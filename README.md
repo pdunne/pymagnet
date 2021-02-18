@@ -1,11 +1,10 @@
-# pymagnet
+# Pymagnet
 
 User friendly magnetic field calculations in Python
 
 ## Calculating Magnetic Fields and Forces
 
-This repository contains the python files and Jupyter notebook needed to follow
-the tutorial presented as part of the MaMi Winter School 2021, Dublin.
+Forms of this library have been used in a number of projects including [Liquid flow and control without solid walls, Nature 2020](https://www.nature.com/articles/s41586-020-2254-4).
 
 ## Features
 
@@ -20,17 +19,16 @@ but the underlying data is also accessible.
 
 ## Prerequisites
 
-This course assumes your working version of python is either
-[anaconda](https://www.anaconda.com/) or
-[miniconda](https://docs.conda.io/en/latest/miniconda.html).
-
 Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
- (to use f-strings).
-If you are using [miniconda](https://docs.conda.io/en/latest/miniconda.html),
-ensure you have the following packages:
+ (to use f-strings), and the following packages:
 
 * numpy
 * matplotlib
+
+## Partial TODOs
+
+* Implement arbitrary orientation in public code
+* 3D rendering of slices
 
 ## Licensing
 

@@ -1,3 +1,11 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
+# Copyright 2021 Peter Dunne
+"""Plotting routines
+
+
+"""
 import matplotlib.pyplot as _plt
 from matplotlib.patches import Rectangle as _Rect
 from matplotlib.patches import Arrow as _Arrow
@@ -82,15 +90,13 @@ def plot_2D_contour(x, y, Field, **kwargs):
     scale_y = kwargs.pop('scale_y', 1e-3)
     scale_cb = kwargs.pop('scale_cb', 1)
 
-    patch_array = kwargs.pop('patch_array', [] )
+    show_magnets = kwargs.pop('show_magnets', True)
 
     cmap = kwargs.pop('cmap', 'magma')
     xlab = kwargs.pop('xlab', f'x (mm)')
     ylab = kwargs.pop('ylab', f'y (mm)')
     clab = kwargs.pop('clab', f'B (T)')
     axis_scale = kwargs.pop('axis_scale', 'equal')
-
-    # show_magnets = kwargs.pop(show_magnets')
 
     field_component = kwargs.pop('field_component', 'n')
 
@@ -139,7 +145,8 @@ def plot_2D_contour(x, y, Field, **kwargs):
                         color=vector_color,
                         alpha=1)
     
-    if len(patch_array) > 0:
+    if show_magnets:
+        patch_array =_num_patch_2D()
         for p in patch_array:
         
             sq = _Rect(xy=(p.patch.x/scale_x, p.patch.y/scale_y),
@@ -160,6 +167,7 @@ def plot_2D_contour(x, y, Field, **kwargs):
     _plt.axis(axis_scale)
     _plt.xlabel(xlab)
     _plt.ylabel(ylab)
+    _plt.show()
 
     if SAVE:
         _plt.savefig('contour_plot.png', dpi=300)
@@ -167,6 +175,11 @@ def plot_2D_contour(x, y, Field, **kwargs):
 
 
 class patch(object):
+    """Encodes magnet dimensions for drawing on plots
+
+    Args:
+        object ([type]): [description]
+    """    
     def __init__(self, x, y, width, height ):
         super().__init__()
         self.x = x
@@ -181,6 +194,11 @@ class patch(object):
         return f"(x: {self.x}, y: {self.y} w:{self.width}, h: {self.height})"
 
 class arrow(object):
+    """Encodes magnetisation vector for drawing on plots
+
+    Args:
+        object ([type]): [description]
+    """    
     def __init__(self, x, y, dx, dy, width=3):
         super().__init__()
         self.x = x
@@ -196,6 +214,11 @@ class arrow(object):
         return f"(x: {self.x}, y: {self.y}, dx: {self.dx}, dy: {self.dy}, w:{self.width})"
 
 class magnet_patch(object):
+    """Magnet drawing class
+
+    Args:
+        object ([type]): [description]
+    """    
     def __init__(self, patch, arrow)    -> None:
         super().__init__()
         self.patch = patch
@@ -205,6 +228,11 @@ class magnet_patch(object):
         return self.patch.__str__() + self.arrow.__str__()
 
 def _num_patch_2D():
+    """Generates patches and arrows for drawing 
+
+    Returns:
+        [tuple(list, list)]: lists of patch and arrow objects
+    """    
     from .magnets._magnet2 import Magnet_2D
     patch_array = []
     
@@ -320,7 +348,13 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
 
 
 def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
+    """Contour plot of 3D simulation
 
+    Args:
+        plot_x ([type]): [description]
+        plot_y ([type]): [description]
+        plot_B ([type]): [description]
+    """
 
     cmap = kwargs.pop('cmap', 'seismic')
     xlab = kwargs.pop('xlab', f'x (mm)')
@@ -358,7 +392,14 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
 
 
 def line_plot_cylinder(magnet, **kwargs):
+    """Calculates and plots the magnetic field along the central axis
+    of a cylinder
 
+    This is an example helper function.
+
+    Args:
+        magnet ([magnet object]):
+    """
     rho = _np.linspace(-2*magnet.radius, 2*magnet.radius, 51)
     z = _np.array([magnet.length * 1.1 / 2])
 
@@ -370,6 +411,15 @@ def line_plot_cylinder(magnet, **kwargs):
     _plt.show()
 
 def contour_plot_cylinder(magnet, **kwargs):
+    """Calculates and plots the magnetic field 
+    of a cylinder
+
+    This is an example helper function.
+
+
+    Args:
+        magnet ([type]): [description]
+    """    
     NP = 101
     NPJ = NP*1j
     rho, z = _np.mgrid[-3 * magnet.radius:3 *
@@ -388,7 +438,14 @@ def contour_plot_cylinder(magnet, **kwargs):
 
 
 def param_test_2D(width, height):
-    
+    """Example plots while varying the size of a permanent magnet
+
+    This is an example helper function.
+
+    Args:
+        width ([type]): [description]
+        height ([type]): [description]
+    """    
     x = _np.linspace(-2*width, 2*width, 100)
     y = 1e-3 + height
 
@@ -399,4 +456,4 @@ def param_test_2D(width, height):
     cmap = 'viridis'
     patch_array = _num_patch_2D()
     plot_2D_contour(
-        x, y, B, patch_array=patch_array, UL=1, NL=11, cmap=cmap)
+        x, y, B, UL=1, NL=11, cmap=cmap)

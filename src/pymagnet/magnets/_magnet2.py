@@ -1,10 +1,13 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
+# Copyright 2021 Peter Dunne
+"""Two Dimensional Magnet Classes
+"""
 import numpy as _np
-# from pymagma import PI
 from ._magnet import Magnet
 from ._fields import Point2
 # from typing import List, Any, Union
-
-
 
 __all__ = ['Magnet_2D', 'Rectangle', 'Square']
 
