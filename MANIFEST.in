@@ -1,0 +1,12 @@
+include pyproject.toml
+include *.md # Include the README
+include LICENSE
+include setup.py
+include tox.ini
+graft examples
+prune examples/.ipynb_checkpoints
+graft docs
+graft tests
+global-exclude *.pyc
+
+
