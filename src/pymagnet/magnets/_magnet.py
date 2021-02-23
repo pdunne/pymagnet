@@ -2,10 +2,29 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
 # Copyright 2021 Peter Dunne
-"""Magnet Base Class
+"""Magnet Base class
+
+This private module implements the registry and base magnet classes
+
+Example:
+    Examples can be given using either the ``Example`` or ``Examples``
+    sections. Sections support any reStructuredText formatting, including
+    literal blocks::
+
+        $ python example_google.py
+
+Section breaks are created by resuming unindented text. Section breaks
+are also implicitly created anytime a new section starts.
+
+TODO:
+    * Add __del__ method for removing strong ref in class instance list
+
+
+.. _Google Python Style Guide:
+   https://google.github.io/styleguide/pyguide.html
 """
 # __all__ = ['Magnet', 'reset_magnets', 'list_magnets']
-__all__ = ['Magnet']
+__all__ = ["Magnet"]
 
 from typing import List, Any, Union, Type, Optional
 from weakref import WeakSet
@@ -16,16 +35,17 @@ class Registry:
 
     Instances are tracked in `class.instances` using weak references.
     This also includes any instances that are deleted manually or go out of
-    scope. 
+    scope.
 
     Class methods:
 
-        `print_instances()` 
+        `print_instances()`
 
         `get_instances()`
-        
+
         `get_num_instances()`
-    """    
+    """
+
     instances = WeakSet()
     _hard_instances = []
 
@@ -36,21 +56,20 @@ class Registry:
 
     def __init__(self, *args, **kwargs):
         super().__init__()
-        
+
     @classmethod
     def print_instances(cls):
-        """Prints class instantiations
-        """        
+        """Prints class instantiations"""
         if len(cls.instances) < 1:
             print("No Instances")
-        else:    
+        else:
             for instance in cls.instances:
                 print(instance)
 
     @classmethod
     def get_instances(cls):
-        return(cls.instances)
-    
+        return cls.instances
+
     @classmethod
     def get_num_instances(cls, Print_Val=False):
         """Return number of instances of class
@@ -59,8 +78,8 @@ class Registry:
             Print_Val (bool, optional): [Print to screen]. Defaults to False.
 
         Returns:
-            num_instances [int]: 
-        """        
+            num_instances [int]:
+        """
         if Print_Val:
             print(len(cls.instances))
         return len(cls.instances)
@@ -71,17 +90,16 @@ class Registry:
 
         Args:
             instance ([type]): [description]
-        """        
+        """
         cls.instances.add(instance)
         cls._hard_instances.append(instance)
         for b in cls.__bases__:
             if issubclass(b, Registry):
                 b._register_instance(instance)
-                
+
     @classmethod
     def reset(cls) -> None:
-        """Removes all magnet instances from registry.
-        """
+        """Removes all magnet instances from registry."""
         for magnet in cls._hard_instances:
             del magnet
         cls.instances = WeakSet()
@@ -98,29 +116,39 @@ class Magnet(Registry):
 
     Returns:
         Magnet: magnet base class
-    """    
+    """
+
     counter = 0
-    mag_type = 'Magnet'
+    mag_type = "Magnet"
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__()
 
 
 def reset_magnets():
-    """Returns a list of all instantiated magnets. 
-    """
+    """Returns a list of all instantiated magnets."""
     from ._magnet2 import Magnet_2D, Rectangle, Square
     from ._magnet3 import Magnet_3D, Prism, Cube, Cylinder
-    magnet_classes = [Registry, Magnet, 
-                        Magnet_2D, Rectangle, Square,
-                        Magnet_3D, Prism, Cube, Cylinder]
+
+    magnet_classes = [
+        Registry,
+        Magnet,
+        Magnet_2D,
+        Rectangle,
+        Square,
+        Magnet_3D,
+        Prism,
+        Cube,
+        Cylinder,
+    ]
     for cls in magnet_classes:
         cls.reset()
 
-def list_magnets():
-    """Returns a list of all instantiated magnets. 
 
-    Assumes that the child class registries have not been modified outside of 
+def list_magnets():
+    """Returns a list of all instantiated magnets.
+
+    Assumes that the child class registries have not been modified outside of
     using `pymagnet.reset_magnets()`.
-    """    
+    """
     return Magnet.print_instances()

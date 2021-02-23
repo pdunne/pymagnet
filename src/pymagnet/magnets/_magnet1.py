@@ -2,8 +2,24 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
 # Copyright 2021 Peter Dunne
-"""Calculate magnetic fields along symmetry axis
-of a cylindrical or prismatic magnet
+"""1D High symmetry methods
+
+This private module implements magnetic field calculations in z along the
+symmetry centre of a cylindrical or cuboidal magnet.
+
+Example:
+    Examples can be given using either the ``Example`` or ``Examples``
+    sections. Sections support any reStructuredText formatting, including
+    literal blocks::
+
+        $ python example_google.py
+
+Section breaks are created by resuming unindented text. Section breaks
+are also implicitly created anytime a new section starts.
+
+
+.. _Google Python Style Guide:
+   https://google.github.io/styleguide/pyguide.html
 """
 import numpy as _np
 
@@ -12,7 +28,8 @@ __all__ = ['magnetic_field_prism_1D',
 
 def magnetic_field_prism_1D(magnet, z):
     from ._magnet3 import Magnet_3D
-    """Magnetic
+    """Calculates the magnetic field z-component due to a cuboid along its
+    axial symmetry center.
 
     Args:
         magnet_object ([type]): [description]
@@ -20,7 +37,7 @@ def magnetic_field_prism_1D(magnet, z):
         z ([type]): [description]
 
     Returns:
-        [type]: [description]
+        [float]: Bz
     """
     if issubclass(magnet.__class__, Magnet_3D):
         a = magnet.a
@@ -53,7 +70,8 @@ def magnetic_field_prism_1D(magnet, z):
 
 def magnetic_field_cylinder_1D(magnet, z):
     from ._magnet3 import Cylinder
-    """Magnetic
+    """Calculates the magnetic field z-component due to a cylinder along its
+    axial symmetry center.
 
     Args:
         magnet_object ([type]): [description]
@@ -61,7 +79,7 @@ def magnetic_field_cylinder_1D(magnet, z):
         z ([type]): [description]
 
     Returns:
-        [type]: [description]
+        [float]: Bz
     """
     if issubclass(magnet.__class__, Cylinder):
         L = magnet.length

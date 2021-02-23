@@ -2,7 +2,27 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
 # Copyright 2021 Peter Dunne
-"""Three Dimensional Magnet Classes
+"""3D Magnet classes
+
+This private module implements the `Prism` and `Cube`, and `Cylinder`
+3D magnet classes
+
+Example:
+    Examples can be given using either the ``Example`` or ``Examples``
+    sections. Sections support any reStructuredText formatting, including
+    literal blocks::
+
+        $ python example_google.py
+
+Section breaks are created by resuming unindented text. Section breaks
+are also implicitly created anytime a new section starts.
+
+TODO:
+    * Add __del__ method for removing strong ref in class instance list
+
+
+.. _Google Python Style Guide:
+   https://google.github.io/styleguide/pyguide.html
 """
 import numpy as _np
 from ._fields import Point3
