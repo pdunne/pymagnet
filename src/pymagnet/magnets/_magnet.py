@@ -44,10 +44,12 @@ class Registry:
         `get_instances()`
 
         `get_num_instances()`
+
+        `reset()
     """
 
     instances = WeakSet()
-    _hard_instances = []
+    _class_instances = []
 
     def __new__(cls, *args, **kwargs):
         o = object.__new__(cls)
@@ -56,6 +58,11 @@ class Registry:
 
     def __init__(self, *args, **kwargs):
         super().__init__()
+        self.__class__._class_instances.append(self)
+
+    def __del__(self):
+        if self in self.__class__._class_instances:
+            self.__class__._class_instances.remove(self)
 
     @classmethod
     def print_instances(cls):
@@ -92,7 +99,6 @@ class Registry:
             instance ([type]): [description]
         """
         cls.instances.add(instance)
-        cls._hard_instances.append(instance)
         for b in cls.__bases__:
             if issubclass(b, Registry):
                 b._register_instance(instance)
@@ -100,14 +106,14 @@ class Registry:
     @classmethod
     def reset(cls) -> None:
         """Removes all magnet instances from registry."""
-        for magnet in cls._hard_instances:
+        for magnet in cls._class_instances:
             del magnet
         cls.instances = WeakSet()
-        cls._hard_instances = []
+        cls._class_instances = []
 
     def __init_subclass__(cls):
         cls.instances = WeakSet()
-        cls._hard_instances = []
+        cls._class_instances = []
 
 
 class Magnet(Registry):
@@ -118,7 +124,7 @@ class Magnet(Registry):
         Magnet: magnet base class
     """
 
-    counter = 0
+    tol = 1e-4  # tolerance for rotations, sufficient for 0.01 degree accuracy
     mag_type = "Magnet"
 
     def __init__(self, *args, **kwargs) -> None:

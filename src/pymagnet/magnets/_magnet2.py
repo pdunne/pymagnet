@@ -53,6 +53,10 @@ class Magnet_2D(Magnet):
         self.b = height / 2
         self.Jr = Jr
 
+        # Magnet rotation w.r.t. x-axis
+        self.alpha = kwargs.pop("alpha", 0.0)
+        self.alpha_radians = _np.deg2rad(self.alpha)
+
         center = kwargs.pop("center", Point2(0.0, 0.0))
 
         if type(center) is tuple:
