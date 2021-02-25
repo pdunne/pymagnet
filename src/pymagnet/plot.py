@@ -153,6 +153,7 @@ def plot_2D_contour(x, y, Field, **kwargs):
         extend="max",
     )
 
+    # Draw contour lines
     if NL > 1:
         lev1 = _np.linspace(LL, UL, NL, endpoint=True)
         _ = _plt.contour(
@@ -169,6 +170,7 @@ def plot_2D_contour(x, y, Field, **kwargs):
     else:
         CB = _plt.colorbar(CS)
 
+    # Draw field vectors
     if vector_plot:
         NPx, NPy = x.shape
         if NQ != 0:
@@ -182,9 +184,11 @@ def plot_2D_contour(x, y, Field, **kwargs):
                 alpha=1,
             )
 
+    # Draw magnets and magnetisation arrows
     if show_magnets:
         patch_array = _num_patch_2D(scale_x, scale_y)
 
+        # Need original axis transform data before making additonal transformations
         axis_transform = ax.transData
         for p in patch_array:
 
@@ -209,6 +213,7 @@ def plot_2D_contour(x, y, Field, **kwargs):
                 width=p.arrow.width,
                 zorder=6,
                 color="k",
+                # must translate arrow before rotating
                 transform=p.arrow.transform + p.patch.transform + axis_transform,
             )
 
@@ -223,17 +228,21 @@ def plot_2D_contour(x, y, Field, **kwargs):
 
     if SAVE:
         _plt.savefig("contour_plot.png", dpi=300)
-        # _plt.savefig('contour_plot.pdf', dpi=300)
 
 
 class patch(object):
-    """Encodes magnet dimensions for drawing on plots
-
-    Args:
-        object ([type]): [description]
-    """
+    """Encodes magnet dimensions for drawing on plots"""
 
     def __init__(self, x, y, width, height, transform):
+        """Initialse a patch
+
+        Args:
+            x (float): centre, x
+            y (float): center, y
+            width (float): width
+            height (float): width
+            transform (matplotlib Affine2D): transform object, `rotate_deg_around`
+        """
         super().__init__()
         self.x = x
         self.y = y
@@ -249,13 +258,19 @@ class patch(object):
 
 
 class arrow(object):
-    """Encodes magnetisation vector for drawing on plots
-
-    Args:
-        object ([type]): [description]
-    """
+    """Encodes magnetisation vector for drawing on plots"""
 
     def __init__(self, x, y, dx, dy, transform, width=3):
+        """Init Arrow
+
+        Args:
+            x (float): arrow tail, x
+            y (float): arrow tail, y
+            dx (float): arrow head displacement, x
+            dy (float): arrow head displacement, y
+            transform (matplotlib Affine2D): transformation object, `translate`
+            width (int, optional): Arrow width. Defaults to 3.
+        """
         super().__init__()
         self.x = x
         self.y = y
@@ -297,12 +312,12 @@ def _num_patch_2D(scale_x, scale_y):
     Returns:
         [tuple(list, list)]: lists of patch and arrow objects
     """
-    # FIXME: rotate rectangles:
     from .magnets._magnet2 import Magnet_2D
     from matplotlib.transforms import Affine2D
 
     patch_array = []
     for magnet in Magnet_2D.instances:
+
         patch_tmp = patch(
             x=(magnet.center()[0] - magnet.a) / scale_x,
             y=(magnet.center()[1] - magnet.b) / scale_y,
@@ -317,7 +332,6 @@ def _num_patch_2D(scale_x, scale_y):
 
         Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
         offset = _np.multiply(Jnorm, magnet.size()) / 2
-        print(f"Jnorm:{Jnorm}, offset:{offset*1e3}")
 
         arrow_tmp = arrow(
             x=(magnet.center()[0] - offset[0]) / scale_x,
@@ -326,7 +340,7 @@ def _num_patch_2D(scale_x, scale_y):
             dy=(2 * offset[1]) / scale_y,
             transform=Affine2D().translate(0, magnet.center()[1] / scale_y),
         )
-        print(f"({arrow_tmp.x},{arrow_tmp.y}) ({arrow_tmp.dx},{arrow_tmp.dy})")
+
         magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
 
         patch_array.append(magnet_patch_tmp)
@@ -426,10 +440,6 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
             )
             ax.add_patch(sq)
 
-            # rot_sq = rotate_around
-
-            # sq.transform()
-
             ar = _Arrow(
                 ii[0] + ii[2] / 2 - ii[4] / 2,
                 ii[1] + ii[3] / 2 - ii[5] / 2,
@@ -449,7 +459,6 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
 
     if SAVE:
         _plt.savefig("contour_plot.png", dpi=300)
-        # _plt.savefig('contour_plot.pdf', dpi=300)
 
 
 def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
@@ -571,5 +580,4 @@ def param_test_2D(width, height):
     x, y = _mag._routines2.grid2D(1.5 * width, height)
     B = _mag._routines2.B_calc_2D(x, y)
     cmap = "viridis"
-    patch_array = _num_patch_2D()
     plot_2D_contour(x, y, B, UL=1, NL=11, cmap=cmap)

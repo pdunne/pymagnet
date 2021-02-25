@@ -7,10 +7,6 @@
 """
 import numpy as _np
 
-# from ..magnets import u0
-# from ..magnets import PI
-from matplotlib.path import Path as _Path
-
 
 def grid2D(ux, uy, **kwargs):
     """Grid of x,y points.
@@ -50,8 +46,8 @@ def B_calc_2D(x, y):
 
     for magnet in Magnet_2D.instances:
         if magnet.alpha_radians > Magnet_2D.tol:
-            xi, yi = rotate_points(x, y, magnet.alpha_radians)
-            xci, yci = rotate_points(
+            xi, yi = rotate_points_2D(x, y, magnet.alpha_radians)
+            xci, yci = rotate_points_2D(
                 _np.array([magnet.xc]), _np.array([magnet.yc]), magnet.alpha_radians
             )
 
@@ -63,7 +59,7 @@ def B_calc_2D(x, y):
                 Bty = magnet._calcBy_mag_x(xi - xci[0], yi - yci[0])
 
                 # Rotate fields to global frame
-                Bxt, Byt = rotate_points(Btx, Bty, 2 * _np.pi - magnet.alpha_radians)
+                Bxt, Byt = rotate_points_2D(Btx, Bty, 2 * _np.pi - magnet.alpha_radians)
 
                 B.x += Bxt
                 B.y += Byt
@@ -77,7 +73,7 @@ def B_calc_2D(x, y):
                 Btx = magnet._calcBx_mag_y(xi - magnet.xc - xci[0], yi - yci[0])
                 Bty = magnet._calcBy_mag_y(xi - magnet.xc - xci[0], yi - yci[0])
 
-                Bxt, Byt = rotate_points(Btx, Bty, 2 * _np.pi - magnet.alpha_radians)
+                Bxt, Byt = rotate_points_2D(Btx, Bty, 2 * _np.pi - magnet.alpha_radians)
                 B.x += Bxt
                 B.y += Byt
             else:
@@ -88,7 +84,7 @@ def B_calc_2D(x, y):
     return B
 
 
-def rotate_points(x, y, alpha):
+def rotate_points_2D(x, y, alpha):
     """Counter-clockwise rotation of points x,y
 
     Rotates 2D coordinates using a rotation matrix
@@ -115,133 +111,51 @@ def rotate_points(x, y, alpha):
     return _np.reshape(x_rotated, x.shape), _np.reshape(y_rotated, y.shape)
 
 
-# def gradB(B, x, y):
-#     """ compute the gradient of Magnetic Field """
-#     dB = field_vec(_np.zeros_like(B), _np.zeros_like(B))
-#     Nx = x.shape[0]
-#     Ny = x.shape[1]
-#     dx = (x.max() - x.min()) / Nx
-#     dy = (y.max() - y.min()) / Ny
-#     dB.x, dB.y = _np.gradient(B, dx, dy)
-#     dB.abmag()
-#     return dB
+def gradB_2D(B, x, y):
+    """Calculates the magnetic field gradient for a 2D field.
+
+    Args:
+        B (Vector2): Magnetic field vector
+        x (float/array): x coordinates
+        y (float/array): y coordinates
+
+    Returns:
+        Vector2: Magnetic field gradient vector
+    """
+    from ._fields import Vector2
+
+    dB = Vector2(_np.zeros_like(B), _np.zeros_like(B))
+    Nx = x.shape[0]
+    Ny = x.shape[1]
+    dx = (x.max() - x.min()) / Nx
+    dy = (y.max() - y.min()) / Ny
+    dB.x, dB.y = _np.gradient(B, dx, dy)
+    dB.calc_norm()
+    return dB
 
 
-# def FgradB(B, x, y, chi_m, c):
-#     """ compute the field gradient force """
-#     BgB = field_vec(_np.zeros_like(B.n), _np.zeros_like(B.n))
-#     FB = field_vec(_np.zeros_like(B.n), _np.zeros_like(B.n))
-#     # Nx = x.shape[0]
-#     # Ny = x.shape[1]
-#     # dx = (x.max()-x.min())/Nx
-#     # dy = (y.max()-y.min())/Ny
-#     dB = gradB(B.n, x, y)
-#     BgB.n = dB.n * B.n
-#     BgB.x = dB.x * B.n
-#     BgB.y = dB.y * B.n
-#     FB.n = (1 / u0) * chi_m * c * BgB.n
-#     FB.x = (1 / u0) * chi_m * c * BgB.x
-#     FB.y = (1 / u0) * chi_m * c * BgB.y
-#     return FB
+def FgradB_2D(B, x, y, chi_m, c):
+    """Calculates the magnetic field gradient force for a 2D field.
 
+    Args:
+        B (Vector2): Magnetic field vector
+        x (float/array): x coordinates
+        y (float/array): y coordinates
 
-# def mask_poly(N, apo, xc, yc, x, y):
-#     k = _np.arange(0, N, 1)
-#     # Case Structure for setting angle offset
+    Returns:
+        Vector2: Magnetic field gradient force vector
+    """
+    from ._fields import Vector2
+    from .. import u0
 
-#     def f(N):
-#         if N % 2 == 0:
-#             return {
-#                 # 3: PI / N.
-#                 # 4: PI / N,
-#                 # 5: PI / N,
-#                 6: 0,
-#                 # 8: PI / N,
-#             }.get(N, PI / N)
-#         else:
-#             return {
-#                 3: PI / 2,
-#                 7: PI / 2,
-#                 # 5: PI / N,
-#                 # 6: 0,
-#                 # 8: PI / N,
-#             }.get(N, PI / N / 2)
+    BgB = Vector2(_np.zeros_like(B.n), _np.zeros_like(B.n))
+    FB = Vector2(_np.zeros_like(B.n), _np.zeros_like(B.n))
 
-#     r = apo / _np.around(_np.cos(PI / N), 4)
-
-#     xv = xc + r * _np.sin(2 * PI * k / N + f(N))
-#     yv = yc + r * _np.cos(2 * PI * k / N + f(N))
-#     poly_verts = _np.vstack((xv, yv)).T.tolist()
-#     points = _np.vstack((x.flatten(), y.flatten())).T
-
-#     path = _Path(poly_verts)
-#     grid = path.contains_points(points)
-#     grid = grid.reshape(x.shape)
-#     return grid
-
-
-# def mask_data(a, N, R1, B, x, y):
-#     apo = R1 - a
-#     xp = 0
-#     yp = 0
-#     grid = mask_poly(N, apo, xp, yp, x, y)
-#     Bm = field_vec(B.x, B.y)
-#     # Bmx = B.x.copy()
-#     # Bmy = B.y.copy
-#     Bm.x[~grid] = _np.nan
-#     Bm.y[~grid] = _np.nan
-#     # Bm = mag.field_vec(Bmx,Bmy)
-#     Bm.abmag()
-#     return Bm
-
-
-# def radius_mask_data(x, y, B, R):
-#     """Circular Data Mask
-
-#     Args:
-#         x ([array]): array of x coordinates
-#         y ([array]): array of x coordinates
-#         B ([field_vec object]): field_vec object
-#                                 contains B.x, B.y, B.n
-#         R ([float]): Radius of circular mask
-#     """
-#     r_data = _np.sqrt(x ** 2 + y ** 2)
-#     B_radius_mask = field_vec(B.x, B.y)
-#     B_radius_mask.x[((r_data) > R)] = _np.NaN
-#     B_radius_mask.y[((r_data) > R)] = _np.NaN
-#     B_radius_mask.abmag()
-#     return B_radius_mask
-
-
-# def radial_profile(data, center):
-#     """[summary]
-
-#     Args:
-#         data ([type]): [description]
-#         center ([type]): [description]
-
-#     Returns:
-#         [type]: [description]
-#     """
-#     y, x = _np.indices((data.shape))
-#     r = _np.sqrt((x - center[0]) ** 2 + (y - center[1]) ** 2)
-#     r = r.astype(_np.int)
-
-#     tbin = _np.bincount(r.ravel(), data.ravel())
-#     nr = _np.bincount(r.ravel())
-#     radialprofile = tbin / nr
-#     return radialprofile
-
-
-# def radial_extraction(x, y, Bm, R, a):
-#     index_x = x.shape[0] // 2
-#     index_y = y.shape[1] // 2
-
-#     radial_length = _np.sqrt(
-#         (x[0, -1] - x[index_x, index_y]) ** 2 + (y[0, -1] - y[index_x, index_y]) ** 2
-#     )
-#     ravg = radial_profile(Bm.n, [index_x, index_y])
-#     xpl = _np.linspace(0, radial_length, len(ravg))
-#     ravg = ravg[xpl <= R - a]
-#     xpl = xpl[xpl <= R - a]
-#     return xpl, ravg
+    dB = gradB_2D(B, x, y)
+    BgB.n = dB.n * B.n
+    BgB.x = dB.x * B.n
+    BgB.y = dB.y * B.n
+    FB.n = (1 / u0) * chi_m * c * BgB.n
+    FB.x = (1 / u0) * chi_m * c * BgB.x
+    FB.y = (1 / u0) * chi_m * c * BgB.y
+    return FB

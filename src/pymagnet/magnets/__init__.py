@@ -31,3 +31,4 @@ from ._magnet3 import *
 from ._fields import *
 from ._routines2 import *
 from ._routines3 import *
+from ._assembly2 import *
