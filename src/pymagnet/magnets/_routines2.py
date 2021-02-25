@@ -6,8 +6,9 @@
 """Routines for Two Dimensional Magnet Classes
 """
 import numpy as _np
-from ..magnets import u0
-from ..magnets import PI
+
+# from ..magnets import u0
+# from ..magnets import PI
 from matplotlib.path import Path as _Path
 
 

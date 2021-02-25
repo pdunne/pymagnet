@@ -30,6 +30,7 @@ from matplotlib.patches import Rectangle as _Rect
 from matplotlib.patches import Arrow as _Arrow
 import numpy as _np
 from pymagnet import magnets as _mag
+from matplotlib.transforms import Affine2D
 
 
 def plot_1D_field(magnet, **kwargs):
@@ -182,35 +183,35 @@ def plot_2D_contour(x, y, Field, **kwargs):
             )
 
     if show_magnets:
-        patch_array, transform_array = _num_patch_2D()
-        for p, t in zip(patch_array, transform_array):
+        patch_array = _num_patch_2D(scale_x, scale_y)
+
+        axis_transform = ax.transData
+        for p in patch_array:
 
             sq = _Rect(
-                xy=(p.patch.x / scale_x, p.patch.y / scale_y),
-                width=p.patch.width / scale_x,
-                height=p.patch.height / scale_y,
+                xy=(p.patch.x, p.patch.y),
+                width=p.patch.width,
+                height=p.patch.height,
                 fill=True,
                 facecolor="#F5F5F5",
                 edgecolor="k",
                 zorder=5,
+                transform=p.patch.transform + axis_transform,
             )
-
-            t2 = t + ax.transData
-            sq.set_transform(t2)
 
             ax.add_patch(sq)
 
             ar = _Arrow(
-                p.arrow.x / scale_x,
-                p.arrow.y / scale_y,
-                p.arrow.dx / scale_x,
-                p.arrow.dy / scale_y,
+                p.arrow.x,
+                p.arrow.y,
+                p.arrow.dx,
+                p.arrow.dy,
                 width=p.arrow.width,
                 zorder=6,
                 color="k",
+                transform=p.arrow.transform + p.patch.transform + axis_transform,
             )
 
-            ar.set_transform(t2)
             ax.add_patch(ar)
 
     CB.ax.get_yaxis().labelpad = 15
@@ -232,12 +233,13 @@ class patch(object):
         object ([type]): [description]
     """
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, transform):
         super().__init__()
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.transform = transform
 
     def __repr__(self) -> str:
         return f"(x: {self.x}, y: {self.y} w:{self.width}, h: {self.height})"
@@ -253,12 +255,13 @@ class arrow(object):
         object ([type]): [description]
     """
 
-    def __init__(self, x, y, dx, dy, width=3):
+    def __init__(self, x, y, dx, dy, transform, width=3):
         super().__init__()
         self.x = x
         self.y = y
         self.dx = dx
         self.dy = dy
+        self.transform = transform
         self.width = width
 
     def __repr__(self) -> str:
@@ -288,47 +291,46 @@ class magnet_patch(object):
         return self.patch.__str__() + self.arrow.__str__()
 
 
-def _num_patch_2D():
+def _num_patch_2D(scale_x, scale_y):
     """Generates patches and arrows for drawing
 
     Returns:
         [tuple(list, list)]: lists of patch and arrow objects
     """
-    # FIXME: replace patches with rectangles:
-    # Rectangle(xy, width, height, angle=0.0, **kwargs)
+    # FIXME: rotate rectangles:
     from .magnets._magnet2 import Magnet_2D
     from matplotlib.transforms import Affine2D
 
     patch_array = []
-    transform_array = []
-
     for magnet in Magnet_2D.instances:
         patch_tmp = patch(
-            x=magnet.center()[0] - magnet.a,
-            y=magnet.center()[1] - magnet.b,
-            width=2 * magnet.a,
-            height=2 * magnet.b,
+            x=(magnet.center()[0] - magnet.a) / scale_x,
+            y=(magnet.center()[1] - magnet.b) / scale_y,
+            width=(2 * magnet.a) / scale_x,
+            height=(2 * magnet.b) / scale_y,
+            transform=Affine2D().rotate_deg_around(
+                (magnet.center()[0]) / scale_x,
+                (magnet.center()[1]) / scale_y,
+                -magnet.alpha,
+            ),
         )
-
-        rot_transform = Affine2D().rotate_around(
-            magnet.center()[0], magnet.center()[1], magnet.alpha_radians
-        )
-        transform_array.append(rot_transform)
 
         Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
         offset = _np.multiply(Jnorm, magnet.size()) / 2
+        print(f"Jnorm:{Jnorm}, offset:{offset*1e3}")
 
         arrow_tmp = arrow(
-            x=magnet.center()[0] - offset[0],
-            y=magnet.center()[1] - offset[1],
-            dx=2 * offset[0],
-            dy=2 * offset[1],
+            x=(magnet.center()[0] - offset[0]) / scale_x,
+            y=(magnet.center()[1] - offset[1] / scale_y),
+            dx=(2 * offset[0]) / scale_x,
+            dy=(2 * offset[1]) / scale_y,
+            transform=Affine2D().translate(0, magnet.center()[1] / scale_y),
         )
-
+        print(f"({arrow_tmp.x},{arrow_tmp.y}) ({arrow_tmp.dx},{arrow_tmp.dy})")
         magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
 
         patch_array.append(magnet_patch_tmp)
-    return patch_array, transform_array
+    return patch_array
 
 
 def plot_3D_contour(x, y, z, Field, **kwargs):
@@ -423,6 +425,10 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
                 zorder=5,
             )
             ax.add_patch(sq)
+
+            # rot_sq = rotate_around
+
+            # sq.transform()
 
             ar = _Arrow(
                 ii[0] + ii[2] / 2 - ii[4] / 2,
