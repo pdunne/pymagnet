@@ -24,27 +24,31 @@ TODO:
 .. _Google Python Style Guide:
    https://google.github.io/styleguide/pyguide.html
 """
+from sys import prefix
 import numpy as _np
 from ._fields import Point3
 from ._magnet import Magnet
+
 # from pymagma import PI
 
-__all__ = ['Magnet_3D', 'Prism', 'Cube', 'Cylinder']
+__all__ = ["Magnet_3D", "Prism", "Cube", "Cylinder"]
+
 
 class Magnet_3D(Magnet):
     """3D Magnet Class
 
     Args:
          width: magnet width [default 10e-3]
-         depth: magnet depth [default 20e-3] 
-         height: magnet height [default 30e-3] 
-         
+         depth: magnet depth [default 20e-3]
+         height: magnet height [default 30e-3]
+
     Optional Arguments:
          centre: magnet centre (Point3_3D object) [default Point3(.0, .0, .0)]
          J: remnant magnetisation in Tesla [default 1.0]
 
     """
-    mag_type = 'Magnet_3D'
+
+    mag_type = "Magnet_3D"
 
     def __init__(self, width, depth, height, Jr, **kwargs) -> None:
         super().__init__()
@@ -52,13 +56,13 @@ class Magnet_3D(Magnet):
         self.depth = depth
         self.height = height
 
-        self.a = width/2
-        self.b = depth/2
-        self.c = height/2
+        self.a = width / 2
+        self.b = depth / 2
+        self.c = height / 2
 
-        self.Jr = Jr 
+        self.Jr = Jr
 
-        center = kwargs.pop('center', Point3(0.0, 0.0, 0.0))
+        center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
 
         if type(center) is tuple:
             center = Point3(center[0], center[1], center[2])
@@ -69,7 +73,7 @@ class Magnet_3D(Magnet):
 
     def center(self):
         return _np.array([self.xc, self.yc, self.zc])
-    
+
     def size(self):
         """Returns magnet dimesions
 
@@ -79,58 +83,67 @@ class Magnet_3D(Magnet):
         return _np.array([self.width, self.depth, self.height])
 
 
-
 class Prism(Magnet_3D):
     """Prism Magnet Class. Cuboid width x depth x height.
 
-   Args:
-         width: magnet width [default 10e-3]
-         depth: magnet depth [default 20e-3]
-         height: magnet height [default 30e-3]
-         J: remnant magnetisation in Tesla [default 1.0]
+    Args:
+          width: magnet width [default 10e-3]
+          depth: magnet depth [default 20e-3]
+          height: magnet height [default 30e-3]
+          J: remnant magnetisation in Tesla [default 1.0]
 
-    Optional Arguments:
-         centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
-         theta: Angle between magnetisation and x-axis [default 90.0 degrees]
-         phi: Angle between magnetisation and z-axis [default 0.0 degrees]  
+     Optional Arguments:
+          centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
+          theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+          phi: Angle between magnetisation and z-axis [default 0.0 degrees]
 
     """
-    mag_type = 'Prism'
+
+    mag_type = "Prism"
     _instances = []
     counter = 0
 
-    def __init__(self,
-                 width=10e-3, depth=20e-3, height=30e-3,   # magnet dimensions
-                 Jr=1.0,  # local magnetisation direction
-                 **kwargs):
+    def __init__(
+        self,
+        width=10e-3,
+        depth=20e-3,
+        height=30e-3,  # magnet dimensions
+        Jr=1.0,  # local magnetisation direction
+        **kwargs,
+    ):
 
         super().__init__(width, depth, height, Jr, **kwargs)
 
-        self.theta = kwargs.pop('theta', 90)
+        self.theta = kwargs.pop("theta", 90)
         self.theta_rad = _np.deg2rad(self.theta)
-        self.phi = kwargs.pop('phi', 0)
+        self.phi = kwargs.pop("phi", 0)
         self.phi_rad = _np.deg2rad(self.phi)
 
-        self.Jx = _np.around(Jr*_np.cos(self.theta_rad)*_np.sin(self.phi_rad),
-                             decimals=6)
-        self.Jy = _np.around(Jr*_np.sin(self.theta_rad)*_np.sin(self.phi_rad),
-                             decimals=6)
-        self.Jz = _np.around(Jr*_np.cos(self.phi_rad),
-                             decimals=6)
+        self.Jx = _np.around(
+            Jr * _np.cos(self.theta_rad) * _np.sin(self.phi_rad), decimals=6
+        )
+        self.Jy = _np.around(
+            Jr * _np.sin(self.theta_rad) * _np.sin(self.phi_rad), decimals=6
+        )
+        self.Jz = _np.around(Jr * _np.cos(self.phi_rad), decimals=6)
         self.tol = 1e-4  # sufficient for 0.01 degree accuracy
 
     def __str__(self):
-        str = f'{self.__class__.mag_type}\n' + \
-              f'J: {self.get_Jr()} (T)\n' + \
-              f'Size: {self.size() * 2} (m)\n' + \
-              f'Center {self.center()} (m)\n'
+        str = (
+            f"{self.__class__.mag_type}\n"
+            + f"J: {self.get_Jr()} (T)\n"
+            + f"Size: {self.size() * 2} (m)\n"
+            + f"Center {self.center()} (m)\n"
+        )
         return str
 
     def __repr__(self):
-        str = f'{self.__class__.mag_type}\n' + \
-              f'J: {self.get_Jr()} (T)\n' + \
-              f'Size: {self.size() * 2} (m)\n' + \
-              f'Center {self.center()} (m)\n'
+        str = (
+            f"{self.__class__.mag_type}\n"
+            + f"J: {self.get_Jr()} (T)\n"
+            + f"Size: {self.size() * 2} (m)\n"
+            + f"Center {self.center()} (m)\n"
+        )
         return str
 
     def size(self):
@@ -154,10 +167,15 @@ class Prism(Magnet_3D):
 
         try:
             data = _np.arctan(
-                ((y + b) * (z + c)) /
-                ((x + a) * _np.sqrt(_np.power((x + a), 2) +
-                                    _np.power((y + b), 2) +
-                                    _np.power((z + c), 2)))
+                ((y + b) * (z + c))
+                / (
+                    (x + a)
+                    * _np.sqrt(
+                        _np.power((x + a), 2)
+                        + _np.power((y + b), 2)
+                        + _np.power((z + c), 2)
+                    )
+                )
             )
         except ValueError:
             data = _np.NaN
@@ -183,7 +201,8 @@ class Prism(Magnet_3D):
             znc_sq = _np.power((z - c), 2)
 
             data = (_np.sqrt(xa_sq + yb_sq + znc_sq) + c - z) / (
-                _np.sqrt(xa_sq + yb_sq + zc_sq) - c - z)
+                _np.sqrt(xa_sq + yb_sq + zc_sq) - c - z
+            )
         except ValueError:
             data = _np.NaN
         return data
@@ -206,11 +225,15 @@ class Prism(Magnet_3D):
         """
 
         try:
-            data = -(Jr/(4 * _np.pi)) * (
-                self._F1(a, b, c, -x, y, z) + self._F1(a, b, c, -x, y, -z)
-                + self._F1(a, b, c, -x, -y, z) + self._F1(a, b, c, -x, -y, -z)
-                + self._F1(a, b, c, x, y, z) + self._F1(a, b, c, x, y, -z)
-                + self._F1(a, b, c, x, -y, z) + self._F1(a, b, c, x, -y, -z)
+            data = -(Jr / (4 * _np.pi)) * (
+                self._F1(a, b, c, -x, y, z)
+                + self._F1(a, b, c, -x, y, -z)
+                + self._F1(a, b, c, -x, -y, z)
+                + self._F1(a, b, c, -x, -y, -z)
+                + self._F1(a, b, c, x, y, z)
+                + self._F1(a, b, c, x, y, -z)
+                + self._F1(a, b, c, x, -y, z)
+                + self._F1(a, b, c, x, -y, -z)
             )
         except ValueError:
             data = _np.NaN
@@ -238,11 +261,12 @@ class Prism(Magnet_3D):
         # Jr = self.Jr
 
         try:
-            data = _np.log(self._F2(a, b, c, -x, -y, z) *
-                           self._F2(a, b, c, x, y, z) /
-                           (self._F2(a, b, c, -x, y, z) *
-                            self._F2(a, b, c, x, -y, z)))
-            data *= (Jr / (4 * _np.pi))
+            data = _np.log(
+                self._F2(a, b, c, -x, -y, z)
+                * self._F2(a, b, c, x, y, z)
+                / (self._F2(a, b, c, -x, y, z) * self._F2(a, b, c, x, -y, z))
+            )
+            data *= Jr / (4 * _np.pi)
         except ValueError:
             data = _np.NaN
         return data
@@ -260,11 +284,12 @@ class Prism(Magnet_3D):
             [array]: [description]
         """
         try:
-            data = _np.log(self._F2(a, c, b, -x, -z, y) *
-                           self._F2(a, c, b, x, z, y) /
-                           (self._F2(a, c, b, -x, z, y) *
-                            self._F2(a, c, b, x, -z, y)))
-            data *= (Jr/(4 * _np.pi))
+            data = _np.log(
+                self._F2(a, c, b, -x, -z, y)
+                * self._F2(a, c, b, x, z, y)
+                / (self._F2(a, c, b, -x, z, y) * self._F2(a, c, b, x, -z, y))
+            )
+            data *= Jr / (4 * _np.pi)
         except ValueError:
             data = _np.NaN
         return data
@@ -316,7 +341,7 @@ class Prism(Magnet_3D):
 
         Bx = self._calcBz_prism_x(-c, b, a, Jr, -z, y, x)
         By = self._calcBy_prism_x(-c, b, a, Jr, -z, y, x)
-        Bz = -1*self._calcBx_prism_x(-c, b, a, Jr, -z, y, x)
+        Bz = -1 * self._calcBx_prism_x(-c, b, a, Jr, -z, y, x)
         return Bx, By, Bz
 
     def _calcB_prism_y(self, x, y, z):
@@ -340,7 +365,7 @@ class Prism(Magnet_3D):
         Jr = self.Jr
 
         Bx = self._calcBy_prism_x(-b, a, c, Jr, -y, x, z)
-        By = -1*self._calcBx_prism_x(-b, a, c, Jr, -y, x, z)
+        By = -1 * self._calcBx_prism_x(-b, a, c, Jr, -y, x, z)
         Bz = self._calcBz_prism_x(-b, a, c, Jr, -y, x, z)
         return Bx, By, Bz
 
@@ -348,22 +373,25 @@ class Prism(Magnet_3D):
 class Cube(Prism):
     """Cube Magnet Class. Cuboid width x depth x height.
 
-   Args:
-         width [float]: magnet side length [default 10e-3]
-         J: remnant magnetisation in Tesla [default 1.0]
+    Args:
+          width [float]: magnet side length [default 10e-3]
+          J: remnant magnetisation in Tesla [default 1.0]
 
-    Optional Arguments:
-         centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
-         theta: Angle between magnetisation and x-axis [default 90.0 degrees]
-         phi: Angle between magnetisation and z-axis [default 0.0 degrees]  
+     Optional Arguments:
+          centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
+          theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+          phi: Angle between magnetisation and z-axis [default 0.0 degrees]
 
     """
-    mag_type = 'Cube'
 
-    def __init__(self,
-                 width=10e-3,   # magnet dimensions
-                 Jr=1.0,  # local magnetisation direction
-                 **kwargs):
+    mag_type = "Cube"
+
+    def __init__(
+        self,
+        width=10e-3,  # magnet dimensions
+        Jr=1.0,  # local magnetisation direction
+        **kwargs,
+    ):
 
         super().__init__(width=width, depth=width, height=width, Jr=Jr, **kwargs)
 
@@ -373,21 +401,25 @@ class Cylinder(Magnet_3D):
 
     Args:
          radius: radius [default 10e-3]
-         length: length [default 10e-3] 
+         length: length [default 10e-3]
          J: remnant magnetisation in Tesla [default 1.0]
 
-         
+
     Optional Arguments:
          centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
 
 
     """
-    mag_type = 'Cylinder'
 
-    def __init__(self,
-                 radius=10e-3, length=10e-3,   # magnet dimensions
-                 Jr=1.0,  # local magnetisation direction
-                 **kwargs):
+    mag_type = "Cylinder"
+
+    def __init__(
+        self,
+        radius=10e-3,
+        length=10e-3,  # magnet dimensions
+        Jr=1.0,  # local magnetisation direction
+        **kwargs,
+    ):
 
         self.radius = radius
         self.length = length
@@ -396,7 +428,7 @@ class Cylinder(Magnet_3D):
         self.Jy = 0
         self.Jz = Jr
 
-        center = kwargs.pop('center', Point3(0.0, 0.0, 0.0))
+        center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
 
         if type(center) is tuple:
             center = Point3(center[0], center[1], center[2])
@@ -406,17 +438,21 @@ class Cylinder(Magnet_3D):
         self.zc = center.z
 
     def __str__(self):
-        str = f'{self.__class__.mag_type}\n' + \
-              f'J: {self.Jr} (T)\n' + \
-              f'Size: {self.size()} (m)\n' + \
-              f'Center {self.center()} (m)\n'
+        str = (
+            f"{self.__class__.mag_type}\n"
+            + f"J: {self.Jr} (T)\n"
+            + f"Size: {self.size()} (m)\n"
+            + f"Center {self.center()} (m)\n"
+        )
         return str
 
     def __repr__(self):
-        str = f'{self.__class__.mag_type}\n' + \
-              f'J: {self.Jr} (T)\n' + \
-              f'Size: {self.size() } (m)\n' + \
-              f'Center {self.center()} (m)\n'
+        str = (
+            f"{self.__class__.mag_type}\n"
+            + f"J: {self.Jr} (T)\n"
+            + f"Size: {self.size() } (m)\n"
+            + f"Center {self.center()} (m)\n"
+        )
         return str
 
     def size(self):
@@ -430,8 +466,8 @@ class Cylinder(Magnet_3D):
     @staticmethod
     @_np.vectorize
     def _cel(kc, p, c, s):
-        """ Burlisch's complete elliptic integral
-            See NIST Handbook of Mathematical Functions, http://dlmf.nist.gov/19.2
+        """Burlisch's complete elliptic integral
+        See NIST Handbook of Mathematical Functions, http://dlmf.nist.gov/19.2
         """
         if kc == 0:
             data = _np.NaN
@@ -446,43 +482,43 @@ class Cylinder(Magnet_3D):
 
             if p > 0:
                 pp = _np.sqrt(p)
-                ss = s/pp
+                ss = s / pp
             else:
-                f = kc*kc
+                f = kc * kc
                 q = 1.0 - f
                 g = 1.0 - pp
                 f = f - pp
-                q = q*(ss - c*pp)
-                pp = _np.sqrt(f/g)
-                cc = (c - ss)/g
-                ss = - q/(g*g*pp) + cc*pp
+                q = q * (ss - c * pp)
+                pp = _np.sqrt(f / g)
+                cc = (c - ss) / g
+                ss = -q / (g * g * pp) + cc * pp
             f = cc
-            cc = cc + ss/pp
-            g = k/pp
-            ss = 2*(ss + f*g)
+            cc = cc + ss / pp
+            g = k / pp
+            ss = 2 * (ss + f * g)
             pp = g + pp
             g = em
             em = k + em
             kk = k
 
             while _np.abs(g - k) > g * errtol:
-                k = 2*_np.sqrt(kk)
-                kk = k*em
+                k = 2 * _np.sqrt(kk)
+                kk = k * em
                 f = cc
-                cc = cc + ss/pp
-                g = kk/pp
-                ss = 2*(ss + f*g)
+                cc = cc + ss / pp
+                g = kk / pp
+                ss = 2 * (ss + f * g)
                 pp = g + pp
                 g = em
                 em = k + em
-            data = (_np.pi / 2.) * (ss + cc * em) / (em * (em + pp))
+            data = (_np.pi / 2.0) * (ss + cc * em) / (em * (em + pp))
             return data
 
-    def _calcB_cyl(self, rho, z):
-        """ Calculates the magnetic field due to 
-            due to a solenoid at any point
-            returns Bz,Br
-            Omit B0 for B0 = 1 mT
+    def _calcB(self, rho, z):
+        """Calculates the magnetic field due to
+        due to a solenoid at any point
+        returns Bz,Br
+        Omit B0 for B0 = 1 mT
         """
         a = self.radius
         b = self.length / 2
@@ -499,11 +535,11 @@ class Cylinder(Magnet_3D):
         rho_a_sq = _np.power(rho + a, 2)
         nrho_a_sq = _np.power(a - rho, 2)
 
-        alphap = a/_np.sqrt(zp_sq + rho_a_sq)
-        alphan = a/_np.sqrt(zn_sq + rho_a_sq)
+        alphap = a / _np.sqrt(zp_sq + rho_a_sq)
+        alphan = a / _np.sqrt(zn_sq + rho_a_sq)
 
-        betap = zp/_np.sqrt(zp_sq + rho_a_sq)
-        betan = zn/_np.sqrt(zn_sq + rho_a_sq)
+        betap = zp / _np.sqrt(zp_sq + rho_a_sq)
+        betan = zn / _np.sqrt(zn_sq + rho_a_sq)
 
         gamma = (a - rho) / (a + rho)
 
@@ -511,11 +547,97 @@ class Cylinder(Magnet_3D):
 
         kn = _np.sqrt((zn_sq + nrho_a_sq) / (zn_sq + rho_a_sq))
 
-        Br = B0 * (alphap * self._cel(kp, 1, 1, -1)
-                   - alphan * self._cel(kn, 1, 1, -1))
+        Br = B0 * (alphap * self._cel(kp, 1, 1, -1) - alphan * self._cel(kn, 1, 1, -1))
 
-        Bz = (B0*a/(a + rho)) * (betap * self._cel(kp, gamma**2, 1, gamma)
-                                 - betan * self._cel(kn, gamma**2, 1, gamma))
+        Bz = (B0 * a / (a + rho)) * (
+            betap * self._cel(kp, gamma ** 2, 1, gamma)
+            - betan * self._cel(kn, gamma ** 2, 1, gamma)
+        )
 
         return Bz / _np.pi, Br / _np.pi
 
+
+class Sphere(Magnet_3D):
+    """Sphere Magnet Class
+
+    Args:
+         radius: radius [default 10e-3]
+         J: remnant magnetisation in Tesla [default 1.0]
+
+
+    Optional Arguments:
+         centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
+         theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+         phi: Angle between magnetisation and z-axis [default 0.0 degrees]
+    """
+
+    mag_type = "Sphere"
+
+    def __init__(
+        self,
+        radius=10e-3,
+        length=10e-3,  # magnet dimensions
+        Jr=1.0,  # local magnetisation direction
+        **kwargs,
+    ):
+
+        self.radius = radius
+        self.radius = radius
+        self.length = length
+        self.Jr = Jr
+
+        self.theta = kwargs.pop("theta", 90)
+        self.theta_rad = _np.deg2rad(self.theta)
+        self.phi = kwargs.pop("phi", 0)
+        self.phi_rad = _np.deg2rad(self.phi)
+
+        center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
+
+        if type(center) is tuple:
+            center = Point3(center[0], center[1], center[2])
+
+        self.xc = center.x
+        self.yc = center.y
+        self.zc = center.z
+
+    def __str__(self):
+        str = (
+            f"{self.__class__.mag_type}\n"
+            + f"J: {self.Jr} (T)\n"
+            + f"Size: {self.size()} (m)\n"
+            + f"Center {self.center()} (m)\n"
+        )
+        return str
+
+    def __repr__(self):
+        str = (
+            f"{self.__class__.mag_type}\n"
+            + f"J: {self.Jr} (T)\n"
+            + f"Size: {self.size() } (m)\n"
+            + f"Center {self.center()} (m)\n"
+        )
+        return str
+
+    def size(self):
+        """Returns magnet dimesions
+
+        Returns:
+            size[ndarray]: numpy array [radius, length]
+        """
+        return _np.array([self.radius])
+
+    def _calcB(
+        self,
+        r,
+        theta,
+    ):
+        """Calculates the magnetic field due to
+        due to a sphere at any point
+        returns Br,Btheta
+        """
+        preFac = self.Jr * (self.radius ** 3 / r ** 3) / 3
+
+        Br = preFac * 2 * _np.cos(theta)
+        Btheta = prefix * _np.sin(theta)
+
+        return Br, Btheta

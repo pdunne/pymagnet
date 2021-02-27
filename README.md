@@ -1,4 +1,4 @@
-# Pymagnet
+# pymagnet
 
 User friendly magnetic field calculations in Python
 
@@ -7,20 +7,19 @@ User friendly magnetic field calculations in Python
 
 ## Getting Started
 
-To use `pymagnet`  only takes 2 steps
-First you install it:
+Installing `pymagnet` can be done using
 
 ```bash
 pip install pymagnet 
 ```
 
-or
+or shortly
 
 ```bash
 conda install -c pdunne pymagnet
 ```
 
-Then in your.
+First tests:
 
 ```python
 # Example 2D calculation
@@ -34,17 +33,17 @@ width = 20e-3
 height = 20e-3
 
 # Set the space between magnets to be the width of one
-hgap_x = width / 2 
+half_gap = width / 2 
 
 # Center of first magnet
-center = (-width / 2 - hgap_x, 0)
+center = (-width / 2 - half_gap, 0)
 
 # Create first magnet
 _ = pm.magnets.Rectangle(width=width, height=height,
                         Jr=1.0, center=center, theta=0.0)
 
 # Centre of second magnet
-center = (width / 2 + hgap_x, 0)
+center = (width / 2 + half_gap, 0)
 
 # Create second magnet
 _ = pm.magnets.Rectangle(width=width, height=height,

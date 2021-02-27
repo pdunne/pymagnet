@@ -237,7 +237,7 @@ def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
                 width=width,
                 height=height,
                 Jr=Jr[i],
-                center=(xc, yc),
+                center=(xc[i], yc[i]),
                 theta=theta[i],
                 alpha=alpha[i],
             )

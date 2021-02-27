@@ -312,38 +312,38 @@ def _num_patch_2D(scale_x, scale_y):
     Returns:
         [tuple(list, list)]: lists of patch and arrow objects
     """
-    from .magnets._magnet2 import Magnet_2D
+    from .magnets._magnet2 import Magnet_2D, Rectangle
     from matplotlib.transforms import Affine2D
 
     patch_array = []
     for magnet in Magnet_2D.instances:
+        if issubclass(magnet.__class__, Rectangle):
+            patch_tmp = patch(
+                x=(magnet.center()[0] - magnet.a) / scale_x,
+                y=(magnet.center()[1] - magnet.b) / scale_y,
+                width=(2 * magnet.a) / scale_x,
+                height=(2 * magnet.b) / scale_y,
+                transform=Affine2D().rotate_deg_around(
+                    (magnet.center()[0]) / scale_x,
+                    (magnet.center()[1]) / scale_y,
+                    -magnet.alpha,
+                ),
+            )
 
-        patch_tmp = patch(
-            x=(magnet.center()[0] - magnet.a) / scale_x,
-            y=(magnet.center()[1] - magnet.b) / scale_y,
-            width=(2 * magnet.a) / scale_x,
-            height=(2 * magnet.b) / scale_y,
-            transform=Affine2D().rotate_deg_around(
-                (magnet.center()[0]) / scale_x,
-                (magnet.center()[1]) / scale_y,
-                -magnet.alpha,
-            ),
-        )
+            Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
+            offset = _np.multiply(Jnorm, magnet.size()) / 2
 
-        Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
-        offset = _np.multiply(Jnorm, magnet.size()) / 2
+            arrow_tmp = arrow(
+                x=(magnet.center()[0] - offset[0]) / scale_x,
+                y=(magnet.center()[1] - offset[1] / scale_y),
+                dx=(2 * offset[0]) / scale_x,
+                dy=(2 * offset[1]) / scale_y,
+                transform=Affine2D().translate(0, magnet.center()[1] / scale_y),
+            )
 
-        arrow_tmp = arrow(
-            x=(magnet.center()[0] - offset[0]) / scale_x,
-            y=(magnet.center()[1] - offset[1] / scale_y),
-            dx=(2 * offset[0]) / scale_x,
-            dy=(2 * offset[1]) / scale_y,
-            transform=Affine2D().translate(0, magnet.center()[1] / scale_y),
-        )
+            magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
 
-        magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
-
-        patch_array.append(magnet_patch_tmp)
+            patch_array.append(magnet_patch_tmp)
     return patch_array
 
 

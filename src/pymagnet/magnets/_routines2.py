@@ -27,12 +27,14 @@ def grid2D(ux, uy, **kwargs):
 
 def B_calc_2D(x, y):
     from ._fields import Vector2
-    from ._magnet2 import Magnet_2D
+    from ._magnet2 import Magnet_2D, Rectangle, Square, Circle
 
     """Function to calculate magnetic field due to any array of points
        It sums the magnetic field B over each component of the magnetisation
        J = mu_0 M
     """
+
+    _num_magnets = 0
     if _np.isscalar(x):
         x = _np.atleast_1d(x)
     if _np.isscalar(y):
@@ -45,42 +47,58 @@ def B_calc_2D(x, y):
         )  # line or single point
 
     for magnet in Magnet_2D.instances:
-        if magnet.alpha_radians > Magnet_2D.tol:
-            xi, yi = rotate_points_2D(x, y, magnet.alpha_radians)
-            xci, yci = rotate_points_2D(
-                _np.array([magnet.xc]), _np.array([magnet.yc]), magnet.alpha_radians
-            )
-
-        if _np.fabs(magnet.Jx) > Magnet_2D.tol:
+        _num_magnets += 1
+        if issubclass(magnet.__class__, Rectangle):
             if magnet.alpha_radians > Magnet_2D.tol:
+                xi, yi = rotate_points_2D(x, y, magnet.alpha_radians)
+                xci, yci = rotate_points_2D(
+                    _np.array([magnet.xc]), _np.array([magnet.yc]), magnet.alpha_radians
+                )
 
-                # Calculate fields in local frame
-                Btx = magnet._calcBx_mag_x(xi - xci[0], yi - yci[0])
-                Bty = magnet._calcBy_mag_x(xi - xci[0], yi - yci[0])
+            # Calculate field due to x-component of magnetisation
+            if _np.fabs(magnet.Jx) > Magnet_2D.tol:
+                if magnet.alpha_radians > Magnet_2D.tol:
 
-                # Rotate fields to global frame
-                Bxt, Byt = rotate_points_2D(Btx, Bty, 2 * _np.pi - magnet.alpha_radians)
+                    # Calculate fields in local frame
+                    Btx = magnet._calcBx_mag_x(xi - xci[0], yi - yci[0])
+                    Bty = magnet._calcBy_mag_x(xi - xci[0], yi - yci[0])
 
-                B.x += Bxt
-                B.y += Byt
-            else:
-                B.x += magnet._calcBx_mag_x(x - magnet.xc, y - magnet.yc)
-                B.y += magnet._calcBy_mag_x(x - magnet.xc, y - magnet.yc)
+                    # Rotate fields to global frame
+                    Bxt, Byt = rotate_points_2D(
+                        Btx, Bty, 2 * _np.pi - magnet.alpha_radians
+                    )
 
-        if _np.fabs(magnet.Jy) > magnet.tol:
-            if magnet.alpha_radians > Magnet_2D.tol:
+                    B.x += Bxt
+                    B.y += Byt
+                else:
+                    B.x += magnet._calcBx_mag_x(x - magnet.xc, y - magnet.yc)
+                    B.y += magnet._calcBy_mag_x(x - magnet.xc, y - magnet.yc)
 
-                Btx = magnet._calcBx_mag_y(xi - magnet.xc - xci[0], yi - yci[0])
-                Bty = magnet._calcBy_mag_y(xi - magnet.xc - xci[0], yi - yci[0])
+            # Calculate field due to y-component of magnetisation
+            if _np.fabs(magnet.Jy) > Magnet_2D.tol:
+                if magnet.alpha_radians > Magnet_2D.tol:
 
-                Bxt, Byt = rotate_points_2D(Btx, Bty, 2 * _np.pi - magnet.alpha_radians)
-                B.x += Bxt
-                B.y += Byt
-            else:
+                    Btx = magnet._calcBx_mag_y(xi - xci[0], yi - yci[0])
+                    Bty = magnet._calcBy_mag_y(xi - xci[0], yi - yci[0])
 
-                B.x += magnet._calcBx_mag_y(x - magnet.xc, y - magnet.yc)
-                B.y += magnet._calcBy_mag_y(x - magnet.xc, y - magnet.yc)
+                    Bxt, Byt = rotate_points_2D(
+                        Btx, Bty, 2 * _np.pi - magnet.alpha_radians
+                    )
+                    B.x += Bxt
+                    B.y += Byt
+                else:
+
+                    B.x += magnet._calcBx_mag_y(x - magnet.xc, y - magnet.yc)
+                    B.y += magnet._calcBy_mag_y(x - magnet.xc, y - magnet.yc)
+
+        elif issubclass(magnet.__class__, Circle):
+            Bx, By = magnet._calcB(x - magnet.xc, y - magnet.yc)
+
+            B.x += Bx
+            B.y += By
+
     B.calc_norm()
+    print(f"{_num_magnets} Magnets")
     return B
 
 

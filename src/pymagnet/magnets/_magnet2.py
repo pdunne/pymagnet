@@ -26,7 +26,7 @@ from ._fields import Point2
 
 # from typing import List, Any, Union
 
-__all__ = ["Magnet_2D", "Rectangle", "Square"]
+__all__ = ["Magnet_2D", "Rectangle", "Square", "Circle"]
 
 
 class Magnet_2D(Magnet):
@@ -45,12 +45,8 @@ class Magnet_2D(Magnet):
 
     mag_type = "Magnet_2D"
 
-    def __init__(self, width, height, Jr, **kwargs) -> None:
+    def __init__(self, Jr, **kwargs) -> None:
         super().__init__()
-        self.width = width
-        self.height = height
-        self.a = width / 2
-        self.b = height / 2
         self.Jr = Jr
 
         # Magnet rotation w.r.t. x-axis
@@ -72,14 +68,6 @@ class Magnet_2D(Magnet):
             center (ndarray): numpy array [xc, yc]
         """
         return _np.array([self.xc, self.yc])
-
-    def size(self):
-        """Returns magnet dimesions
-
-        Returns:
-            size[ndarray]: numpy array [width, height]
-        """
-        return _np.array([self.width, self.height])
 
 
 class Rectangle(Magnet_2D):
@@ -105,7 +93,12 @@ class Rectangle(Magnet_2D):
         Jr=1.0,  # local magnetisation
         **kwargs,
     ):
-        super().__init__(width, height, Jr, **kwargs)
+        super().__init__(Jr, **kwargs)
+        self.width = width
+        self.height = height
+
+        self.a = width / 2
+        self.b = height / 2
 
         self.theta = kwargs.pop("theta", 90)
         self.theta_rad = _np.deg2rad(self.theta)
@@ -113,6 +106,14 @@ class Rectangle(Magnet_2D):
         self.Jx = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
         self.Jy = _np.around(Jr * _np.sin(self.theta_rad), decimals=6)
         self.tol = 1e-4  # sufficient for 0.01 degree accuracy
+
+    def size(self):
+        """Returns magnet dimesions
+
+        Returns:
+            size[ndarray]: numpy array [width, height]
+        """
+        return _np.array([self.width, self.height])
 
     def __str__(self):
         str = (
@@ -240,3 +241,88 @@ class Square(Rectangle):
     ):
 
         super().__init__(width=width, height=width, Jr=Jr, **kwargs)
+
+
+class Circle(Magnet_2D):
+    """Circle Magnet Class
+
+    Args:
+        radius [float]: magnet radius [m] (defaults to 10e-3)
+        Jr [float]: Remnant magnetisation [T] (defaults to 1.0)
+
+    Optional Arguments:
+         centre: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
+         theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+
+    """
+
+    mag_type = "Circle"
+
+    def __init__(
+        self,
+        radius=10e-3,
+        Jr=1.0,  # local magnetisation
+        **kwargs,
+    ):
+        self.radius = radius
+        self.Jr = Jr
+        self.theta = kwargs.pop("theta", 90)
+        self.theta_rad = _np.deg2rad(self.theta)
+
+        center = kwargs.pop("center", Point2(0.0, 0.0))
+
+        if type(center) is tuple:
+            center = Point2(center[0], center[1])
+
+        self.xc = center.x
+        self.yc = center.y
+
+    def __str__(self):
+        str = (
+            f"{self.__class__.mag_type}\n"
+            + f"J: {self.get_Jr()} (T)\n"
+            + f"Size: {self.size() * 2} (m)\n"
+            + f"Center {self.center()} (m)\n"
+        )
+        return str
+
+    def __repr__(self):
+        str = (
+            f"{self.__class__.mag_type}\n"
+            + f"J: {self.get_Jr()} (T)\n"
+            + f"Size: {self.size()} (m)\n"
+            + f"Center {self.center()} (m)\n"
+        )
+        return str
+
+    def get_Jr(self):
+        """Returns Magnetisation components [Jx, Jy]
+
+        Returns:
+            J[ndarray]: [Jx, Jy]
+        """
+        return _np.array([self.Jr])
+
+    def _calcB(self, x, y):
+        from ._routines import cart2pol, pol2cart, vector_pol2cart
+
+        """Calculates the magnetic field due to long bipolar cylinder
+
+        Args:
+            rho (float/array): radial values
+            phi (float/array): azimuthal values
+
+        Returns:
+            tuple: Br, Bphi magnetic field in polar coordinates
+        """
+        rho, phi = cart2pol(x - self.xc, y - self.yc)
+
+        prefac = self.Jr * (self.radius ** 2 / rho ** 2) / 2
+
+        Brho = prefac * _np.cos(phi - self.theta_rad)
+        Bphi = prefac * _np.sin(phi - self.theta_rad)
+
+        # Convert magnetic fields from cylindrical to cartesian
+        Bx, By = vector_pol2cart(Brho, Bphi, phi)
+
+        return Bx, By

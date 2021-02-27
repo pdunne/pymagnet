@@ -133,8 +133,8 @@ class Magnet(Registry):
 
 def reset_magnets():
     """Returns a list of all instantiated magnets."""
-    from ._magnet2 import Magnet_2D, Rectangle, Square
-    from ._magnet3 import Magnet_3D, Prism, Cube, Cylinder
+    from ._magnet2 import Magnet_2D, Rectangle, Square, Circle
+    from ._magnet3 import Magnet_3D, Prism, Cube, Cylinder, Sphere
 
     magnet_classes = [
         Registry,
@@ -142,10 +142,12 @@ def reset_magnets():
         Magnet_2D,
         Rectangle,
         Square,
+        Circle,
         Magnet_3D,
         Prism,
         Cube,
         Cylinder,
+        Sphere,
     ]
     for cls in magnet_classes:
         cls.reset()
