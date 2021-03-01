@@ -207,6 +207,34 @@ class Prism(Magnet_3D):
             data = _np.NaN
         return data
 
+    def _calcB(self, x, y, z):
+
+        from ._routines3 import _allocate_field_array3
+
+        B = _allocate_field_array3(x, y, z)
+
+        # Magnetic field due to component of M magnetised in x
+        if _np.fabs(self.Jx) > self.tol:
+            Bx, By, Bz = self._calcB_prism_x(x, y, z)
+            B.x += Bx
+            B.y += By
+            B.z += Bz
+
+        # Magnetic field due to component of M magnetised in y
+        if _np.fabs(self.Jy) > self.tol:
+            Bx, By, Bz = self._calcB_prism_y(x, y, z)
+            B.x += Bx
+            B.y += By
+            B.z += Bz
+
+        # Magnetic field due to component of M magnetised in z
+        if _np.fabs(self.Jz) > self.tol:
+            Bx, By, Bz = self._calcB_prism_z(x, y, z)
+            B.x += Bx
+            B.y += By
+            B.z += Bz
+        return B.x, B.y, B.z
+
     def _calcBx_prism_x(self, a, b, c, Jr, x, y, z):
         """x component of magnetic field for prism magnet
         magnetised in x
@@ -514,18 +542,37 @@ class Cylinder(Magnet_3D):
             data = (_np.pi / 2.0) * (ss + cc * em) / (em * (em + pp))
             return data
 
-    def _calcB(self, rho, z):
+    def _calcB(self, x, y, z):
         """Calculates the magnetic field due to
         due to a solenoid at any point
-        returns Bz,Br
-        Omit B0 for B0 = 1 mT
+        returns Bx,By, Bz
+        """
+        from ._routines import cart2pol, pol2cart
+
+        # Convert cartesian coordinates to cylindrical
+        rho, phi = cart2pol(x, y)
+
+        Brho, Bz = self._calcB_cyl(rho, z)
+
+        # Convert magnetic fields from cylindrical to cartesian
+        Bx, By = pol2cart(Brho, phi)
+
+        return Bx, By, Bz
+
+    def _calcB_cyl(self, rho, z):
+        """Calculates the magnetic field due to a solenoid/cylinder in
+        polar cylindrical coordinates
+
+        Args:
+            rho (float/array): radial coordinates
+            z (float/array): axial coordinates
+
+        Returns:
+            tuple: Brho, Bz - magnetic field components
         """
         a = self.radius
         b = self.length / 2
-        B0 = self.Jr
-
-        # rho -= self.xc
-        # z -= self.zc
+        B0 = self.Jr / _np.pi
 
         zp = z + b
         zn = z - b
@@ -547,14 +594,15 @@ class Cylinder(Magnet_3D):
 
         kn = _np.sqrt((zn_sq + nrho_a_sq) / (zn_sq + rho_a_sq))
 
-        Br = B0 * (alphap * self._cel(kp, 1, 1, -1) - alphan * self._cel(kn, 1, 1, -1))
+        Brho = B0 * (
+            alphap * self._cel(kp, 1, 1, -1) - alphan * self._cel(kn, 1, 1, -1)
+        )
 
         Bz = (B0 * a / (a + rho)) * (
             betap * self._cel(kp, gamma ** 2, 1, gamma)
             - betan * self._cel(kn, gamma ** 2, 1, gamma)
         )
-
-        return Bz / _np.pi, Br / _np.pi
+        return Brho, Bz
 
 
 class Sphere(Magnet_3D):

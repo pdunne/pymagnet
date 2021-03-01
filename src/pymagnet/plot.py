@@ -27,10 +27,88 @@ Todo:
 """
 import matplotlib.pyplot as _plt
 from matplotlib.patches import Rectangle as _Rect
+from matplotlib.patches import Circle as _Circ
 from matplotlib.patches import Arrow as _Arrow
 import numpy as _np
 from pymagnet import magnets as _mag
 from matplotlib.transforms import Affine2D
+
+
+class patch(object):
+    """Encodes magnet dimensions for drawing on plots"""
+
+    def __init__(self, x, y, width, height, transform, type):
+        """Initialse a patch
+
+        Args:
+            x (float): centre, x
+            y (float): center, y
+            width (float): width
+            height (float): width
+            transform (matplotlib Affine2D): transform object, `rotate_deg_around`
+        """
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.transform = transform
+        self.type = type
+
+    def __repr__(self) -> str:
+        return f"(x: {self.x}, y: {self.y} w:{self.width}, h: {self.height})"
+
+    def __str__(self) -> str:
+        return f"(x: {self.x}, y: {self.y} w:{self.width}, h: {self.height})"
+
+
+class arrow(object):
+    """Encodes magnetisation vector for drawing on plots"""
+
+    def __init__(self, x, y, dx, dy, transform, width=3):
+        """Init Arrow
+
+        Args:
+            x (float): arrow tail, x
+            y (float): arrow tail, y
+            dx (float): arrow head displacement, x
+            dy (float): arrow head displacement, y
+            transform (matplotlib Affine2D): transformation object, `translate`
+            width (int, optional): Arrow width. Defaults to 3.
+        """
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.dx = dx
+        self.dy = dy
+        self.transform = transform
+        self.width = width
+
+    def __repr__(self) -> str:
+        return (
+            f"(x: {self.x}, y: {self.y}, dx: {self.dx}, dy: {self.dy}, w:{self.width})"
+        )
+
+    def __str__(self) -> str:
+        return (
+            f"(x: {self.x}, y: {self.y}, dx: {self.dx}, dy: {self.dy}, w:{self.width})"
+        )
+
+
+class magnet_patch(object):
+    """Magnet drawing class
+
+    Args:
+        object ([type]): [description]
+    """
+
+    def __init__(self, patch, arrow) -> None:
+        super().__init__()
+        self.patch = patch
+        self.arrow = arrow
+
+    def __str__(self) -> str:
+        return self.patch.__str__() + self.arrow.__str__()
 
 
 def plot_1D_field(magnet, **kwargs):
@@ -172,26 +250,144 @@ def plot_2D_contour(x, y, Field, **kwargs):
 
     # Draw field vectors
     if vector_plot:
-        NPx, NPy = x.shape
-        if NQ != 0:
-            NSx, NSy = NPx // NQ, NPy // NQ
-            _plt.quiver(
-                x[::NSx, ::NSy] / scale_x,
-                y[::NSx, ::NSy] / scale_y,
-                Field.x[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
-                Field.y[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
-                color=vector_color,
-                alpha=1,
-            )
+        _vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color)
 
     # Draw magnets and magnetisation arrows
     if show_magnets:
-        patch_array = _num_patch_2D(scale_x, scale_y)
+        _draw_magnets2(ax, scale_x, scale_y)
 
-        # Need original axis transform data before making additonal transformations
-        axis_transform = ax.transData
-        for p in patch_array:
+    CB.ax.get_yaxis().labelpad = 15
+    CB.ax.set_ylabel(clab, rotation=270)
+    _plt.axis(axis_scale)
+    _plt.xlabel(xlab)
+    _plt.ylabel(ylab)
+    _plt.show()
 
+    if SAVE:
+        _plt.savefig("contour_plot.png", dpi=300)
+
+
+def _num_patch_2D(scale_x, scale_y):
+    """Generates patches and arrows for drawing
+
+    Returns:
+        [tuple(list, list)]: lists of patch and arrow objects
+    """
+    from .magnets._magnet2 import Magnet_2D, Rectangle, Circle
+
+    patch_array = []
+    for magnet in Magnet_2D.instances:
+        if issubclass(magnet.__class__, Rectangle):
+            magnet_patch_tmp = _gen_rect_patch(magnet, scale_x, scale_y)
+        elif issubclass(magnet.__class__, Circle):
+            magnet_patch_tmp = _gen_circle_patch(magnet, scale_x, scale_y)
+        patch_array.append(magnet_patch_tmp)
+    return patch_array
+
+
+def _gen_rect_patch(magnet, scale_x, scale_y):
+    """Generates rectangular patches and arrows to represent magnets for 2D plots
+
+    Args:
+        magnet (Magnet object): instance of a magnet class
+        scale_x (float): unit scaling
+        scale_y (float): unit scaling
+
+    Returns:
+        struct: magnet_patch data structure
+    """
+    from matplotlib.transforms import Affine2D
+
+    patch_tmp = patch(
+        x=(magnet.center()[0] - magnet.a) / scale_x,
+        y=(magnet.center()[1] - magnet.b) / scale_y,
+        width=(2 * magnet.a) / scale_x,
+        height=(2 * magnet.b) / scale_y,
+        transform=Affine2D().rotate_deg_around(
+            (magnet.center()[0]) / scale_x,
+            (magnet.center()[1]) / scale_y,
+            -magnet.alpha,
+        ),
+        type="rectangle",
+    )
+
+    Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
+    offset = _np.multiply(Jnorm, magnet.size()) / 2
+
+    arrow_tmp = arrow(
+        x=(magnet.center()[0] - offset[0]) / scale_x,
+        y=(magnet.center()[1] - offset[1] / scale_y),
+        dx=(2 * offset[0]) / scale_x,
+        dy=(2 * offset[1]) / scale_y,
+        transform=Affine2D().translate(0, magnet.center()[1] / scale_y),
+    )
+
+    magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
+    return magnet_patch_tmp
+
+
+def _gen_circle_patch(magnet, scale_x, scale_y):
+    """Generates circular patches and arrows to represent magnets for 2D plots
+
+    Args:
+        magnet (Magnet object): instance of a magnet class
+        scale_x (float): unit scaling
+        scale_y (float): unit scaling
+
+    Returns:
+        struct: magnet_patch data structure
+    """
+    from matplotlib.transforms import Affine2D
+
+    patch_tmp = patch(
+        x=(magnet.center()[0]) / scale_x,
+        y=(magnet.center()[1]) / scale_y,
+        width=(magnet.radius) / scale_x,
+        height=(magnet.radius) / scale_y,
+        transform=Affine2D().rotate_deg_around(
+            (magnet.center()[0]) / scale_x,
+            (magnet.center()[1]) / scale_y,
+            -magnet.alpha,
+        ),
+        type="circle",
+    )
+
+    Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
+    offset = (
+        magnet.radius
+        * Jnorm
+        * _np.array([_np.cos(magnet.theta_rad), _np.sin(magnet.theta_rad)])
+        / 2
+    )
+    print(f"offset: ({offset[0]*1e3}, {offset[1]*1e3})")
+    print(f"Center{magnet.center()*1e3}")
+    arrow_tmp = arrow(
+        x=(magnet.center()[0] - offset[0]) / scale_x,
+        y=(magnet.center()[1] - offset[1]) / scale_y,
+        dx=(2 * offset[0]) / scale_x,
+        dy=(2 * offset[1]) / scale_y,
+        transform=Affine2D().translate(0, 0),
+    )
+    print(f"x,y({arrow_tmp.x}, {arrow_tmp.y})")
+    print(f"dx,dy({arrow_tmp.dx}, {arrow_tmp.dy})")
+    magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
+    return magnet_patch_tmp
+
+
+def _draw_magnets2(ax, scale_x, scale_y):
+    """Draws Magnets and magnetisation arrows on 2D plots
+
+    Args:
+        ax (axis?): axis reference
+        scale_x (float): unit scaling
+        scale_y (float): unit scaling
+    """
+    patch_array = _num_patch_2D(scale_x, scale_y)
+
+    # Need original axis transform data before making additional transformations
+    axis_transform = ax.transData
+    for p in patch_array:
+        if p.patch.type == "rectangle":
             sq = _Rect(
                 xy=(p.patch.x, p.patch.y),
                 width=p.patch.width,
@@ -205,146 +401,57 @@ def plot_2D_contour(x, y, Field, **kwargs):
 
             ax.add_patch(sq)
 
-            ar = _Arrow(
-                p.arrow.x,
-                p.arrow.y,
-                p.arrow.dx,
-                p.arrow.dy,
-                width=p.arrow.width,
-                zorder=6,
-                color="k",
-                # must translate arrow before rotating
-                transform=p.arrow.transform + p.patch.transform + axis_transform,
+        if p.patch.type == "circle":
+            circ = _Circ(
+                xy=(p.patch.x, p.patch.y),
+                radius=p.patch.width,
+                fill=True,
+                facecolor="#F5F5F5",
+                edgecolor="k",
+                zorder=5,
+                transform=p.patch.transform + axis_transform,
             )
 
-            ax.add_patch(ar)
+            ax.add_patch(circ)
 
-    CB.ax.get_yaxis().labelpad = 15
-    CB.ax.set_ylabel(clab, rotation=270)
-    _plt.axis(axis_scale)
-    _plt.xlabel(xlab)
-    _plt.ylabel(ylab)
-    _plt.show()
-
-    if SAVE:
-        _plt.savefig("contour_plot.png", dpi=300)
-
-
-class patch(object):
-    """Encodes magnet dimensions for drawing on plots"""
-
-    def __init__(self, x, y, width, height, transform):
-        """Initialse a patch
-
-        Args:
-            x (float): centre, x
-            y (float): center, y
-            width (float): width
-            height (float): width
-            transform (matplotlib Affine2D): transform object, `rotate_deg_around`
-        """
-        super().__init__()
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.transform = transform
-
-    def __repr__(self) -> str:
-        return f"(x: {self.x}, y: {self.y} w:{self.width}, h: {self.height})"
-
-    def __str__(self) -> str:
-        return f"(x: {self.x}, y: {self.y} w:{self.width}, h: {self.height})"
-
-
-class arrow(object):
-    """Encodes magnetisation vector for drawing on plots"""
-
-    def __init__(self, x, y, dx, dy, transform, width=3):
-        """Init Arrow
-
-        Args:
-            x (float): arrow tail, x
-            y (float): arrow tail, y
-            dx (float): arrow head displacement, x
-            dy (float): arrow head displacement, y
-            transform (matplotlib Affine2D): transformation object, `translate`
-            width (int, optional): Arrow width. Defaults to 3.
-        """
-        super().__init__()
-        self.x = x
-        self.y = y
-        self.dx = dx
-        self.dy = dy
-        self.transform = transform
-        self.width = width
-
-    def __repr__(self) -> str:
-        return (
-            f"(x: {self.x}, y: {self.y}, dx: {self.dx}, dy: {self.dy}, w:{self.width})"
+        ar = _Arrow(
+            p.arrow.x,
+            p.arrow.y,
+            p.arrow.dx,
+            p.arrow.dy,
+            width=p.arrow.width,
+            zorder=6,
+            color="k",
+            # must translate arrow before rotating
+            transform=p.arrow.transform + p.patch.transform + axis_transform,
         )
 
-    def __str__(self) -> str:
-        return (
-            f"(x: {self.x}, y: {self.y}, dx: {self.dx}, dy: {self.dy}, w:{self.width})"
-        )
+        ax.add_patch(ar)
 
 
-class magnet_patch(object):
-    """Magnet drawing class
+def _vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color):
+    """Draws quiver plot of field vectors
 
     Args:
-        object ([type]): [description]
+        x (float/array): x coordinates
+        y (float/array): y coordinates
+        Field (Vector2): Field structure
+        NQ (int): Plot every NQth vector
+        scale_x (float): unit scaling
+        scale_y (float): unit scaling
+        vector_color (string): quiver color
     """
-
-    def __init__(self, patch, arrow) -> None:
-        super().__init__()
-        self.patch = patch
-        self.arrow = arrow
-
-    def __str__(self) -> str:
-        return self.patch.__str__() + self.arrow.__str__()
-
-
-def _num_patch_2D(scale_x, scale_y):
-    """Generates patches and arrows for drawing
-
-    Returns:
-        [tuple(list, list)]: lists of patch and arrow objects
-    """
-    from .magnets._magnet2 import Magnet_2D, Rectangle
-    from matplotlib.transforms import Affine2D
-
-    patch_array = []
-    for magnet in Magnet_2D.instances:
-        if issubclass(magnet.__class__, Rectangle):
-            patch_tmp = patch(
-                x=(magnet.center()[0] - magnet.a) / scale_x,
-                y=(magnet.center()[1] - magnet.b) / scale_y,
-                width=(2 * magnet.a) / scale_x,
-                height=(2 * magnet.b) / scale_y,
-                transform=Affine2D().rotate_deg_around(
-                    (magnet.center()[0]) / scale_x,
-                    (magnet.center()[1]) / scale_y,
-                    -magnet.alpha,
-                ),
-            )
-
-            Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
-            offset = _np.multiply(Jnorm, magnet.size()) / 2
-
-            arrow_tmp = arrow(
-                x=(magnet.center()[0] - offset[0]) / scale_x,
-                y=(magnet.center()[1] - offset[1] / scale_y),
-                dx=(2 * offset[0]) / scale_x,
-                dy=(2 * offset[1]) / scale_y,
-                transform=Affine2D().translate(0, magnet.center()[1] / scale_y),
-            )
-
-            magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
-
-            patch_array.append(magnet_patch_tmp)
-    return patch_array
+    NPx, NPy = x.shape
+    if NQ != 0:
+        NSx, NSy = NPx // NQ, NPy // NQ
+        _plt.quiver(
+            x[::NSx, ::NSy] / scale_x,
+            y[::NSx, ::NSy] / scale_y,
+            Field.x[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
+            Field.y[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
+            color=vector_color,
+            alpha=1,
+        )
 
 
 def plot_3D_contour(x, y, z, Field, **kwargs):
@@ -525,7 +632,7 @@ def line_plot_cylinder(magnet, **kwargs):
     rho = _np.linspace(-2 * magnet.radius, 2 * magnet.radius, 51)
     z = _np.array([magnet.length * 1.1 / 2])
 
-    Bz, Br = magnet._calcB_cyl(rho, z)
+    Br, Bz = magnet._calcB_cyl(rho, z)
     _, _ = _plt.subplots()
     _plt.plot(rho * 1e3, Bz, label="Bz")
     _plt.plot(rho * 1e3, Br, label="Br")
@@ -549,7 +656,7 @@ def contour_plot_cylinder(magnet, **kwargs):
         -3 * magnet.radius : 3 * magnet.radius : NPJ,
         -magnet.length : magnet.length : NPJ,
     ]
-    Bz, Br = magnet._calcB_cyl(rho, z)
+    Br, Bz = magnet._calcB_cyl(rho, z)
     Bn = _np.sqrt(Bz ** 2 + Br ** 2)
 
     xlab = f"r (mm)"

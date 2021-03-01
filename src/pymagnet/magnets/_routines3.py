@@ -1,6 +1,6 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
 """Routines for Three Dimensional Magnet Classes
 """
@@ -8,6 +8,9 @@ __all__ = ["B_calc_3D", "grid3D"]
 
 import numpy as _np
 from ._fields import Vector3
+
+# TODO:
+# - Default grid size in calc_3D for x, y, z slices
 
 
 def grid3D(ux, uy, uz, **kwargs):
@@ -43,12 +46,44 @@ def grid3D(ux, uy, uz, **kwargs):
 
 
 def B_calc_3D(x, y, z):
-    from ._magnet3 import Magnet_3D, Prism, Cube, Cylinder, Sphere
+    from ._magnet3 import Magnet_3D, Sphere
 
     """Function to calculate magnetic field due to any array of points
        It sums the magnetic field B over each component of the magnetisation
        J = mu_0 M
     """
+    B = _allocate_field_array3(x, y, z)
+
+    for magnet in Magnet_3D.instances:
+        Bx, By, Bz = magnet._calcB(x - magnet.xc, y - magnet.yc, z - magnet.zc)
+
+        B.x += Bx
+        B.y += By
+        B.z += Bz
+
+        if issubclass(magnet.__class__, Sphere):
+            from ._routines import cart2sph, sph2cart
+
+            # # FIXME:
+            print("Sphere not implemented yet.")
+
+    B.calc_norm()
+    return B
+
+
+def _allocate_field_array3(x, y, z):
+    """Allocates empty Vector3 data structure
+
+    Args:
+        x (float/array): x co-ordinates
+        y (float/array): y co-ordinates
+        z (float/array): z co-ordinates
+
+    Returns:
+        Vector2: Empty data structure
+    """
+
+    # Ensure x,y,z are numpy arrays (even of element 1)
     if _np.isscalar(x):
         x = _np.atleast_1d(x)
     if _np.isscalar(y):
@@ -56,7 +91,8 @@ def B_calc_3D(x, y, z):
     if _np.isscalar(z):
         z = _np.atleast_1d(z)
 
-    if _np.ndim(x) == 3:  # volume meshgrid
+    # Determine array shape:
+    if _np.ndim(x) == 3:  # Volume meshgrid
         B = Vector3(_np.zeros_like(x), _np.zeros_like(x), _np.zeros_like(x))
 
     elif _np.ndim(x) == 2:  # planar slice
@@ -65,70 +101,10 @@ def B_calc_3D(x, y, z):
     elif _np.ndim(y) == 2:  # planar slice
         B = Vector3(_np.zeros_like(y), _np.zeros_like(y), _np.zeros_like(y))
 
-    else:
+    else:  # line or single point
         B = Vector3(
             _np.zeros(max(x.size, y.size, z.size)),
             _np.zeros(max(x.size, y.size, z.size)),
             _np.zeros(max(x.size, y.size, z.size)),
-        )  # line or single point
-
-    for magnet in Magnet_3D.instances:
-        if issubclass(magnet.__class__, Prism):
-
-            if _np.fabs(magnet.Jx) > magnet.tol:
-                # print('Calc Jx')
-                Bx, By, Bz = magnet._calcB_prism_x(
-                    x - magnet.xc, y - magnet.yc, z - magnet.zc
-                )
-                B.x += Bx
-                B.y += By
-                B.z += Bz
-
-            if _np.fabs(magnet.Jy) > magnet.tol:
-                # print('Calc Jy')
-                Bx, By, Bz = magnet._calcB_prism_y(
-                    x - magnet.xc, y - magnet.yc, z - magnet.zc
-                )
-                B.x += Bx
-                B.y += By
-                B.z += Bz
-
-            if _np.fabs(magnet.Jz) > magnet.tol:
-                # print('Calc Jz')
-                Bx, By, Bz = magnet._calcB_prism_z(
-                    x - magnet.xc, y - magnet.yc, z - magnet.zc
-                )
-                B.x += Bx
-                B.y += By
-                B.z += Bz
-
-        elif issubclass(magnet.__class__, Cylinder):
-            from ._routines import cart2pol, pol2cart
-
-            # Convert cartesian coordinates to cylindrical
-            rho, phi = cart2pol(x - magnet.xc, y - magnet.yc)
-            Bz, Brho = magnet._calcB(rho, z - magnet.zc)
-            # Convert magnetic fields from cylindrical to cartesian
-            Bx, By = pol2cart(Brho, phi)
-
-            B.x += Bx
-            B.y += By
-            B.z += Bz
-
-        elif issubclass(magnet.__class__, Sphere):
-            from ._routines import cart2sph, sph2cart
-
-            # FIXME:
-            # Convert cartesian coordinates to spherical
-            r, theta, phi = cart2sph(x - magnet.xc, y - magnet.yc, z - magnet.zc)
-            Br, Btheta = magnet._calcB(r, theta)
-
-            # Convert magnetic fields from cylindrical to cartesian
-            Bx, By = sph2cart(Br, phi)
-
-            B.x += Bx
-            B.y += By
-            B.z += Bz
-
-    B.calc_norm()
+        )
     return B

@@ -1,11 +1,13 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
+
 # __all__ = ['B_calc_2D']
 """Routines for Two Dimensional Magnet Classes
 """
 import numpy as _np
+from ._fields import Vector2
 
 
 def grid2D(ux, uy, **kwargs):
@@ -26,79 +28,22 @@ def grid2D(ux, uy, **kwargs):
 
 
 def B_calc_2D(x, y):
-    from ._fields import Vector2
-    from ._magnet2 import Magnet_2D, Rectangle, Square, Circle
+    from ._magnet2 import Magnet_2D
 
     """Function to calculate magnetic field due to any array of points
        It sums the magnetic field B over each component of the magnetisation
        J = mu_0 M
     """
 
-    _num_magnets = 0
-    if _np.isscalar(x):
-        x = _np.atleast_1d(x)
-    if _np.isscalar(y):
-        y = _np.atleast_1d(y)
-    if _np.ndim(x) == 2:  # planar slice
-        B = Vector2(_np.zeros_like(x), _np.zeros_like(x))
-    else:
-        B = Vector2(
-            _np.zeros(max(x.size, y.size)), _np.zeros(max(x.size, y.size))
-        )  # line or single point
+    # Empty data structure
+    B = _allocate_field_array2(x, y)
 
     for magnet in Magnet_2D.instances:
-        _num_magnets += 1
-        if issubclass(magnet.__class__, Rectangle):
-            if magnet.alpha_radians > Magnet_2D.tol:
-                xi, yi = rotate_points_2D(x, y, magnet.alpha_radians)
-                xci, yci = rotate_points_2D(
-                    _np.array([magnet.xc]), _np.array([magnet.yc]), magnet.alpha_radians
-                )
-
-            # Calculate field due to x-component of magnetisation
-            if _np.fabs(magnet.Jx) > Magnet_2D.tol:
-                if magnet.alpha_radians > Magnet_2D.tol:
-
-                    # Calculate fields in local frame
-                    Btx = magnet._calcBx_mag_x(xi - xci[0], yi - yci[0])
-                    Bty = magnet._calcBy_mag_x(xi - xci[0], yi - yci[0])
-
-                    # Rotate fields to global frame
-                    Bxt, Byt = rotate_points_2D(
-                        Btx, Bty, 2 * _np.pi - magnet.alpha_radians
-                    )
-
-                    B.x += Bxt
-                    B.y += Byt
-                else:
-                    B.x += magnet._calcBx_mag_x(x - magnet.xc, y - magnet.yc)
-                    B.y += magnet._calcBy_mag_x(x - magnet.xc, y - magnet.yc)
-
-            # Calculate field due to y-component of magnetisation
-            if _np.fabs(magnet.Jy) > Magnet_2D.tol:
-                if magnet.alpha_radians > Magnet_2D.tol:
-
-                    Btx = magnet._calcBx_mag_y(xi - xci[0], yi - yci[0])
-                    Bty = magnet._calcBy_mag_y(xi - xci[0], yi - yci[0])
-
-                    Bxt, Byt = rotate_points_2D(
-                        Btx, Bty, 2 * _np.pi - magnet.alpha_radians
-                    )
-                    B.x += Bxt
-                    B.y += Byt
-                else:
-
-                    B.x += magnet._calcBx_mag_y(x - magnet.xc, y - magnet.yc)
-                    B.y += magnet._calcBy_mag_y(x - magnet.xc, y - magnet.yc)
-
-        elif issubclass(magnet.__class__, Circle):
-            Bx, By = magnet._calcB(x - magnet.xc, y - magnet.yc)
-
-            B.x += Bx
-            B.y += By
+        Bx, By = magnet._calcB(x, y)
+        B.x += Bx
+        B.y += By
 
     B.calc_norm()
-    print(f"{_num_magnets} Magnets")
     return B
 
 
@@ -177,3 +122,28 @@ def FgradB_2D(B, x, y, chi_m, c):
     FB.x = (1 / u0) * chi_m * c * BgB.x
     FB.y = (1 / u0) * chi_m * c * BgB.y
     return FB
+
+
+def _allocate_field_array2(x, y):
+    """Allocates empty Vector2 data structure
+
+    Args:
+        x (float/array): x co-ordinates
+        y (float/array): y co-ordinates
+
+    Returns:
+        Vector2: Empty data structure
+    """
+
+    # Ensure x,y,z are numpy arrays (even of element 1)
+    if _np.isscalar(x):
+        x = _np.atleast_1d(x)
+    if _np.isscalar(y):
+        y = _np.atleast_1d(y)
+
+    # Determine array shape:
+    if _np.ndim(x) == 2:  # planar slice
+        B = Vector2(_np.zeros_like(x), _np.zeros_like(x))
+    else:  # line or single point
+        B = Vector2(_np.zeros(max(x.size, y.size)), _np.zeros(max(x.size, y.size)))
+    return B

@@ -86,13 +86,7 @@ class Rectangle(Magnet_2D):
 
     mag_type = "Rectangle"
 
-    def __init__(
-        self,
-        width=20e-3,
-        height=40e-3,  # magnet dimensions
-        Jr=1.0,  # local magnetisation
-        **kwargs,
-    ):
+    def __init__(self, width=20e-3, height=40e-3, Jr=1.0, **kwargs):
         super().__init__(Jr, **kwargs)
         self.width = width
         self.height = height
@@ -140,6 +134,57 @@ class Rectangle(Magnet_2D):
             J[ndarray]: [Jx, Jy]
         """
         return _np.array([self.Jx, self.Jy])
+
+    def _calcB(self, x, y):
+        """Calculates the magnetic field at point(s) x,y due to a rectangular magnet
+
+        Args:
+            x (float/array): x co-ordinates
+            y (float/array): y co-ordinates
+
+        Returns:
+            Vector2: magnetic field vector
+        """
+        from ._routines2 import rotate_points_2D
+
+        Bx, By = _np.zeros_like(x), _np.zeros_like(x)
+
+        if self.alpha_radians > Magnet_2D.tol:
+            xi, yi = rotate_points_2D(x, y, self.alpha_radians)
+            xci, yci = rotate_points_2D(
+                _np.array([self.xc]), _np.array([self.yc]), self.alpha_radians
+            )
+
+        # Calculate field due to x-component of magnetisation
+        if _np.fabs(self.Jx) > Magnet_2D.tol:
+            if self.alpha_radians > Magnet_2D.tol:
+
+                # Calculate fields in local frame
+                Btx = self._calcBx_mag_x(xi - xci[0], yi - yci[0])
+                Bty = self._calcBy_mag_x(xi - xci[0], yi - yci[0])
+
+                # Rotate fields to global frame
+                Bx, By = rotate_points_2D(Btx, Bty, 2 * _np.pi - self.alpha_radians)
+
+            else:
+                Bx = self._calcBx_mag_x(x - self.xc, y - self.yc)
+                By = self._calcBy_mag_x(x - self.xc, y - self.yc)
+
+        # Calculate field due to y-component of magnetisation
+        if _np.fabs(self.Jy) > Magnet_2D.tol:
+            if self.alpha_radians > Magnet_2D.tol:
+
+                Btx = self._calcBx_mag_y(xi - xci[0], yi - yci[0])
+                Bty = self._calcBy_mag_y(xi - xci[0], yi - yci[0])
+
+                Bxt, Byt = rotate_points_2D(Btx, Bty, 2 * _np.pi - self.alpha_radians)
+                Bx += Bxt
+                By += Byt
+            else:
+
+                Bx += self._calcBx_mag_y(x - self.xc, y - self.yc)
+                By += self._calcBy_mag_y(x - self.xc, y - self.yc)
+        return Bx, By
 
     def _calcBx_mag_x(self, x, y):
         """Bx using 2D Model for rectangular sheets magnetised in x-plane
@@ -233,13 +278,7 @@ class Square(Rectangle):
 
     mag_type = "Square"
 
-    def __init__(
-        self,
-        width=20e-3,  # magnet dimensions
-        Jr=1.0,  # local magnetisation direction
-        **kwargs,
-    ):
-
+    def __init__(self, width=20e-3, Jr=1.0, **kwargs):
         super().__init__(width=width, height=width, Jr=Jr, **kwargs)
 
 
@@ -251,7 +290,7 @@ class Circle(Magnet_2D):
         Jr [float]: Remnant magnetisation [T] (defaults to 1.0)
 
     Optional Arguments:
-         centre: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
+         center: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
          theta: Angle between magnetisation and x-axis [default 90.0 degrees]
 
     """
@@ -264,8 +303,8 @@ class Circle(Magnet_2D):
         Jr=1.0,  # local magnetisation
         **kwargs,
     ):
+        super().__init__(Jr, **kwargs)
         self.radius = radius
-        self.Jr = Jr
         self.theta = kwargs.pop("theta", 90)
         self.theta_rad = _np.deg2rad(self.theta)
 
@@ -304,9 +343,29 @@ class Circle(Magnet_2D):
         return _np.array([self.Jr])
 
     def _calcB(self, x, y):
-        from ._routines import cart2pol, pol2cart, vector_pol2cart
-
         """Calculates the magnetic field due to long bipolar cylinder
+
+        Args:
+            x (float/array): x coordinates
+            y (float/array): y coordinates
+
+        Returns:
+            tuple: Bx, By magnetic field in cartesian coordinates
+        """
+        from ._routines import cart2pol, vector_pol2cart
+
+        rho, phi = cart2pol(x - self.xc, y - self.yc)
+
+        Brho, Bphi = self._calcB_polar(rho, phi)
+
+        # Convert magnetic fields from cylindrical to cartesian
+        Bx, By = vector_pol2cart(Brho, Bphi, phi)
+
+        return Bx, By
+
+    def _calcB_polar(self, rho, phi):
+        """Calculates the magnetic field due to long bipolar cylinder in polar
+        coordinates
 
         Args:
             rho (float/array): radial values
@@ -315,14 +374,9 @@ class Circle(Magnet_2D):
         Returns:
             tuple: Br, Bphi magnetic field in polar coordinates
         """
-        rho, phi = cart2pol(x - self.xc, y - self.yc)
-
         prefac = self.Jr * (self.radius ** 2 / rho ** 2) / 2
 
         Brho = prefac * _np.cos(phi - self.theta_rad)
         Bphi = prefac * _np.sin(phi - self.theta_rad)
 
-        # Convert magnetic fields from cylindrical to cartesian
-        Bx, By = vector_pol2cart(Brho, Bphi, phi)
-
-        return Bx, By
+        return Brho, Bphi
