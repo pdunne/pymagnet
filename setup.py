@@ -36,7 +36,7 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     python_requires=">=3.6, <4",
-    install_requires=["numpy", "matplotlib"],  # Optional
+    install_requires=["numpy", "matplotlib", "numba"],
     # If there are data files included in your packages that need to be
     # installed, specify them here.
     # FIXME:

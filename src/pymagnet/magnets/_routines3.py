@@ -55,17 +55,11 @@ def B_calc_3D(x, y, z):
     B = _allocate_field_array3(x, y, z)
 
     for magnet in Magnet_3D.instances:
-        Bx, By, Bz = magnet._calcB(x - magnet.xc, y - magnet.yc, z - magnet.zc)
+        Bx, By, Bz = magnet._calcB(x, y, z)
 
         B.x += Bx
         B.y += By
         B.z += Bz
-
-        if issubclass(magnet.__class__, Sphere):
-            from ._routines import cart2sph, sph2cart
-
-            # # FIXME:
-            print("Sphere not implemented yet.")
 
     B.calc_norm()
     return B

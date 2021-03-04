@@ -80,7 +80,7 @@ class Rectangle(Magnet_2D):
 
     Optional Arguments:
          centre: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
-         theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+         phi: Angle between magnetisation and x-axis [default 90.0 degrees]
 
     """
 
@@ -94,11 +94,11 @@ class Rectangle(Magnet_2D):
         self.a = width / 2
         self.b = height / 2
 
-        self.theta = kwargs.pop("theta", 90)
-        self.theta_rad = _np.deg2rad(self.theta)
+        self.phi = kwargs.pop("phi", 90)
+        self.phi_rad = _np.deg2rad(self.phi)
 
-        self.Jx = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
-        self.Jy = _np.around(Jr * _np.sin(self.theta_rad), decimals=6)
+        self.Jx = _np.around(Jr * _np.cos(self.phi_rad), decimals=6)
+        self.Jy = _np.around(Jr * _np.sin(self.phi_rad), decimals=6)
         self.tol = 1e-4  # sufficient for 0.01 degree accuracy
 
     def size(self):
@@ -112,7 +112,7 @@ class Rectangle(Magnet_2D):
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
-            + f"J: {self.get_Jr()} (T)\n"
+            + f"J: {self.Jr} (T)\n"
             + f"Size: {self.size() * 2} (m)\n"
             + f"Center {self.center()} (m)\n"
         )
@@ -121,7 +121,7 @@ class Rectangle(Magnet_2D):
     def __repr__(self):
         str = (
             f"{self.__class__.mag_type}\n"
-            + f"J: {self.get_Jr()} (T)\n"
+            + f"J: {self.Jr} (T)\n"
             + f"Size: {self.size()} (m)\n"
             + f"Center {self.center()} (m)\n"
         )
@@ -272,7 +272,7 @@ class Square(Rectangle):
 
     Optional Arguments:
          centre: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
-         theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+         phi: Angle between magnetisation and x-axis [default 90.0 degrees]
 
     """
 
@@ -291,7 +291,7 @@ class Circle(Magnet_2D):
 
     Optional Arguments:
          center: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
-         theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+         phi: Angle between magnetisation and x-axis [default 90.0 degrees]
 
     """
 
@@ -305,8 +305,8 @@ class Circle(Magnet_2D):
     ):
         super().__init__(Jr, **kwargs)
         self.radius = radius
-        self.theta = kwargs.pop("theta", 90)
-        self.theta_rad = _np.deg2rad(self.theta)
+        self.phi = kwargs.pop("phi", 90)
+        self.phi_rad = _np.deg2rad(self.phi)
 
         center = kwargs.pop("center", Point2(0.0, 0.0))
 
@@ -376,7 +376,7 @@ class Circle(Magnet_2D):
         """
         prefac = self.Jr * (self.radius ** 2 / rho ** 2) / 2
 
-        Brho = prefac * _np.cos(phi - self.theta_rad)
-        Bphi = prefac * _np.sin(phi - self.theta_rad)
+        Brho = prefac * _np.cos(phi - self.phi_rad)
+        Bphi = prefac * _np.sin(phi - self.phi_rad)
 
         return Brho, Bphi

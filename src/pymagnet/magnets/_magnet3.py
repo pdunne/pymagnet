@@ -24,14 +24,15 @@ TODO:
 .. _Google Python Style Guide:
    https://google.github.io/styleguide/pyguide.html
 """
-from sys import prefix
+from numba import vectorize, float64
 import numpy as _np
 from ._fields import Point3
 from ._magnet import Magnet
+from ._quaternion import Quaternion
 
 # from pymagma import PI
 
-__all__ = ["Magnet_3D", "Prism", "Cube", "Cylinder"]
+__all__ = ["Magnet_3D", "Prism", "Cube", "Cylinder", "Sphere"]
 
 
 class Magnet_3D(Magnet):
@@ -114,18 +115,18 @@ class Prism(Magnet_3D):
 
         super().__init__(width, depth, height, Jr, **kwargs)
 
-        self.theta = kwargs.pop("theta", 90)
-        self.theta_rad = _np.deg2rad(self.theta)
-        self.phi = kwargs.pop("phi", 0)
+        self.phi = kwargs.pop("theta", 90)
         self.phi_rad = _np.deg2rad(self.phi)
+        self.theta = kwargs.pop("phi", 0)
+        self.theta_rad = _np.deg2rad(self.theta)
 
         self.Jx = _np.around(
-            Jr * _np.cos(self.theta_rad) * _np.sin(self.phi_rad), decimals=6
+            Jr * _np.cos(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
         )
         self.Jy = _np.around(
-            Jr * _np.sin(self.theta_rad) * _np.sin(self.phi_rad), decimals=6
+            Jr * _np.sin(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
         )
-        self.Jz = _np.around(Jr * _np.cos(self.phi_rad), decimals=6)
+        self.Jz = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
         self.tol = 1e-4  # sufficient for 0.01 degree accuracy
 
     def __str__(self):
@@ -208,6 +209,16 @@ class Prism(Magnet_3D):
         return data
 
     def _calcB(self, x, y, z):
+        """Calculates the magnetic field at point(s) x,y,z due to a cuboid magnet
+
+        Args:
+            x (float/array): x co-ordinates
+            y (float/array): y co-ordinates
+            z (float/array): z co-ordinates
+
+        Returns:
+            Vector3: magnetic field vector
+        """
 
         from ._routines3 import _allocate_field_array3
 
@@ -215,21 +226,21 @@ class Prism(Magnet_3D):
 
         # Magnetic field due to component of M magnetised in x
         if _np.fabs(self.Jx) > self.tol:
-            Bx, By, Bz = self._calcB_prism_x(x, y, z)
+            Bx, By, Bz = self._calcB_prism_x(x - self.xc, y - self.yc, z - self.zc)
             B.x += Bx
             B.y += By
             B.z += Bz
 
         # Magnetic field due to component of M magnetised in y
         if _np.fabs(self.Jy) > self.tol:
-            Bx, By, Bz = self._calcB_prism_y(x, y, z)
+            Bx, By, Bz = self._calcB_prism_y(x - self.xc, y - self.yc, z - self.zc)
             B.x += Bx
             B.y += By
             B.z += Bz
 
         # Magnetic field due to component of M magnetised in z
         if _np.fabs(self.Jz) > self.tol:
-            Bx, By, Bz = self._calcB_prism_z(x, y, z)
+            Bx, By, Bz = self._calcB_prism_z(x - self.xc, y - self.yc, z - self.zc)
             B.x += Bx
             B.y += By
             B.z += Bz
@@ -491,8 +502,9 @@ class Cylinder(Magnet_3D):
         """
         return _np.array([self.radius, self.length])
 
+    # Use Numba to create compiled Numpy ufunc that accepts arrays
     @staticmethod
-    @_np.vectorize
+    @vectorize([float64(float64, float64, float64, float64)])
     def _cel(kc, p, c, s):
         """Burlisch's complete elliptic integral
         See NIST Handbook of Mathematical Functions, http://dlmf.nist.gov/19.2
@@ -550,11 +562,13 @@ class Cylinder(Magnet_3D):
         from ._routines import cart2pol, pol2cart
 
         # Convert cartesian coordinates to cylindrical
-        rho, phi = cart2pol(x, y)
+        rho, phi = cart2pol(x - self.xc, y - self.yc)
 
-        Brho, Bz = self._calcB_cyl(rho, z)
+        Brho, Bz = self._calcB_cyl(rho, z - self.zc)
 
         # Convert magnetic fields from cylindrical to cartesian
+        # We use pol2cart because Bphi is zero
+        # If Bphi != 0, then use vector_pol2cart(Brho, Bphi, phi)
         Bx, By = pol2cart(Brho, phi)
 
         return Bx, By, Bz
@@ -624,20 +638,17 @@ class Sphere(Magnet_3D):
     def __init__(
         self,
         radius=10e-3,
-        length=10e-3,  # magnet dimensions
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):
 
         self.radius = radius
-        self.radius = radius
-        self.length = length
         self.Jr = Jr
 
-        self.theta = kwargs.pop("theta", 90)
-        self.theta_rad = _np.deg2rad(self.theta)
-        self.phi = kwargs.pop("phi", 0)
+        self.phi = kwargs.pop("phi", 90)
         self.phi_rad = _np.deg2rad(self.phi)
+        self.theta = kwargs.pop("theta", 0)
+        self.theta_rad = _np.deg2rad(self.theta)
 
         center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
 
@@ -674,18 +685,62 @@ class Sphere(Magnet_3D):
         """
         return _np.array([self.radius])
 
-    def _calcB(
-        self,
-        r,
-        theta,
-    ):
-        """Calculates the magnetic field due to
-        due to a sphere at any point
-        returns Br,Btheta
-        """
-        preFac = self.Jr * (self.radius ** 3 / r ** 3) / 3
+    def _calcB(self, x, y, z):
+        from ._routines import cart2sph, sphere_sph2cart
 
-        Br = preFac * 2 * _np.cos(theta)
-        Btheta = prefix * _np.sin(theta)
+        if _np.fabs(self.theta_rad) > 1e-4:
+            rotate_about_y = Quaternion.q_angle_from_axis(-self.theta_rad, (0, 1, 0))
+            print(f"x shape: {x.shape}")
+            pos_vec = Quaternion._prepare_vector(
+                x, y.repeat(x.shape[0] * x.shape[1]), z
+            )
+            x_rot, y_rot, z_rot = rotate_about_y * pos_vec
+
+            r, theta, phi = cart2sph(
+                x_rot.reshape(x.shape) - self.xc,
+                y_rot[0] - self.yc,
+                z_rot.reshape(z.shape) - self.zc,
+            )
+
+        else:
+            r, theta, phi = cart2sph(x - self.xc, y - self.yc, z - self.zc)
+
+            # Calculates field for sphere magnetised along z
+        Br, Btheta = self._calcB_spherical(r, theta)
+
+        # Convert magnetic fields from spherical to cartesian
+        Bx, By, Bz = sphere_sph2cart(Br, Btheta, theta, phi)
+
+        # Rotate using quaternions to get correct fields
+        # FIXME: Implement rotation
+        if _np.fabs(self.theta_rad) > 1e-4:
+            rev_rotate_about_y = Quaternion.q_angle_from_axis(self.theta_rad, (0, 1, 0))
+            Bvec = Quaternion._prepare_vector(Bx, By, Bz)
+            Bx_rot, By_rot, Bz_rot = rev_rotate_about_y * Bvec
+            return (
+                Bx_rot.reshape(Bx.shape),
+                By_rot.reshape(By.shape),
+                Bz_rot.reshape(Bz.shape),
+            )
+        else:
+            return Bx, By, Bz
+
+    def _calcB_spherical(self, r, theta):
+        """Calculates the magnetic field due to due to a sphere at any point
+
+        Args:
+            r (float/array): radial coordinates
+            theta (float/array): azimuthal coordinates
+
+        Returns:
+            tuple: Br, Btheta
+        """
+        # try:
+        preFac = self.Jr * (self.radius ** 3 / r ** 3) / 3.0
+        # except ZeroDivisionError:
+        #     preFac = 0
+
+        Br = preFac * 2.0 * _np.cos(theta)
+        Btheta = preFac * _np.sin(theta)
 
         return Br, Btheta

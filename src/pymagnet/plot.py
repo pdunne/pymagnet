@@ -356,7 +356,7 @@ def _gen_circle_patch(magnet, scale_x, scale_y):
     offset = (
         magnet.radius
         * Jnorm
-        * _np.array([_np.cos(magnet.theta_rad), _np.sin(magnet.theta_rad)])
+        * _np.array([_np.cos(magnet.phi_rad), _np.sin(magnet.phi_rad)])
         / 2
     )
     print(f"offset: ({offset[0]*1e3}, {offset[1]*1e3})")
@@ -566,6 +566,7 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
 
     if SAVE:
         _plt.savefig("contour_plot.png", dpi=300)
+    return ax
 
 
 def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
@@ -618,6 +619,8 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
     _plt.ylabel(ylab)
     _plt.axis("equal")
     _plt.show()
+
+    return ax
 
 
 def line_plot_cylinder(magnet, **kwargs):
