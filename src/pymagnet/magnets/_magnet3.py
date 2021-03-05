@@ -208,7 +208,7 @@ class Prism(Magnet_3D):
             data = _np.NaN
         return data
 
-    def _calcB(self, x, y, z):
+    def calcB(self, x, y, z):
         """Calculates the magnetic field at point(s) x,y,z due to a cuboid magnet
 
         Args:
@@ -554,7 +554,7 @@ class Cylinder(Magnet_3D):
             data = (_np.pi / 2.0) * (ss + cc * em) / (em * (em + pp))
             return data
 
-    def _calcB(self, x, y, z):
+    def calcB(self, x, y, z):
         """Calculates the magnetic field due to
         due to a solenoid at any point
         returns Bx,By, Bz
@@ -685,45 +685,83 @@ class Sphere(Magnet_3D):
         """
         return _np.array([self.radius])
 
-    def _calcB(self, x, y, z):
+    def calcB(self, x, y, z):
         from ._routines import cart2sph, sphere_sph2cart
 
-        if _np.fabs(self.theta_rad) > 1e-4:
-            rotate_about_y = Quaternion.q_angle_from_axis(-self.theta_rad, (0, 1, 0))
-            print(f"x shape: {x.shape}")
-            pos_vec = Quaternion._prepare_vector(
-                x, y.repeat(x.shape[0] * x.shape[1]), z
-            )
-            x_rot, y_rot, z_rot = rotate_about_y * pos_vec
-
-            r, theta, phi = cart2sph(
-                x_rot.reshape(x.shape) - self.xc,
-                y_rot[0] - self.yc,
-                z_rot.reshape(z.shape) - self.zc,
-            )
+        if _np.fabs(self.theta_rad) > 1e-4 or _np.fabs(self.phi_rad) > 1e-4:
+            # rotate to local frame, calculate B, rotate B to global frame
+            Bx, By, Bz = self._rotate_and_calcB(x, y, z)
+            return Bx, By, Bz
 
         else:
+            # Otherwise directly convert to spherical coordinates
             r, theta, phi = cart2sph(x - self.xc, y - self.yc, z - self.zc)
 
             # Calculates field for sphere magnetised along z
+            Br, Btheta = self._calcB_spherical(r, theta)
+
+            # Convert magnetic fields from spherical to cartesian
+            Bx, By, Bz = sphere_sph2cart(Br, Btheta, theta, phi)
+            return Bx, By, Bz
+
+    def _rotate_and_calcB(self, x, y, z):
+        """Translates and rotates global coordinates into local before calculating
+        the magnetic field and then rotating magnetic field into global frame
+
+        Args:
+            x (array): x coordinates
+            y (array): y coordinates
+            z (array): z coordinates
+
+        Returns:
+            tuple: Bx, By, Bz: calculated magnetic field
+        """
+
+        from ._routines import cart2sph, sphere_sph2cart
+
+        x = Quaternion._input_to_numpy(x) - self.xc
+        y = Quaternion._input_to_numpy(y) - self.yc
+        z = Quaternion._input_to_numpy(z) - self.zc
+
+        rotate_about_y, rotate_about_x, total_rotation = None, None, None
+
+        if _np.fabs(self.theta_rad) > 1e-4:
+            rotate_about_y = Quaternion.q_angle_from_axis(self.theta_rad, (0, 1, 0))
+
+        if _np.fabs(self.phi_rad) > 1e-4:
+            rotate_about_x = Quaternion.q_angle_from_axis(self.phi_rad, (1, 0, 0))
+
+        if rotate_about_y is not None:
+            total_rotation = rotate_about_y
+
+            if rotate_about_x is not None:
+                # Rotate about y first, then about x
+                total_rotation = rotate_about_x * rotate_about_y
+
+        elif rotate_about_x is not None and total_rotation is not None:
+            # Rotate about x
+            total_rotation = rotate_about_x
+
+        # Generate 3xN array for quaternion rotation
+        pos_vec = Quaternion._prepare_vector(x, y, z)
+
+        # Rotate points
+        x_rot, y_rot, z_rot = total_rotation * pos_vec
+
+        # Convert points to spherical coordinates
+        r, theta, phi = cart2sph(x_rot, y_rot, z_rot)
+
+        # Calculates field for sphere magnetised along z
         Br, Btheta = self._calcB_spherical(r, theta)
 
         # Convert magnetic fields from spherical to cartesian
         Bx, By, Bz = sphere_sph2cart(Br, Btheta, theta, phi)
 
         # Rotate using quaternions to get correct fields
-        # FIXME: Implement rotation
-        if _np.fabs(self.theta_rad) > 1e-4:
-            rev_rotate_about_y = Quaternion.q_angle_from_axis(self.theta_rad, (0, 1, 0))
-            Bvec = Quaternion._prepare_vector(Bx, By, Bz)
-            Bx_rot, By_rot, Bz_rot = rev_rotate_about_y * Bvec
-            return (
-                Bx_rot.reshape(Bx.shape),
-                By_rot.reshape(By.shape),
-                Bz_rot.reshape(Bz.shape),
-            )
-        else:
-            return Bx, By, Bz
+        reverse_rotation = total_rotation.get_conjugate()
+        Bvec = Quaternion._prepare_vector(Bx, By, Bz)
+        Bx_rot, By_rot, Bz_rot = reverse_rotation * Bvec
+        return Bx_rot, By_rot, Bz_rot
 
     def _calcB_spherical(self, r, theta):
         """Calculates the magnetic field due to due to a sphere at any point

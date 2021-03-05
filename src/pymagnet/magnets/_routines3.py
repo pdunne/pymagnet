@@ -55,11 +55,10 @@ def B_calc_3D(x, y, z):
     B = _allocate_field_array3(x, y, z)
 
     for magnet in Magnet_3D.instances:
-        Bx, By, Bz = magnet._calcB(x, y, z)
-
-        B.x += Bx
-        B.y += By
-        B.z += Bz
+        Bx, By, Bz = magnet.calcB(x, y, z)
+        B.x += Bx.reshape(B.x.shape)
+        B.y += By.reshape(B.y.shape)
+        B.z += Bz.reshape(B.z.shape)
 
     B.calc_norm()
     return B

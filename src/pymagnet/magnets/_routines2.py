@@ -39,7 +39,7 @@ def B_calc_2D(x, y):
     B = _allocate_field_array2(x, y)
 
     for magnet in Magnet_2D.instances:
-        Bx, By = magnet._calcB(x, y)
+        Bx, By = magnet.calcB(x, y)
         B.x += Bx
         B.y += By
 

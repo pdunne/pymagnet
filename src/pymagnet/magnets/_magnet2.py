@@ -135,7 +135,7 @@ class Rectangle(Magnet_2D):
         """
         return _np.array([self.Jx, self.Jy])
 
-    def _calcB(self, x, y):
+    def calcB(self, x, y):
         """Calculates the magnetic field at point(s) x,y due to a rectangular magnet
 
         Args:
@@ -342,7 +342,7 @@ class Circle(Magnet_2D):
         """
         return _np.array([self.Jr])
 
-    def _calcB(self, x, y):
+    def calcB(self, x, y):
         """Calculates the magnetic field due to long bipolar cylinder
 
         Args:

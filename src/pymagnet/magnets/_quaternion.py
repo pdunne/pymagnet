@@ -81,7 +81,9 @@ class Quaternion:
 
     @staticmethod
     def _prepare_vector(x, y, z):
-        """Creates 3xN array where each row(?) corresponds to x, y, z vectors
+        """Creates 3xN array where each column corresponds to x, y, z vectors
+        all of the same length. If some vectors are shorter, their values are repeated
+        to ensure and array of (x,y,z) points for quaternion rotation.
 
         Args:
             x (float/array): x coordinates
@@ -91,10 +93,47 @@ class Quaternion:
         Returns:
             ndarray: 3xN numpy ndarray
         """
-        x = Quaternion._input_to_numpy(x).ravel()
-        y = Quaternion._input_to_numpy(y).ravel()
-        z = Quaternion._input_to_numpy(z).ravel()
+        # Check input x,y,z are numpy arrays and if not, convert to numpy arrays
+        x = Quaternion._input_to_numpy(x)
+        y = Quaternion._input_to_numpy(y)
+        z = Quaternion._input_to_numpy(z)
+
+        longest_array_length = _np.max([x.size, y.size, z.size])
+
+        # Ensure the unravelled arrays are all of the same length
+        x = Quaternion._check_extend_array(x.ravel(), longest_array_length)
+        y = Quaternion._check_extend_array(y.ravel(), longest_array_length)
+        z = Quaternion._check_extend_array(z.ravel(), longest_array_length)
+
         return _np.array([x, y, z])
+
+    @staticmethod
+    def _check_extend_array(array, max):
+        """Extend a 1D vector to length 'max' if it is shorter than 'max'
+
+        Args:
+            array (ndarray): numpy array
+            max (int): array length to compare to
+
+        Returns:
+            ndarray: numpy array of length 'max'
+        """
+
+        if max % array.size != 0:
+            raise ValueError("Incorrect gridding of x,y,z")
+        # If array is smaller than longest array length 'max', extend it by tiling
+        if array.size < max:
+            extended_array = _np.tile(array, (max // array.size))
+
+            # # If there is a remainder, 'n' append the first n elements of the array
+            # # to ensure the final length is 'max'.
+            # if max % array.size != 0:
+            #     extended_array = _np.append(
+            #         extended_array, array[0 : (max % array.size)]
+            #     )
+            return extended_array
+        else:
+            return array
 
     @staticmethod
     def _normalise_axis(vec):
