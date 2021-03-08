@@ -10,7 +10,7 @@ User friendly magnetic field calculations in Python
 Installing `pymagnet` can be done using
 
 ```bash
-pip install pymagnet 
+python -m pip install pymagnet 
 ```
 
 or shortly
@@ -69,7 +69,7 @@ Forms of this library have been used in a number of projects including [Liquid f
 This code uses analytical expressions to calculate the magnetic field due to
 simple magnets. These include:
 
-* 3D objects: cubes, cuboids, cylinders
+* 3D objects: cubes, cuboids, cylinders, spheres
 * 2D: rectangles, squares
 
 There are helper functions to plot the data as either line or countour plots,
@@ -82,11 +82,12 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 
 * numpy
 * matplotlib
+* numba
 
 ## Partial TODOs
 
-* Implement arbitrary orientation in public code
 * 3D rendering of slices
+* Calculation of magnetisation and the H field inside the magnets
 * Complete documentation
 
 ## Licensing
