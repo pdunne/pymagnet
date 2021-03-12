@@ -1,30 +1,16 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
 """Plotting routines
 
-This module demonstrates documentation as specified by the `Google Python
-Style Guide`_. Docstrings may extend over multiple lines. Sections are created
-with a section header and a colon followed by a block of indented text.
+This module contains all functions needed to plot lines and contours for 1D, 2D,
+and 3D magnetic sources.
 
-Example:
-    Examples can be given using either the ``Example`` or ``Examples``
-    sections. Sections support any reStructuredText formatting, including
-    literal blocks::
-
-        $ python example_google.py
-
-Section breaks are created by resuming unindented text. Section breaks
-are also implicitly created anytime a new section starts.
-
-Todo:
-    * Reimplement all data fits
-
-
-.. _Google Python Style Guide:
-   https://google.github.io/styleguide/pyguide.html
+TODO:
+    * Spin out 2D and 3D plots into separate modules
 """
+from .magnets._magnet import Registry
 import matplotlib.pyplot as _plt
 from matplotlib.patches import Rectangle as _Rect
 from matplotlib.patches import Circle as _Circ
@@ -35,7 +21,15 @@ from matplotlib.transforms import Affine2D
 
 
 class patch(object):
-    """Encodes magnet dimensions for drawing on plots"""
+    """Encodes magnet dimensions for drawing on plots
+
+    Args:
+            x (float): centre, x
+            y (float): center, y
+            width (float): width
+            height (float): width
+            transform (matplotlib Affine2D): transform object, `rotate_deg_around`
+    """
 
     def __init__(self, x, y, width, height, transform, type):
         """Initialse a patch
@@ -359,8 +353,6 @@ def _gen_circle_patch(magnet, scale_x, scale_y):
         * _np.array([_np.cos(magnet.phi_rad), _np.sin(magnet.phi_rad)])
         / 2
     )
-    print(f"offset: ({offset[0]*1e3}, {offset[1]*1e3})")
-    print(f"Center{magnet.center()*1e3}")
     arrow_tmp = arrow(
         x=(magnet.center()[0] - offset[0]) / scale_x,
         y=(magnet.center()[1] - offset[1]) / scale_y,
@@ -368,8 +360,6 @@ def _gen_circle_patch(magnet, scale_x, scale_y):
         dy=(2 * offset[1]) / scale_y,
         transform=Affine2D().translate(0, 0),
     )
-    print(f"x,y({arrow_tmp.x}, {arrow_tmp.y})")
-    print(f"dx,dy({arrow_tmp.dx}, {arrow_tmp.dy})")
     magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
     return magnet_patch_tmp
 
@@ -691,3 +681,172 @@ def param_test_2D(width, height):
     B = _mag._routines2.B_calc_2D(x, y)
     cmap = "viridis"
     plot_2D_contour(x, y, B, UL=1, NL=11, cmap=cmap)
+
+
+def generate_vertices(center=(0, 0, 0), size=(1, 1, 1)):
+    """Generates coordinates for all cuboid vertices
+
+    Args:
+        center (tuple, optional): x,y,z coordinates. Defaults to (0, 0, 0)
+        size (tuple, optional): scale the cuboid in x, y, z directons. Defaults to (1, 1, 1).
+
+    Returns:
+        ndarray: numpy array of shape (3, 8)
+    """
+    # Center of this cube is (0.5, 0.5, 0.5)
+    x = _np.array([0, 0, 1, 1, 0, 0, 1, 1]) - 0.5
+    y = _np.array([0, 1, 1, 0, 0, 1, 1, 0]) - 0.5
+    z = _np.array([0, 0, 0, 0, 1, 1, 1, 1]) - 0.5
+
+    vertex_coords = _np.vstack([x, y, z])
+
+    # Scale x, y, z by the size array
+    vertex_coords = _np.multiply(vertex_coords.T, size).T
+
+    # Offset by externally set center
+    vertex_coords += _np.array(center).reshape(-1, 1)
+
+    return vertex_coords
+
+
+class Polyhedron(Registry):
+    """Encodes magnet dimensions for drawing a polyhedon on 3D plots
+
+    Polyhedra:
+        Cuboid
+        Cylinder (TODO)
+        Sphere (TODO)
+
+    """
+
+    # Tolerance for minimum angle needed for rotation of object
+    tol = 1e-4
+
+    def __init__(self, center, size, **kwargs):
+        """Initialises a cuboid
+
+        Args:
+            center (tuple): x,y,z
+            size (tuple): x,y,z
+        """
+        super().__init__()
+
+        self.center = _np.asarray(center)
+        self.size = _np.asarray(size)
+
+        self.alpha = kwargs.pop("alpha", 0.0)
+        self.alpha_rad = _np.deg2rad(self.alpha)
+        self.beta = kwargs.pop("beta", 0.0)
+        self.beta_rad = _np.deg2rad(self.beta)
+        self.gamma = kwargs.pop("gamma", 0.0)
+        self.gamma_rad = _np.deg2rad(self.gamma)
+        self.color = kwargs.pop("color", "C0")
+
+    def __repr__(self) -> str:
+        return f"(center: {self.center}, size: {self.size} )"
+
+    def __str__(self) -> str:
+        return f"(center: {self.center}, size: {self.size} )"
+
+
+class Graphic_Cuboid(Polyhedron):
+    def __init__(self, center=(0, 0, 0), size=(1, 1, 1), **kwargs):
+        super().__init__(center, size, **kwargs)
+
+        self.vertices = self._gen_vertices()
+
+    # FIXME: Move below function into quaternion class, do the same for Magnet_3D class
+    def _generate_rotation_quaternions(self):
+        """Generates single rotation quaternion for all non-zero rotation angles,
+        which are:
+
+            alpha: angle in degrees around z-axis
+            beta: angle in degrees around y-axis
+            gamma: angle in degrees around x-axis
+
+        Returns:
+            Quaternion: total rotation quaternion
+        """
+        from .magnets._quaternion import Quaternion
+        from functools import reduce
+
+        # Initialise quaternions
+        rotate_about_x, rotate_about_y, rotate_about_z = None, None, None
+        forward_rotation, reverse_rotation = None, None
+
+        if _np.fabs(self.alpha_rad) > 1e-4:
+            rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
+
+        if _np.fabs(self.beta_rad) > 1e-4:
+            rotate_about_y = Quaternion.q_angle_from_axis(self.beta_rad, (0, 1, 0))
+
+        if _np.fabs(self.gamma_rad) > 1e-4:
+            rotate_about_x = Quaternion.q_angle_from_axis(self.gamma_rad, (1, 0, 0))
+
+        # Generate compound rotations
+        # Order of rotation: beta  about y, alpha about z, gamma about x
+        q_forward = [
+            q for q in [rotate_about_y, rotate_about_z, rotate_about_x] if q is not None
+        ]
+
+        forward_rotation = reduce(lambda x, y: x * y, q_forward)
+
+        q_reverse = [
+            q.get_conjugate()
+            for q in [rotate_about_x, rotate_about_z, rotate_about_y]
+            if q is not None
+        ]
+
+        reverse_rotation = reduce(lambda x, y: x * y, q_reverse)
+        return forward_rotation, reverse_rotation
+
+    def _gen_vertices(self):
+        """Generates vertices of a cuboid
+
+        Returns:
+            ndarray: 3xN array of vertex coordinates (columns are x, y, z)
+        """
+        # Generate and rotate the vertices
+        if _np.any(
+            _np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]) > Polyhedron.tol
+        ):
+
+            forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
+
+            # Generate 3xN array for quaternion rotation
+            vertex_coords = generate_vertices((0, 0, 0), self.size)
+
+            # Rotate points
+            x, y, z = reverse_rotation * vertex_coords
+
+            # Reconstruct 3xN array and add center offset
+            vertex_coords = _np.vstack([x, y, z])
+            vertex_coords += _np.array(self.center).reshape(-1, 1)
+
+            # finally return the coordinates
+            return vertex_coords
+
+        # Only generate
+        else:
+            vertex_coords = generate_vertices(self.center, self.size)
+            return vertex_coords
+
+
+def reset_polyhedra():
+    """Returns a list of all instantiated polyhedra."""
+
+    polyhedra_classes = [
+        Polyhedron,
+        Graphic_Cuboid,
+    ]
+    for cls in polyhedra_classes:
+        cls.reset()
+
+
+def list_polyhedra():
+    """Returns a list of all instantiated polyhedra.
+
+    Assumes that the child class registries have not been modified outside of
+    using `pymagnet.reset_magnets()`.
+    """
+    return Polyhedron.print_instances()

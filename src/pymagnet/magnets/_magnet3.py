@@ -141,7 +141,6 @@ class Magnet_3D(Magnet):
         if _np.any(
             _np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]) > Magnet.tol
         ):
-            print("Rotation Triggered")
 
             forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
 

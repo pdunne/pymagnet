@@ -28,12 +28,11 @@ def grid2D(ux, uy, **kwargs):
 
 
 def B_calc_2D(x, y):
-    from ._magnet2 import Magnet_2D
-
     """Function to calculate magnetic field due to any array of points
-       It sums the magnetic field B over each component of the magnetisation
-       J = mu_0 M
+    It sums the magnetic field B over each component of the magnetisation
+    J = mu_0 M
     """
+    from ._magnet2 import Magnet_2D
 
     # Empty data structure
     B = _allocate_field_array2(x, y)

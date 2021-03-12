@@ -105,7 +105,7 @@ class Registry:
 
     @classmethod
     def reset(cls) -> None:
-        """Removes all magnet instances from registry."""
+        """Removes all instances from registry."""
         for magnet in cls._class_instances:
             del magnet
         cls.instances = WeakSet()
@@ -137,7 +137,7 @@ def reset_magnets():
     from ._magnet3 import Magnet_3D, Prism, Cube, Cylinder, Sphere
 
     magnet_classes = [
-        Registry,
+        # Registry,
         Magnet,
         Magnet_2D,
         Rectangle,
