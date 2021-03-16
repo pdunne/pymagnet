@@ -7,27 +7,15 @@
 This private module implements magnetic field calculations in z along the
 symmetry centre of a cylindrical or cuboidal magnet.
 
-Example:
-    Examples can be given using either the ``Example`` or ``Examples``
-    sections. Sections support any reStructuredText formatting, including
-    literal blocks::
-
-        $ python example_google.py
-
-Section breaks are created by resuming unindented text. Section breaks
-are also implicitly created anytime a new section starts.
-
-
-.. _Google Python Style Guide:
-   https://google.github.io/styleguide/pyguide.html
 """
 import numpy as _np
 
-__all__ = ['magnetic_field_prism_1D',
-           'magnetic_field_cylinder_1D']
+__all__ = ["magnetic_field_prism_1D", "magnetic_field_cylinder_1D"]
+
 
 def magnetic_field_prism_1D(magnet, z):
     from ._magnet3 import Magnet_3D
+
     """Calculates the magnetic field z-component due to a cuboid along its
     axial symmetry center.
 
@@ -57,19 +45,20 @@ def magnetic_field_prism_1D(magnet, z):
         zc = z_local + 2 * c
         zc_sq = _np.power(zc, 2)
 
-        data = (_np.arctan2(zc * _np.sqrt(a_sq + b_sq + zc_sq), ab) -
-                _np.arctan2(z_local * _np.sqrt(a_sq + b_sq + z_sq), ab))
-        data *= (Jr / _np.pi)
+        data = _np.arctan2(zc * _np.sqrt(a_sq + b_sq + zc_sq), ab) - _np.arctan2(
+            z_local * _np.sqrt(a_sq + b_sq + z_sq), ab
+        )
+        data *= Jr / _np.pi
 
         return data
     else:
-        print(
-            f"Error, the magnet should be a 3D magnet not {magnet.__class__}")
+        print(f"Error, the magnet should be a 3D magnet not {magnet.__class__}")
         return _np.full_like(z, _np.nan)
 
 
 def magnetic_field_cylinder_1D(magnet, z):
     from ._magnet3 import Cylinder
+
     """Calculates the magnetic field z-component due to a cylinder along its
     axial symmetry center.
 
@@ -97,12 +86,10 @@ def magnetic_field_cylinder_1D(magnet, z):
         z_sq = _np.power(z_local, 2)
         zL_sq = _np.power(zL, 2)
 
-        data = ((zL / _np.sqrt(zL_sq + R_sq)) - 
-            (z_local / _np.sqrt(z_sq + R_sq)))
-        data *= (Jr / 2)
+        data = (zL / _np.sqrt(zL_sq + R_sq)) - (z_local / _np.sqrt(z_sq + R_sq))
+        data *= Jr / 2
         return data
 
     else:
-        print(
-            f"Error, the magnet should be a 3D magnet not {magnet.__class__}")
+        print(f"Error, the magnet should be a 3D magnet not {magnet.__class__}")
         return _np.NaN

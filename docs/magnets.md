@@ -1,0 +1,3 @@
+# Magnets module
+
+::: pymagnet.magnets

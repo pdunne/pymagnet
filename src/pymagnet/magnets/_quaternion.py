@@ -5,6 +5,18 @@
 """Quaternion module
 
 Implements quaternion multiplication for convenient rotation of vectors in 3D.
+
+Example:
+    Rotation of a vector about the x-axis:
+
+        import numpy as np
+        import pymagnet as pm
+        vector1 = np.array([1,0,0])
+        rotate_about_z = pm.magnets.Quaternion.q_angle_from_axis(np.pi/2, (0, 0, 1))
+        vector2 = rotate_about_z * vector1
+
+Section breaks are created by resuming unindented text. Section breaks
+are also implicitly created anytime a new section starts.    
 """
 import numpy as _np
 

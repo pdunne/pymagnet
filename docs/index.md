@@ -13,15 +13,13 @@ Installing `pymagnet` can be done using
 python -m pip install pymagnet 
 ```
 
-or
+or shortly
 
 ```bash
 conda install -c pdunne pymagnet
 ```
 
 ## Examples
-
-Additional examples are in the examples directory of the repository.
 
 ### 3D calculation and render using plotly
 
@@ -109,7 +107,7 @@ pm.plots.plot_2D_contour(x, y, B, cmin=0.0, # minimum field value
                                  cmap=cmap, # set the colormap
                                  )
 
-``` 
+```
 
 ## Calculating Magnetic Fields and Forces
 
@@ -136,10 +134,15 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 * numba
 * plotly
 
-TODO:
+!!! TODO
+    - Calculation of magnetisation and the H field inside the magnets
+    - Complete documentation
+    - Fix quaternion rotations
 
-* Calculation of magnetisation and the H field inside the magnets
-* Complete documentation
+!!! warning
+    There are still some bugs in the quaternion rotations. For spheres, rotate them using alpha, beta, gamma,
+    rather than the magnetisation angles theta and phi, and phi is not working correctly.
+    There is also a bug in the plotly rendering of the rotated axes (x,y)
 
 ## Licensing
 
@@ -165,3 +168,43 @@ This is a human-readable summary of (and not a substitute for) the license, adap
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you shall be licensed as above, without any
 additional terms or conditions.
+
+## Commands
+
+* `mkdocs new [dir-name]` - Create a new project.
+* `mkdocs serve` - Start the live-reloading docs server.
+* `mkdocs build` - Build the documentation site.
+* `mkdocs -h` - Print help message and exit.
+
+## Docs layout
+
+    mkdocs.yml    # The configuration file.
+    docs/
+        index.md  # The documentation homepage.
+        ...       # Other markdown pages, images and other files.
+
+## Project layout
+
+    pyproject.toml    # The  packageconfiguration file.
+    examples/
+        example_01.py  # Example description
+        example_01.ipynb  #xample as a Jupyter notebook
+    src/
+        index.md  # The documentation homepag
+    tests/
+        index.md  # The documentation homepag
+        ...       # Other markdown pages, images and other files.
+
+## Methods
+
+$$
+\operatorname{ker} f=\{g\in G:f(g)=e_{H}\}{\mbox{.}}
+$$
+
+!!! note
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
+    nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
+    massa, nec semper lorem quam in massa.
+
+![Placeholder](https://dummyimage.com/600x400/eee/aaa){: align=left }
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor massa, nec semper lorem quam in massa.

@@ -13,7 +13,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="pymagnet",
-    version="0.1.0",
+    version="0.2.0",
     description="User Friendly Magnetic Field Calculations",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -36,24 +36,9 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     python_requires=">=3.6, <4",
-    install_requires=["numpy", "matplotlib", "numba"],
-    # If there are data files included in your packages that need to be
-    # installed, specify them here.
-    # FIXME:
-    # package_data={  # Optional
-    #     'sample': ['package_data.dat'],
-    # },
-    # Although 'package_data' is the preferred approach, in some case you may
-    # need to place data files outside of your packages. See:
-    # http://docs.python.org/distutils/setupscript.html#installing-additional-files
-    #
-    # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
-    # data_files=[('my_data', ['data/data_file'])],  # Optional
-    # FIXME:
-    project_urls={  # Optional
+    install_requires=["numpy", "matplotlib", "numba", "plotly"],
+    project_urls={
         "Bug Reports": "https://github.com/pdunne/pymagnet/issues",
-        # 'Funding': 'https://donate.pypi.org',
-        # 'Say Thanks!': 'http://saythanks.io/to/example',
         "Source": "https://github.com/pdunne/pymagnet/",
     },
 )

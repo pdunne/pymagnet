@@ -1,0 +1,37 @@
+site_name: Pymagnet
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - Code Reference:
+      - pymagnet: pymagnet.md
+      - magnets: magnets.md
+      - plots: plots.md
+      - quaternions: quaternions.md
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      # watch:
+      # - src/pymagnet:
+      handlers:
+        python:
+          setup_commands:
+            - import sys
+            - sys.path.append("src")
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

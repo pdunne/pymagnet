@@ -21,6 +21,7 @@ are also implicitly created anytime a new section starts.
 
 TODO:
     * Add __del__ method for removing strong ref in class instance list
+    * Update __str__ and __repr__ methods to show orientation and magnetisation
 """
 from numba import vectorize, float64
 import numpy as _np
@@ -293,9 +294,9 @@ class Prism(Magnet_3D):
         """Helper Function F2 for 3D prismatic magnets
 
         Args:
-            x ([type]): [description]
-            y ([type]): [description]
-            z ([type]): [description]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
 
         Returns:
             [array]: [description]
@@ -306,10 +307,12 @@ class Prism(Magnet_3D):
             yb_sq = _np.power((y + b), 2)
             zc_sq = _np.power((z + c), 2)
             znc_sq = _np.power((z - c), 2)
-
-            data = (_np.sqrt(xa_sq + yb_sq + znc_sq) + c - z) / (
-                _np.sqrt(xa_sq + yb_sq + zc_sq) - c - z
-            )
+            # Hide the warning for situtations where there is a divide by zero.
+            # This returns a NaN in the array, which is ignored for plotting.
+            with _np.errstate(divide="ignore", invalid="ignore"):
+                data = (_np.sqrt(xa_sq + yb_sq + znc_sq) + c - z) / (
+                    _np.sqrt(xa_sq + yb_sq + zc_sq) - c - z
+                )
         except ValueError:
             data = _np.NaN
         return data
@@ -425,11 +428,12 @@ class Prism(Magnet_3D):
             [array]: [description]
         """
         try:
-            data = _np.log(
-                self._F2(a, c, b, -x, -z, y)
-                * self._F2(a, c, b, x, z, y)
-                / (self._F2(a, c, b, -x, z, y) * self._F2(a, c, b, x, -z, y))
-            )
+            with _np.errstate(divide="ignore"):
+                data = _np.log(
+                    self._F2(a, c, b, -x, -z, y)
+                    * self._F2(a, c, b, x, z, y)
+                    / (self._F2(a, c, b, -x, z, y) * self._F2(a, c, b, x, -z, y))
+                )
             data *= Jr / (4 * _np.pi)
         except ValueError:
             data = _np.NaN
@@ -674,9 +678,9 @@ class Cylinder(Magnet_3D):
         B = _allocate_field_array3(x, y, z)
 
         # Convert cartesian coordinates to cylindrical
-        rho, phi = cart2pol(x - self.xc, y - self.yc)
+        rho, phi = cart2pol(x, y)
 
-        Brho, B.z = self._calcB_cyl(rho, z - self.zc)
+        Brho, B.z = self._calcB_cyl(rho, z)
 
         # Convert magnetic fields from cylindrical to cartesian
         # We use pol2cart because Bphi is zero
@@ -836,6 +840,7 @@ class Sphere(Magnet_3D):
             B.x, B.y, B.z = sphere_sph2cart(Br, Btheta, theta, phi)
             return B
 
+    # FIXME: Phi not rotating field
     def _rotate_and_calcB(self, x, y, z):
         """Translates and rotates global coordinates into local before calculating
         the magnetic field and then rotating magnetic field into global frame
@@ -845,6 +850,9 @@ class Sphere(Magnet_3D):
             y (array): y coordinates
             z (array): z coordinates
 
+        TODO:
+            - Fix the rotation around z axis for phi (local magnetisation)
+
         Returns:
             tuple: Bx, By, Bz: calculated magnetic field
         """
@@ -852,17 +860,17 @@ class Sphere(Magnet_3D):
         from ._routines import cart2sph, sphere_sph2cart
         from functools import reduce
 
-        x = Quaternion._input_to_numpy(x) - self.xc
-        y = Quaternion._input_to_numpy(y) - self.yc
-        z = Quaternion._input_to_numpy(z) - self.zc
+        x = Quaternion._input_to_numpy(x)
+        y = Quaternion._input_to_numpy(y)
+        z = Quaternion._input_to_numpy(z)
 
         rotate_about_y, rotate_about_z = None, None
         forward_rotation, reverse_rotation = None, None
 
-        if _np.fabs(self.theta_rad) > 1e-4:
+        if _np.fabs(self.theta_rad) > self.tol:
             rotate_about_y = Quaternion.q_angle_from_axis(self.theta_rad, (0, 1, 0))
 
-        if _np.fabs(self.phi_rad) > 1e-4:
+        if _np.fabs(self.phi_rad) > self.tol:
             rotate_about_z = Quaternion.q_angle_from_axis(self.phi_rad, (0, 0, 1))
 
         # Generate compound rotations
@@ -904,10 +912,8 @@ class Sphere(Magnet_3D):
         Returns:
             tuple: Br, Btheta
         """
-        # try:
+
         preFac = self.Jr * (self.radius ** 3 / r ** 3) / 3.0
-        # except ZeroDivisionError:
-        #     preFac = 0
 
         Br = preFac * 2.0 * _np.cos(theta)
         Btheta = preFac * _np.sin(theta)

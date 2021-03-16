@@ -4,13 +4,13 @@
 # Copyright 2021 Peter Dunne
 """Plotting routines
 
-This module contains all functions needed to plot lines and contours for 1D, 2D,
-and 3D magnetic sources.
+This module contains all functions needed to plot lines and contours for 2D,
+magnetic sources.
 
 TODO:
-    * Spin out 2D and 3D plots into separate modules
+    * Spin out 2D and 3D plots into separate module
 """
-from .magnets._magnet import Registry
+from ..magnets._magnet import Registry
 import matplotlib.pyplot as _plt
 from matplotlib.patches import Rectangle as _Rect
 from matplotlib.patches import Circle as _Circ
@@ -106,6 +106,20 @@ class magnet_patch(object):
 
 
 def plot_1D_field(magnet, **kwargs):
+    """Calculates and plots the magnetic field along the central symmetry axis
+    of a cylinder or cuboid magnet, assuming the magnetic field is collinear
+
+    Args:
+        magnet (magnet object): Must be a Magnet_3D type of magnet, either Prism, Cube,
+        or Cylinder.
+
+    Kwargs:
+        NP (int): Number of points to calculate. Defaults to 101.
+
+    Returns:
+        tuple: z,Bz: arrays of z the distance from the magnet surface, and Bz the
+        magnetic field.
+    """
 
     NP = kwargs.pop("NP", 101)
     return_data = kwargs.pop("return_data", False)
@@ -139,7 +153,7 @@ def plot_1D_field(magnet, **kwargs):
     if return_data:
         return z, Bz
     else:
-        return None
+        return None, None
 
 
 def plot_2D_line(x, Field, **kwargs):
@@ -209,11 +223,11 @@ def plot_2D_contour(x, y, Field, **kwargs):
     SAVE = kwargs.pop("save_fig", False)
 
     finite_field = field_chosen[_np.isfinite(field_chosen)] / scale_cb
-    LL = kwargs.pop("LL", 0)
-    UL = kwargs.pop("UL", round(finite_field.mean() * 2, 1))
-    NL = kwargs.pop("NL", 11)
+    cmin = kwargs.pop("cmin", 0)
+    cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
+    num_levels = kwargs.pop("num_levels", 11)
 
-    lev2 = _np.linspace(LL, UL, 256, endpoint=True)
+    lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
 
     _, ax = _plt.subplots()
     CS = _plt.contourf(
@@ -226,14 +240,14 @@ def plot_2D_contour(x, y, Field, **kwargs):
     )
 
     # Draw contour lines
-    if NL > 1:
-        lev1 = _np.linspace(LL, UL, NL, endpoint=True)
+    if num_levels > 1:
+        lev1 = _np.linspace(cmin, cmax, num_levels, endpoint=True)
         _ = _plt.contour(
             x / scale_x,
             y / scale_y,
             field_chosen / scale_cb,
-            vmin=LL,
-            vmax=UL,
+            vmin=cmin,
+            vmax=cmax,
             levels=lev1,
             linewidths=1.0,
             colors="k",
@@ -267,7 +281,7 @@ def _num_patch_2D(scale_x, scale_y):
     Returns:
         [tuple(list, list)]: lists of patch and arrow objects
     """
-    from .magnets._magnet2 import Magnet_2D, Rectangle, Circle
+    from ..magnets._magnet2 import Magnet_2D, Rectangle, Circle
 
     patch_array = []
     for magnet in Magnet_2D.instances:
@@ -321,7 +335,7 @@ def _gen_rect_patch(magnet, scale_x, scale_y):
 
 
 def _gen_circle_patch(magnet, scale_x, scale_y):
-    """Generates circular patches and arrows to represent magnets for 2D plots
+    """Generates circcmaxar patches and arrows to represent magnets for 2D plots
 
     Args:
         magnet (Magnet object): instance of a magnet class
@@ -469,11 +483,11 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
     SAVE = kwargs.pop("save_fig", False)
 
     finite_field = Field.n[_np.isfinite(Field.n)] / scale_cb
-    LL = kwargs.pop("LL", 0)
-    UL = kwargs.pop("UL", round(finite_field.mean() * 2, 1))
-    NL = kwargs.pop("NL", 11)
+    cmin = kwargs.pop("cmin", 0)
+    cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
+    num_levels = kwargs.pop("num_levels", 11)
 
-    lev2 = _np.linspace(LL, UL, 256, endpoint=True)
+    lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
 
     if _np.ndim(z) < 2:
         orientation = "xy"
@@ -507,14 +521,14 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         extend="max",
     )
 
-    if NL > 1:
-        lev1 = _np.linspace(LL, UL, NL, endpoint=True)
+    if num_levels > 1:
+        lev1 = _np.linspace(cmin, cmax, num_levels, endpoint=True)
         _ = _plt.contour(
             plot_x,
             plot_y,
             Field.n / scale_cb,
-            vmin=LL,
-            vmax=UL,
+            vmin=cmin,
+            vmax=cmax,
             levels=lev1,
             linewidths=1.0,
             colors="k",
@@ -577,24 +591,24 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
 
     SAVE = kwargs.pop("save_fig", False)
 
-    LL = kwargs.pop("LL", -0.5)
-    UL = kwargs.pop("UL", 0.5)
-    NL = kwargs.pop("NL", 11)
+    cmin = kwargs.pop("cmin", -0.5)
+    cmax = kwargs.pop("cmax", 0.5)
+    num_levels = kwargs.pop("num_levels", 11)
 
-    lev2 = _np.linspace(LL, UL, 256, endpoint=True)
+    lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
     _, ax = _plt.subplots()
     CS = _plt.contourf(
         plot_x, plot_y, plot_B, levels=lev2, cmap=_plt.get_cmap(cmap), extend="both"
     )
 
-    if NL > 1:
-        lev1 = _np.linspace(LL, UL, NL, endpoint=True)
+    if num_levels > 1:
+        lev1 = _np.linspace(cmin, cmax, num_levels, endpoint=True)
         _ = _plt.contour(
             plot_x,
             plot_y,
             plot_B,
-            vmin=LL,
-            vmax=UL,
+            vmin=cmin,
+            vmax=cmax,
             levels=lev1,
             linewidths=1.0,
             colors="k",
@@ -659,7 +673,15 @@ def contour_plot_cylinder(magnet, **kwargs):
     clab = r"$|B|$ (T)"
     cmap = "viridis"
     plot_sub_contour_3D(
-        rho * 1e3, z * 1e3, Bn, xlab=xlab, ylab=ylab, clab=clab, cmap=cmap, LL=0, UL=1.0
+        rho * 1e3,
+        z * 1e3,
+        Bn,
+        xlab=xlab,
+        ylab=ylab,
+        clab=clab,
+        cmap=cmap,
+        cmin=0,
+        cmax=1.0,
     )
 
 
@@ -680,173 +702,4 @@ def param_test_2D(width, height):
     x, y = _mag._routines2.grid2D(1.5 * width, height)
     B = _mag._routines2.B_calc_2D(x, y)
     cmap = "viridis"
-    plot_2D_contour(x, y, B, UL=1, NL=11, cmap=cmap)
-
-
-def generate_vertices(center=(0, 0, 0), size=(1, 1, 1)):
-    """Generates coordinates for all cuboid vertices
-
-    Args:
-        center (tuple, optional): x,y,z coordinates. Defaults to (0, 0, 0)
-        size (tuple, optional): scale the cuboid in x, y, z directons. Defaults to (1, 1, 1).
-
-    Returns:
-        ndarray: numpy array of shape (3, 8)
-    """
-    # Center of this cube is (0.5, 0.5, 0.5)
-    x = _np.array([0, 0, 1, 1, 0, 0, 1, 1]) - 0.5
-    y = _np.array([0, 1, 1, 0, 0, 1, 1, 0]) - 0.5
-    z = _np.array([0, 0, 0, 0, 1, 1, 1, 1]) - 0.5
-
-    vertex_coords = _np.vstack([x, y, z])
-
-    # Scale x, y, z by the size array
-    vertex_coords = _np.multiply(vertex_coords.T, size).T
-
-    # Offset by externally set center
-    vertex_coords += _np.array(center).reshape(-1, 1)
-
-    return vertex_coords
-
-
-class Polyhedron(Registry):
-    """Encodes magnet dimensions for drawing a polyhedon on 3D plots
-
-    Polyhedra:
-        Cuboid
-        Cylinder (TODO)
-        Sphere (TODO)
-
-    """
-
-    # Tolerance for minimum angle needed for rotation of object
-    tol = 1e-4
-
-    def __init__(self, center, size, **kwargs):
-        """Initialises a cuboid
-
-        Args:
-            center (tuple): x,y,z
-            size (tuple): x,y,z
-        """
-        super().__init__()
-
-        self.center = _np.asarray(center)
-        self.size = _np.asarray(size)
-
-        self.alpha = kwargs.pop("alpha", 0.0)
-        self.alpha_rad = _np.deg2rad(self.alpha)
-        self.beta = kwargs.pop("beta", 0.0)
-        self.beta_rad = _np.deg2rad(self.beta)
-        self.gamma = kwargs.pop("gamma", 0.0)
-        self.gamma_rad = _np.deg2rad(self.gamma)
-        self.color = kwargs.pop("color", "C0")
-
-    def __repr__(self) -> str:
-        return f"(center: {self.center}, size: {self.size} )"
-
-    def __str__(self) -> str:
-        return f"(center: {self.center}, size: {self.size} )"
-
-
-class Graphic_Cuboid(Polyhedron):
-    def __init__(self, center=(0, 0, 0), size=(1, 1, 1), **kwargs):
-        super().__init__(center, size, **kwargs)
-
-        self.vertices = self._gen_vertices()
-
-    # FIXME: Move below function into quaternion class, do the same for Magnet_3D class
-    def _generate_rotation_quaternions(self):
-        """Generates single rotation quaternion for all non-zero rotation angles,
-        which are:
-
-            alpha: angle in degrees around z-axis
-            beta: angle in degrees around y-axis
-            gamma: angle in degrees around x-axis
-
-        Returns:
-            Quaternion: total rotation quaternion
-        """
-        from .magnets._quaternion import Quaternion
-        from functools import reduce
-
-        # Initialise quaternions
-        rotate_about_x, rotate_about_y, rotate_about_z = None, None, None
-        forward_rotation, reverse_rotation = None, None
-
-        if _np.fabs(self.alpha_rad) > 1e-4:
-            rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
-
-        if _np.fabs(self.beta_rad) > 1e-4:
-            rotate_about_y = Quaternion.q_angle_from_axis(self.beta_rad, (0, 1, 0))
-
-        if _np.fabs(self.gamma_rad) > 1e-4:
-            rotate_about_x = Quaternion.q_angle_from_axis(self.gamma_rad, (1, 0, 0))
-
-        # Generate compound rotations
-        # Order of rotation: beta  about y, alpha about z, gamma about x
-        q_forward = [
-            q for q in [rotate_about_y, rotate_about_z, rotate_about_x] if q is not None
-        ]
-
-        forward_rotation = reduce(lambda x, y: x * y, q_forward)
-
-        q_reverse = [
-            q.get_conjugate()
-            for q in [rotate_about_x, rotate_about_z, rotate_about_y]
-            if q is not None
-        ]
-
-        reverse_rotation = reduce(lambda x, y: x * y, q_reverse)
-        return forward_rotation, reverse_rotation
-
-    def _gen_vertices(self):
-        """Generates vertices of a cuboid
-
-        Returns:
-            ndarray: 3xN array of vertex coordinates (columns are x, y, z)
-        """
-        # Generate and rotate the vertices
-        if _np.any(
-            _np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]) > Polyhedron.tol
-        ):
-
-            forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
-
-            # Generate 3xN array for quaternion rotation
-            vertex_coords = generate_vertices((0, 0, 0), self.size)
-
-            # Rotate points
-            x, y, z = reverse_rotation * vertex_coords
-
-            # Reconstruct 3xN array and add center offset
-            vertex_coords = _np.vstack([x, y, z])
-            vertex_coords += _np.array(self.center).reshape(-1, 1)
-
-            # finally return the coordinates
-            return vertex_coords
-
-        # Only generate
-        else:
-            vertex_coords = generate_vertices(self.center, self.size)
-            return vertex_coords
-
-
-def reset_polyhedra():
-    """Returns a list of all instantiated polyhedra."""
-
-    polyhedra_classes = [
-        Polyhedron,
-        Graphic_Cuboid,
-    ]
-    for cls in polyhedra_classes:
-        cls.reset()
-
-
-def list_polyhedra():
-    """Returns a list of all instantiated polyhedra.
-
-    Assumes that the child class registries have not been modified outside of
-    using `pymagnet.reset_magnets()`.
-    """
-    return Polyhedron.print_instances()
+    plot_2D_contour(x, y, B, cmax=1, num_levels=11, cmap=cmap)

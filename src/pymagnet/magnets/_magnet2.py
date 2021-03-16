@@ -1,23 +1,14 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
 """2D Magnet classes
 
 This private module implements the rectangle and square 2D magnet classes
 
-Example:
-    Examples can be given using either the ``Example`` or ``Examples``
-    sections. Sections support any reStructuredText formatting, including
-    literal blocks::
-
-        $ python example_google.py
-
-Section breaks are created by resuming unindented text. Section breaks
-are also implicitly created anytime a new section starts.
-
 TODO:
     * Add __del__ method for removing strong ref in class instance list
+    * Update __str__ and __repr__ methods to show orientation and magnetisation
 
 """
 import numpy as _np
