@@ -567,10 +567,6 @@ class Cylinder(Magnet_3D):
         super().__init__(Jr, **kwargs)
         self.radius = radius
         self.length = length
-        # self.Jr = Jr
-        self.Jx = 0
-        self.Jy = 0
-        self.Jz = Jr
 
         center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
 
@@ -611,7 +607,7 @@ class Cylinder(Magnet_3D):
     @staticmethod
     @vectorize([float64(float64, float64, float64, float64)])
     def _cel(kc, p, c, s):
-        """Burlisch's complete elliptic integral
+        """Bulirsch's complete elliptic integral
         See NIST Handbook of Mathematical Functions, http://dlmf.nist.gov/19.2
         """
         if kc == 0:

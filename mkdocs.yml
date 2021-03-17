@@ -5,7 +5,8 @@ theme:
 
 nav:
   - Home: index.md
-  - About: about.md
+  - Field Equations: equations.md
+  - Methods: methods.md
   - Code Reference:
       - pymagnet: pymagnet.md
       - magnets: magnets.md
@@ -23,10 +24,15 @@ plugins:
           setup_commands:
             - import sys
             - sys.path.append("src")
+  # - bibtex:
+  #     bib_file: "docs/refs.bib"
+  #     cite_style: "pandoc"
+  # csl_file: "docs/physical-review-letters.csl"
 
 markdown_extensions:
   - admonition
   - attr_list
+  - footnotes
   - pymdownx.superfences
   - pymdownx.arithmatex:
       generic: true

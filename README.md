@@ -65,10 +65,26 @@ volume_cache = pm.plots.volume_plot(cmin=0.0, # minimum field value
                                     num_points=50,
                                     )
 ```
+<figure>
+  <img src="docs/img/3d_example_slice_1.png" width=400/>
+  <img src="docs/img/3d_example_slice_2.png" width=400/>
+  <figcaption>3D surface slice plot</figcaption>
+</figure>
+
+<figure>
+  <img src="docs/img/3d_example_volume_1.png" width=400/>
+  <img src="docs/img/3d_example_volume_2.png" width=400/>
+  <figcaption>3D volume plot</figcaption>
+</figure>
 
 ### 2D calculation and render using matplotlib
 
 Two square magnets of 20x20 mm are added, and a contour plot with a vector field are drawn.
+
+<figure>
+  <img src="docs/img/2d_example.png" width=400/>
+  <figcaption>2D contour plot</figcaption>
+</figure>
 
 ```python
 import pymagnet as pm
@@ -109,7 +125,7 @@ pm.plots.plot_2D_contour(x, y, B, cmin=0.0, # minimum field value
                                  cmap=cmap, # set the colormap
                                  )
 
-``` 
+```
 
 ## Calculating Magnetic Fields and Forces
 
