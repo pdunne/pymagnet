@@ -360,18 +360,13 @@ def _gen_circle_patch(magnet, scale_x, scale_y):
         type="circle",
     )
 
-    Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
-    offset = (
-        magnet.radius
-        * Jnorm
-        * _np.array([_np.cos(magnet.phi_rad), _np.sin(magnet.phi_rad)])
-        / 2
-    )
+    # Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
+    offset = magnet.radius / 2
     arrow_tmp = arrow(
-        x=(magnet.center()[0] - offset[0]) / scale_x,
-        y=(magnet.center()[1] - offset[1]) / scale_y,
-        dx=(2 * offset[0]) / scale_x,
-        dy=(2 * offset[1]) / scale_y,
+        x=(magnet.center()[0] - offset) / scale_x,
+        y=(magnet.center()[1]) / scale_y,
+        dx=(2 * offset) / scale_x,
+        dy=(2 * 0) / scale_y,
         transform=Affine2D().translate(0, 0),
     )
     magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
@@ -570,7 +565,6 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
 
     if SAVE:
         _plt.savefig("contour_plot.png", dpi=300)
-    return ax
 
 
 def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
@@ -623,8 +617,6 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
     _plt.ylabel(ylab)
     _plt.axis("equal")
     _plt.show()
-
-    return ax
 
 
 def line_plot_cylinder(magnet, **kwargs):

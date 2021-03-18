@@ -64,9 +64,9 @@ class Magnet_3D(Magnet):
         self.yc = center.y
         self.zc = center.z
 
-        self.alpha = kwargs.pop("alpha", 0.0)  # rotation angle about x
+        self.alpha = kwargs.pop("alpha", 0.0)  # rotation angle about z
         self.beta = kwargs.pop("beta", 0.0)  # rotation angle about y
-        self.gamma = kwargs.pop("gamma", 0.0)  # rotation angle about z
+        self.gamma = kwargs.pop("gamma", 0.0)  # rotation angle about x
 
         self.alpha_rad = _np.deg2rad(self.alpha)
         self.beta_rad = _np.deg2rad(self.beta)
@@ -79,6 +79,15 @@ class Magnet_3D(Magnet):
             ndarray: [center_x, center_y, center_z]
         """
         return _np.array([self.xc, self.yc, self.zc])
+
+    def get_orientation(self):
+        """Returns magnet orientation, `alpha`, `beta`, `gamma` in degrees
+
+        Returns:
+            ndarray: alpha, beta, gamma rotation angles w.r.t z, y, and x axes
+        """
+
+        return _np.array([self.alpha, self.beta, self.gamma])
 
     def _generate_rotation_quaternions(self):
         """Generates single rotation quaternion for all non-zero rotation angles,
@@ -232,8 +241,9 @@ class Prism(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size() * 2} (m)\n"
+            + f"Size: {self.size()} (m)\n"
             + f"Center {self.center()} (m)\n"
+            + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
@@ -241,8 +251,9 @@ class Prism(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size() * 2} (m)\n"
+            + f"Size: {self.size()} (m)\n"
             + f"Center {self.center()} (m)\n"
+            + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
@@ -428,7 +439,9 @@ class Prism(Magnet_3D):
             [array]: [description]
         """
         try:
-            with _np.errstate(divide="ignore"):
+            # Hide the warning for situtations where there is a divide by zero.
+            # This returns a NaN in the array, which is ignored for plotting.
+            with _np.errstate(divide="ignore", invalid="ignore"):
                 data = _np.log(
                     self._F2(a, c, b, -x, -z, y)
                     * self._F2(a, c, b, x, z, y)
@@ -580,9 +593,10 @@ class Cylinder(Magnet_3D):
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
-            + f"J: {self.Jr} (T)\n"
+            + f"J: {self.get_Jr()} (T)\n"
             + f"Size: {self.size()} (m)\n"
             + f"Center {self.center()} (m)\n"
+            + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
@@ -592,6 +606,7 @@ class Cylinder(Magnet_3D):
             + f"J: {self.Jr} (T)\n"
             + f"Size: {self.size() } (m)\n"
             + f"Center {self.center()} (m)\n"
+            + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
@@ -602,6 +617,9 @@ class Cylinder(Magnet_3D):
             size[ndarray]: numpy array [radius, length]
         """
         return _np.array([self.radius, self.length])
+
+    def get_Jr(self):
+        return _np.array([self.Jr])
 
     # Use Numba to create compiled Numpy ufunc that accepts arrays
     @staticmethod
@@ -758,12 +776,19 @@ class Sphere(Magnet_3D):
 
         super().__init__(Jr, **kwargs)
         self.radius = radius
-        # self.Jr = Jr
 
-        self.phi = kwargs.pop("phi", 90)
-        self.phi_rad = _np.deg2rad(self.phi)
-        self.theta = kwargs.pop("theta", 0)
-        self.theta_rad = _np.deg2rad(self.theta)
+        # self.phi = kwargs.pop("phi", 90)
+        # self.phi_rad = _np.deg2rad(self.phi)
+        # self.theta = kwargs.pop("theta", 0)
+        # self.theta_rad = _np.deg2rad(self.theta)
+
+        # self.Jx = _np.around(
+        #     Jr * _np.cos(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
+        # )
+        # self.Jy = _np.around(
+        #     Jr * _np.sin(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
+        # )
+        # self.Jz = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
 
         center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
 
@@ -777,18 +802,20 @@ class Sphere(Magnet_3D):
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
-            + f"J: {self.Jr} (T)\n"
+            + f"J: {self.get_Jr()} (T)\n"
             + f"Size: {self.size()} (m)\n"
             + f"Center {self.center()} (m)\n"
+            + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
     def __repr__(self):
         str = (
             f"{self.__class__.mag_type}\n"
-            + f"J: {self.Jr} (T)\n"
+            + f"J: {self.get_Jr()} (T)\n"
             + f"Size: {self.size() } (m)\n"
             + f"Center {self.center()} (m)\n"
+            + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
@@ -799,6 +826,9 @@ class Sphere(Magnet_3D):
             size[ndarray]: numpy array [radius, length]
         """
         return _np.array([self.radius])
+
+    def get_Jr(self):
+        return _np.array([self.Jr])
 
     def _calcB_local(self, x, y, z):
         """Internal magnetic field calculation methods.
@@ -818,23 +848,15 @@ class Sphere(Magnet_3D):
 
         B = _allocate_field_array3(x, y, z)
 
-        # only run rotation routine if theta != 0, as a rotation about z (phi) alone
-        # will not rotate the fields.
-        if _np.fabs(self.theta_rad) > 1e-4:
-            # rotate to local frame, calculate B, rotate B to global frame
-            B.x, B.y, B.z = self._rotate_and_calcB(x, y, z)
-            return B
+        # Convert to spherical coordinates
+        r, theta, phi = cart2sph(x, y, z)
 
-        else:
-            # Otherwise directly convert to spherical coordinates
-            r, theta, phi = cart2sph(x, y, z)
+        # Calculates field for sphere magnetised along z
+        Br, Btheta = self._calcB_spherical(r, theta)
 
-            # Calculates field for sphere magnetised along z
-            Br, Btheta = self._calcB_spherical(r, theta)
-
-            # Convert magnetic fields from spherical to cartesian
-            B.x, B.y, B.z = sphere_sph2cart(Br, Btheta, theta, phi)
-            return B
+        # Convert magnetic fields from spherical to cartesian
+        B.x, B.y, B.z = sphere_sph2cart(Br, Btheta, theta, phi)
+        return B
 
     # FIXME: Phi not rotating field
     def _rotate_and_calcB(self, x, y, z):
@@ -900,6 +922,7 @@ class Sphere(Magnet_3D):
 
     def _calcB_spherical(self, r, theta):
         """Calculates the magnetic field due to due to a sphere at any point
+        in spherical coordinates
 
         Args:
             r (float/array): radial coordinates

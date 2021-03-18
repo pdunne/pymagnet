@@ -54,7 +54,7 @@ class Quaternion:
         Example:
             90 degree rotation about the x axis:
 
-            `rotation_quaternion = Quaternion.q_angle_from_axis(np.pi/2, (1, 0, 0) )`
+                rotation_quaternion = Quaternion.q_angle_from_axis(np.pi/2, (1, 0, 0) )
 
         Returns:
             Quaternion: rotation quaternion

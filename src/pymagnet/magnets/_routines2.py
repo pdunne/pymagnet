@@ -146,3 +146,28 @@ def _allocate_field_array2(x, y):
     else:  # line or single point
         B = Vector2(_np.zeros(max(x.size, y.size)), _np.zeros(max(x.size, y.size)))
     return B
+
+
+def _get_field_array_shape2(x, y):
+    """Allocates empty Vector2 data structure
+
+    Args:
+        x (float/array): x co-ordinates
+        y (float/array): y co-ordinates
+
+    Returns:
+        Vector2: Empty data structure
+    """
+
+    # Ensure x,y,z are numpy arrays (even of element 1)
+    if _np.isscalar(x):
+        x = _np.atleast_1d(x)
+    if _np.isscalar(y):
+        y = _np.atleast_1d(y)
+
+    # Determine array shape:
+    if _np.ndim(x) == 2:  # planar slice
+        array_shape = x.shape
+    else:  # line or single point
+        array_shape = max(x.size, y.size)
+    return array_shape

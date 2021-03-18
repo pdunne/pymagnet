@@ -21,7 +21,7 @@ conda install -c pdunne pymagnet
 
 ## Examples
 
-Additional examples are in the examples directory of the repository.
+Additional examples are in the [examples directory of the repository](https://github.com/pdunne/pymagnet/tree/main/examples).
 
 ### 3D calculation and render using plotly
 

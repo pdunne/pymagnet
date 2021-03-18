@@ -50,7 +50,7 @@ def vector_pol2cart(Brho, Bphi, phi):
         tuple: x,y
     """
     Bx = Brho * _np.cos(phi) - Bphi * _np.sin(phi)
-    By = Brho * _np.sin(phi) - Bphi * _np.cos(phi)
+    By = Brho * _np.sin(phi) + Bphi * _np.cos(phi)
     return Bx, By
 
 
