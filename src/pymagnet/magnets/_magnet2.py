@@ -8,7 +8,6 @@ This private module implements the rectangle and square 2D magnet classes
 
 TODO:
     * Add __del__ method for removing strong ref in class instance list
-    * Update __str__ and __repr__ methods to show orientation and magnetisation
 
 """
 import numpy as _np
@@ -152,7 +151,7 @@ class Rectangle(Magnet_2D):
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
 
-        if self.alpha_radians > Magnet_2D.tol:
+        if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
             xi, yi = rotate_points_2D(x, y, self.alpha_radians)
             xci, yci = rotate_points_2D(
                 _np.array([self.xc]), _np.array([self.yc]), self.alpha_radians
@@ -160,7 +159,7 @@ class Rectangle(Magnet_2D):
 
         # Calculate field due to x-component of magnetisation
         if _np.fabs(self.Jx) > Magnet_2D.tol:
-            if self.alpha_radians > Magnet_2D.tol:
+            if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
 
                 # Calculate fields in local frame
                 Btx = self._calcBx_mag_x(xi - xci[0], yi - yci[0])
@@ -175,7 +174,7 @@ class Rectangle(Magnet_2D):
 
         # Calculate field due to y-component of magnetisation
         if _np.fabs(self.Jy) > Magnet_2D.tol:
-            if self.alpha_radians > Magnet_2D.tol:
+            if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
 
                 Btx = self._calcBx_mag_y(xi - xci[0], yi - yci[0])
                 Bty = self._calcBy_mag_y(xi - xci[0], yi - yci[0])
@@ -364,12 +363,9 @@ class Circle(Magnet_2D):
             tuple: Bx, By magnetic field in cartesian coordinates
         """
         from ._routines import cart2pol, vector_pol2cart
-        from ._routines2 import rotate_points_2D, _get_field_array_shape2
+        from ._routines2 import rotate_points_2D
 
-        # array_shape = _get_field_array_shape2(x, y)
-        # Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
-
-        if self.alpha_radians > Magnet_2D.tol:
+        if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
             xi, yi = rotate_points_2D(x, y, self.alpha_radians)
             xci, yci = rotate_points_2D(
                 _np.array([self.xc]), _np.array([self.yc]), self.alpha_radians
@@ -379,7 +375,6 @@ class Circle(Magnet_2D):
             Brho, Bphi = self._calcB_polar(rho, phi)
 
             # Convert magnetic fields from cylindrical to cartesian
-            # Bx, By = vector_pol2cart(Brho)
             Bx, By = vector_pol2cart(Brho, Bphi, phi)
             Bx, By = rotate_points_2D(Bx, By, 2 * _np.pi - self.alpha_radians)
             return Bx, By
@@ -389,7 +384,6 @@ class Circle(Magnet_2D):
         Brho, Bphi = self._calcB_polar(rho, phi)
 
         # Convert magnetic fields from cylindrical to cartesian
-        # Bx, By = vector_pol2cart(Brho)
         Bx, By = vector_pol2cart(Brho, Bphi, phi)
 
         return Bx, By

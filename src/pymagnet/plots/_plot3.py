@@ -142,7 +142,16 @@ class Graphic_Cuboid(Polyhedron):
         """
         # Generate and rotate the vertices
         if _np.any(
-            _np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]) > Polyhedron.tol
+            _np.fabs(
+                _np.array(
+                    [
+                        self.alpha_rad,
+                        self.beta_rad,
+                        self.gamma_rad,
+                    ]
+                )
+            )
+            > Polyhedron.tol
         ):
 
             forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
@@ -226,7 +235,16 @@ class Graphic_Sphere(Polyhedron):
         """
         # Generate and rotate the vertices
         if _np.any(
-            _np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]) > Polyhedron.tol
+            _np.fabs(
+                _np.array(
+                    [
+                        self.alpha_rad,
+                        self.beta_rad,
+                        self.gamma_rad,
+                    ]
+                )
+            )
+            > Polyhedron.tol
         ):
 
             forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
@@ -309,7 +327,16 @@ class Graphic_Cylinder(Polyhedron):
         """
         # Generate and rotate the vertices
         if _np.any(
-            _np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]) > Polyhedron.tol
+            _np.fabs(
+                _np.array(
+                    [
+                        self.alpha_rad,
+                        self.beta_rad,
+                        self.gamma_rad,
+                    ]
+                )
+            )
+            > Polyhedron.tol
         ):
 
             forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
@@ -563,6 +590,7 @@ def _generate_volume_data(x, y, z, B, **kwargs):
         surface_count=kwargs.pop("num_levels", 10),
         showscale=True,
         caps=caps,
+        colorbar=dict(title="|B| (T)"),
     )
 
 
@@ -575,7 +603,7 @@ def surface_slice3(**kwargs):
     """
 
     import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
+    # from plotly.subplots import make_subplots
 
     reset_polyhedra()
 
@@ -597,7 +625,10 @@ def surface_slice3(**kwargs):
     data_objects = []
     cache = {}
 
-    data_objects.extend(_generate_all_meshes(magnet_opacity=1.0))
+    show_magnets = kwargs.pop("show_magnets", True)
+
+    if show_magnets:
+        data_objects.extend(_generate_all_meshes(magnet_opacity=1.0))
 
     xlim = kwargs.pop("xlim", 30e-3)
     ylim = kwargs.pop("ylim", 30e-3)
@@ -715,10 +746,13 @@ def volume_plot(**kwargs):
     cmax = kwargs.pop("cmax", 0.5)
     num_levels = kwargs.pop("num_levels", 5)
 
+    show_magnets = kwargs.pop("show_magnets", True)
+    
     data_objects = []
     cache = {}
 
-    data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
+    if show_magnets:
+        data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
 
     xlim = kwargs.pop("xlim", 30e-3)
     ylim = kwargs.pop("ylim", 30e-3)

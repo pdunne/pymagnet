@@ -41,7 +41,7 @@ length = 20e-3
 m_cyl = pm.magnets.Cylinder(radius = radius, length = length, Jr = 1.0,
                             center=center,
                             alpha = 0, # rotation of magnet w.r.t. z-axis
-                            beta = 330, # rotation of magnet w.r.t. y-axis
+                            beta = -30, # rotation of magnet w.r.t. y-axis
                             gamma = 0, # rotation of magnet w.r.t. x-axis
                             )
 

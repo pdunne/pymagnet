@@ -67,7 +67,11 @@ def cart2sph(x, y, z):
     """
     r = _np.sqrt(x ** 2 + y ** 2 + z ** 2)
     phi = _np.arctan2(y, x)
-    theta = _np.arccos(z / r)
+
+    # Hide the warning for situtations where there is a divide by zero.
+    # This returns a NaN in the array, which is ignored for plotting.
+    with _np.errstate(divide="ignore", invalid="ignore"):
+        theta = _np.arccos(z / r)
     return (r, theta, phi)
 
 

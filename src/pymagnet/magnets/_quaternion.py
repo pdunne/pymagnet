@@ -38,10 +38,10 @@ class Quaternion:
             y (float/array, optional): vector component. Defaults to 0.0.
             z (float/array, optional): vector component. Defaults to 0.0.
         """
-        self.w = Quaternion._input_to_numpy(w)
-        self.x = Quaternion._input_to_numpy(x)
-        self.y = Quaternion._input_to_numpy(y)
-        self.z = Quaternion._input_to_numpy(z)
+        self.w = _np.asarray(w)
+        self.x = _np.asarray(x)
+        self.y = _np.asarray(y)
+        self.z = _np.asarray(z)
 
     def q_angle_from_axis(theta, vec):
         """Generates a rotation quaternion for an angle `theta` about an axis `vec`
@@ -76,20 +76,20 @@ class Quaternion:
         """
         return Quaternion(self.w, -self.x, -self.y, -self.z)
 
-    @staticmethod
-    def _input_to_numpy(x):
-        """Converts input to numpy ndarray
+    # @staticmethod
+    # def _input_to_numpy(x):
+    #     """Converts input to numpy ndarray
 
-        Args:
-            x (float, list, tuple): input
+    #     Args:
+    #         x (float, list, tuple): input
 
-        Returns:
-            ndarry: returns ndarry
-        """
-        if type(x) is not _np.ndarray:
-            return _np.asarray([x])
-        else:
-            return x
+    #     Returns:
+    #         ndarry: returns ndarry
+    #     """
+    #     if type(x) is not _np.ndarray:
+    #         return _np.asarray([x])
+    #     else:
+    #         return x
 
     @staticmethod
     def _prepare_vector(x, y, z):
@@ -106,9 +106,9 @@ class Quaternion:
             ndarray: 3xN numpy ndarray
         """
         # Check input x,y,z are numpy arrays and if not, convert to numpy arrays
-        x = Quaternion._input_to_numpy(x)
-        y = Quaternion._input_to_numpy(y)
-        z = Quaternion._input_to_numpy(z)
+        x = _np.asarray(x)
+        y = _np.asarray(y)
+        z = _np.asarray(z)
 
         longest_array_length = _np.max([x.size, y.size, z.size])
 

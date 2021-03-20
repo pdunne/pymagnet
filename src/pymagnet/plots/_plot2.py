@@ -195,70 +195,106 @@ def plot_2D_contour(x, y, Field, **kwargs):
         y ([array]): [assumes in nm]
         Field ([field vector_2D]): [field vector object]
     """
+    import matplotlib.cm as _cm
+
     scale_x = kwargs.pop("scale_x", 1e-3)
     scale_y = kwargs.pop("scale_y", 1e-3)
     scale_cb = kwargs.pop("scale_cb", 1)
 
     show_magnets = kwargs.pop("show_magnets", True)
 
-    cmap = kwargs.pop("cmap", "magma")
     xlab = kwargs.pop("xlab", f"x (mm)")
     ylab = kwargs.pop("ylab", f"y (mm)")
     clab = kwargs.pop("clab", f"B (T)")
     axis_scale = kwargs.pop("axis_scale", "equal")
 
-    field_component = kwargs.pop("field_component", "n")
-
-    vector_plot = kwargs.pop("vector_plot", False)
-    vector_color = kwargs.pop("vector_color", "w")
-    NQ = kwargs.pop("vector_arrows", 11)
-
-    if field_component == "x":
-        field_chosen = Field.x
-    elif field_component == "y":
-        field_chosen = Field.y
-    else:
-        field_chosen = Field.n
-
     SAVE = kwargs.pop("save_fig", False)
 
-    finite_field = field_chosen[_np.isfinite(field_chosen)] / scale_cb
-    cmin = kwargs.pop("cmin", 0)
-    cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
-    num_levels = kwargs.pop("num_levels", 11)
+    field_component = kwargs.pop("field_component", "n")
 
-    lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
-
+    plot_type = kwargs.pop("plot_type", "contour")
     _, ax = _plt.subplots()
-    CS = _plt.contourf(
-        x / scale_x,
-        y / scale_y,
-        field_chosen / scale_cb,
-        levels=lev2,
-        cmap=_plt.get_cmap(cmap),
-        extend="max",
-    )
 
-    # Draw contour lines
-    if num_levels > 1:
-        lev1 = _np.linspace(cmin, cmax, num_levels, endpoint=True)
-        _ = _plt.contour(
+    if plot_type.lower() == "contour":
+        cmap = kwargs.pop("cmap", "magma")
+        vector_plot = kwargs.pop("vector_plot", False)
+        vector_color = kwargs.pop("vector_color", "w")
+        NQ = kwargs.pop("vector_arrows", 11)
+
+        if field_component == "x":
+            field_chosen = Field.x
+        elif field_component == "y":
+            field_chosen = Field.y
+        else:
+            field_chosen = Field.n
+
+        finite_field = field_chosen[_np.isfinite(field_chosen)] / scale_cb
+        cmin = kwargs.pop("cmin", 0)
+        cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
+        num_levels = kwargs.pop("num_levels", 11)
+
+        lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
+
+        CS = _plt.contourf(
             x / scale_x,
             y / scale_y,
             field_chosen / scale_cb,
-            vmin=cmin,
-            vmax=cmax,
-            levels=lev1,
-            linewidths=1.0,
-            colors="k",
+            levels=lev2,
+            cmap=_plt.get_cmap(cmap),
+            extend="max",
         )
-        CB = _plt.colorbar(CS, ticks=lev1)
-    else:
-        CB = _plt.colorbar(CS)
 
-    # Draw field vectors
-    if vector_plot:
-        _vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color)
+        # Draw contour lines
+        if num_levels > 1:
+            lev1 = _np.linspace(cmin, cmax, num_levels, endpoint=True)
+            _ = _plt.contour(
+                x / scale_x,
+                y / scale_y,
+                field_chosen / scale_cb,
+                vmin=cmin,
+                vmax=cmax,
+                levels=lev1,
+                linewidths=1.0,
+                colors="k",
+            )
+            CB = _plt.colorbar(CS, ticks=lev1)
+        else:
+            CB = _plt.colorbar(CS)
+
+        # Draw field vectors
+        if vector_plot:
+            _vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color)
+    elif plot_type.lower() == "streamplot":
+        cmap = kwargs.pop("cmap", "coolwarm")
+
+        cmin = kwargs.pop("cmin", -round(_np.nanmean(Field.n), 1))
+        cmax = kwargs.pop("cmax", round(_np.nanmean(Field.n), 1))
+
+        stream_shading = kwargs.pop("stream_shading", "vertical")
+        stream_dict = {
+            "normal": Field.n.T,
+            "horizontal": Field.x.T,
+            "vertical": Field.y.T,
+        }
+        xpl = x[:, 0] / scale_x
+        ypl = y[0, :] / scale_y
+        norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
+
+        CS = _plt.streamplot(
+            xpl,
+            ypl,
+            Field.x.T / Field.n.T,
+            Field.y.T / Field.n.T,
+            color=stream_dict.get(stream_shading, "normal"),
+            density=1.2,
+            norm=norm,
+            cmap="coolwarm",
+            linewidth=0.5,
+        )
+        CB = _plt.colorbar(CS.lines)
+
+    else:
+        raise Exception("plot_type must be 'contour' or 'streamplot'")
 
     # Draw magnets and magnetisation arrows
     if show_magnets:
@@ -360,8 +396,8 @@ def _gen_circle_patch(magnet, scale_x, scale_y):
         type="circle",
     )
 
-    # Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
-    offset = magnet.radius / 2
+    Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
+    offset = magnet.radius * Jnorm[0] / 2
     arrow_tmp = arrow(
         x=(magnet.center()[0] - offset) / scale_x,
         y=(magnet.center()[1]) / scale_y,
@@ -461,15 +497,17 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         y ([array]): [assumes in nm]
         Field ([field vector]): [field vector object]
     """
+    import matplotlib.cm as _cm
+    from ..magnets._fields import Vector2
+
     scale_x = kwargs.pop("scale_x", 1e-3)
     scale_y = kwargs.pop("scale_y", 1e-3)
     scale_z = kwargs.pop("scale_z", 1e-3)
     scale_cb = kwargs.pop("scale_cb", 1)
     axis_scale = kwargs.pop("axis_scale", "equal")
 
-    patch_array = kwargs.pop("patch_array", _np.array([]))
+    plot_type = kwargs.pop("plot_type", "contour")
 
-    cmap = kwargs.pop("cmap", "magma")
     xlab = kwargs.pop("xlab", f"x (mm)")
     ylab = kwargs.pop("ylab", f"y (mm)")
     zlab = kwargs.pop("zlab", f"z (mm)")
@@ -478,14 +516,14 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
     SAVE = kwargs.pop("save_fig", False)
 
     finite_field = Field.n[_np.isfinite(Field.n)] / scale_cb
-    cmin = kwargs.pop("cmin", 0)
+
     cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
     num_levels = kwargs.pop("num_levels", 11)
 
-    lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
-
     if _np.ndim(z) < 2:
         orientation = "xy"
+        stream_x = Field.x
+        stream_y = Field.y
         plot_x = x / scale_x
         plot_y = y / scale_y
         plot_xlab = xlab
@@ -493,6 +531,8 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
 
     elif _np.ndim(y) < 2:
         orientation = "xz"
+        stream_x = Field.x
+        stream_y = Field.z
         plot_x = x / scale_x
         plot_y = z / scale_z
         plot_xlab = xlab
@@ -500,62 +540,84 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
 
     else:
         orientation = "yz"
+        stream_x = Field.y
+        stream_y = Field.z
         plot_x = y / scale_y
         plot_y = z / scale_z
         plot_xlab = ylab
         plot_ylab = zlab
 
-    print(orientation)
     _, ax = _plt.subplots()
-    CS = _plt.contourf(
-        plot_x,
-        plot_y,
-        Field.n / scale_cb,
-        levels=lev2,
-        cmap=_plt.get_cmap(cmap),
-        extend="max",
-    )
 
-    if num_levels > 1:
-        lev1 = _np.linspace(cmin, cmax, num_levels, endpoint=True)
-        _ = _plt.contour(
+    # Generate Contour Plot
+    if plot_type.lower() == "contour":
+        vector_plot = kwargs.pop("vector_plot", False)
+        vector_color = kwargs.pop("vector_color", "w")
+        NQ = kwargs.pop("vector_arrows", 11)
+
+        cmap = kwargs.pop("cmap", "magma")
+        cmin = kwargs.pop("cmin", 0)
+        lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
+        CS = _plt.contourf(
             plot_x,
             plot_y,
             Field.n / scale_cb,
-            vmin=cmin,
-            vmax=cmax,
-            levels=lev1,
-            linewidths=1.0,
-            colors="k",
+            levels=lev2,
+            cmap=_plt.get_cmap(cmap),
+            extend="max",
         )
-        CB = _plt.colorbar(CS, ticks=lev1)
+
+        # Draw contour lines
+        if num_levels > 1:
+            lev1 = _np.linspace(cmin, cmax, num_levels, endpoint=True)
+            _ = _plt.contour(
+                plot_x,
+                plot_y,
+                Field.n / scale_cb,
+                vmin=cmin,
+                vmax=cmax,
+                levels=lev1,
+                linewidths=1.0,
+                colors="k",
+            )
+            CB = _plt.colorbar(CS, ticks=lev1)
+
+        else:
+            CB = _plt.colorbar(CS)
+
+        if vector_plot:
+            B_2D = Vector2(stream_x, stream_y)
+            B_2D.calc_norm()
+            _vector_plot2(plot_x, plot_y, B_2D, NQ, 1, 1, vector_color)
+
+    # Generates streamplot
+    elif plot_type.lower() == "streamplot":
+        cmap = kwargs.pop("cmap", "coolwarm")
+        cmin = kwargs.pop("cmin", -round(finite_field.mean() * 2, 1))
+        stream_shading = kwargs.pop("stream_shading", "vertical")
+        stream_dict = {
+            "normal": Field.n.T,
+            "horizontal": stream_x.T,
+            "vertical": stream_y.T,
+        }
+        xpl = plot_x[:, 0]
+        ypl = plot_y[0, :]
+        norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
+
+        CS = _plt.streamplot(
+            xpl,
+            ypl,
+            stream_x.T / Field.n.T,
+            stream_y.T / Field.n.T,
+            color=stream_dict.get(stream_shading, "normal"),
+            density=1.2,
+            norm=norm,
+            cmap=cmap,
+            linewidth=0.5,
+        )
+        CB = _plt.colorbar(CS.lines)
     else:
-        CB = _plt.colorbar(CS)
-
-    if len(patch_array) > 0:
-        for ii in patch_array:
-            ii /= scale_x
-
-            sq = _Rect(
-                xy=(ii[0], ii[1]),
-                width=ii[2],
-                height=ii[3],
-                fill=True,
-                color="#F5F5F5",
-                zorder=5,
-            )
-            ax.add_patch(sq)
-
-            ar = _Arrow(
-                ii[0] + ii[2] / 2 - ii[4] / 2,
-                ii[1] + ii[3] / 2 - ii[5] / 2,
-                ii[4],
-                ii[5],
-                width=5,
-                zorder=6,
-                color="k",
-            )
-            ax.add_patch(ar)
+        raise Exception("plot_type must be 'contour' or 'streamplot'")
 
     CB.ax.get_yaxis().labelpad = 15
     CB.ax.set_ylabel(clab, rotation=270)
@@ -590,7 +652,7 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
     num_levels = kwargs.pop("num_levels", 11)
 
     lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
-    _, ax = _plt.subplots()
+    _, _ = _plt.subplots()
     CS = _plt.contourf(
         plot_x, plot_y, plot_B, levels=lev2, cmap=_plt.get_cmap(cmap), extend="both"
     )

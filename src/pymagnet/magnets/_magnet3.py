@@ -57,6 +57,8 @@ class Magnet_3D(Magnet):
 
         center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
 
+        self._mask_magnet = kwargs.pop("mask_magnet", "nan")
+
         if type(center) is tuple:
             center = Point3(center[0], center[1], center[2])
 
@@ -79,6 +81,13 @@ class Magnet_3D(Magnet):
             ndarray: [center_x, center_y, center_z]
         """
         return _np.array([self.xc, self.yc, self.zc])
+
+    def get_Jr(self):
+        """Returns local magnetisation orientation
+
+        Must be implemented for all classes
+        """
+        pass
 
     def get_orientation(self):
         """Returns magnet orientation, `alpha`, `beta`, `gamma` in degrees
@@ -146,10 +155,20 @@ class Magnet_3D(Magnet):
         Returns:
             tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector
         """
+        from ._routines3 import _gen_mask, _tile_arrays, _apply_mask
 
         # If any rotation angle is set, transform the data
         if _np.any(
-            _np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]) > Magnet.tol
+            _np.fabs(
+                _np.array(
+                    [
+                        self.alpha_rad,
+                        self.beta_rad,
+                        self.gamma_rad,
+                    ]
+                )
+            )
+            > Magnet.tol
         ):
 
             forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
@@ -162,6 +181,8 @@ class Magnet_3D(Magnet):
 
             # Calls internal child method to calculate the field
             B_local = self._calcB_local(x_rot, y_rot, z_rot)
+            mask = _gen_mask(self, x_rot, y_rot, z_rot)
+            B_local = _apply_mask(self, B_local, mask, self.get_Jr(), self._mask_magnet)
 
             # Rearrange the field vectors in a 3xN array for quaternion rotation
             Bvec = Quaternion._prepare_vector(B_local.x, B_local.y, B_local.z)
@@ -173,6 +194,11 @@ class Magnet_3D(Magnet):
             return Bx, By, Bz
         else:
             B = self._calcB_local(x - self.xc, y - self.yc, z - self.zc)
+
+            xloc, yloc, zloc = _tile_arrays(x - self.xc, y - self.yc, z - self.zc)
+            mask = _gen_mask(self, xloc, yloc, zloc)
+            B = _apply_mask(self, B, mask, self.get_Jr(), self._mask_magnet)
+
             return B.x, B.y, B.z
 
     def _calcB_local(x, y, z):
@@ -183,6 +209,13 @@ class Magnet_3D(Magnet):
             x (float/array): x co-ordinates
             y (float/array): y co-ordinates
             z (float/array): z co-ordinates
+        """
+        pass
+
+    def size(self):
+        """Returns magnet dimesions
+
+        Must be implemented for each magnet
         """
         pass
 
@@ -619,7 +652,7 @@ class Cylinder(Magnet_3D):
         return _np.array([self.radius, self.length])
 
     def get_Jr(self):
-        return _np.array([self.Jr])
+        return _np.array([0.0, 0.0, self.Jr])
 
     # Use Numba to create compiled Numpy ufunc that accepts arrays
     @staticmethod
@@ -828,7 +861,7 @@ class Sphere(Magnet_3D):
         return _np.array([self.radius])
 
     def get_Jr(self):
-        return _np.array([self.Jr])
+        return _np.array([0.0, 0.0, self.Jr])
 
     def _calcB_local(self, x, y, z):
         """Internal magnetic field calculation methods.
@@ -844,7 +877,7 @@ class Sphere(Magnet_3D):
             Vector3: Magnetic field array
         """
         from ._routines import cart2sph, sphere_sph2cart
-        from ._routines3 import _allocate_field_array3
+        from ._routines3 import _allocate_field_array3, _gen_mask_sphere
 
         B = _allocate_field_array3(x, y, z)
 
@@ -859,66 +892,66 @@ class Sphere(Magnet_3D):
         return B
 
     # FIXME: Phi not rotating field
-    def _rotate_and_calcB(self, x, y, z):
-        """Translates and rotates global coordinates into local before calculating
-        the magnetic field and then rotating magnetic field into global frame
+    # def _rotate_and_calcB(self, x, y, z):
+    #     """Translates and rotates global coordinates into local before calculating
+    #     the magnetic field and then rotating magnetic field into global frame
 
-        Args:
-            x (array): x coordinates
-            y (array): y coordinates
-            z (array): z coordinates
+    #     Args:
+    #         x (array): x coordinates
+    #         y (array): y coordinates
+    #         z (array): z coordinates
 
-        TODO:
-            - Fix the rotation around z axis for phi (local magnetisation)
+    #     TODO:
+    #         - Fix the rotation around z axis for phi (local magnetisation)
 
-        Returns:
-            tuple: Bx, By, Bz: calculated magnetic field
-        """
+    #     Returns:
+    #         tuple: Bx, By, Bz: calculated magnetic field
+    #     """
 
-        from ._routines import cart2sph, sphere_sph2cart
-        from functools import reduce
+    #     from ._routines import cart2sph, sphere_sph2cart
+    #     from functools import reduce
 
-        x = Quaternion._input_to_numpy(x)
-        y = Quaternion._input_to_numpy(y)
-        z = Quaternion._input_to_numpy(z)
+    #     x = Quaternion._input_to_numpy(x)
+    #     y = Quaternion._input_to_numpy(y)
+    #     z = Quaternion._input_to_numpy(z)
 
-        rotate_about_y, rotate_about_z = None, None
-        forward_rotation, reverse_rotation = None, None
+    #     rotate_about_y, rotate_about_z = None, None
+    #     forward_rotation, reverse_rotation = None, None
 
-        if _np.fabs(self.theta_rad) > self.tol:
-            rotate_about_y = Quaternion.q_angle_from_axis(self.theta_rad, (0, 1, 0))
+    #     if _np.fabs(self.theta_rad) > self.tol:
+    #         rotate_about_y = Quaternion.q_angle_from_axis(self.theta_rad, (0, 1, 0))
 
-        if _np.fabs(self.phi_rad) > self.tol:
-            rotate_about_z = Quaternion.q_angle_from_axis(self.phi_rad, (0, 0, 1))
+    #     if _np.fabs(self.phi_rad) > self.tol:
+    #         rotate_about_z = Quaternion.q_angle_from_axis(self.phi_rad, (0, 0, 1))
 
-        # Generate compound rotations
-        q_forward = [q for q in [rotate_about_z, rotate_about_y] if q is not None]
-        forward_rotation = reduce(lambda x, y: x * y, q_forward)
+    #     # Generate compound rotations
+    #     q_forward = [q for q in [rotate_about_z, rotate_about_y] if q is not None]
+    #     forward_rotation = reduce(lambda x, y: x * y, q_forward)
 
-        q_reverse = [
-            q.get_conjugate() for q in [rotate_about_y, rotate_about_z] if q is not None
-        ]
-        reverse_rotation = reduce(lambda x, y: x * y, q_reverse)
+    #     q_reverse = [
+    #         q.get_conjugate() for q in [rotate_about_y, rotate_about_z] if q is not None
+    #     ]
+    #     reverse_rotation = reduce(lambda x, y: x * y, q_reverse)
 
-        # Generate 3xN array for quaternion rotation
-        pos_vec = Quaternion._prepare_vector(x, y, z)
+    #     # Generate 3xN array for quaternion rotation
+    #     pos_vec = Quaternion._prepare_vector(x, y, z)
 
-        # Rotate points
-        x_rot, y_rot, z_rot = forward_rotation * pos_vec
+    #     # Rotate points
+    #     x_rot, y_rot, z_rot = forward_rotation * pos_vec
 
-        # Convert points to spherical coordinates
-        r, theta, phi = cart2sph(x_rot, y_rot, z_rot)
+    #     # Convert points to spherical coordinates
+    #     r, theta, phi = cart2sph(x_rot, y_rot, z_rot)
 
-        # Calculates field for sphere magnetised along z
-        Br, Btheta = self._calcB_spherical(r, theta)
+    #     # Calculates field for sphere magnetised along z
+    #     Br, Btheta = self._calcB_spherical(r, theta)
 
-        # Convert magnetic fields from spherical to cartesian
-        Bx, By, Bz = sphere_sph2cart(Br, Btheta, theta, phi)
+    #     # Convert magnetic fields from spherical to cartesian
+    #     Bx, By, Bz = sphere_sph2cart(Br, Btheta, theta, phi)
 
-        # Rotate using quaternions to get correct fields
-        Bvec = Quaternion._prepare_vector(Bx, By, Bz)
-        Bx_rot, By_rot, Bz_rot = reverse_rotation * Bvec
-        return Bx_rot, By_rot, Bz_rot
+    #     # Rotate using quaternions to get correct fields
+    #     Bvec = Quaternion._prepare_vector(Bx, By, Bz)
+    #     Bx_rot, By_rot, Bz_rot = reverse_rotation * Bvec
+    #     return Bx_rot, By_rot, Bz_rot
 
     def _calcB_spherical(self, r, theta):
         """Calculates the magnetic field due to due to a sphere at any point
@@ -932,7 +965,10 @@ class Sphere(Magnet_3D):
             tuple: Br, Btheta
         """
 
-        preFac = self.Jr * (self.radius ** 3 / r ** 3) / 3.0
+        # Hide the warning for situtations where there is a divide by zero.
+        # This returns a NaN in the array, which is ignored for plotting.
+        with _np.errstate(divide="ignore", invalid="ignore"):
+            preFac = self.Jr * (self.radius ** 3 / r ** 3) / 3.0
 
         Br = preFac * 2.0 * _np.cos(theta)
         Btheta = preFac * _np.sin(theta)
