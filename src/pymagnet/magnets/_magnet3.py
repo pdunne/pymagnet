@@ -57,7 +57,7 @@ class Magnet_3D(Magnet):
 
         center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
 
-        self._mask_magnet = kwargs.pop("mask_magnet", "nan")
+        self._mask_magnet = kwargs.pop("mask_magnet", False)
 
         if type(center) is tuple:
             center = Point3(center[0], center[1], center[2])
@@ -155,7 +155,7 @@ class Magnet_3D(Magnet):
         Returns:
             tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector
         """
-        from ._routines3 import _gen_mask, _tile_arrays, _apply_mask
+        from ._routines3 import _tile_arrays, _apply_mask
 
         # If any rotation angle is set, transform the data
         if _np.any(
@@ -181,8 +181,9 @@ class Magnet_3D(Magnet):
 
             # Calls internal child method to calculate the field
             B_local = self._calcB_local(x_rot, y_rot, z_rot)
-            mask = _gen_mask(self, x_rot, y_rot, z_rot)
-            B_local = _apply_mask(self, B_local, mask, self.get_Jr(), self._mask_magnet)
+            mask = self._generate_mask(x_rot, y_rot, z_rot)
+
+            B_local = _apply_mask(self, B_local, mask)
 
             # Rearrange the field vectors in a 3xN array for quaternion rotation
             Bvec = Quaternion._prepare_vector(B_local.x, B_local.y, B_local.z)
@@ -196,8 +197,8 @@ class Magnet_3D(Magnet):
             B = self._calcB_local(x - self.xc, y - self.yc, z - self.zc)
 
             xloc, yloc, zloc = _tile_arrays(x - self.xc, y - self.yc, z - self.zc)
-            mask = _gen_mask(self, xloc, yloc, zloc)
-            B = _apply_mask(self, B, mask, self.get_Jr(), self._mask_magnet)
+            mask = self._generate_mask(xloc, yloc, zloc)
+            B = _apply_mask(self, B, mask)
 
             return B.x, B.y, B.z
 
@@ -209,6 +210,16 @@ class Magnet_3D(Magnet):
             x (float/array): x co-ordinates
             y (float/array): y co-ordinates
             z (float/array): z co-ordinates
+        """
+        pass
+
+    def _generate_mask(self, x, y, z):
+        """Generates mask of points inside a magnet
+
+        Args:
+            x (ndarray/float): x-coordinates
+            y (ndarray/float): y-coordinates
+            z (ndarray/float): z-coordinates
         """
         pass
 
@@ -318,17 +329,20 @@ class Prism(Magnet_3D):
         """
 
         try:
-            data = _np.arctan(
-                ((y + b) * (z + c))
-                / (
-                    (x + a)
-                    * _np.sqrt(
-                        _np.power((x + a), 2)
-                        + _np.power((y + b), 2)
-                        + _np.power((z + c), 2)
+            # Hide the warning for situtations where there is a divide by zero.
+            # This returns a NaN in the array, which is ignored for plotting.
+            with _np.errstate(divide="ignore", invalid="ignore"):
+                data = _np.arctan(
+                    ((y + b) * (z + c))
+                    / (
+                        (x + a)
+                        * _np.sqrt(
+                            _np.power((x + a), 2)
+                            + _np.power((y + b), 2)
+                            + _np.power((z + c), 2)
+                        )
                     )
                 )
-            )
         except ValueError:
             data = _np.NaN
         return data
@@ -560,6 +574,32 @@ class Prism(Magnet_3D):
         Bz = self._calcBz_prism_x(-b, a, c, Jr, -y, x, z)
         return Bx, By, Bz
 
+    def _generate_mask(self, x, y, z):
+        """Generates mask of points inside a magnet
+
+        Args:
+            x (ndarray/float): x-coordinates
+            y (ndarray/float): y-coordinates
+            z (ndarray/float): z-coordinates
+        """
+        w, d, h = self.size()
+        xn = -w / 2
+        xp = w / 2
+        yn = -d / 2
+        yp = d / 2
+        zn = -h / 2
+        zp = h / 2
+
+        mask_x = _np.logical_and(x > xn, x < xp)
+        mask_y = _np.logical_and(y > yn, y < yp)
+        mask_z = _np.logical_and(z > zn, z < zp)
+
+        # merge logical masks
+        mask = _np.logical_and(mask_x, mask_z)
+        mask = _np.logical_and(mask, mask_y)
+
+        return mask
+
 
 class Cube(Prism):
     """Cube Magnet Class. Cuboid width x depth x height.
@@ -783,6 +823,26 @@ class Cylinder(Magnet_3D):
         )
         return Brho, Bz
 
+    def _generate_mask(self, x, y, z):
+        """Generates mask of points inside a cylindrical magnet
+
+        Args:
+            x (ndarray/float): x-coordinates
+            y (ndarray/float): y-coordinates
+            z (ndarray/float): z-coordinates
+        """
+
+        radius, length = self.size()
+        data_norm = x ** 2 + y ** 2
+        zn = -length / 2
+        zp = length / 2
+
+        mask_rho = data_norm < radius ** 2
+        mask_z = _np.logical_and(z > zn, z < zp)
+        mask = _np.logical_and(mask_rho, mask_z)
+
+        return mask
+
 
 class Sphere(Magnet_3D):
     """Sphere Magnet Class
@@ -877,7 +937,7 @@ class Sphere(Magnet_3D):
             Vector3: Magnetic field array
         """
         from ._routines import cart2sph, sphere_sph2cart
-        from ._routines3 import _allocate_field_array3, _gen_mask_sphere
+        from ._routines3 import _allocate_field_array3
 
         B = _allocate_field_array3(x, y, z)
 
@@ -974,3 +1034,17 @@ class Sphere(Magnet_3D):
         Btheta = preFac * _np.sin(theta)
 
         return Br, Btheta
+
+    def _generate_mask(self, x, y, z):
+        """Generates mask of points inside a spherical magnet
+
+        Args:
+            x (ndarray/float): x-coordinates
+            y (ndarray/float): y-coordinates
+            z (ndarray/float): z-coordinates
+        """
+
+        data_norm = x ** 2 + y ** 2 + z ** 2
+        mask = data_norm < self.radius ** 2
+
+        return mask

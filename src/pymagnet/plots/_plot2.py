@@ -4,11 +4,9 @@
 # Copyright 2021 Peter Dunne
 """Plotting routines
 
-This module contains all functions needed to plot lines and contours for 2D,
-magnetic sources.
+This module contains all functions needed to plot lines and contours for 2D
+magnetic sources, and 
 
-TODO:
-    * Spin out 2D and 3D plots into separate module
 """
 from ..magnets._magnet import Registry
 import matplotlib.pyplot as _plt
@@ -103,57 +101,6 @@ class magnet_patch(object):
 
     def __str__(self) -> str:
         return self.patch.__str__() + self.arrow.__str__()
-
-
-def plot_1D_field(magnet, **kwargs):
-    """Calculates and plots the magnetic field along the central symmetry axis
-    of a cylinder or cuboid magnet, assuming the magnetic field is collinear
-
-    Args:
-        magnet (magnet object): Must be a Magnet_3D type of magnet, either Prism, Cube,
-        or Cylinder.
-
-    Kwargs:
-        NP (int): Number of points to calculate. Defaults to 101.
-
-    Returns:
-        tuple: z,Bz: arrays of z the distance from the magnet surface, and Bz the
-        magnetic field.
-    """
-
-    NP = kwargs.pop("NP", 101)
-    return_data = kwargs.pop("return_data", False)
-
-    if issubclass(magnet.__class__, _mag.Cylinder):
-        mag_boundary = magnet.length / 2
-        z = _np.linspace(
-            -2 * magnet.length + magnet.zc, 2 * magnet.length + magnet.zc, NP
-        )
-        Bz = _mag.magnetic_field_cylinder_1D(magnet, z)
-
-    elif issubclass(magnet.__class__, _mag.Prism):
-        mag_boundary = magnet.height / 2
-        z = _np.linspace(
-            -2 * magnet.height + magnet.zc, 2 * magnet.height + magnet.zc, NP
-        )
-        Bz = _mag.magnetic_field_prism_1D(magnet, z)
-
-    else:
-        print("Error")
-        return None
-
-    _, _ = _plt.subplots()
-    _plt.xlabel(r"$z$ (mm)")
-    _plt.ylabel(r"$B_z$ (mT)")
-    _plt.plot(z * 1e3, Bz * 1e3, label="Cube")
-    _plt.axvline(x=-mag_boundary * 1e3 + magnet.zc * 1e3, c="blue", ls="--")
-    _plt.axvline(x=mag_boundary * 1e3 + magnet.zc * 1e3, c="red", ls="--")
-    _plt.axvline(x=0.0, c="k", ls="-")
-    _plt.show()
-    if return_data:
-        return z, Bz
-    else:
-        return None, None
 
 
 def plot_2D_line(x, Field, **kwargs):
@@ -264,34 +211,50 @@ def plot_2D_contour(x, y, Field, **kwargs):
         # Draw field vectors
         if vector_plot:
             _vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color)
+
     elif plot_type.lower() == "streamplot":
-        cmap = kwargs.pop("cmap", "coolwarm")
 
-        cmin = kwargs.pop("cmin", -round(_np.nanmean(Field.n), 1))
-        cmax = kwargs.pop("cmax", round(_np.nanmean(Field.n), 1))
-
-        stream_shading = kwargs.pop("stream_shading", "vertical")
-        stream_dict = {
-            "normal": Field.n.T,
-            "horizontal": Field.x.T,
-            "vertical": Field.y.T,
-        }
         xpl = x[:, 0] / scale_x
         ypl = y[0, :] / scale_y
-        norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
+        cmap = kwargs.pop("cmap", None)
 
-        CS = _plt.streamplot(
-            xpl,
-            ypl,
-            Field.x.T / Field.n.T,
-            Field.y.T / Field.n.T,
-            color=stream_dict.get(stream_shading, "normal"),
-            density=1.2,
-            norm=norm,
-            cmap="coolwarm",
-            linewidth=0.5,
-        )
-        CB = _plt.colorbar(CS.lines)
+        if cmap is not None:
+            cmin = kwargs.pop("cmin", -round(_np.nanmean(Field.n), 1))
+            cmax = kwargs.pop("cmax", round(_np.nanmean(Field.n), 1))
+            stream_shading = kwargs.pop("stream_color", "vertical")
+            norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
+
+            stream_dict = {
+                "normal": Field.n.T,
+                "horizontal": Field.x.T,
+                "vertical": Field.y.T,
+            }
+
+            CS = _plt.streamplot(
+                xpl,
+                ypl,
+                Field.x.T / Field.n.T,
+                Field.y.T / Field.n.T,
+                color=stream_dict.get(stream_shading, "normal"),
+                density=1.2,
+                norm=norm,
+                cmap=cmap,
+                linewidth=0.5,
+            )
+            CB = _plt.colorbar(CS.lines)
+
+        else:
+            color = kwargs.pop("color", "k")
+            CS = _plt.streamplot(
+                xpl,
+                ypl,
+                Field.x.T / Field.n.T,
+                Field.y.T / Field.n.T,
+                density=1.2,
+                linewidth=0.5,
+                color=color,
+            )
+            CB = None
 
     else:
         raise Exception("plot_type must be 'contour' or 'streamplot'")
@@ -300,8 +263,9 @@ def plot_2D_contour(x, y, Field, **kwargs):
     if show_magnets:
         _draw_magnets2(ax, scale_x, scale_y)
 
-    CB.ax.get_yaxis().labelpad = 15
-    CB.ax.set_ylabel(clab, rotation=270)
+    if CB is not None:
+        CB.ax.get_yaxis().labelpad = 15
+        CB.ax.set_ylabel(clab, rotation=270)
     _plt.axis(axis_scale)
     _plt.xlabel(xlab)
     _plt.ylabel(ylab)
@@ -479,14 +443,15 @@ def _vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color):
     NPx, NPy = x.shape
     if NQ != 0:
         NSx, NSy = NPx // NQ, NPy // NQ
-        _plt.quiver(
-            x[::NSx, ::NSy] / scale_x,
-            y[::NSx, ::NSy] / scale_y,
-            Field.x[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
-            Field.y[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
-            color=vector_color,
-            alpha=1,
-        )
+        with _np.errstate(divide="ignore", invalid="ignore"):
+            _plt.quiver(
+                x[::NSx, ::NSy] / scale_x,
+                y[::NSx, ::NSy] / scale_y,
+                Field.x[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
+                Field.y[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
+                color=vector_color,
+                alpha=1,
+            )
 
 
 def plot_3D_contour(x, y, z, Field, **kwargs):
@@ -592,35 +557,53 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
 
     # Generates streamplot
     elif plot_type.lower() == "streamplot":
-        cmap = kwargs.pop("cmap", "coolwarm")
-        cmin = kwargs.pop("cmin", -round(finite_field.mean() * 2, 1))
-        stream_shading = kwargs.pop("stream_shading", "vertical")
-        stream_dict = {
-            "normal": Field.n.T,
-            "horizontal": stream_x.T,
-            "vertical": stream_y.T,
-        }
         xpl = plot_x[:, 0]
         ypl = plot_y[0, :]
-        norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
+        cmap = kwargs.pop("cmap", None)
+        if cmap is not None:
+            cmin = kwargs.pop("cmin", -round(finite_field.mean() * 2, 1))
+            cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
 
-        CS = _plt.streamplot(
-            xpl,
-            ypl,
-            stream_x.T / Field.n.T,
-            stream_y.T / Field.n.T,
-            color=stream_dict.get(stream_shading, "normal"),
-            density=1.2,
-            norm=norm,
-            cmap=cmap,
-            linewidth=0.5,
-        )
-        CB = _plt.colorbar(CS.lines)
+            stream_shading = kwargs.pop("stream_shading", "vertical")
+            norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
+
+            stream_dict = {
+                "normal": Field.n.T,
+                "horizontal": stream_x.T,
+                "vertical": stream_y.T,
+            }
+
+            CS = _plt.streamplot(
+                xpl,
+                ypl,
+                stream_x.T / Field.n.T,
+                stream_y.T / Field.n.T,
+                color=stream_dict.get(stream_shading, "normal"),
+                density=1.2,
+                norm=norm,
+                cmap=cmap,
+                linewidth=0.5,
+            )
+            CB = _plt.colorbar(CS.lines)
+        else:
+            color = kwargs.pop("color", "k")
+            CS = _plt.streamplot(
+                xpl,
+                ypl,
+                stream_x.T / Field.n.T,
+                stream_y.T / Field.n.T,
+                density=1.2,
+                linewidth=0.5,
+                color=color,
+            )
+            CB = None
+
     else:
         raise Exception("plot_type must be 'contour' or 'streamplot'")
 
-    CB.ax.get_yaxis().labelpad = 15
-    CB.ax.set_ylabel(clab, rotation=270)
+    if CB is not None:
+        CB.ax.get_yaxis().labelpad = 15
+        CB.ax.set_ylabel(clab, rotation=270)
     _plt.xlabel(plot_xlab)
     _plt.ylabel(plot_ylab)
     _plt.axis(axis_scale)

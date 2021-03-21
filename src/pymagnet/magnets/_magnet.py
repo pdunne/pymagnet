@@ -5,23 +5,6 @@
 """Magnet Base class
 
 This private module implements the registry and base magnet classes
-
-Example:
-    Examples can be given using either the ``Example`` or ``Examples``
-    sections. Sections support any reStructuredText formatting, including
-    literal blocks::
-
-        $ python example_google.py
-
-Section breaks are created by resuming unindented text. Section breaks
-are also implicitly created anytime a new section starts.
-
-TODO:
-    * Add __del__ method for removing strong ref in class instance list
-
-
-.. _Google Python Style Guide:
-   https://google.github.io/styleguide/pyguide.html
 """
 # __all__ = ['Magnet', 'reset_magnets', 'list_magnets']
 __all__ = ["Magnet"]

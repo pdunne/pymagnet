@@ -13,13 +13,15 @@ Installing `pymagnet` can be done using
 python -m pip install pymagnet 
 ```
 
-or shortly
+or
 
 ```bash
 conda install -c pdunne pymagnet
 ```
 
-## Examples
+### Examples
+
+Additional examples are in the [examples directory of the repository](https://github.com/pdunne/pymagnet/tree/main/examples).
 
 ### 3D calculation and render using plotly
 
@@ -39,7 +41,7 @@ length = 20e-3
 m_cyl = pm.magnets.Cylinder(radius = radius, length = length, Jr = 1.0,
                             center=center,
                             alpha = 0, # rotation of magnet w.r.t. z-axis
-                            beta = 330, # rotation of magnet w.r.t. y-axis
+                            beta = -30, # rotation of magnet w.r.t. y-axis
                             gamma = 0, # rotation of magnet w.r.t. x-axis
                             )
 
@@ -64,24 +66,73 @@ volume_cache = pm.plots.volume_plot(cmin=0.0, # minimum field value
                                     )
 ```
 <figure>
-  <img src="../img/3d_example_slice_1.png" width=400/>
-  <img src="../img/3d_example_slice_2.png" width=400/>
+  <img src="img/3d_example_slice_1.png" width=400/>
+  <img src="img/3d_example_slice_2.png" width=400/>
   <figcaption>3D surface slice plot</figcaption>
 </figure>
 
 <figure>
-  <img src="../img/3d_example_volume_1.png" width=400/>
-  <img src="../img/3d_example_volume_2.png" width=400/>
+  <img src="img/3d_example_volume_1.png" width=400/>
+  <img src="img/3d_example_volume_2.png" width=400/>
   <figcaption>3D volume plot</figcaption>
 </figure>
 
 ### 2D calculation and render using matplotlib
 
-Two square magnets of 20x20 mm are added, and a contour plot with a vector field are drawn.
 
 <figure>
-  <img src="../img/2d_example.png" width=400/>
-  <figcaption>2D contour plots</figcaption>
+  <img src="img/2d_circle_contour.png" width=400/>
+  <img src="img/2d_circle_stream.png" width=400/>
+  <figcaption>2D contour plot and streamplot of a long bipolar rod</figcaption>
+</figure>
+
+Two square magnets of 20x20 mm are added, and a contour plot with a vector field are drawn.
+
+```python
+import pymagnet as pm
+
+pm.reset_magnets() # clear magnet registry
+
+cmap = 'viridis' # set the colormap
+
+radius = 10e-3
+center = (0, 0)
+
+# Create magnet
+_ = pm.magnets.Circle(radius=radius, Jr = 1.0, center=center, alpha=45)
+
+
+# Prepare 100x100 grid of x,y coordinates to calculate the field
+x, y = pm.grid2D(2*radius, 2*radius)
+
+# Calculate the magnetic field due to all magnets in the registry
+B = pm.B_calc_2D(x, y)
+
+# Plot the result, vector_plot = True toggles on the vector field plot
+pm.plots.plot_2D_contour(x, y, B,
+                         cmax=0.5,
+                         num_levels=6,
+                         cmap=cmap,
+                         vector_plot=True,
+                         vector_arrows=11)
+
+
+
+# Plot the result as a streamplot 
+pm.plots.plot_2D_contour(x, y, B,
+                         cmin = -0.3,
+                         cmax=0.3,
+                         cmap='coolwarm',
+                         plot_type="streamplot",
+                         stream_color= 'vertical', # 'vertical', 'horizontal', 'normal':
+                        #  corresponds to coloring by B.x, B.y, B.n
+                        )
+
+```
+
+<figure>
+  <img src="img/2d_example.png" width=400/>
+  <figcaption>2D contour plot</figcaption>
 </figure>
 
 ```python
@@ -153,12 +204,11 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 !!! TODO
     - Calculation of magnetisation and the H field inside the magnets
     - Complete documentation
-    - Fix quaternion rotations
 
-!!! warning
-    There are still some bugs in the quaternion rotations. For spheres, rotate them using alpha, beta, gamma,
+!!! Warning
+    - For spheres, rotate them using alpha, beta, gamma,
     rather than the magnetisation angles theta and phi, as phi rotations are not working correctly.
-    There is also a bug in the plotly rendering of the rotated axes (x,y)
+    - Similarly, for circles, rotate them using alpha, not phi.
 
 ## Licensing
 

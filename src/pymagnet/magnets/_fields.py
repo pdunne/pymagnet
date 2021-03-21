@@ -5,24 +5,6 @@
 """pymagnets._fields
 
 Private module consiting of point/vector classes and their methods.
-
-Example:
-    Examples can be given using either the ``Example`` or ``Examples``
-    sections. Sections support any reStructuredText formatting, including
-    literal blocks::
-
-        $ python example_google.py
-
-Section breaks are created by resuming unindented text. Section breaks
-are also implicitly created anytime a new section starts.
-
-TODO:
-    * Quaternions and arbitrary rotation
-    * Conversion between cylindrical and cartesian coordinates
-
-
-.. _Google Python Style Guide:
-   https://google.github.io/styleguide/pyguide.html
 """
 import numpy as _np
 
@@ -41,6 +23,7 @@ class Point2(object):
     Examples:
         TODO:
     """
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -66,23 +49,23 @@ class Point2(object):
         return Point2(x, y)
 
     def __lt__(self, other):
-        self_mag = (self.x**2) + (self.y**2)
-        other_mag = (other.x**2) + (other.y**2)
+        self_mag = (self.x ** 2) + (self.y ** 2)
+        other_mag = (other.x ** 2) + (other.y ** 2)
         return self_mag < other_mag
 
     def __le__(self, other):
-        self_mag = (self.x**2) + (self.y**2)
-        other_mag = (other.x**2) + (other.y**2)
+        self_mag = (self.x ** 2) + (self.y ** 2)
+        other_mag = (other.x ** 2) + (other.y ** 2)
         return self_mag <= other_mag
 
     def __gt__(self, other):
-        self_mag = (self.x**2) + (self.y**2)
-        other_mag = (other.x**2) + (other.y**2)
+        self_mag = (self.x ** 2) + (self.y ** 2)
+        other_mag = (other.x ** 2) + (other.y ** 2)
         return self_mag > other_mag
 
     def __ge__(self, other):
-        self_mag = (self.x**2) + (self.y**2)
-        other_mag = (other.x**2) + (other.y**2)
+        self_mag = (self.x ** 2) + (self.y ** 2)
+        other_mag = (other.x ** 2) + (other.y ** 2)
         return self_mag >= other_mag
 
     def __eq__(self, other):
@@ -92,8 +75,7 @@ class Point2(object):
         return self.x != other.x or self.y != other.y
 
     def distance_to(self, point):
-        return _np.sqrt(
-            _np.power(point.x - self.x, 2) + _np.power(point.y - self.y, 2))
+        return _np.sqrt(_np.power(point.x - self.x, 2) + _np.power(point.y - self.y, 2))
 
     def distance_to_origin(self):
         return self._norm()
@@ -109,9 +91,7 @@ class Point2(object):
             else:
                 self + point
         except ValueError as e:
-            print(
-                f"Invalid input {0}, should be a 2-element tuple or Point2 object",
-                e)
+            print(f"Invalid input {0}, should be a 2-element tuple or Point2 object", e)
 
 
 class Point3(Point2):
@@ -126,6 +106,7 @@ class Point3(Point2):
     Examples:
         TODO:
     """
+
     def __init__(self, x, y, z):
         super().__init__(x, y)
         self.z = z
@@ -152,23 +133,23 @@ class Point3(Point2):
         return Point3(x, y, z)
 
     def __lt__(self, other):
-        self_mag = (self.x**2) + (self.y**2)
-        other_mag = (other.x**2) + (other.y**2)
+        self_mag = (self.x ** 2) + (self.y ** 2)
+        other_mag = (other.x ** 2) + (other.y ** 2)
         return self_mag < other_mag
 
     def __le__(self, other):
-        self_mag = (self.x**2) + (self.y**2)
-        other_mag = (other.x**2) + (other.y**2)
+        self_mag = (self.x ** 2) + (self.y ** 2)
+        other_mag = (other.x ** 2) + (other.y ** 2)
         return self_mag <= other_mag
 
     def __gt__(self, other):
-        self_mag = (self.x**2) + (self.y**2)
-        other_mag = (other.x**2) + (other.y**2)
+        self_mag = (self.x ** 2) + (self.y ** 2)
+        other_mag = (other.x ** 2) + (other.y ** 2)
         return self_mag > other_mag
 
     def __ge__(self, other):
-        self_mag = (self.x**2) + (self.y**2)
-        other_mag = (other.x**2) + (other.y**2)
+        self_mag = (self.x ** 2) + (self.y ** 2)
+        other_mag = (other.x ** 2) + (other.y ** 2)
         return self_mag >= other_mag
 
     def __eq__(self, other):
@@ -179,8 +160,10 @@ class Point3(Point2):
 
     def distance_to(self, point):
         return _np.sqrt(
-            _np.power(point.x - self.x, 2) + _np.power(point.y - self.y, 2) +
-            _np.power(point.z - self.z, 2))
+            _np.power(point.x - self.x, 2)
+            + _np.power(point.y - self.y, 2)
+            + _np.power(point.z - self.z, 2)
+        )
 
     def _norm(self):
         return _np.linalg.norm([self.x, self.y, self.z], axis=0)
@@ -200,6 +183,7 @@ class Vector2(object):
         calc_norm: calculates the magnitude of the fields at every point and
                     stores in self.n
     """
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -227,6 +211,7 @@ class Vector3(Vector2):
         calc_norm: calculates the magnitude of the fields at every point and
                     stores in self.n
     """
+
     def __init__(self, x, y, z):
         super().__init__(x, y)
         self.z = z

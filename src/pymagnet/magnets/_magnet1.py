@@ -14,8 +14,6 @@ __all__ = ["magnetic_field_prism_1D", "magnetic_field_cylinder_1D"]
 
 
 def magnetic_field_prism_1D(magnet, z):
-    from ._magnet3 import Magnet_3D
-
     """Calculates the magnetic field z-component due to a cuboid along its
     axial symmetry center.
 
@@ -27,6 +25,8 @@ def magnetic_field_prism_1D(magnet, z):
     Returns:
         [float]: Bz
     """
+    from ._magnet3 import Magnet_3D
+
     if issubclass(magnet.__class__, Magnet_3D):
         a = magnet.a
         b = magnet.b
@@ -57,8 +57,6 @@ def magnetic_field_prism_1D(magnet, z):
 
 
 def magnetic_field_cylinder_1D(magnet, z):
-    from ._magnet3 import Cylinder
-
     """Calculates the magnetic field z-component due to a cylinder along its
     axial symmetry center.
 
@@ -70,6 +68,8 @@ def magnetic_field_cylinder_1D(magnet, z):
     Returns:
         [float]: Bz
     """
+    from ._magnet3 import Cylinder
+
     if issubclass(magnet.__class__, Cylinder):
         L = magnet.length
         R = magnet.radius

@@ -6,7 +6,7 @@ include tox.ini
 graft examples
 prune examples/.ipynb_checkpoints
 graft docs
-graft tests
+prune tests
 global-exclude *.pyc
 
 

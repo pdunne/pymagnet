@@ -79,7 +79,56 @@ volume_cache = pm.plots.volume_plot(cmin=0.0, # minimum field value
 
 ### 2D calculation and render using matplotlib
 
+
+<figure>
+  <img src="docs/img/2d_circle_contour.png" width=400/>
+  <img src="docs/img/2d_circle_stream.png" width=400/>
+  <figcaption>2D contour plot and streamplot of a long bipolar rod</figcaption>
+</figure>
+
 Two square magnets of 20x20 mm are added, and a contour plot with a vector field are drawn.
+
+```python
+import pymagnet as pm
+
+pm.reset_magnets() # clear magnet registry
+
+cmap = 'viridis' # set the colormap
+
+radius = 10e-3
+center = (0, 0)
+
+# Create magnet
+_ = pm.magnets.Circle(radius=radius, Jr = 1.0, center=center, alpha=45)
+
+
+# Prepare 100x100 grid of x,y coordinates to calculate the field
+x, y = pm.grid2D(2*radius, 2*radius)
+
+# Calculate the magnetic field due to all magnets in the registry
+B = pm.B_calc_2D(x, y)
+
+# Plot the result, vector_plot = True toggles on the vector field plot
+pm.plots.plot_2D_contour(x, y, B,
+                         cmax=0.5,
+                         num_levels=6,
+                         cmap=cmap,
+                         vector_plot=True,
+                         vector_arrows=11)
+
+
+
+# Plot the result as a streamplot 
+pm.plots.plot_2D_contour(x, y, B,
+                         cmin = -0.3,
+                         cmax=0.3,
+                         cmap='coolwarm',
+                         plot_type="streamplot",
+                         stream_color= 'vertical', # 'vertical', 'horizontal', 'normal':
+                        #  corresponds to coloring by B.x, B.y, B.n
+                        )
+
+```
 
 <figure>
   <img src="docs/img/2d_example.png" width=400/>

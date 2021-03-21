@@ -105,6 +105,14 @@ def _allocate_field_array3(x, y, z):
 
 
 def _get_max_array(list_arrays):
+    """Gets the shape and size of the largest array in a list
+
+    Args:
+        list_arrays (list): list of numpy ndarrays
+
+    Returns:
+        tuple: max_shape (tuple), max_size (int)
+    """
     max_shape = (1, 1)
     max_size = 0
     for array in list_arrays:
@@ -122,7 +130,16 @@ def _check_tile_array(array, max_size, max_shape):
 
 
 def _tile_arrays(x, y, z):
+    """Tiles arrays to match the largest array of x, y, z
 
+    Args:
+        x (ndarray/float): x-coordinates
+        y (ndarray/float): y-coordinates
+        z (ndarray/float): z-coordinates
+
+    Returns:
+        tuple: x, y, z ndarrays
+    """
     x = _np.asarray(x)
     y = _np.asarray(y)
     z = _np.asarray(z)
@@ -136,76 +153,29 @@ def _tile_arrays(x, y, z):
     return x, y, z
 
 
-def _gen_mask_prism(magnet_size, x, y, z):
+def _apply_mask(magnet, field, mask):
+    """Calculates B, or applies Nan, inside magnets
 
-    w, d, h = magnet_size
-    xn = -w / 2
-    xp = w / 2
-    yn = -d / 2
-    yp = d / 2
-    zn = -h / 2
-    zp = h / 2
+    Args:
+        magnet (Magnet_3D): instantiated magnet
+        field (Vector3): magnetic field vector
+        mask (array): boolean array where True marks coordinates inside the magnet
 
-    mask_x = _np.logical_and(x > xn, x < xp)
-    mask_y = _np.logical_and(y > yn, y < yp)
-    mask_z = _np.logical_and(z > zn, z < zp)
-
-    mask = _np.logical_and(mask_x, mask_z)
-
-    mask = _np.logical_and(mask, mask_y)
-
-    return mask
-
-
-def _gen_mask_cylinder(magnet_size, x, y, z):
-
-    radius, length = magnet_size
-    data_norm = x ** 2 + y ** 2
-    zn = -length / 2
-    zp = length / 2
-
-    mask_rho = data_norm < radius ** 2
-    mask_z = _np.logical_and(z > zn, z < zp)
-    mask = _np.logical_and(mask_rho, mask_z)
-    return mask
-
-
-def _gen_mask_sphere(radius, x, y, z):
-
-    data_norm = x ** 2 + y ** 2 + z ** 2
-
-    mask = data_norm < radius ** 2
-
-    return mask
-
-
-def _gen_mask(magnet, x, y, z):
-    from ._magnet3 import Prism, Cylinder, Sphere
-
-    mask = _np.array([])
-    if issubclass(magnet.__class__, Prism):
-        mask = _gen_mask_prism(magnet.size(), x, y, z)
-
-    elif issubclass(magnet.__class__, Cylinder):
-        mask = _gen_mask_cylinder(magnet.size(), x, y, z)
-
-    elif issubclass(magnet.__class__, Sphere):
-        mask = _gen_mask_sphere(magnet.radius, x, y, z)
-    return mask
-
-
-def _apply_mask(magnet, field, mask, J, mask_magnet):
+    Returns:
+        Vector3: masked magnetic field vector
+    """
     from .. import u0
     from ._magnet3 import Prism, Cylinder, Sphere
 
-    # mask_magnet = kwargs.pop("mask_magnet", True)
+    J = magnet.get_Jr()
+    mask_magnet = magnet._mask_magnet
 
-    if mask_magnet.lower() == "nan":
+    if mask_magnet:
         field.x[mask] = _np.NaN
         field.y[mask] = _np.NaN
         field.z[mask] = _np.NaN
 
-    elif mask_magnet.lower() == "mag":
+    else:
         if issubclass(magnet.__class__, Prism):
             field.x[mask] += J[0]
             field.y[mask] += J[1]

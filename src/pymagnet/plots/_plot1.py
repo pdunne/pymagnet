@@ -36,12 +36,22 @@ def plot_1D_field(magnet, **kwargs):
         )
         Bz = _mag.magnetic_field_cylinder_1D(magnet, z)
 
+        # if true, apply NaNs to inside the magnet
+        if magnet._mask_magnet:
+            mask = _generate_mask_1D(mag_boundary, magnet.zc, z)
+            Bz[mask] = _np.NaN
+
     elif issubclass(magnet.__class__, _mag.Prism):
         mag_boundary = magnet.height / 2
         z = _np.linspace(
             -2 * magnet.height + magnet.zc, 2 * magnet.height + magnet.zc, NP
         )
         Bz = _mag.magnetic_field_prism_1D(magnet, z)
+
+        # if true, apply NaNs to inside the magnet
+        if magnet._mask_magnet:
+            mask = _generate_mask_1D(mag_boundary, magnet.zc, z)
+            Bz[mask] = _np.NaN
 
     else:
         print("Error")
@@ -55,7 +65,24 @@ def plot_1D_field(magnet, **kwargs):
     _plt.axvline(x=mag_boundary * 1e3 + magnet.zc * 1e3, c="red", ls="--")
     _plt.axvline(x=0.0, c="k", ls="-")
     _plt.show()
+
     if return_data:
         return z, Bz
-    else:
-        return None, None
+
+
+def _generate_mask_1D(mag_boundary, zc, z):
+    """Generates mask for points inside magnet
+
+    Args:
+        mag_boundary (float): half the height/length of a magnet
+        zc (float): center of the magnet
+        z (ndarray): z-coordinates
+
+    Returns:
+        ndarray: boolean mask array
+    """
+    zn = -mag_boundary + zc
+    zp = mag_boundary + zc
+    mask = _np.logical_and(z > zn, z < zp)
+
+    return mask
