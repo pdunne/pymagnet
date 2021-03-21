@@ -66,14 +66,14 @@ volume_cache = pm.plots.volume_plot(cmin=0.0, # minimum field value
                                     )
 ```
 <figure>
-  <img src="docs/img/3d_example_slice_1.png" width=400/>
-  <img src="docs/img/3d_example_slice_2.png" width=400/>
+  <img src="https://raw.githubusercontent.com/pdunne/pymagnet/9b8c3ecdfcb8600ae30f1114a4b07ce81fd81b19/docs/img/3d_example_slice_1.png" width=400/>
+  <img src="https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_slice_2.png" width=400/>
   <figcaption>3D surface slice plot</figcaption>
 </figure>
 
 <figure>
-  <img src="docs/img/3d_example_volume_1.png" width=400/>
-  <img src="docs/img/3d_example_volume_2.png" width=400/>
+  <img src="https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_volume_1.png" width=400/>
+  <img src="https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_volume_2.png" width=400/>
   <figcaption>3D volume plot</figcaption>
 </figure>
 
@@ -81,8 +81,9 @@ volume_cache = pm.plots.volume_plot(cmin=0.0, # minimum field value
 
 
 <figure>
-  <img src="docs/img/2d_circle_contour.png" width=400/>
-  <img src="docs/img/2d_circle_stream.png" width=400/>
+
+  <img src="https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_circle_contour.png" width=400/>
+  <img src="https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_circle_stream.png" width=400/>
   <figcaption>2D contour plot and streamplot of a long bipolar rod</figcaption>
 </figure>
 
@@ -131,7 +132,7 @@ pm.plots.plot_2D_contour(x, y, B,
 ```
 
 <figure>
-  <img src="docs/img/2d_example.png" width=400/>
+  <img src="https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_example.png" width=400/>
   <figcaption>2D contour plot</figcaption>
 </figure>
 
