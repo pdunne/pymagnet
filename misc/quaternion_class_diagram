@@ -1,0 +1,10 @@
+classDiagram
+    Registry <|-- Quaternion
+    class Quaternion{
+        +set instances
+        -list _class_instances
+        +print_instances()
+        +get_instances() set
+        +get_num_instances() int
+        +reset()
+    }

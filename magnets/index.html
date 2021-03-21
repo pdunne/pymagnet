@@ -1,0 +1,5424 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.3">
+    
+    
+      
+        <title>magnets - Pymagnet</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1655a90d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#magnets-module" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pymagnet" class="md-header__button md-logo" aria-label="Pymagnet">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pymagnet
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              magnets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pymagnet" class="md-nav__button md-logo" aria-label="Pymagnet">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pymagnet
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../equations/" class="md-nav__link">
+        Field Equations
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methods/" class="md-nav__link">
+        Methods
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      <label class="md-nav__link" for="__nav_4">
+        Code Reference
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Code Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Code Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pymagnet/" class="md-nav__link">
+        pymagnet
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          magnets
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        magnets
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets" class="md-nav__link">
+    pymagnet.magnets
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields" class="md-nav__link">
+    pymagnet.magnets._fields
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields.Point2" class="md-nav__link">
+    Point2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields.Point3" class="md-nav__link">
+    Point3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields.Vector2" class="md-nav__link">
+    Vector2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields.Vector3" class="md-nav__link">
+    Vector3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet" class="md-nav__link">
+    pymagnet.magnets._magnet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Magnet" class="md-nav__link">
+    Magnet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry" class="md-nav__link">
+    Registry
+  </a>
+  
+    <nav class="md-nav" aria-label="Registry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.__init_subclass__" class="md-nav__link">
+    __init_subclass__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.__new__" class="md-nav__link">
+    __new__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.get_num_instances" class="md-nav__link">
+    get_num_instances()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.print_instances" class="md-nav__link">
+    print_instances()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.reset" class="md-nav__link">
+    reset()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.list_magnets" class="md-nav__link">
+    list_magnets()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.reset_magnets" class="md-nav__link">
+    reset_magnets()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet1" class="md-nav__link">
+    pymagnet.magnets._magnet1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet1.magnetic_field_cylinder_1D" class="md-nav__link">
+    magnetic_field_cylinder_1D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet1.magnetic_field_prism_1D" class="md-nav__link">
+    magnetic_field_prism_1D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2" class="md-nav__link">
+    pymagnet.magnets._magnet2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Circle" class="md-nav__link">
+    Circle
+  </a>
+  
+    <nav class="md-nav" aria-label="Circle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Circle.calcB" class="md-nav__link">
+    calcB()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Circle.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Magnet_2D" class="md-nav__link">
+    Magnet_2D
+  </a>
+  
+    <nav class="md-nav" aria-label="Magnet_2D">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Magnet_2D.center" class="md-nav__link">
+    center()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Magnet_2D.get_orientation" class="md-nav__link">
+    get_orientation()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Rectangle" class="md-nav__link">
+    Rectangle
+  </a>
+  
+    <nav class="md-nav" aria-label="Rectangle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Rectangle.calcB" class="md-nav__link">
+    calcB()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Rectangle.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Rectangle.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Square" class="md-nav__link">
+    Square
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3" class="md-nav__link">
+    pymagnet.magnets._magnet3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Cube" class="md-nav__link">
+    Cube
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Cylinder" class="md-nav__link">
+    Cylinder
+  </a>
+  
+    <nav class="md-nav" aria-label="Cylinder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Cylinder.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Cylinder.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D" class="md-nav__link">
+    Magnet_3D
+  </a>
+  
+    <nav class="md-nav" aria-label="Magnet_3D">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.calcB" class="md-nav__link">
+    calcB()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.center" class="md-nav__link">
+    center()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.get_orientation" class="md-nav__link">
+    get_orientation()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Prism" class="md-nav__link">
+    Prism
+  </a>
+  
+    <nav class="md-nav" aria-label="Prism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Prism.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Prism.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Sphere" class="md-nav__link">
+    Sphere
+  </a>
+  
+    <nav class="md-nav" aria-label="Sphere">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Sphere.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Sphere.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines" class="md-nav__link">
+    pymagnet.magnets._routines
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.cart2pol" class="md-nav__link">
+    cart2pol()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.cart2sph" class="md-nav__link">
+    cart2sph()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.pol2cart" class="md-nav__link">
+    pol2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.sph2cart" class="md-nav__link">
+    sph2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.sphere_sph2cart" class="md-nav__link">
+    sphere_sph2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.vector_pol2cart" class="md-nav__link">
+    vector_pol2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.vector_sph2cart" class="md-nav__link">
+    vector_sph2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2" class="md-nav__link">
+    pymagnet.magnets._routines2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.B_calc_2D" class="md-nav__link">
+    B_calc_2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.FgradB_2D" class="md-nav__link">
+    FgradB_2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.gradB_2D" class="md-nav__link">
+    gradB_2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.grid2D" class="md-nav__link">
+    grid2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.rotate_points_2D" class="md-nav__link">
+    rotate_points_2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines3" class="md-nav__link">
+    pymagnet.magnets._routines3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines3.grid3D" class="md-nav__link">
+    grid3D()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plots/" class="md-nav__link">
+        plots
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quaternions/" class="md-nav__link">
+        quaternions
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets" class="md-nav__link">
+    pymagnet.magnets
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields" class="md-nav__link">
+    pymagnet.magnets._fields
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields.Point2" class="md-nav__link">
+    Point2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields.Point3" class="md-nav__link">
+    Point3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields.Vector2" class="md-nav__link">
+    Vector2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._fields.Vector3" class="md-nav__link">
+    Vector3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet" class="md-nav__link">
+    pymagnet.magnets._magnet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Magnet" class="md-nav__link">
+    Magnet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry" class="md-nav__link">
+    Registry
+  </a>
+  
+    <nav class="md-nav" aria-label="Registry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.__init_subclass__" class="md-nav__link">
+    __init_subclass__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.__new__" class="md-nav__link">
+    __new__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.get_num_instances" class="md-nav__link">
+    get_num_instances()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.print_instances" class="md-nav__link">
+    print_instances()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.Registry.reset" class="md-nav__link">
+    reset()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.list_magnets" class="md-nav__link">
+    list_magnets()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet.reset_magnets" class="md-nav__link">
+    reset_magnets()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet1" class="md-nav__link">
+    pymagnet.magnets._magnet1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet1.magnetic_field_cylinder_1D" class="md-nav__link">
+    magnetic_field_cylinder_1D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet1.magnetic_field_prism_1D" class="md-nav__link">
+    magnetic_field_prism_1D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2" class="md-nav__link">
+    pymagnet.magnets._magnet2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Circle" class="md-nav__link">
+    Circle
+  </a>
+  
+    <nav class="md-nav" aria-label="Circle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Circle.calcB" class="md-nav__link">
+    calcB()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Circle.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Magnet_2D" class="md-nav__link">
+    Magnet_2D
+  </a>
+  
+    <nav class="md-nav" aria-label="Magnet_2D">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Magnet_2D.center" class="md-nav__link">
+    center()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Magnet_2D.get_orientation" class="md-nav__link">
+    get_orientation()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Rectangle" class="md-nav__link">
+    Rectangle
+  </a>
+  
+    <nav class="md-nav" aria-label="Rectangle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Rectangle.calcB" class="md-nav__link">
+    calcB()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Rectangle.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Rectangle.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet2.Square" class="md-nav__link">
+    Square
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3" class="md-nav__link">
+    pymagnet.magnets._magnet3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Cube" class="md-nav__link">
+    Cube
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Cylinder" class="md-nav__link">
+    Cylinder
+  </a>
+  
+    <nav class="md-nav" aria-label="Cylinder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Cylinder.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Cylinder.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D" class="md-nav__link">
+    Magnet_3D
+  </a>
+  
+    <nav class="md-nav" aria-label="Magnet_3D">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.calcB" class="md-nav__link">
+    calcB()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.center" class="md-nav__link">
+    center()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.get_orientation" class="md-nav__link">
+    get_orientation()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Magnet_3D.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Prism" class="md-nav__link">
+    Prism
+  </a>
+  
+    <nav class="md-nav" aria-label="Prism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Prism.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Prism.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Sphere" class="md-nav__link">
+    Sphere
+  </a>
+  
+    <nav class="md-nav" aria-label="Sphere">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Sphere.get_Jr" class="md-nav__link">
+    get_Jr()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._magnet3.Sphere.size" class="md-nav__link">
+    size()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines" class="md-nav__link">
+    pymagnet.magnets._routines
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.cart2pol" class="md-nav__link">
+    cart2pol()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.cart2sph" class="md-nav__link">
+    cart2sph()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.pol2cart" class="md-nav__link">
+    pol2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.sph2cart" class="md-nav__link">
+    sph2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.sphere_sph2cart" class="md-nav__link">
+    sphere_sph2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.vector_pol2cart" class="md-nav__link">
+    vector_pol2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines.vector_sph2cart" class="md-nav__link">
+    vector_sph2cart()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2" class="md-nav__link">
+    pymagnet.magnets._routines2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.B_calc_2D" class="md-nav__link">
+    B_calc_2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.FgradB_2D" class="md-nav__link">
+    FgradB_2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.gradB_2D" class="md-nav__link">
+    gradB_2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.grid2D" class="md-nav__link">
+    grid2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines2.rotate_points_2D" class="md-nav__link">
+    rotate_points_2D()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines3" class="md-nav__link">
+    pymagnet.magnets._routines3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymagnet.magnets._routines3.grid3D" class="md-nav__link">
+    grid3D()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="magnets-module">Magnets module</h1>
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets"></a>
+    <div class="doc doc-contents first">
+
+      <p>pymagnets.magnets</p>
+<p>This module imports the classes and functions in the private modules to create a public API.</p>
+<div class="admonition todo">
+<p class="admonition-title">Todo</p>
+<ul>
+<li>Quaternions and arbitrary rotation</li>
+<li>Conversion between cylindrical and cartesian coordinates</li>
+</ul>
+</div>
+
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets._fields"></a>
+    <div class="doc doc-contents first">
+
+      <p>pymagnets._fields</p>
+<p>Private module consiting of point/vector classes and their methods.</p>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._fields.Point2" class="doc doc-heading">
+        <code>Point2</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>2D point class</p>
+<p>Note that multiplication of two points is done elementwise, dot product is
+a separate method.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>object</code></td>
+        <td><code>[type]</code></td>
+        <td><p>[description]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <p>TODO:</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._fields.Point3" class="doc doc-heading">
+        <code>Point3</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>"3D point class</p>
+<p>Note that multiplication of two points is done elementwise, dot product is
+a separate method.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>object</code></td>
+        <td><code>[type]</code></td>
+        <td><p>[description]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <p>TODO:</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._fields.Vector2" class="doc doc-heading">
+        <code>Vector2</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>2D Field vector class consisting of numpy arrays of x and y values</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>x</code></td>
+        <td><code></code></td>
+        <td></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code></code></td>
+        <td></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <div class="admonition methods">
+<p class="admonition-title">Methods</p>
+<div class="admonition calc_norm">
+<p class="admonition-title">calculates the magnitude of the fields at every point and<pre><code>stores in self.n
+</code></pre>
+</p>
+</div>
+</div>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._fields.Vector3" class="doc doc-heading">
+        <code>Vector3</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>3D Field vector class consisting of numpy arrays of x and y values</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>x</code></td>
+        <td><code></code></td>
+        <td></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code></code></td>
+        <td></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>z</code></td>
+        <td><code></code></td>
+        <td></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <div class="admonition methods">
+<p class="admonition-title">Methods</p>
+<div class="admonition calc_norm">
+<p class="admonition-title">calculates the magnitude of the fields at every point and<pre><code>stores in self.n
+</code></pre>
+</p>
+</div>
+</div>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets._magnet"></a>
+    <div class="doc doc-contents first">
+
+      <p>Magnet Base class</p>
+<p>This private module implements the registry and base magnet classes</p>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet.Magnet" class="doc doc-heading">
+        <code>Magnet</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Magnet base class</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Magnet</code></td>
+      <td><p>magnet base class</p></td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet.Registry" class="doc doc-heading">
+        <code>Registry</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Registry class for tracking instances</p>
+<p>Instances are tracked in <code>class.instances</code> using weak references.
+This also includes any instances that are deleted manually or go out of
+scope.</p>
+<p>Class methods:</p>
+<pre><code>`print_instances()`
+
+`get_instances()`
+
+`get_num_instances()`
+
+`reset()
+</code></pre>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet.Registry.__init_subclass__" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">__init_subclass__</span><span class="p">()</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-classmethod"><code>classmethod</code></small>
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">instances</span> <span class="o">=</span> <span class="n">WeakSet</span><span class="p">()</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">_class_instances</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet.Registry.__new__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+      <small class="doc doc-property doc-property-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Create and return a new object.  See help(type) for accurate signature.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">_register_instance</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">o</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet.Registry.get_num_instances" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_num_instances</span><span class="p">(</span><span class="n">Print_Val</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Return number of instances of class</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>Print_Val</code></td>
+        <td><code>bool</code></td>
+        <td><p>[Print to screen]. Defaults to False.</p></td>
+        <td><code>False</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>num_instances [int]</code></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">get_num_instances</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">Print_Val</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return number of instances of class</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Print_Val (bool, optional): [Print to screen]. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        num_instances [int]:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Print_Val</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">instances</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet.Registry.print_instances" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">print_instances</span><span class="p">()</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Prints class instantiations</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">print_instances</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prints class instantiations&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No Instances&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet.Registry.reset" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">reset</span><span class="p">()</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Removes all instances from registry.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Removes all instances from registry.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">magnet</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_instances</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">magnet</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">instances</span> <span class="o">=</span> <span class="n">WeakSet</span><span class="p">()</span>
+    <span class="bp">cls</span><span class="o">.</span><span class="n">_class_instances</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._magnet.list_magnets" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">list_magnets</span><span class="p">()</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns a list of all instantiated magnets.</p>
+<p>Assumes that the child class registries have not been modified outside of
+using <code>pymagnet.reset_magnets()</code>.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">list_magnets</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of all instantiated magnets.</span>
+
+<span class="sd">    Assumes that the child class registries have not been modified outside of</span>
+<span class="sd">    using `pymagnet.reset_magnets()`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Magnet</span><span class="o">.</span><span class="n">print_instances</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._magnet.reset_magnets" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">reset_magnets</span><span class="p">()</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns a list of all instantiated magnets.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">reset_magnets</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of all instantiated magnets.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._magnet2</span> <span class="kn">import</span> <span class="n">Magnet_2D</span><span class="p">,</span> <span class="n">Rectangle</span><span class="p">,</span> <span class="n">Square</span><span class="p">,</span> <span class="n">Circle</span>
+    <span class="kn">from</span> <span class="nn">._magnet3</span> <span class="kn">import</span> <span class="n">Magnet_3D</span><span class="p">,</span> <span class="n">Prism</span><span class="p">,</span> <span class="n">Cube</span><span class="p">,</span> <span class="n">Cylinder</span><span class="p">,</span> <span class="n">Sphere</span>
+
+    <span class="n">magnet_classes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># Registry,</span>
+        <span class="n">Magnet</span><span class="p">,</span>
+        <span class="n">Magnet_2D</span><span class="p">,</span>
+        <span class="n">Rectangle</span><span class="p">,</span>
+        <span class="n">Square</span><span class="p">,</span>
+        <span class="n">Circle</span><span class="p">,</span>
+        <span class="n">Magnet_3D</span><span class="p">,</span>
+        <span class="n">Prism</span><span class="p">,</span>
+        <span class="n">Cube</span><span class="p">,</span>
+        <span class="n">Cylinder</span><span class="p">,</span>
+        <span class="n">Sphere</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">magnet_classes</span><span class="p">:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets._magnet1"></a>
+    <div class="doc doc-contents first">
+
+      <p>1D High symmetry methods</p>
+<p>This private module implements magnetic field calculations in z along the
+symmetry centre of a cylindrical or cuboidal magnet.</p>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._magnet1.magnetic_field_cylinder_1D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">magnetic_field_cylinder_1D</span><span class="p">(</span><span class="n">magnet</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the magnetic field z-component due to a cylinder along its
+axial symmetry center.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>magnet_object</code></td>
+        <td><code>[type]</code></td>
+        <td><p>[description]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Jr</code></td>
+        <td><code>[type]</code></td>
+        <td><p>[description]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>z</code></td>
+        <td><code>[type]</code></td>
+        <td><p>[description]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>[float]</code></td>
+      <td><p>Bz</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet1.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">magnetic_field_cylinder_1D</span><span class="p">(</span><span class="n">magnet</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the magnetic field z-component due to a cylinder along its</span>
+<span class="sd">    axial symmetry center.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        magnet_object ([type]): [description]</span>
+<span class="sd">        Jr ([type]): [description]</span>
+<span class="sd">        z ([type]): [description]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        [float]: Bz</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._magnet3</span> <span class="kn">import</span> <span class="n">Cylinder</span>
+
+    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">magnet</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">Cylinder</span><span class="p">):</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">length</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">radius</span>
+        <span class="n">Jr</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">Jr</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="c1"># z_local = z</span>
+            <span class="n">z_local</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">-</span> <span class="n">magnet</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">magnet</span><span class="o">.</span><span class="n">zc</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># z_local = z</span>
+            <span class="n">z_local</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">magnet</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">magnet</span><span class="o">.</span><span class="n">zc</span>
+
+        <span class="n">zL</span> <span class="o">=</span> <span class="n">z_local</span> <span class="o">+</span> <span class="n">L</span>
+        <span class="n">R_sq</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">z_sq</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">z_local</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">zL_sq</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">zL</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">zL</span> <span class="o">/</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">zL_sq</span> <span class="o">+</span> <span class="n">R_sq</span><span class="p">))</span> <span class="o">-</span> <span class="p">(</span><span class="n">z_local</span> <span class="o">/</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">z_sq</span> <span class="o">+</span> <span class="n">R_sq</span><span class="p">))</span>
+        <span class="n">data</span> <span class="o">*=</span> <span class="n">Jr</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error, the magnet should be a 3D magnet not </span><span class="si">{</span><span class="n">magnet</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">NaN</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._magnet1.magnetic_field_prism_1D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">magnetic_field_prism_1D</span><span class="p">(</span><span class="n">magnet</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the magnetic field z-component due to a cuboid along its
+axial symmetry center.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>magnet_object</code></td>
+        <td><code>[type]</code></td>
+        <td><p>[description]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Jr</code></td>
+        <td><code>[type]</code></td>
+        <td><p>[description]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>z</code></td>
+        <td><code>[type]</code></td>
+        <td><p>[description]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>[float]</code></td>
+      <td><p>Bz</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet1.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">magnetic_field_prism_1D</span><span class="p">(</span><span class="n">magnet</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the magnetic field z-component due to a cuboid along its</span>
+<span class="sd">    axial symmetry center.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        magnet_object ([type]): [description]</span>
+<span class="sd">        Jr ([type]): [description]</span>
+<span class="sd">        z ([type]): [description]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        [float]: Bz</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._magnet3</span> <span class="kn">import</span> <span class="n">Magnet_3D</span>
+
+    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">magnet</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">Magnet_3D</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">a</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">b</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">c</span>
+        <span class="n">Jr</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">Jr</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="n">z_local</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">-</span> <span class="n">c</span> <span class="o">-</span> <span class="n">magnet</span><span class="o">.</span><span class="n">zc</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z_local</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="n">c</span> <span class="o">-</span> <span class="n">magnet</span><span class="o">.</span><span class="n">zc</span>
+
+        <span class="n">ab</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+        <span class="n">a_sq</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">b_sq</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">z_sq</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">z_local</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">zc</span> <span class="o">=</span> <span class="n">z_local</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">c</span>
+        <span class="n">zc_sq</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">zc</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">zc</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a_sq</span> <span class="o">+</span> <span class="n">b_sq</span> <span class="o">+</span> <span class="n">zc_sq</span><span class="p">),</span> <span class="n">ab</span><span class="p">)</span> <span class="o">-</span> <span class="n">_np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span>
+            <span class="n">z_local</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a_sq</span> <span class="o">+</span> <span class="n">b_sq</span> <span class="o">+</span> <span class="n">z_sq</span><span class="p">),</span> <span class="n">ab</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">*=</span> <span class="n">Jr</span> <span class="o">/</span> <span class="n">_np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error, the magnet should be a 3D magnet not </span><span class="si">{</span><span class="n">magnet</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">_np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets._magnet2"></a>
+    <div class="doc doc-contents first">
+
+      <p>2D Magnet classes</p>
+<p>This private module implements the rectangle and square 2D magnet classes</p>
+<div class="admonition todo">
+<p class="admonition-title">Todo</p>
+<ul>
+<li>Add <strong>del</strong> method for removing strong ref in class instance list</li>
+</ul>
+</div>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet2.Circle" class="doc doc-heading">
+        <code>Circle</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Circle Magnet Class</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>radius</code></td>
+        <td><code>[float]</code></td>
+        <td><p>magnet radius [m] (defaults to 10e-3)</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Jr</code></td>
+        <td><code>[float]</code></td>
+        <td><p>Remnant magnetisation [T] (defaults to 1.0)</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <p>Optional Arguments:
+     center: magnet centre (Point2 object) [default Point2(0.0, 0.0)]</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet2.Circle.calcB" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">calcB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the magnetic field due to long bipolar cylinder</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>x</code></td>
+        <td><code>float/array</code></td>
+        <td><p>x coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code>float/array</code></td>
+        <td><p>y coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>Bx, By magnetic field in cartesian coordinates</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">calcB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the magnetic field due to long bipolar cylinder</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float/array): x coordinates</span>
+<span class="sd">        y (float/array): y coordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Bx, By magnetic field in cartesian coordinates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._routines</span> <span class="kn">import</span> <span class="n">cart2pol</span><span class="p">,</span> <span class="n">vector_pol2cart</span>
+    <span class="kn">from</span> <span class="nn">._routines2</span> <span class="kn">import</span> <span class="n">rotate_points_2D</span>
+
+    <span class="k">if</span> <span class="n">_np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">Magnet_2D</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+        <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
+        <span class="n">xci</span><span class="p">,</span> <span class="n">yci</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span>
+            <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">]),</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span>
+        <span class="p">)</span>
+        <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">cart2pol</span><span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yi</span> <span class="o">-</span> <span class="n">yci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">Brho</span><span class="p">,</span> <span class="n">Bphi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcB_polar</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+
+        <span class="c1"># Convert magnetic fields from cylindrical to cartesian</span>
+        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">vector_pol2cart</span><span class="p">(</span><span class="n">Brho</span><span class="p">,</span> <span class="n">Bphi</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span>
+
+    <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">cart2pol</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">)</span>
+
+    <span class="n">Brho</span><span class="p">,</span> <span class="n">Bphi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcB_polar</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+
+    <span class="c1"># Convert magnetic fields from cylindrical to cartesian</span>
+    <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">vector_pol2cart</span><span class="p">(</span><span class="n">Brho</span><span class="p">,</span> <span class="n">Bphi</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet2.Circle.get_Jr" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns Magnetisation components [Jr]</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ndarray</code></td>
+      <td><p>[Jr]</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns Magnetisation components [Jr]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ndarray: [Jr]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Jr</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet2.Magnet_2D" class="doc doc-heading">
+        <code>Magnet_2D</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>2D Magnet class.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>width</code></td>
+        <td><code>[float]</code></td>
+        <td><p>magnet width</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>height</code></td>
+        <td><code>[float]</code></td>
+        <td><p>magnet height</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Jr</code></td>
+        <td><code>[float]</code></td>
+        <td><p>Remnant magnetisation</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code></code></td>
+        <td><p>Arbitrary keyword arguments.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <div class="admonition kwargs">
+<p class="admonition-title">Kwargs</p>
+<p>center [Tuple(float, float), or Point2]: center of magnet, defaults to
+Point2(0.0, 0.0)</p>
+</div>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet2.Magnet_2D.center" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">center</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet centre</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>center (ndarray)</code></td>
+      <td><p>numpy array [xc, yc]</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet centre</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        center (ndarray): numpy array [xc, yc]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet2.Magnet_2D.get_orientation" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet orientation, <code>alpha</code> in degrees</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>float</code></td>
+      <td><p>alpha, rotation angle w.r.t x-axis.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet orientation, `alpha` in degrees</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: alpha, rotation angle w.r.t x-axis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet2.Rectangle" class="doc doc-heading">
+        <code>Rectangle</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Rectangle Magnet Class</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>width</code></td>
+        <td><code>[float]</code></td>
+        <td><p>magnet width [m] (defaults to 20e-3)</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>height</code></td>
+        <td><code>[float]</code></td>
+        <td><p>magnet height [m] (defaults to 40e-3)</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Jr</code></td>
+        <td><code>[float]</code></td>
+        <td><p>Remnant magnetisation [T] (defaults to 1.0)</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <p>Optional Arguments:
+     centre: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
+     phi: Angle between magnetisation and x-axis [default 90.0 degrees]</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet2.Rectangle.calcB" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">calcB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the magnetic field at point(s) x,y due to a rectangular magnet</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>x</code></td>
+        <td><code>float/array</code></td>
+        <td><p>x co-ordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code>float/array</code></td>
+        <td><p>y co-ordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Vector2</code></td>
+      <td><p>magnetic field vector</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">calcB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the magnetic field at point(s) x,y due to a rectangular magnet</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float/array): x co-ordinates</span>
+<span class="sd">        y (float/array): y co-ordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Vector2: magnetic field vector</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._routines2</span> <span class="kn">import</span> <span class="n">rotate_points_2D</span><span class="p">,</span> <span class="n">_get_field_array_shape2</span>
+
+    <span class="n">array_shape</span> <span class="o">=</span> <span class="n">_get_field_array_shape2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">array_shape</span><span class="p">),</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">array_shape</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">_np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">Magnet_2D</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+        <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
+        <span class="n">xci</span><span class="p">,</span> <span class="n">yci</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span>
+            <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">]),</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Calculate field due to x-component of magnetisation</span>
+    <span class="k">if</span> <span class="n">_np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Jx</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">Magnet_2D</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">Magnet_2D</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+
+            <span class="c1"># Calculate fields in local frame</span>
+            <span class="n">Btx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBx_mag_x</span><span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yi</span> <span class="o">-</span> <span class="n">yci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">Bty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBy_mag_x</span><span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yi</span> <span class="o">-</span> <span class="n">yci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="c1"># Rotate fields to global frame</span>
+            <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Btx</span><span class="p">,</span> <span class="n">Bty</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Bx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBx_mag_x</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">)</span>
+            <span class="n">By</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBy_mag_x</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">)</span>
+
+    <span class="c1"># Calculate field due to y-component of magnetisation</span>
+    <span class="k">if</span> <span class="n">_np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Jy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">Magnet_2D</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">Magnet_2D</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+
+            <span class="n">Btx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBx_mag_y</span><span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yi</span> <span class="o">-</span> <span class="n">yci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">Bty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBy_mag_y</span><span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yi</span> <span class="o">-</span> <span class="n">yci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">Bxt</span><span class="p">,</span> <span class="n">Byt</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Btx</span><span class="p">,</span> <span class="n">Bty</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
+            <span class="n">Bx</span> <span class="o">+=</span> <span class="n">Bxt</span>
+            <span class="n">By</span> <span class="o">+=</span> <span class="n">Byt</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">Bx</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBx_mag_y</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">)</span>
+            <span class="n">By</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBy_mag_y</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet2.Rectangle.get_Jr" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns Magnetisation components [Jx, Jy]</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>J[ndarray]</code></td>
+      <td><p>[Jx, Jy]</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns Magnetisation components [Jx, Jy]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        J[ndarray]: [Jx, Jy]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Jx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Jy</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet2.Rectangle.size" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet dimesions</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>size[ndarray]</code></td>
+      <td><p>numpy array [width, height]</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet dimesions</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        size[ndarray]: numpy array [width, height]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet2.Square" class="doc doc-heading">
+        <code>Square</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Square Magnet Class</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>width</code></td>
+        <td><code>[float]</code></td>
+        <td><p>magnet side length [m] (defaults to 20e-3)</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Jr</code></td>
+        <td><code>[float]</code></td>
+        <td><p>Remnant magnetisation [T] (defaults to 1.0)</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <p>Optional Arguments:
+     centre: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
+     phi: Angle between magnetisation and x-axis [default 90.0 degrees]</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets._magnet3"></a>
+    <div class="doc doc-contents first">
+
+      <p>3D Magnet classes</p>
+<p>This private module implements the <code>Prism</code>, <code>Cube</code>, <code>Cylinder</code>, and <code>Sphere</code>
+3D magnet classes. The parent class <code>Magnet_3D</code> implements the location and orientation
+methods, i.e. magnet center and quaternion methods for rotating the magnet with respect
+to each principal axis.</p>
+
+<p><strong>Examples:</strong></p>
+    <p>Examples can be given using either the <code>Example</code> or <code>Examples</code>
+sections. Sections support any reStructuredText formatting, including
+literal blocks::</p>
+<pre><code>$ python example_google.py
+</code></pre>
+      <p>Section breaks are created by resuming unindented text. Section breaks
+are also implicitly created anytime a new section starts.</p>
+<div class="admonition todo">
+<p class="admonition-title">Todo</p>
+<ul>
+<li>Add <strong>del</strong> method for removing strong ref in class instance list</li>
+<li>Update <strong>str</strong> and <strong>repr</strong> methods to show orientation and magnetisation</li>
+</ul>
+</div>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet3.Cube" class="doc doc-heading">
+        <code>Cube</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Cube Magnet Class. Cuboid width x depth x height.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>width</code></td>
+        <td><code>[float]</code></td>
+        <td><p>magnet side length [default 10e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>J</code></td>
+        <td><code></code></td>
+        <td><p>remnant magnetisation in Tesla [default 1.0]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <p>Optional Arguments:
+      centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
+      theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+      phi: Angle between magnetisation and z-axis [default 0.0 degrees]</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet3.Cylinder" class="doc doc-heading">
+        <code>Cylinder</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Cylinder Magnet Class</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>radius</code></td>
+        <td><code></code></td>
+        <td><p>radius [default 10e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>length</code></td>
+        <td><code></code></td>
+        <td><p>length [default 10e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>J</code></td>
+        <td><code></code></td>
+        <td><p>remnant magnetisation in Tesla [default 1.0]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <p>Optional Arguments:
+     centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Cylinder.get_Jr" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns local magnetisation orientation</p>
+<p>Must be implemented for all classes</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Jr</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Cylinder.size" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet dimesions</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>size[ndarray]</code></td>
+      <td><p>numpy array [radius, length]</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet dimesions</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        size[ndarray]: numpy array [radius, length]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet3.Magnet_3D" class="doc doc-heading">
+        <code>Magnet_3D</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>3D Magnet Class</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>width</code></td>
+        <td><code></code></td>
+        <td><p>magnet width [default 10e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>depth</code></td>
+        <td><code></code></td>
+        <td><p>magnet depth [default 20e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>height</code></td>
+        <td><code></code></td>
+        <td><p>magnet height [default 30e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <p>Optional Arguments:
+     centre: magnet centre (Point3_3D object) [default Point3(.0, .0, .0)]
+     J: remnant magnetisation in Tesla [default 1.0]</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Magnet_3D.calcB" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">calcB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the magnetic field at point(s) x,y,z due to a 3D magnet
+The calculations are always performed in local coordinates with the centre of the magnet at origin and z magnetisation pointing along the local z' axis.</p>
+<p>The rotations and translations are performed first, and the internal field calculation functions are called.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>x</code></td>
+        <td><code>float/array</code></td>
+        <td><p>x co-ordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code>float/array</code></td>
+        <td><p>y co-ordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>z</code></td>
+        <td><code>float/array</code></td>
+        <td><p>z co-ordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>Bx(ndarray), By(ndarray), Bz(ndarray)  field vector</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">calcB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the magnetic field at point(s) x,y,z due to a 3D magnet</span>
+<span class="sd">    The calculations are always performed in local coordinates with the centre of the magnet at origin and z magnetisation pointing along the local z&#39; axis.</span>
+
+<span class="sd">    The rotations and translations are performed first, and the internal field calculation functions are called.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float/array): x co-ordinates</span>
+<span class="sd">        y (float/array): y co-ordinates</span>
+<span class="sd">        z (float/array): z co-ordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._routines3</span> <span class="kn">import</span> <span class="n">_tile_arrays</span><span class="p">,</span> <span class="n">_apply_mask</span>
+
+    <span class="c1"># If any rotation angle is set, transform the data</span>
+    <span class="k">if</span> <span class="n">_np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span>
+        <span class="n">_np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span>
+            <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">alpha_rad</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">beta_rad</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gamma_rad</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">&gt;</span> <span class="n">Magnet</span><span class="o">.</span><span class="n">tol</span>
+    <span class="p">):</span>
+
+        <span class="n">forward_rotation</span><span class="p">,</span> <span class="n">reverse_rotation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_rotation_quaternions</span><span class="p">()</span>
+
+        <span class="c1"># Generate 3xN array for quaternion rotation</span>
+        <span class="n">pos_vec</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="o">.</span><span class="n">_prepare_vector</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">,</span> <span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="p">)</span>
+
+        <span class="c1"># Rotate points</span>
+        <span class="n">x_rot</span><span class="p">,</span> <span class="n">y_rot</span><span class="p">,</span> <span class="n">z_rot</span> <span class="o">=</span> <span class="n">forward_rotation</span> <span class="o">*</span> <span class="n">pos_vec</span>
+
+        <span class="c1"># Calls internal child method to calculate the field</span>
+        <span class="n">B_local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcB_local</span><span class="p">(</span><span class="n">x_rot</span><span class="p">,</span> <span class="n">y_rot</span><span class="p">,</span> <span class="n">z_rot</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_mask</span><span class="p">(</span><span class="n">x_rot</span><span class="p">,</span> <span class="n">y_rot</span><span class="p">,</span> <span class="n">z_rot</span><span class="p">)</span>
+
+        <span class="n">B_local</span> <span class="o">=</span> <span class="n">_apply_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">B_local</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+
+        <span class="c1"># Rearrange the field vectors in a 3xN array for quaternion rotation</span>
+        <span class="n">Bvec</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="o">.</span><span class="n">_prepare_vector</span><span class="p">(</span><span class="n">B_local</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">B_local</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">B_local</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="c1"># Rotate the local fields back into the global frame using quaternions</span>
+        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="n">Bz</span> <span class="o">=</span> <span class="n">reverse_rotation</span> <span class="o">*</span> <span class="n">Bvec</span>
+
+        <span class="c1"># finally return the fields</span>
+        <span class="k">return</span> <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="n">Bz</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcB_local</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">,</span> <span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="p">)</span>
+
+        <span class="n">xloc</span><span class="p">,</span> <span class="n">yloc</span><span class="p">,</span> <span class="n">zloc</span> <span class="o">=</span> <span class="n">_tile_arrays</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">,</span> <span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_mask</span><span class="p">(</span><span class="n">xloc</span><span class="p">,</span> <span class="n">yloc</span><span class="p">,</span> <span class="n">zloc</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">_apply_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">B</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">z</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Magnet_3D.center" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">center</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet center</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ndarray</code></td>
+      <td><p>[center_x, center_y, center_z]</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet center</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ndarray: [center_x, center_y, center_z]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zc</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Magnet_3D.get_Jr" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns local magnetisation orientation</p>
+<p>Must be implemented for all classes</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns local magnetisation orientation</span>
+
+<span class="sd">    Must be implemented for all classes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Magnet_3D.get_orientation" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet orientation, <code>alpha</code>, <code>beta</code>, <code>gamma</code> in degrees</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ndarray</code></td>
+      <td><p>alpha, beta, gamma rotation angles w.r.t z, y, and x axes</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet orientation, `alpha`, `beta`, `gamma` in degrees</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ndarray: alpha, beta, gamma rotation angles w.r.t z, y, and x axes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Magnet_3D.size" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet dimesions</p>
+<p>Must be implemented for each magnet</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet dimesions</span>
+
+<span class="sd">    Must be implemented for each magnet</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet3.Prism" class="doc doc-heading">
+        <code>Prism</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Prism Magnet Class. Cuboid (width, depth height).</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>width</code></td>
+        <td><code>float</code></td>
+        <td><p>magnet width [default 10e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>depth</code></td>
+        <td><code>float</code></td>
+        <td><p>magnet depth [default 20e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>height</code></td>
+        <td><code>float</code></td>
+        <td><p>magnet height [default 30e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Jr</code></td>
+        <td><code>float</code></td>
+        <td><p>remnant magnetisation in Tesla [default 1.0]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <p>Optional Arguments:
+      centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
+      theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+      phi: Angle between magnetisation and z-axis [default 0.0 degrees]</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Prism.get_Jr" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns local magnetisation orientation</p>
+<p>Must be implemented for all classes</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Jx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Jy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Jz</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Prism.size" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet dimesions</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>size[ndarray]</code></td>
+      <td><p>numpy array [width, depth, height]</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet dimesions</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        size[ndarray]: numpy array [width, depth, height]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="pymagnet.magnets._magnet3.Sphere" class="doc doc-heading">
+        <code>Sphere</code>
+
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Sphere Magnet Class</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>radius</code></td>
+        <td><code></code></td>
+        <td><p>radius [default 10e-3]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>J</code></td>
+        <td><code></code></td>
+        <td><p>remnant magnetisation in Tesla [default 1.0]</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>      <p>Optional Arguments:
+     centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
+     theta: Angle between magnetisation and x-axis [default 90.0 degrees]
+     phi: Angle between magnetisation and z-axis [default 0.0 degrees]</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Sphere.get_Jr" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns local magnetisation orientation</p>
+<p>Must be implemented for all classes</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_Jr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Jr</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._magnet3.Sphere.size" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Returns magnet dimesions</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>size[ndarray]</code></td>
+      <td><p>numpy array [radius, length]</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_magnet3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns magnet dimesions</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        size[ndarray]: numpy array [radius, length]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets._routines"></a>
+    <div class="doc doc-contents first">
+
+      <p>Routines for converting between coordinate systems</p>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines.cart2pol" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">cart2pol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Converts from cartesian to polar coordinates</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>x</code></td>
+        <td><code>float/array</code></td>
+        <td><p>x coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code>float/array</code></td>
+        <td><p>y coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>rho, phi</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">cart2pol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts from cartesian to polar coordinates</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float/array): x coordinates</span>
+<span class="sd">        y (float/array): y coordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: rho, phi</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines.cart2sph" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">cart2sph</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Converts from cartesian to spherical coordinates</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>x</code></td>
+        <td><code>float/array</code></td>
+        <td><p>x coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code>float/array</code></td>
+        <td><p>y coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>z</code></td>
+        <td><code>float/array</code></td>
+        <td><p>z coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>r, theta, phi</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">cart2sph</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts from cartesian to spherical coordinates</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float/array): x coordinates</span>
+<span class="sd">        y (float/array): y coordinates</span>
+<span class="sd">        z (float/array): z coordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: r, theta, phi</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">z</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># Hide the warning for situtations where there is a divide by zero.</span>
+    <span class="c1"># This returns a NaN in the array, which is ignored for plotting.</span>
+    <span class="k">with</span> <span class="n">_np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines.pol2cart" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">pol2cart</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Converts from polar to cartesian coordinates</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>rho</code></td>
+        <td><code>float/array</code></td>
+        <td><p>radial coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>phi</code></td>
+        <td><code>float/array</code></td>
+        <td><p>azimuthal coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>x,y</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">pol2cart</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts from polar to cartesian coordinates</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rho (float/array): radial coordinates</span>
+<span class="sd">        phi (float/array): azimuthal coordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: x,y</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines.sph2cart" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">sph2cart</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Converts from spherical to cartesian coordinates</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>r</code></td>
+        <td><code>float/array</code></td>
+        <td><p>radial coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>theta</code></td>
+        <td><code>float/array</code></td>
+        <td><p>azimuthal angles</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>phi</code></td>
+        <td><code>float/array</code></td>
+        <td><p>polar angle</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>x,y,z</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">sph2cart</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts from spherical to cartesian coordinates</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        r (float/array): radial coordinates</span>
+<span class="sd">        theta (float/array): azimuthal angles</span>
+<span class="sd">        phi (float/array): polar angle</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: x,y,z</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines.sphere_sph2cart" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">sphere_sph2cart</span><span class="p">(</span><span class="n">Br</span><span class="p">,</span> <span class="n">Btheta</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Converts magnetic field of a sphere from spherical to cartesian coordinates</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>Br</code></td>
+        <td><code>float/array</code></td>
+        <td><p>radial vector component</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Btheta</code></td>
+        <td><code>float/array</code></td>
+        <td><p>polar vector component</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>theta</code></td>
+        <td><code>float/array</code></td>
+        <td><p>azimuthal angles</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>phi</code></td>
+        <td><code>float/array</code></td>
+        <td><p>polar angle</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>Bx,By,Bz</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">sphere_sph2cart</span><span class="p">(</span><span class="n">Br</span><span class="p">,</span> <span class="n">Btheta</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts magnetic field of a sphere from spherical to cartesian coordinates</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Br (float/array): radial vector component</span>
+<span class="sd">        Btheta (float/array): polar vector component</span>
+<span class="sd">        theta (float/array): azimuthal angles</span>
+<span class="sd">        phi (float/array): polar angle</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Bx,By,Bz</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Bx</span> <span class="o">=</span> <span class="n">Br</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="o">+</span> <span class="n">Btheta</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+
+    <span class="n">By</span> <span class="o">=</span> <span class="n">Br</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="o">+</span> <span class="n">Btheta</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+
+    <span class="n">Bz</span> <span class="o">=</span> <span class="n">Br</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">Btheta</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="n">Bz</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines.vector_pol2cart" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">vector_pol2cart</span><span class="p">(</span><span class="n">Brho</span><span class="p">,</span> <span class="n">Bphi</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Converts Vectors from polar to cartesian coordinates</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>Brho</code></td>
+        <td><code>float/array</code></td>
+        <td><p>radial vector component</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Bphi</code></td>
+        <td><code>float/array</code></td>
+        <td><p>azimuthal vector component</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>phi</code></td>
+        <td><code>float/array</code></td>
+        <td><p>azimuthal coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>x,y</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">vector_pol2cart</span><span class="p">(</span><span class="n">Brho</span><span class="p">,</span> <span class="n">Bphi</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts Vectors from polar to cartesian coordinates</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Brho (float/array): radial vector component</span>
+<span class="sd">        Bphi (float/array): azimuthal vector component</span>
+<span class="sd">        phi (float/array): azimuthal coordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: x,y</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Bx</span> <span class="o">=</span> <span class="n">Brho</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="o">-</span> <span class="n">Bphi</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">By</span> <span class="o">=</span> <span class="n">Brho</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="o">+</span> <span class="n">Bphi</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines.vector_sph2cart" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">vector_sph2cart</span><span class="p">(</span><span class="n">Br</span><span class="p">,</span> <span class="n">Btheta</span><span class="p">,</span> <span class="n">Bphi</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Converts Vectors from spherical to cartesian coordinates</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>Br</code></td>
+        <td><code>float/array</code></td>
+        <td><p>radial vector component</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Btheta</code></td>
+        <td><code>float/array</code></td>
+        <td><p>polar vector component</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>Bphi</code></td>
+        <td><code>float/array</code></td>
+        <td><p>azimuthal vector component</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>theta</code></td>
+        <td><code>float/array</code></td>
+        <td><p>azimuthal angles</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>phi</code></td>
+        <td><code>float/array</code></td>
+        <td><p>polar angle</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>Bx,By,Bz</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">vector_sph2cart</span><span class="p">(</span><span class="n">Br</span><span class="p">,</span> <span class="n">Btheta</span><span class="p">,</span> <span class="n">Bphi</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts Vectors from spherical to cartesian coordinates</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Br (float/array): radial vector component</span>
+<span class="sd">        Btheta (float/array): polar vector component</span>
+<span class="sd">        Bphi (float/array): azimuthal vector component</span>
+<span class="sd">        theta (float/array): azimuthal angles</span>
+<span class="sd">        phi (float/array): polar angle</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Bx,By,Bz</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Bx</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Br</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">Btheta</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">Bphi</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">By</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Br</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">Btheta</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">Bphi</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">Bz</span> <span class="o">=</span> <span class="n">Br</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">Btheta</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="n">Bz</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets._routines2"></a>
+    <div class="doc doc-contents first">
+
+      <p>Routines for Two Dimensional Magnet Classes</p>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines2.B_calc_2D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">B_calc_2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Function to calculate magnetic field due to any array of points
+It sums the magnetic field B over each component of the magnetisation
+J = mu_0 M</p>
+
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">B_calc_2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to calculate magnetic field due to any array of points</span>
+<span class="sd">    It sums the magnetic field B over each component of the magnetisation</span>
+<span class="sd">    J = mu_0 M</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._magnet2</span> <span class="kn">import</span> <span class="n">Magnet_2D</span>
+
+    <span class="c1"># Empty data structure</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">_allocate_field_array2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">magnet</span> <span class="ow">in</span> <span class="n">Magnet_2D</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">calcB</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">B</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">Bx</span>
+        <span class="n">B</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">By</span>
+
+    <span class="n">B</span><span class="o">.</span><span class="n">calc_norm</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">B</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines2.FgradB_2D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">FgradB_2D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">chi_m</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the magnetic field gradient force for a 2D field.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>B</code></td>
+        <td><code>Vector2</code></td>
+        <td><p>Magnetic field vector</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>x</code></td>
+        <td><code>float/array</code></td>
+        <td><p>x coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code>float/array</code></td>
+        <td><p>y coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Vector2</code></td>
+      <td><p>Magnetic field gradient force vector</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">FgradB_2D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">chi_m</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the magnetic field gradient force for a 2D field.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        B (Vector2): Magnetic field vector</span>
+<span class="sd">        x (float/array): x coordinates</span>
+<span class="sd">        y (float/array): y coordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Vector2: Magnetic field gradient force vector</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._fields</span> <span class="kn">import</span> <span class="n">Vector2</span>
+    <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">u0</span>
+
+    <span class="n">BgB</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">n</span><span class="p">),</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">FB</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">n</span><span class="p">),</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+
+    <span class="n">dB</span> <span class="o">=</span> <span class="n">gradB_2D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">BgB</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">dB</span><span class="o">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">B</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">BgB</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">dB</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">B</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">BgB</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">dB</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">B</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">FB</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">u0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">FB</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">u0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">FB</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">u0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">y</span>
+    <span class="k">return</span> <span class="n">FB</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines2.gradB_2D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">gradB_2D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the magnetic field gradient for a 2D field.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>B</code></td>
+        <td><code>Vector2</code></td>
+        <td><p>Magnetic field vector</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>x</code></td>
+        <td><code>float/array</code></td>
+        <td><p>x coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code>float/array</code></td>
+        <td><p>y coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Vector2</code></td>
+      <td><p>Magnetic field gradient vector</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">gradB_2D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the magnetic field gradient for a 2D field.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        B (Vector2): Magnetic field vector</span>
+<span class="sd">        x (float/array): x coordinates</span>
+<span class="sd">        y (float/array): y coordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Vector2: Magnetic field gradient vector</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">._fields</span> <span class="kn">import</span> <span class="n">Vector2</span>
+
+    <span class="n">dB</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">B</span><span class="p">),</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">B</span><span class="p">))</span>
+    <span class="n">Nx</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Ny</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="n">Nx</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="n">Ny</span>
+    <span class="n">dB</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dB</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+    <span class="n">dB</span><span class="o">.</span><span class="n">calc_norm</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">dB</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines2.grid2D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">grid2D</span><span class="p">(</span><span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Grid of x,y points.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ux</code></td>
+        <td><code>[float]</code></td>
+        <td><p>[x upper limit]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>uy</code></td>
+        <td><code>[float]</code></td>
+        <td><p>[y upper limit]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>lx</code></td>
+        <td><code>[float, optional]</code></td>
+        <td><p>[x lower limit defaults to -ux]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>ly</code></td>
+        <td><code>[optional]</code></td>
+        <td><p>[x lower limit defaults to -ux]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>NP</code></td>
+        <td><code>int</code></td>
+        <td><p>[number of points in each direction]. Defaults to 100.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">grid2D</span><span class="p">(</span><span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Grid of x,y points.</span>
+<span class="sd">    Args:</span>
+
+<span class="sd">        ux ([float]): [x upper limit]</span>
+<span class="sd">        uy ([float]): [y upper limit]</span>
+<span class="sd">        lx ([float, optional]): [x lower limit defaults to -ux]</span>
+<span class="sd">        ly ([optional]): [x lower limit defaults to -ux]</span>
+<span class="sd">        NP (int, optional): [number of points in each direction]. Defaults to 100.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NP</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;NP&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">lx</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;lx&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ux</span><span class="p">)</span>
+    <span class="n">ly</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ly&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">uy</span><span class="p">)</span>
+    <span class="n">NPJ</span> <span class="o">=</span> <span class="n">NP</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="n">lx</span><span class="p">:</span><span class="n">ux</span><span class="p">:</span><span class="n">NPJ</span><span class="p">,</span> <span class="n">ly</span><span class="p">:</span><span class="n">uy</span><span class="p">:</span><span class="n">NPJ</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines2.rotate_points_2D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Counter-clockwise rotation of points x,y</p>
+<p>Rotates 2D coordinates using a rotation matrix</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>x</code></td>
+        <td><code>float/array</code></td>
+        <td><p>array of x coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>y</code></td>
+        <td><code>float/array</code></td>
+        <td><p>array of x coordinates</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>alpha</code></td>
+        <td><code>float</code></td>
+        <td><p>rotation angle w.r.t. x-axis</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>(x', y') rotated array of points</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines2.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">rotate_points_2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Counter-clockwise rotation of points x,y</span>
+
+<span class="sd">    Rotates 2D coordinates using a rotation matrix</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float/array): array of x coordinates</span>
+<span class="sd">        y (float/array): array of x coordinates</span>
+<span class="sd">        alpha (float): rotation angle w.r.t. x-axis</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: (x&#39;, y&#39;) rotated array of points</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must have same number of points in x and y&quot;</span><span class="p">)</span>
+
+    <span class="n">rot_matrix</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[[</span><span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span> <span class="o">-</span><span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">)],</span> <span class="p">[</span><span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">)]]</span>
+    <span class="p">)</span>
+    <span class="n">stacked_points</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">_np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">_np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+    <span class="n">rotated_points</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rot_matrix</span><span class="p">,</span> <span class="n">stacked_points</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">x_rotated</span> <span class="o">=</span> <span class="n">rotated_points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">y_rotated</span> <span class="o">=</span> <span class="n">rotated_points</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_rotated</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">_np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_rotated</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="pymagnet.magnets._routines3"></a>
+    <div class="doc doc-contents first">
+
+      <p>Routines for Three Dimensional Magnet Classes</p>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.magnets._routines3.grid3D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">grid3D</span><span class="p">(</span><span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="n">uz</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Grid of x,y, z points.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ux</code></td>
+        <td><code>[float]</code></td>
+        <td><p>[x upper limit]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>uy</code></td>
+        <td><code>[float]</code></td>
+        <td><p>[y upper limit]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>uz</code></td>
+        <td><code>[float]</code></td>
+        <td><p>[z upper limit]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>lx</code></td>
+        <td><code>[float, optional]</code></td>
+        <td><p>[x lower limit defaults to -ux]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>ly</code></td>
+        <td><code>[optional]</code></td>
+        <td><p>[y lower limit defaults to -uy]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>lz</code></td>
+        <td><code>[optional]</code></td>
+        <td><p>[x lower limit defaults to -ux]</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>NP</code></td>
+        <td><code>int</code></td>
+        <td><p>[number of points in each direction]. Defaults to 100.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>grid</code></td>
+      <td><p>numpy array</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_routines3.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">grid3D</span><span class="p">(</span><span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="n">uz</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Grid of x,y, z points.</span>
+<span class="sd">    Args:</span>
+
+<span class="sd">        ux ([float]): [x upper limit]</span>
+<span class="sd">        uy ([float]): [y upper limit]</span>
+<span class="sd">        uz ([float]): [z upper limit]</span>
+<span class="sd">        lx ([float, optional]): [x lower limit defaults to -ux]</span>
+<span class="sd">        ly ([optional]): [y lower limit defaults to -uy]</span>
+<span class="sd">        lz ([optional]): [x lower limit defaults to -ux]</span>
+<span class="sd">        NP (int, optional): [number of points in each direction]. Defaults to 100.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        grid: numpy array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NP</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;NP&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">NP</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">NPx</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;NPx&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">NPy</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;NPy&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">NPz</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;NPz&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">NPx</span> <span class="o">=</span> <span class="n">NP</span>
+        <span class="n">NPy</span> <span class="o">=</span> <span class="n">NP</span>
+        <span class="n">NPz</span> <span class="o">=</span> <span class="n">NP</span>
+
+    <span class="n">lx</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;lx&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ux</span><span class="p">)</span>
+    <span class="n">ly</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ly&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">uy</span><span class="p">)</span>
+    <span class="n">lz</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;lz&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">uz</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="n">lx</span> <span class="p">:</span> <span class="n">ux</span> <span class="p">:</span> <span class="n">NPx</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="n">ly</span> <span class="p">:</span> <span class="n">uy</span> <span class="p">:</span> <span class="n">NPy</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="n">lz</span> <span class="p">:</span> <span class="n">uz</span> <span class="p">:</span> <span class="n">NPz</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../pymagnet/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              pymagnet
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../plots/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              plots
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.ca5457b8.min.js"></script>
+      
+        <script src="../javascripts/config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

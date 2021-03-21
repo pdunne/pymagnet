@@ -1,0 +1,998 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.3">
+    
+    
+      
+        <title>Field Equations - Pymagnet</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1655a90d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#magnetic-field-equations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pymagnet" class="md-header__button md-logo" aria-label="Pymagnet">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pymagnet
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Field Equations
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pymagnet" class="md-nav__button md-logo" aria-label="Pymagnet">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pymagnet
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Field Equations
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Field Equations
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1d-calculations" class="md-nav__link">
+    1D Calculations
+  </a>
+  
+    <nav class="md-nav" aria-label="1D Calculations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cylinder" class="md-nav__link">
+    Cylinder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cuboid" class="md-nav__link">
+    Cuboid
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2d-calculations" class="md-nav__link">
+    2D Calculations
+  </a>
+  
+    <nav class="md-nav" aria-label="2D Calculations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rectangles" class="md-nav__link">
+    Rectangles
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#circles" class="md-nav__link">
+    Circles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3d-calculations" class="md-nav__link">
+    3D Calculations
+  </a>
+  
+    <nav class="md-nav" aria-label="3D Calculations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prismscuboids" class="md-nav__link">
+    Prisms/Cuboids
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cylinderssolenoids" class="md-nav__link">
+    Cylinders/Solenoids
+  </a>
+  
+    <nav class="md-nav" aria-label="Cylinders/Solenoids">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bulirschs-complete-elliptic-integral" class="md-nav__link">
+    Bulirsch's  complete elliptic integral
+  </a>
+  
+    <nav class="md-nav" aria-label="Bulirsch's  complete elliptic integral">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spheres" class="md-nav__link">
+    Spheres
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#composite-objects" class="md-nav__link">
+    Composite Objects
+  </a>
+  
+    <nav class="md-nav" aria-label="Composite Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2d-quadrupoles" class="md-nav__link">
+    2D Quadrupoles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methods/" class="md-nav__link">
+        Methods
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Code Reference
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Code Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Code Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pymagnet/" class="md-nav__link">
+        pymagnet
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets/" class="md-nav__link">
+        magnets
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plots/" class="md-nav__link">
+        plots
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quaternions/" class="md-nav__link">
+        quaternions
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1d-calculations" class="md-nav__link">
+    1D Calculations
+  </a>
+  
+    <nav class="md-nav" aria-label="1D Calculations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cylinder" class="md-nav__link">
+    Cylinder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cuboid" class="md-nav__link">
+    Cuboid
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2d-calculations" class="md-nav__link">
+    2D Calculations
+  </a>
+  
+    <nav class="md-nav" aria-label="2D Calculations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rectangles" class="md-nav__link">
+    Rectangles
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#circles" class="md-nav__link">
+    Circles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3d-calculations" class="md-nav__link">
+    3D Calculations
+  </a>
+  
+    <nav class="md-nav" aria-label="3D Calculations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prismscuboids" class="md-nav__link">
+    Prisms/Cuboids
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cylinderssolenoids" class="md-nav__link">
+    Cylinders/Solenoids
+  </a>
+  
+    <nav class="md-nav" aria-label="Cylinders/Solenoids">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bulirschs-complete-elliptic-integral" class="md-nav__link">
+    Bulirsch's  complete elliptic integral
+  </a>
+  
+    <nav class="md-nav" aria-label="Bulirsch's  complete elliptic integral">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spheres" class="md-nav__link">
+    Spheres
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#composite-objects" class="md-nav__link">
+    Composite Objects
+  </a>
+  
+    <nav class="md-nav" aria-label="Composite Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2d-quadrupoles" class="md-nav__link">
+    2D Quadrupoles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="magnetic-field-equations">Magnetic Field Equations</h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li>SI Units with the Sommerfeld convetion are used for this discussion:
+<span class="arithmatex">\(\mathbf{B} = \mu_0 \left( \mathbf{H} + \mathbf{M}  \right)\)</span><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+<li>However, the Kennelly Convetion is used for the creation of each magnet object
+in the library:
+<span class="arithmatex">\(\mathbf{B} = \mu_0\mathbf{H} + \mathbf{J}\)</span><sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+<li>In free space <span class="arithmatex">\(\mathbf{B} = \mu_0 \mathbf{H}\)</span></li>
+<li>In magnetised bodies, the demagnetising field <span class="arithmatex">\(\mathbf{H_d} = - N \mathbf{M}\)</span>,
+where <span class="arithmatex">\(N\)</span> is the demagnetising factor.</li>
+</ul>
+</div>
+<p>Many of the relations here come from<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>, those that do not are noted below, or
+derived.</p>
+<h2 id="1d-calculations">1D Calculations</h2>
+<h3 id="cylinder">Cylinder</h3>
+<p>The magnetic field directly above the centre of a cylinder is:</p>
+<figure>
+  <img src="../img/cylinder.png" />
+  <figcaption>Magnetic cylinder schematic</figcaption>
+</figure>
+
+<div class="arithmatex">\[
+B_z = \frac{\mu_0 M_r}{2} \left[ \frac{z+L}{\sqrt{(z+L)^2 + R^2} } - \frac{z}{\sqrt{z^2 + R^2}} \right]
+\]</div>
+<h3 id="cuboid">Cuboid</h3>
+<p>While for a cuboid, this equation is:</p>
+<figure>
+  <img src="../img/cuboid.png" />
+  <figcaption>Magnetic cuboid</figcaption>
+</figure>
+
+<div class="arithmatex">\[
+B_z = \frac{\mu_0 M_r}{2}  {\left[ \tan^{-1}{\left(
+\frac{(z+L)\sqrt{a^2 + b^2 + (z+L)^2} }{ab}
+\right)} - \tan^{-1}{\left( \frac{z\sqrt{a^2 + b^2 + z^2} }{ab}
+\right)}
+\right]}
+\]</div>
+<h2 id="2d-calculations">2D Calculations</h2>
+<p>For infinitely long objects, the field problems can be approximated in 2D, where the magnet field consists of:</p>
+<div class="arithmatex">\[
+\mathbf{B} = B_x \mathbf{\hat{x}} + B_y\mathbf{\hat{y}}
+\]</div>
+<h3 id="rectangles">Rectangles</h3>
+<figure>
+    <img src="../img/rectangle.png" width="300" />
+    <figcaption>2D Magnet Rectangle</figcaption>
+</figure>
+
+<p>The magnetic field due to rectangle and magnetised in <span class="arithmatex">\(x\)</span> is:</p>
+<div class="arithmatex">\[
+B_x = Bx
+\]</div>
+<div class="arithmatex">\[
+B_y = By
+\]</div>
+<p>and if magnetised in <span class="arithmatex">\(y\)</span> is:</p>
+<div class="arithmatex">\[
+B_x = \frac{\mu_0 M_r}{4\pi} \left[\ln {\left(
+\frac{{\left(x+a\right)}^2 + {\left(y-b\right)}^2}{{\left(x+a\right)}^2
++{\left(y+b\right)}^2}
+\right)}
+-\ln{\left(
+\frac{{\left(x-a\right)}^2+{\left(y-b\right)}^2}{ {\left(x-a\right)}^2 +
+{\left(y+b\right)}^2}
+\right)}\right]
+\]</div>
+<div class="arithmatex">\[
+B_y = \frac{\mu_0M_r}{2\pi}
+\left[{\tan}^{-1}{\left( \frac{2b \left(x+a\right)}{y^2-b^2+{\left(x+a\right)}^2}
+\right)}
+- {\tan}^{-1}{\left(\frac{2b\left(x-a\right)}{y^2-b^2+{\left(x-a\right)}^2}\right)}\right]
+\]</div>
+<h3 id="circles">Circles</h3>
+<figure>
+  <!-- <img src="../img/cylinder.png" /> -->
+    <img src="../img/biaxial_rod.png"/>
+    <figcaption>2D Magnet Circle</figcaption>
+</figure>
+
+<p>A long bipolar rod of radius <span class="arithmatex">\(a\)</span> can be approximated as circular source. The magnetic
+stray field is most conveniently written in polar coordinates, as:</p>
+<div class="arithmatex">\[
+\mathbf{B} = \frac{\mu_0 M_r}{2} \left( \frac{a^2}{r^2}\right) \left[
+    \cos(\phi) \mathbf{\hat{r}} + \sin(\phi) \mathbf{\hat{\phi}}
+     \right]
+\]</div>
+<h2 id="3d-calculations">3D Calculations</h2>
+<p>The derived equations for 3D magnets were performed using the Coulombic Charge model
+rather than the Amperian current model of the 2D systems. More correctly they are
+derived in terms of the <span class="arithmatex">\(H\)</span> field rather than <span class="arithmatex">\(B\)</span>, but which in free space only differ
+by a factor <span class="arithmatex">\(\mu_0\)</span>, i.e. <span class="arithmatex">\(\mathbf{B} = \mu_0 \mathbf{H}\)</span>.</p>
+<p>In the Kennelly convention of electromagnetic units every factor <span class="arithmatex">\(\mu_0 M_r\)</span> can be
+replaced by <span class="arithmatex">\(J\)</span> or <span class="arithmatex">\(J_r\)</span>.</p>
+<h3 id="prismscuboids">Prisms/Cuboids</h3>
+<p>For a uniformly magnetised cuboid, used in our experiments, with dimensions <span class="arithmatex">\(2a
+\times  2b \times 2c\)</span> magnetised in the <span class="arithmatex">\(x\)</span>-direction
+is<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></p>
+<div class="arithmatex">\[
+\begin{align}
+B_x = &amp;-\frac{\mu_0 M_r}{4\pi} \Big[ F_1\left(-x,y,z\right)
++ F_1\left(-x,y,-z \right) \nonumber\\
+ &amp; + F_1\left(-x,-y,z \right) + F_1\left(-x,-y,-z\right) + F_1\left(x,y,z\right) \nonumber\\
+ &amp; + F_1\left(x,y,-z \right) + F_1\left(x,-y,z\right) + F_1\left(x,-y,-z\right) \Big]
+ \end{align}
+\]</div>
+<div class="arithmatex">\[
+B_y = \frac{\mu_0 M_r}{4\pi}
+\ln{\left[\frac{F_2\left(-x,-y,-z\right)F_2\left(x,y,z\right)}{F_2\left(x,y,-z\right)F_2\left(-x,y,z\right)}\right]}
+\]</div>
+<div class="arithmatex">\[
+B_z = \frac{\mu_0 M_r}{4\pi}
+\ln{\left[
+    \frac{F_2\left(-x,-z,y\right)F_2\left(x,z,y\right)}{F_2\left(-x,z,y\right)F_2\left(x,-z,y\right)}
+    \right]}
+\]</div>
+<p>where the functions <span class="arithmatex">\(F_1\)</span> and <span class="arithmatex">\(F_2\)</span> are</p>
+<div class="arithmatex">\[
+F_1\left(x,y,z\right) = \tan^{-1}{\frac{\left(b+y\right)\left(c+z\right)}
+{\left(a+x\right)\sqrt{\left(a+x\right)^2+\left(b+y\right)^2+\left(c+z\right)^2}}}
+\]</div>
+<div class="arithmatex">\[
+F_2\left(x,y,z\right) = \frac{\sqrt{\left(a+x\right)^2+\left(b+y\right)^2+\left(c-z\right)^2}+c-z}
+{\sqrt{\left(a+x\right)^2+\left(b+y\right)^2+\left(c+z\right)^2}-c-z}
+\]</div>
+<p>For a bar magnetised in <span class="arithmatex">\(z\)</span>, the above equations can be rewritten by a 90˚
+rotation about <span class="arithmatex">\(y\)</span>, leading to<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></p>
+<div class="arithmatex">\[
+B_x = \frac{\mu_0 M_r}{4\pi}\ln{\left[
+\frac{F_2\left(-x,y,-z\right)F_2\left(x,y,z\right)}
+{F_2\left(x,y,-z\right)F_2\left(-x,y,z\right)}
+\right]}
+\]</div>
+<div class="arithmatex">\[
+B_y = \frac{\mu_0M_r}{4\pi}\ln{\left[
+\frac{F_2\left(-y,x,-z\right)F_2\left(y,x,z\right)}
+{F_2\left(y,x,-z\right)F_2\left(-y,x,z\right)}
+\right]}
+\]</div>
+<div class="arithmatex">\[
+\begin{align}
+B_z = &amp;-\frac{\mu_0 M_r}{4\pi} \Big[ F_1\left(-x,y,z\right)
++ F_1\left(-x,y,-z \right) \nonumber\\
+ &amp; + F_1\left(-x,-y,z \right) + F_1\left(-x,-y,-z\right) + F_1\left(x,y,z\right) \nonumber\\
+ &amp; + F_1\left(x,y,-z \right) + F_1\left(x,-y,z\right) + F_1\left(x,-y,-z\right) \Big]
+\end{align}
+\]</div>
+<p>where the functions <span class="arithmatex">\(F_1\)</span> and <span class="arithmatex">\(F_2\)</span> are</p>
+<div class="arithmatex">\[
+F_1\left(x,y,z\right)= \tan^{-1}
+\frac{\left(a+x\right)\left(b+y\right)}{\left(c+z\right)
+\sqrt{\left(a+x\right)^2+\left(b+y\right)^2+\left(c+z\right)^2}}
+\]</div>
+<div class="arithmatex">\[
+F_2\left(x,y,z\right)=\frac{\sqrt{\left(a+x\right)^2+\left(b-y\right)^2+\left(c+z\right)^2}+b-y}
+{\sqrt{\left(a+x\right)^2+\left(b+y\right)^2+\left(c+z\right)^2}-b-y}
+\]</div>
+<p>Similar equations can be attained for a magnet magnetised in <span class="arithmatex">\(y\)</span> by a 90˚ rotation
+of the first set of equations about the <span class="arithmatex">\(z\)</span>-axis.</p>
+<h3 id="cylinderssolenoids">Cylinders/Solenoids</h3>
+<p>Recalling that the magnetic field due to a cylinder of length <span class="arithmatex">\(2b\)</span> and radius <span class="arithmatex">\(a\)</span>,
+with a current <span class="arithmatex">\(I\)</span> running through <span class="arithmatex">\(n\)</span> turns of wire along the symmetry axis is:</p>
+<div class="arithmatex">\[
+B_z = \frac{\mu_0 n I}{2} \left[
+\frac{z + b}{\sqrt{ (z + b)^2 - a^2 }} -
+\frac{z - b}{\sqrt{ (z - b)^2 - a^2 }}  \right]
+\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li>This is equivalent to the equation in the <a href="#cylinder">Cylinder section</a>,
+where <span class="arithmatex">\(\mu_0 n I \equiv \mu_0 M_r\)</span></li>
+<li>For an infinite solenoid, this reduces to <span class="arithmatex">\(B_z = \mu_0 n I\)</span> at its center</li>
+</ul>
+</div>
+<p>For the general case, including off-axis points the field in cylindrical coordinates
+becomes</p>
+<div class="arithmatex">\[
+B_\rho = B_0 \left[ \alpha_+ C(k_+, 1, 1, -1) 
+- \alpha_- C(k_-, 1, 1, -1)
+\right]
+\]</div>
+<p>and</p>
+<div class="arithmatex">\[
+B_z = \frac{B_0 a}{a + \rho} \left[
+\beta_+ C(k_+, \gamma^2, 1, \gamma)
+- \beta_- C(k_, \gamma^2, 1, \gamma)
+\right]
+\]</div>
+<p>where:</p>
+<div class="arithmatex">\[
+B_0 = \frac{\mu_0}{\pi}n I \,\,\,\,\, z_\pm = z \pm b
+\]</div>
+<div class="arithmatex">\[
+\alpha_\pm = \frac{a}{\sqrt{z^2_\pm + (\rho + a)^2 }} \,\,\,\,\,\, \beta_\pm = \frac{z_\pm}{\sqrt{z^2_\pm + (\rho + a)^2 }}
+\]</div>
+<div class="arithmatex">\[
+\gamma = \frac{a - \rho}{a + \rho} \,\,\,\,\,\,\, k_\pm = \sqrt{ \frac{z^2_\pm + (a - \rho)^2}{z^2_\pm + (a + \rho)^2} }
+\]</div>
+<p>and <span class="arithmatex">\(C\)</span> is Bulirsch's 'cel' function<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup>.</p>
+<h4 id="bulirschs-complete-elliptic-integral">Bulirsch's  complete elliptic integral</h4>
+<p>See NIST Handbook of Mathematical Functions<sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup></p>
+<div class="arithmatex">\[
+C\left(k_c, p, c,s \right) = \int_0 ^{\pi/2} \frac{ \left( c \cos^2 \varphi + s \sin^s \varphi  \right) d\varphi }
+{\left( \cos^2 \varphi + p \sin^2 \varphi \right) \sqrt{ \cos^2 \varphi + k_c^2 \sin^2 \varphi  } }
+\]</div>
+<p>The three standard Legendre forms of the complete elliptic integrals
+can be written using the generalised complete elliptic integral of
+Bulirsch:</p>
+<p><span class="arithmatex">\(K(k) = C(k_c, 1, 1, 1)\)</span></p>
+<p><span class="arithmatex">\((K) = C(k_c, 1, 1, k_c^2)\)</span></p>
+<p><span class="arithmatex">\(\Pi(n, k) = C(k_c, n+1, 1, 1)\)</span></p>
+<p>A simple algorirthm for solving the elliptic integrals<sup id="fnref2:6"><a class="footnote-ref" href="#fn:6">6</a></sup> is included as a <code>@staticmethod</code>
+in the <code>Cylinder</code> subclass. It is vectorised and JIT compiled as a Numpy ufunc using
+Numba for improved performance:</p>
+<pre><code>Cylinder._cel(kc, p, c, s)
+</code></pre>
+<h5 id="example">Example</h5>
+<p>Here is an example of how to use it, for the special case of
+<span class="arithmatex">\(k_c = 1\)</span> for the first complete elliptic integral, <span class="arithmatex">\(K(1)\)</span>:</p>
+<p><span class="arithmatex">\(C\left(1, 1, 1, 1 \right)  = \pi/2\)</span></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pymagnet</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">cel_value</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Cylinder</span><span class="o">.</span><span class="n">_cel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">cel_value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="spheres">Spheres</h3>
+<p>Outside a uniformly magnetised sphere of radius <span class="arithmatex">\(a\)</span>, the stray field is identical to a magnetic
+dipole, and has a convenient representation is spherical coordinates:</p>
+<div class="arithmatex">\[
+\mathbf{B} = \frac{\mu_0 M_r}{3} \left( \frac{a^3}{r^3}\right) \left[
+    2\cos(\theta) \mathbf{\hat{r}} + \sin(\theta) \mathbf{\hat{\theta}}
+     \right]
+\]</div>
+<h2 id="composite-objects">Composite Objects</h2>
+<h3 id="2d-quadrupoles">2D Quadrupoles</h3>
+<p>The magnetic field due to a pseudo-quadrupolar configuration of four 2D rectangles of width <span class="arithmatex">\(2a\)</span>, height, <span class="arithmatex">\(2b\)</span>, with uniform
+remnant magnetisation <span class="arithmatex">\(M_r\)</span> in <span class="arithmatex">\(y\)</span> with a gap <span class="arithmatex">\(2w\)</span> can be written as</p>
+<div class="arithmatex">\[
+\begin{align}
+H_x &amp;= \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{y^{2} + \left(- 2 a - w + x\right)^{2}}{y^{2} + \left(- w + x\right)^{2}} \right )} + \ln{\left (\frac{\left(- 2 b - y\right)^{2} + \left(- 2 a - w + x\right)^{2}}{\left(- 2 b - y\right)^{2} + \left(- w + x\right)^{2}} \right )}\right) \nonumber\\
+&amp;- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{y^{2} + \left(- 2 a - w + x\right)^{2}}{y^{2} + \left(- w + x\right)^{2}} \right )} - \ln{\left (\frac{\left(2 b - y\right)^{2} + \left(- 2 a - w + x\right)^{2}}{\left(2 b - y\right)^{2} + \left(- w + x\right)^{2}} \right )}\right) \nonumber\\
+&amp; + \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{y^{2} + \left(w + x\right)^{2}}{y^{2} + \left(2 a + w + x\right)^{2}} \right )} + \ln{\left (\frac{\left(- 2 b - y\right)^{2} + \left(w + x\right)^{2}}{\left(- 2 b - y\right)^{2} + \left(2 a + w + x\right)^{2}} \right )}\right) \nonumber\\
+&amp;- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{y^{2} + \left(w + x\right)^{2}}{y^{2} + \left(2 a + w + x\right)^{2}} \right )} - \ln{\left (\frac{\left(2 b - y\right)^{2} + \left(w + x\right)^{2}}{\left(2 b - y\right)^{2} + \left(2 a + w + x\right)^{2}} \right )}\right) \label{eqn:quad_hx}
+\end{align}
+\]</div>
+<p>and</p>
+<div class="arithmatex">\[
+\begin{align}
+H_y &amp; = \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{1}{w^{2} + y^{2}} \left(y^{2} + \left(- 2 a - w\right)^{2}\right) \right )} + \ln{\left (\frac{\left(- 2 a - w\right)^{2} + \left(- 2 b - y\right)^{2}}{w^{2} + \left(- 2 b - y\right)^{2}} \right )}\right) \nonumber\\
+&amp;- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{1}{w^{2} + y^{2}} \left(y^{2} + \left(- 2 a - w\right)^{2}\right) \right )} - \ln{\left (\frac{\left(- 2 a - w\right)^{2} + \left(2 b - y\right)^{2}}{w^{2} + \left(2 b - y\right)^{2}} \right )}\right)\nonumber\\
+ &amp;+ \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{w^{2} + y^{2}}{y^{2} + \left(2 a + w\right)^{2}} \right )} + \ln{\left (\frac{w^{2} + \left(- 2 b - y\right)^{2}}{\left(2 a + w\right)^{2} + \left(- 2 b - y\right)^{2}} \right )}\right)\nonumber\\
+  &amp;- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{w^{2} + y^{2}}{y^{2} + \left(2 a + w\right)^{2}} \right )} - \ln{\left (\frac{w^{2} + \left(2 b - y\right)^{2}}{\left(2 a + w\right)^{2} + \left(2 b - y\right)^{2}} \right )}\right)
+\label{eqn:quad_hy}
+\end{align}
+\]</div>
+<p>By using a Maclaurin expansion, the magnetic field magnitude <span class="arithmatex">\(H_{2w}\)</span> in the gap, along <span class="arithmatex">\(x\)</span> for <span class="arithmatex">\(y = 0\)</span>, or along <span class="arithmatex">\(y\)</span> for <span class="arithmatex">\(x = 0\)</span>, assuming <span class="arithmatex">\(a,b &gt; w\)</span>, is</p>
+<div class="arithmatex">\[
+\label{eqn:h_2w}
+H_{2w} = \frac{2M_r x}{\pi w}
+\]</div>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>J. M. D. Coey, Magnetism and Magnetic Materials (Cambridge University Press, 2010).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>E. P. Furlani, Permanent Magnet and Electromechanical Devices (Academic Press, San Diego, 2001).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>Z. J. Yang, T. H. Johansen, H. Bratsberg, G. Helgesen, and A. T. Skjeltorp, Potential and Force between a Magnet and a Bulk Y1Ba2Cu3O7-δ Superconductor Studied by a Mechanical Pendulum, Superconductor Science and Technology 3, 591 (1990).&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>J. M. Camacho and V. Sosa, Alternative Method to Calculate the Magnetic Field of Permanent Magnets with Azimuthal Symmetry, Revista Mexicana de Física E 59, 8 (2013).&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>R. Bulirsch, Numerical Calculation of Elliptic Integrals and Elliptic Functions. III, Numer. Math. 13, 305 (1969).&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:6">
+<p><a href="http://dlmf.nist.gov/19.2">http://dlmf.nist.gov/19.2</a>&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:7">
+<p>N. Derby and S. Olbert, Cylindrical Magnets and Ideal Solenoids, American Journal of Physics 78, 229 (2010).&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href=".." class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Home
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../methods/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Methods
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.ca5457b8.min.js"></script>
+      
+        <script src="../javascripts/config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

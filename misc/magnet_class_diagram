@@ -1,0 +1,331 @@
+classDiagram
+    Registry <|-- Magnet
+    Magnet <|-- Magnet_2D
+    Magnet_2D <|-- Rectangle
+    Rectangle <|-- Square
+    Magnet_2D <|-- Circle
+    Magnet <|-- Magnet_3D
+    Magnet_3D <|-- Prism
+    Prism <|-- Cube
+    Magnet_3D <|-- Cylinder
+    Magnet_3D <|-- Sphere
+    class Registry{
+        +set instances
+        -list _class_instances
+        +print_instances()
+        +get_instances() set
+        +get_num_instances() int
+        +reset()
+    }
+    class Magnet{
+        +float tol
+        +String mag_type
+    }
+    class Magnet_2D{
+        +float Jr
+        +float alpha
+        +float alpha_radians
+        +float xc
+        +float yc
+        +center() ndarray
+    }
+    class Rectangle{
+        +float width
+        +float height
+        +float phi
+        +float phi_rad
+        +float Jx
+        +float Jy
+        +size() ndarray
+        +get_Jr() ndarray
+        +calcB(x,y) Tuple
+        -_calcBx_mag_x(x,y) ndarray
+        -_calcBy_mag_x(x,y) ndarray
+        -_calcBx_mag_y(x,y) ndarray
+        -_calcBy_mag_y(x,y) ndarray
+
+    }
+    class Circle{
+        +float radius
+        +float phi
+        +float phi_rad
+        +calcB(x,y) tuple
+        -_calcB_polar(rho, phi) tuple
+    }
+    class Magnet_3D{
+        +float Jr
+        +float xc
+        +float yc
+        +float zc
+        +float alpha
+        +float beta
+        +float gamma
+        +float alpha_rad
+        +float beta_rad
+        +float gamma_rad
+        +center() ndarray
+        -_generate_rotation_quaternions() Quaternion
+        +calcB(x,y,z) tuple
+        -_calcB_local(x,y,z) tuple
+    }
+    class Prism{
+        +float width
+        +float depth
+        +float height
+        +float a
+        +float b
+        +float c
+        +float phi
+        +float phi_rad
+        +float theta
+        +float theta_rad
+        +float Jx
+        +float Jy
+        +float Jz
+        +get_Jr() ndarray
+        +size() ndarray
+        -_F1(a,b,c,x,y,z) ndarray
+        -_F2(a,b,c,x,y,z) ndarray
+        -_calcBx_prism_x(a,b,c,Jr,x,y,z) ndarray
+        -_calcBy_prism_x(a,b,c,Jr,x,y,z) ndarray
+        -_calcBz_prism_x(a,b,c,Jr,x,y,z) ndarray
+        -_calcBx_prism_x(x,y,z) tuple
+        -_calcBx_prism_y(x,y,z) tuple
+        -_calcBx_prism_z(x,y,z) tuple
+    }
+    class Cylinder{
+        +float radius
+        +float length
+        -_cel(kc,p,c,s) ndarray
+        -_calcB_cyl(rho, z) tuple
+    }
+    class Sphere{
+        +float radius
+        +float phi
+        +float phi_rad
+        +float theta
+        +float theta_rad
+        -_rotate_and_calcB(x,y,z) tuple
+        -_calcB_spherical(r, theta) tuple
+    }
+
+PARTIAL
+classDiagram
+    Registry <|-- Magnet
+    Magnet <|-- Magnet_2D
+    Magnet_2D <|-- Rectangle
+    Rectangle <|-- Square
+    Magnet_2D <|-- Circle
+    Magnet <|-- Magnet_3D
+    Magnet_3D <|-- Prism
+    Prism <|-- Cube
+    Magnet_3D <|-- Cylinder
+    Magnet_3D <|-- Sphere
+    class Registry{
+        +set instances
+        +print_instances()
+        +get_instances() set
+        +get_num_instances() int
+        +reset()
+    }
+    class Magnet{
+        +float tol
+        +String mag_type
+    }
+    class Magnet_2D{
+        +float Jr
+        +float alpha
+        +float xc
+        +float yc
+        +center() ndarray
+    }
+
+    class Rectangle{
+        +float width
+        +float height
+        +float phi
+        +size() ndarray
+        +get_Jr() ndarray
+        +calcB(x,y) Tuple
+    }
+    class Circle{
+        +float radius
+        +float phi
+        +calcB(x,y) tuple
+    }
+    class Magnet_3D{
+        +float Jr
+        +float xc
+        +float yc
+        +float zc
+        +float alpha
+        +float beta
+        +float gamma
+        +center() ndarray
+        +calcB(x,y,z) tuple
+    }
+    class Prism{
+        +float width
+        +float depth
+        +float height
+        +float phi
+        +float theta
+        +get_Jr() ndarray
+        +size() ndarray
+    }
+    class Cylinder{
+        +float radius
+        +float length
+    }
+    class Sphere{
+        +float radius
+        +float phi
+        +float theta
+    }
+
+
+classDiagram
+    Magnet <|-- Magnet_2D
+    Magnet_2D <|-- Rectangle
+    Rectangle <|-- Square
+    Magnet_2D <|-- Circle
+    Magnet <|-- Magnet_3D
+    Magnet_3D <|-- Prism
+    Prism <|-- Cube
+    Magnet_3D <|-- Cylinder
+    Magnet_3D <|-- Sphere
+    class Registry{
+        +set instances
+        -list _class_instances
+        +print_instances()
+        +get_instances() set
+        +get_num_instances() int
+        +reset()
+    }
+    class Magnet{
+        +float tol
+        +String mag_type
+    }
+    class Magnet_2D{
+        +float Jr
+        +float alpha
+        +float alpha_radians
+        +float xc
+        +float yc
+        +center() ndarray
+    }
+    class Rectangle{
+        +float width
+        +float height
+        +float phi
+        +float phi_rad
+        +float Jx
+        +float Jy
+        +size() ndarray
+        +get_Jr() ndarray
+        +calcB(x,y) Tuple
+        -_calcBx_mag_x(x,y) ndarray
+        -_calcBy_mag_x(x,y) ndarray
+        -_calcBx_mag_y(x,y) ndarray
+        -_calcBy_mag_y(x,y) ndarray
+
+    }
+    class Circle{
+        +float radius
+        +float phi
+        +float phi_rad
+        +calcB(x,y) tuple
+        -_calcB_polar(rho, phi) tuple
+    }
+    class Magnet_3D{
+        +float Jr
+        +float xc
+        +float yc
+        +float zc
+        +float alpha
+        +float beta
+        +float gamma
+        +float alpha_rad
+        +float beta_rad
+        +float gamma_rad
+        +center() ndarray
+        -_generate_rotation_quaternions() Quaternion
+        +calcB(x,y,z) tuple
+        -_calcB_local(x,y,z) tuple
+    }
+    class Prism{
+        +float width
+        +float depth
+        +float height
+        +float a
+        +float b
+        +float c
+        +float phi
+        +float phi_rad
+        +float theta
+        +float theta_rad
+        +float Jx
+        +float Jy
+        +float Jz
+        +get_Jr() ndarray
+        +size() ndarray
+        -_F1(a,b,c,x,y,z) ndarray
+        -_F2(a,b,c,x,y,z) ndarray
+        -_calcBx_prism_x(a,b,c,Jr,x,y,z) ndarray
+        -_calcBy_prism_x(a,b,c,Jr,x,y,z) ndarray
+        -_calcBz_prism_x(a,b,c,Jr,x,y,z) ndarray
+        -_calcBx_prism_x(x,y,z) tuple
+        -_calcBx_prism_y(x,y,z) tuple
+        -_calcBx_prism_z(x,y,z) tuple
+    }
+    class Cylinder{
+        +float radius
+        +float length
+        -_cel(kc,p,c,s) ndarray
+        -_calcB_cyl(rho, z) tuple
+    }
+    class Sphere{
+        +float radius
+        +float phi
+        +float phi_rad
+        +float theta
+        +float theta_rad
+        -_rotate_and_calcB(x,y,z) tuple
+        -_calcB_spherical(r, theta) tuple
+    }
+
+SIMPLIFIED:
+
+classDiagram
+    Registry <|-- Magnet
+    Magnet <|-- Magnet_2D
+    Magnet_2D <|-- Rectangle
+    Rectangle <|-- Square
+    Magnet_2D <|-- Circle
+    Magnet <|-- Magnet_3D
+    Magnet_3D <|-- Prism
+    Prism <|-- Cube
+    Magnet_3D <|-- Cylinder
+    Magnet_3D <|-- Sphere
+    class Registry{
+        +set instances
+        -list _class_instances
+        +print_instances()
+        +get_instances() set
+        +get_num_instances() int
+        +reset()
+    }
+
+
+
+classDiagram
+    Registry <|-- Magnet
+    Registry <|-- Polyhedron
+    class Registry{
+        +set instances
+        -list _class_instances
+        +print_instances()
+        +get_instances() set
+        +get_num_instances() int
+        +reset()
+    }
