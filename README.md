@@ -5,7 +5,7 @@ User friendly magnetic field calculations in Python
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-blue.svg)](https://opensource.org/licenses/MPL-2.0)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![DOI](https://zenodo.org/badge/339667292.svg)](https://zenodo.org/badge/latestdoi/339667292)
-
+[![Anaconda-Server Badge](https://anaconda.org/pdunne/pymagnet/badges/version.svg)](https://anaconda.org/pdunne/pymagnet)
 
 
 ## Getting Started
@@ -22,9 +22,14 @@ or
 conda install -c pdunne pymagnet
 ```
 
+## Documentation 
+
+Full documentation can be found here: [https://pdunne.github.io/pymagnet/](https://pdunne.github.io/pymagnet/)
+
 ## Examples
 
 Additional examples are in the [examples directory of the repository](https://github.com/pdunne/pymagnet/tree/main/examples).
+
 
 ### 3D calculation and render using plotly
 
@@ -207,7 +212,6 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 
 TODO:
 
-* Calculation of magnetisation and the H field inside the magnets
 * Complete documentation
 
 ## Licensing
