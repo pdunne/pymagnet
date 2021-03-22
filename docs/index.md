@@ -202,7 +202,6 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 * plotly
 
 !!! TODO
-    - Calculation of magnetisation and the H field inside the magnets
     - Complete documentation
 
 !!! Warning

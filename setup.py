@@ -38,7 +38,7 @@ setup(
     python_requires=">=3.6, <4",
     install_requires=["numpy", "matplotlib", "numba", "plotly"],
     project_urls={
-        "Documentation": "https://github.com/pdunne/pymagnet/",
+        "Documentation": "https://pdunne.github.io/pymagnet/",
         "Bug Reports": "https://github.com/pdunne/pymagnet/issues",
         "Source": "https://github.com/pdunne/pymagnet/",
     },
