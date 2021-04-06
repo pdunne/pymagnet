@@ -13,3 +13,4 @@ This module imports the classes and functions in the private modules to create a
 from ._plot1 import *
 from ._plot2 import *
 from ._plot3 import *
+from ._plotly2 import *

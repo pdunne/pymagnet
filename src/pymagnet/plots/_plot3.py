@@ -603,6 +603,7 @@ def surface_slice3(**kwargs):
     """
 
     import plotly.graph_objects as go
+
     # from plotly.subplots import make_subplots
 
     reset_polyhedra()
@@ -664,8 +665,8 @@ def surface_slice3(**kwargs):
         z = _np.array([0])
         B = _mag.B_calc_3D(x, y, z)
         cache["xy"] = {"x": x, "y": y, "z": z, "B": B}
-        # Tile for plotting
 
+        # Tile for plotting
         z = _np.tile(z, x.shape)
 
         data_objects.append(
@@ -747,7 +748,7 @@ def volume_plot(**kwargs):
     num_levels = kwargs.pop("num_levels", 5)
 
     show_magnets = kwargs.pop("show_magnets", True)
-    
+
     data_objects = []
     cache = {}
 

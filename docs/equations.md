@@ -52,7 +52,6 @@ $$
 \mathbf{B} = B_x \mathbf{\hat{x}} + B_y\mathbf{\hat{y}}
 $$
 
-
 ### Rectangles
 
 <figure>
@@ -90,7 +89,7 @@ B_y = \frac{\mu_0M_r}{2\pi}
 - {\tan}^{-1}{\left(\frac{2b\left(x-a\right)}{y^2-b^2+{\left(x-a\right)}^2}\right)}\right]
 $$
 
-### Circles
+### Biaxial Rods (Circle)
 
 <figure>
   <!-- <img src="../img/cylinder.png" /> -->
@@ -106,6 +105,39 @@ $$
     \cos(\phi) \mathbf{\hat{r}} + \sin(\phi) \mathbf{\hat{\phi}}
      \right]
 $$
+
+
+### Line Elements
+
+The magnetic field due to an infinitely long, thin magnetic sheet of height $2h$
+with a surface current density $\mathbf{K} = K_0 \mathbf{\hat{z}}$ is
+
+$$
+B_x = \frac{\mu_0 K_0}{4\pi} \ln \left( \frac{x^2 + (y-h)^2}{x^2 + (y+h)^2} \right)
+$$
+
+and
+
+$$
+B_y = \frac{\mu_0 K_0}{2\pi} \tan^{-1} \left( \frac{2hx}{x^2 + y^2 - h^2} \right)
+$$
+
+### Composite Polygons
+
+An object consisting of two vertical sheets, one at $-w$ with $\mathbf{K} = -K_0 \mathbf{\hat{z}}$, and one
+at $+w$ with with $\mathbf{K} = K_0\mathbf{\hat{z}}$ will produce the same field as a rectangular magnetic of
+width $2w$, height $2h$, and remnant magnetisation $\mathbf{J_r} = J_y \mathbf{\hat{y}}$,
+
+The surface current $\mu_0 \mathbf{K}$
+
+$$
+\mu_0 \mathbf{K} =  \mathbf{J} \times \mathbf{\hat{n}}  = \left( J_x n_y - J_y n_x  \right)\mathbf{\hat{z}}
+$$
+
+where  $\mathbf{\hat{n}} = n_x  \mathbf{\hat{x}}  + n_y  \mathbf{\hat{y}}  + 0  \mathbf{\hat{z}}$
+is the unit normal vector to the magnetic sheet, and
+$\mathbf{J} = J_x  \mathbf{\hat{x}}  + J_y  \mathbf{\hat{y}}  + 0  \mathbf{\hat{z}}$
+is the remnant magnetisation vector of the composite polygonal magnet.
 
 ## 3D Calculations
 
@@ -298,6 +330,28 @@ $$
 $$
 
 ## Composite Objects
+
+### Polygons
+
+$$
+\sigma_m = \mathbf{M} \cdot \mathbf{\hat{n}}
+$$
+
+$$
+H_x = \frac{\sigma_m}{4\pi\mu_0} \left[
+  \ln \left( \frac{\sqrt{L^2 + (x-a)^2 + y^2} + L}{\sqrt{L^2 + (x-a)^2 + y^2} - L} \right) +
+  \ln \left( \frac{\sqrt{L^2 + (x+a)^2 + y^2} + L}{\sqrt{L^2 + (x+a)^2 + y^2} - L} \right)
+\right]
+$$
+
+$$
+\begin{align}
+H_y = \frac{\sigma_m}{2\pi\mu_0 y} &\left[
+  \tan^{-1} \left( \frac{L(x-a)}{y\sqrt{ (x-a)^2 + y^2 + L^2 }} \right) \right.\\
+  + &\left. \tan^{-1} \left( \frac{L(x+a)}{y\sqrt{ (x+a)^2 + y^2 + L^2 }} \right)
+\right]
+\end{align}
+$$
 
 ### 2D Quadrupoles
 

@@ -5,8 +5,9 @@ theme:
 
 nav:
   - Home: index.md
-  - Field Equations: equations.md
+  - Magnets: equations.md
   - Methods: methods.md
+  - Transforms: transforms.md
   - Code Reference:
       - pymagnet: pymagnet.md
       - magnets: magnets.md

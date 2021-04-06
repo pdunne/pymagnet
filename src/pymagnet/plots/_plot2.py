@@ -8,6 +8,7 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources, and 
 
 """
+from numpy.core.numerictypes import issubsctype
 from ..magnets._magnet import Registry
 import matplotlib.pyplot as _plt
 from matplotlib.patches import Rectangle as _Rect
@@ -143,6 +144,7 @@ def plot_2D_contour(x, y, Field, **kwargs):
         Field ([field vector_2D]): [field vector object]
     """
     import matplotlib.cm as _cm
+    from ..magnets._poly2D import PolyMagnet
 
     scale_x = kwargs.pop("scale_x", 1e-3)
     scale_y = kwargs.pop("scale_y", 1e-3)
@@ -262,6 +264,15 @@ def plot_2D_contour(x, y, Field, **kwargs):
     # Draw magnets and magnetisation arrows
     if show_magnets:
         _draw_magnets2(ax, scale_x, scale_y)
+        if len(PolyMagnet.instances) > 0:
+            for magnet in PolyMagnet.instances:
+                poly = _plt.Polygon(
+                    _np.array(magnet.polygon.vertices) / scale_x,
+                    ec="k",
+                    fc="w",
+                    zorder=5,
+                )
+                ax.add_patch(poly)
 
     if CB is not None:
         CB.ax.get_yaxis().labelpad = 15
@@ -287,9 +298,11 @@ def _num_patch_2D(scale_x, scale_y):
     for magnet in Magnet_2D.instances:
         if issubclass(magnet.__class__, Rectangle):
             magnet_patch_tmp = _gen_rect_patch(magnet, scale_x, scale_y)
+            patch_array.append(magnet_patch_tmp)
         elif issubclass(magnet.__class__, Circle):
             magnet_patch_tmp = _gen_circle_patch(magnet, scale_x, scale_y)
-        patch_array.append(magnet_patch_tmp)
+            patch_array.append(magnet_patch_tmp)
+
     return patch_array
 
 

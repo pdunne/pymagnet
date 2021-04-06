@@ -59,6 +59,8 @@ def rotate_points_2D(x, y, alpha):
     Returns:
         tuple: (x', y') rotated array of points
     """
+    x = _np.atleast_1d(x)
+    y = _np.atleast_1d(y)
     if len(x) != len(y):
         raise Exception("Must have same number of points in x and y")
 
