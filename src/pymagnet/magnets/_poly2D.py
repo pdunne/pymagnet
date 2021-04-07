@@ -1,10 +1,12 @@
-"""2D Polygon Magnet classes
+"""2D Polygon Magnet class
 
 
 TODO:
     * Add __del__ method for removing strong ref in class instance list
 
 """
+from operator import le
+from os import EX_CANTCREAT
 import numpy as _np
 
 # from ._magnet import Magnet
@@ -38,12 +40,24 @@ def _furlani(x, y, h, Kr=1):
 
 
 class Polygon(object):
+    """[summary]
+
+    Args:
+        object ([type]): [description]
+    """
+
     def __init__(self, **kwargs):
 
         vertices = kwargs.pop("vertices", None)
         center = kwargs.pop("center", None)
         if vertices is not None:
-            self.vertices = vertices
+            if type(vertices) is _np.ndarray:
+                if center is not None:
+                    vertices += center
+                self.vertices = vertices.tolist()
+            else:
+                self.vertices = vertices
+
             if center is not None:
                 self.center = center
             else:
@@ -79,7 +93,7 @@ class Polygon(object):
         self.center = _np.mean(_np.asarray(self.vertices), axis=0)
 
     @staticmethod
-    def gen_polygon(N=6, apo=1, center=(0, 0), offset=0):
+    def gen_polygon(N=6, center=(0, 0), alpha=0, **kwargs):
         """[summary]
 
         Args:
@@ -95,28 +109,42 @@ class Polygon(object):
             [type]: [description]
         """
         N = int(N)
+
         if N < 3:
             raise Exception("Error, N must be > 2.")
+
+        apothem = kwargs.pop("apothem", None)
+        length = kwargs.pop("length", None)
+        radius = kwargs.pop("radius", None)
+
+        radius = Polygon.check_radius(N, apothem, length, radius)
 
         k = _np.arange(0, N, 1)
         xc = center[0]
         yc = center[1]
 
-        offset = _np.deg2rad(offset)
-
         def f(N):
             if N % 2 == 0:
-                return PI / N + offset
+                return PI / N + _np.deg2rad(alpha)
             else:
-                return PI / N + PI + offset
+                return PI / N + PI + _np.deg2rad(alpha)
 
-        r = apo / _np.around(_np.cos(PI / N), 4)
-
-        xv = xc + r * _np.sin(2 * PI * k / N + f(N))
-        yv = yc + r * _np.cos(2 * PI * k / N + f(N))
+        xv = xc + radius * _np.sin(2 * PI * k / N + f(N))
+        yv = yc + radius * _np.cos(2 * PI * k / N + f(N))
         poly_verts = _np.vstack((xv, yv)).T.tolist()
 
         return poly_verts
+
+    @staticmethod
+    def check_radius(N, apothem, length, radius):
+        if apothem is not None:
+            return apothem / _np.around(_np.cos(PI / N), 4)
+        elif length is not None:
+            return length / _np.around(2 * _np.sin(PI / N), 4)
+        elif radius is not None:
+            return radius
+        else:
+            raise Exception("Error, one of apothem, length, or radius must be defined.")
 
 
 class LineUtils(object):
@@ -131,6 +159,16 @@ class LineUtils(object):
 
     @staticmethod
     def unit_norm(ver1, ver2, clockwise=True):
+        """[summary]
+
+        Args:
+            ver1 ([type]): [description]
+            ver2 ([type]): [description]
+            clockwise (bool, optional): [description]. Defaults to True.
+
+        Returns:
+            [type]: [description]
+        """
 
         dx = ver1[0] - ver2[0]
         dy = ver1[1] - ver2[1]
@@ -275,6 +313,8 @@ class PolyMagnet(Magnet_2D):
     mag_type = "PolyMagnet"
 
     def __init__(self, Jr, **kwargs) -> None:
+        from ._routines2 import rotate_points_2D
+
         super().__init__(Jr, **kwargs)
 
         # Magnet rotation w.r.t. x-axis
@@ -288,27 +328,44 @@ class PolyMagnet(Magnet_2D):
         self.Jy = _np.around(Jr * _np.sin(self.phi_rad), decimals=6)
         self.tol = 1e-4  # sufficient for 0.01 degree accuracy
         self.area = None
-        self.length = kwargs.pop("length", 10e-3)
 
+        # self.length = kwargs.pop("length", 10e-3)
+        self.length = kwargs.pop("length", None)
+        self.apothem = kwargs.pop("apothem", None)
+        self.radius = kwargs.pop("radius", None)
         self.num_sides = kwargs.pop("num_sides", 6)
 
-        self.custom_polygon = kwargs.pop("custom_polygon", False)
+        self.radius = Polygon.check_radius(
+            self.num_sides,
+            self.apothem,
+            self.length,
+            self.radius,
+        )
 
+        self.custom_polygon = kwargs.pop("custom_polygon", False)
+        self.center = kwargs.pop("center", (0, 0))
         if self.custom_polygon:
             vertices = kwargs.pop("vertices", None)
             if vertices is None:
                 raise Exception("Error, no vertices were defined.")
-            self.polygon = Polygon(vertices=vertices)
-            self.center = self.polygon.center
 
+            vertices = _np.atleast_2d(vertices)
+
+            x_rot, y_rot = rotate_points_2D(
+                vertices[:, 0], vertices[:, 1], self.alpha_radians
+            )
+            vertices = _np.stack([x_rot, y_rot]).T + _np.array(self.center)
+            self.polygon = Polygon(vertices=vertices.tolist())
         else:
             self.center = kwargs.pop("center", (0, 0))
             self.polygon = Polygon(
                 vertices=Polygon.gen_polygon(
                     self.num_sides,
-                    self.length,
                     self.center,
                     self.alpha,
+                    length=self.length,
+                    apothem=self.apothem,
+                    radius=self.radius,
                 ),
                 center=self.center,
             )
