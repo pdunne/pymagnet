@@ -321,7 +321,7 @@ np.allclose(cel_value, np.pi/2.0)
 ### Spheres
 
 Outside a uniformly magnetised sphere of radius $a$, the stray field is identical to a magnetic
-dipole, and has a convenient representation is spherical coordinates:
+dipole, and has a convenient representation in spherical coordinates:
 
 $$
 \mathbf{B} = \frac{\mu_0 M_r}{3} \left( \frac{a^3}{r^3}\right) \left[
@@ -331,7 +331,7 @@ $$
 
 ## Composite Objects
 
-### Polygons
+<!-- ### Polygons
 
 $$
 \sigma_m = \mathbf{M} \cdot \mathbf{\hat{n}}
@@ -351,7 +351,7 @@ H_y = \frac{\sigma_m}{2\pi\mu_0 y} &\left[
   + &\left. \tan^{-1} \left( \frac{L(x+a)}{y\sqrt{ (x+a)^2 + y^2 + L^2 }} \right)
 \right]
 \end{align}
-$$
+$$ -->
 
 ### 2D Quadrupoles
 

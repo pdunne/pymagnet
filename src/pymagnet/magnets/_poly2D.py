@@ -5,15 +5,11 @@ TODO:
     * Add __del__ method for removing strong ref in class instance list
 
 """
-from operator import le
-from os import EX_CANTCREAT
 import numpy as _np
 
 # from ._magnet import Magnet
 from ._magnet2 import Magnet_2D
-from ._fields import Point2
 
-# from ._routines2 import rotate_points_2D
 
 PI = _np.pi
 u0 = PI * 4e-7
@@ -286,7 +282,7 @@ class Line(object):
 
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
-        if _np.fabs(self.beta_rad) > 1e-3:
+        if _np.fabs(self.beta_rad) > 1e-4:
             xt, yt = rotate_points_2D(x - self.xc, y - self.yc, 2 * PI - self.beta_rad)
             Btx, Bty = _furlani(xt, yt, self.length / 2, self.K)
             Bx, By = rotate_points_2D(Btx, Bty, self.beta_rad)
@@ -319,7 +315,10 @@ class PolyMagnet(Magnet_2D):
 
         # Magnet rotation w.r.t. x-axis
         self.alpha = kwargs.pop("alpha", 0.0)
-        # self.alpha_radians = _np.deg2rad(self.alpha)
+        self.alpha_radians = _np.deg2rad(self.alpha)
+
+        self.theta = kwargs.pop("theta", 0.0)
+        self.theta_radians = _np.deg2rad(self.theta)
 
         self.phi = kwargs.pop("phi", 90)
         self.phi_rad = _np.deg2rad(self.phi)
@@ -352,7 +351,9 @@ class PolyMagnet(Magnet_2D):
             vertices = _np.atleast_2d(vertices)
 
             x_rot, y_rot = rotate_points_2D(
-                vertices[:, 0], vertices[:, 1], self.alpha_radians
+                vertices[:, 0],
+                vertices[:, 1],
+                self.theta_radians,  # + self.alpha_radians,
             )
             vertices = _np.stack([x_rot, y_rot]).T + _np.array(self.center)
             self.polygon = Polygon(vertices=vertices.tolist())
@@ -362,7 +363,7 @@ class PolyMagnet(Magnet_2D):
                 vertices=Polygon.gen_polygon(
                     self.num_sides,
                     self.center,
-                    self.alpha,
+                    self.theta,  # + self.alpha,
                     length=self.length,
                     apothem=self.apothem,
                     radius=self.radius,
@@ -402,11 +403,33 @@ class PolyMagnet(Magnet_2D):
         return beta, length, center, K
 
     def calcB(self, x, y):
-        from ._routines2 import _get_field_array_shape2
+        from ._routines2 import rotate_points_2D, _get_field_array_shape2
 
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
         beta, length, center, K = self._gen_sheet_magnets()
+
+        if _np.fabs(self.alpha_radians) > self.tol:
+            pass
+            # FIXME: rotate centres
+            # xt, yt = rotate_points_2D(x - self.xc, y - self.yc, self.alpha_radians)
+            # beta += self.alpha
+            # xc_rot, yc_rot = rotate_points_2D(
+            #     center[:, 0] - self.xc,
+            #     center[:, 1] - self.yc,
+            #     self.alpha_radians,
+            # )
+            # center[:, 0] = xc_rot
+            # center[:, 1] = yc_rot
+            #
+            #
+            # for i in range(len(K)):
+            #     sheet = Line(length[i], center[i], beta[i], K[i])
+            #     Btx, Bty = sheet.calcB(xt, yt)
+            #     Btx, Bty = rotate_points_2D(Btx, Bty, 2 * PI - self.alpha_radians)
+            #     Bx += Btx
+            #     By += Bty
+
         for i in range(len(K)):
             sheet = Line(length[i], center[i], beta[i], K[i])
             Btx, Bty = sheet.calcB(x, y)
