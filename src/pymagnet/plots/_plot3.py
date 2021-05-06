@@ -69,11 +69,17 @@ class Polyhedron(Registry):
             Quaternion: total rotation quaternion
         """
         from ..magnets._quaternion import Quaternion
-        from functools import reduce
+
+        # from functools import reduce
 
         # Initialise quaternions
-        rotate_about_x, rotate_about_y, rotate_about_z = None, None, None
-        forward_rotation, reverse_rotation = None, None
+        # rotate_about_x, rotate_about_y, rotate_about_z = None, None, None
+        # forward_rotation, reverse_rotation = None, None
+        rotate_about_x = Quaternion()
+        rotate_about_y = Quaternion()
+        rotate_about_z = Quaternion()
+
+        forward_rotation, reverse_rotation = Quaternion(), Quaternion()
 
         if _np.fabs(self.alpha_rad) > 1e-4:
             rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
@@ -86,19 +92,23 @@ class Polyhedron(Registry):
 
         # Generate compound rotations
         # Order of rotation: beta  about y, alpha about z, gamma about x
-        q_forward = [
-            q for q in [rotate_about_y, rotate_about_z, rotate_about_x] if q is not None
-        ]
+        #         q_forward = [
+        #             q for q in [rotate_about_y, rotate_about_z, rotate_about_x] if q is not None
+        #         ]
+        #
+        #         forward_rotation = reduce(lambda x, y: x * y, q_forward)
+        #
+        #         q_reverse = [
+        #             q.get_conjugate()
+        #             for q in [rotate_about_x, rotate_about_z, rotate_about_y]
+        #             if q is not None
+        #         ]
+        #
+        #         reverse_rotation = reduce(lambda x, y: x * y, q_reverse)
 
-        forward_rotation = reduce(lambda x, y: x * y, q_forward)
+        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
+        reverse_rotation = forward_rotation.get_conjugate()
 
-        q_reverse = [
-            q.get_conjugate()
-            for q in [rotate_about_x, rotate_about_z, rotate_about_y]
-            if q is not None
-        ]
-
-        reverse_rotation = reduce(lambda x, y: x * y, q_reverse)
         return forward_rotation, reverse_rotation
 
     def generate_vertices(self):
@@ -386,6 +396,35 @@ class Graphic_Cylinder(Polyhedron):
         return vertex_coords
 
 
+class Graphic_Mesh(Polyhedron):
+    """Generates
+
+    Args:
+        center (tuple, optional): Cuboid center. Defaults to (0, 0, 0).
+        size (tuple, optional): Size of cuboid. Defaults to (1, 1, 1).
+
+    Kwargs:
+        alpha (float):
+        beta (float):
+        gamma (float):
+        color (float):
+    """
+
+    def __init__(self, plot_data, **kwargs):
+        """Init method
+
+        Args:
+            center (tuple, optional): [description]. Defaults to (0, 0, 0).
+            size (tuple, optional): [description]. Defaults to (1, 1, 1).
+        """
+        self.color = kwargs.pop("color", "C0")
+        self.plot_data = plot_data
+
+        self.plot_data.x = self.plot_data.x / 1e-3
+        self.plot_data.y = self.plot_data.y / 1e-3
+        self.plot_data.z = self.plot_data.z / 1e-3
+
+
 def reset_polyhedra():
     """Returns a list of all instantiated polyhedra."""
 
@@ -512,34 +551,39 @@ def _generate_all_meshes(magnet_opacity=1.0):
 
     data_objects = []
     for magnet in _mag.Magnet_3D.instances:
-        if issubclass(magnet.__class__, _mag.Prism):
-            polyhed = Graphic_Cuboid(
-                center=magnet.center() / 1e-3,
-                size=magnet.size() / 1e-3,
-                alpha=magnet.alpha,
-                beta=magnet.beta,
-                gamma=magnet.gamma,
-            )
-        elif issubclass(magnet.__class__, _mag.Cylinder):
-            polyhed = Graphic_Cylinder(
-                center=magnet.center() / 1e-3,
-                radius=magnet.radius / 1e-3,
-                length=magnet.length / 1e-3,
-                alpha=magnet.alpha,
-                beta=magnet.beta,
-                gamma=magnet.gamma,
-            )
+        if issubclass(magnet.__class__, _mag.Mesh):
+            mesh_data = Graphic_Mesh(magnet.plot_data)
+            data_objects.append(mesh_data.plot_data)
 
-        elif issubclass(magnet.__class__, _mag.Sphere):
-            polyhed = Graphic_Sphere(
-                center=magnet.center() / 1e-3,
-                radius=magnet.radius / 1e-3,
-                alpha=magnet.alpha,
-                beta=magnet.beta,
-                gamma=magnet.gamma,
-            )
+        else:
+            if issubclass(magnet.__class__, _mag.Prism):
+                polyhed = Graphic_Cuboid(
+                    center=magnet.center() / 1e-3,
+                    size=magnet.size() / 1e-3,
+                    alpha=magnet.alpha,
+                    beta=magnet.beta,
+                    gamma=magnet.gamma,
+                )
+            elif issubclass(magnet.__class__, _mag.Cylinder):
+                polyhed = Graphic_Cylinder(
+                    center=magnet.center() / 1e-3,
+                    radius=magnet.radius / 1e-3,
+                    length=magnet.length / 1e-3,
+                    alpha=magnet.alpha,
+                    beta=magnet.beta,
+                    gamma=magnet.gamma,
+                )
 
-        data_objects.append(_draw_mesh(polyhed.vertices, magnet_opacity))
+            elif issubclass(magnet.__class__, _mag.Sphere):
+                polyhed = Graphic_Sphere(
+                    center=magnet.center() / 1e-3,
+                    radius=magnet.radius / 1e-3,
+                    alpha=magnet.alpha,
+                    beta=magnet.beta,
+                    gamma=magnet.gamma,
+                )
+
+            data_objects.append(_draw_mesh(polyhed.vertices, magnet_opacity))
 
     return data_objects
 
@@ -622,6 +666,7 @@ def surface_slice3(**kwargs):
         NA = 1
     cmin = kwargs.pop("cmin", 0)
     cmax = kwargs.pop("cmax", 0.5)
+    colorscale = kwargs.pop("colorscale", "viridis")
 
     data_objects = []
     cache = {}
@@ -629,7 +674,7 @@ def surface_slice3(**kwargs):
     show_magnets = kwargs.pop("show_magnets", True)
 
     if show_magnets:
-        data_objects.extend(_generate_all_meshes(magnet_opacity=1.0))
+        data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
 
     xlim = kwargs.pop("xlim", 30e-3)
     ylim = kwargs.pop("ylim", 30e-3)
@@ -651,7 +696,7 @@ def surface_slice3(**kwargs):
                 y,
                 z,
                 B,
-                "viridis",
+                colorscale,
                 opacity=opacity,
                 cmin=cmin,
                 cmax=cmax,
@@ -675,7 +720,7 @@ def surface_slice3(**kwargs):
                 y,
                 z,
                 B,
-                "viridis",
+                colorscale,
                 opacity=opacity,
                 cmin=cmin,
                 cmax=cmax,
@@ -697,7 +742,7 @@ def surface_slice3(**kwargs):
                 y,
                 z,
                 B,
-                "viridis",
+                colorscale,
                 opacity=opacity,
                 cmin=cmin,
                 cmax=cmax,
@@ -718,7 +763,7 @@ def surface_slice3(**kwargs):
         margin=dict(r=20, b=10, l=10, t=10),
     )
     fig.show()
-    return cache
+    return cache, data_objects
 
 
 def volume_plot(**kwargs):

@@ -74,7 +74,7 @@ def _allocate_field_array3(x, y, z):
         z (float/array): z co-ordinates
 
     Returns:
-        Vector2: Empty data structure
+        Vector3: Empty data structure
     """
 
     # Ensure x,y,z are numpy arrays (even of element 1)

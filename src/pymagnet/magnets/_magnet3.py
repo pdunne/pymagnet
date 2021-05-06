@@ -109,11 +109,14 @@ class Magnet_3D(Magnet):
         Returns:
             Quaternion: total rotation quaternion
         """
-        from functools import reduce
+        # from functools import reduce
 
         # Initialise quaternions
-        rotate_about_x, rotate_about_y, rotate_about_z = None, None, None
-        forward_rotation, reverse_rotation = None, None
+        rotate_about_x = Quaternion()
+        rotate_about_y = Quaternion()
+        rotate_about_z = Quaternion()
+
+        forward_rotation, reverse_rotation = Quaternion(), Quaternion()
 
         if _np.fabs(self.alpha_rad) > 1e-4:
             rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
@@ -126,19 +129,14 @@ class Magnet_3D(Magnet):
 
         # Generate compound rotations
         # Order of rotation: beta  about y, alpha about z, gamma about x
-        q_forward = [
-            q for q in [rotate_about_y, rotate_about_z, rotate_about_x] if q is not None
-        ]
+        # q_forward = [
+        #     q for q in [rotate_about_y, rotate_about_z, rotate_about_x] if q is not None
+        # ]
 
-        forward_rotation = reduce(lambda x, y: x * y, q_forward)
+        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
 
-        q_reverse = [
-            q.get_conjugate()
-            for q in [rotate_about_x, rotate_about_z, rotate_about_y]
-            if q is not None
-        ]
+        reverse_rotation = forward_rotation.get_conjugate()
 
-        reverse_rotation = reduce(lambda x, y: x * y, q_reverse)
         return forward_rotation, reverse_rotation
 
     def calcB(self, x, y, z):
