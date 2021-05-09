@@ -16,6 +16,7 @@ from pymagnet import magnets as _mag
 import plotly.graph_objects as _go
 
 # from plotly.subplots import _make_subplots
+PI = _np.pi
 
 
 class Polyhedron(Registry):
@@ -48,7 +49,7 @@ class Polyhedron(Registry):
         self.beta_rad = _np.deg2rad(self.beta)
         self.gamma = kwargs.pop("gamma", 0.0)
         self.gamma_rad = _np.deg2rad(self.gamma)
-        self.color = kwargs.pop("color", "C0")
+        self.color = kwargs.pop("color", "pink")
 
     def __repr__(self) -> str:
         return f"(center: {self.center}, size: {self.size} )"
@@ -289,7 +290,7 @@ class Graphic_Sphere(Polyhedron):
         Returns:
             ndarray: numpy array of shape (3, 8)
         """
-        u, v = _np.mgrid[0 : 2 * _np.pi : 20j, 0 : _np.pi : 10j]
+        u, v = _np.mgrid[0 : 2 * PI : 20j, 0:PI:10j]
         x = radius * _np.cos(u) * _np.sin(v)
         y = radius * _np.sin(u) * _np.sin(v)
         z = radius * _np.cos(v)
@@ -385,7 +386,7 @@ class Graphic_Cylinder(Polyhedron):
         Returns:
             ndarray: numpy array of shape (3, 8)
         """
-        rho, z = _np.mgrid[0 : 2 * _np.pi : 20j, -length / 2 : length / 2 : 2j]
+        rho, z = _np.mgrid[0 : 2 * PI : 20j, -length / 2 : length / 2 : 2j]
         x = radius * _np.cos(rho)
         y = radius * _np.sin(rho)
 
@@ -404,13 +405,10 @@ class Graphic_Mesh(Polyhedron):
         size (tuple, optional): Size of cuboid. Defaults to (1, 1, 1).
 
     Kwargs:
-        alpha (float):
-        beta (float):
-        gamma (float):
         color (float):
     """
 
-    def __init__(self, plot_data, **kwargs):
+    def __init__(self, mesh_vectors, start, stop, **kwargs):
         """Init method
 
         Args:
@@ -418,11 +416,29 @@ class Graphic_Mesh(Polyhedron):
             size (tuple, optional): [description]. Defaults to (1, 1, 1).
         """
         self.color = kwargs.pop("color", "C0")
-        self.plot_data = plot_data
+        self.mesh_vectors = mesh_vectors[start:stop]
 
-        self.plot_data.x = self.plot_data.x / 1e-3
-        self.plot_data.y = self.plot_data.y / 1e-3
-        self.plot_data.z = self.plot_data.z / 1e-3
+    def generate_vertices(self):
+        # return super().generate_vertices()
+        p, q, r = self.mesh_vectors.shape  # (p, 3, 3)
+
+        # the array stl_mesh.vectors.reshape(p*q, r) can contain multiple copies of the same vertex;
+        # extract unique vertices from all mesh triangles
+        vertices, ixr = _np.unique(
+            self.mesh_vectors.reshape(p * q, r), return_inverse=True, axis=0
+        )
+        I = _np.take(ixr, [3 * k for k in range(p)])
+        J = _np.take(ixr, [3 * k + 1 for k in range(p)])
+        K = _np.take(ixr, [3 * k + 2 for k in range(p)])
+        x, y, z = vertices.T
+        # FIXME: Color-Pink
+        trace = _go.Mesh3d(x=x, y=y, z=z, i=I, j=J, k=K, color="pink")
+
+        # optional parameters to make it look nicer
+        trace.update(
+            flatshading=True, lighting_facenormalsepsilon=0, lighting_ambient=0.7
+        )
+        return trace
 
 
 def reset_polyhedra():
@@ -475,9 +491,9 @@ def _draw_surface_slice(
         Surface object: plotly graphics object (Surface)
     """
     return _go.Surface(
-        x=x * 1e3,
-        y=y * 1e3,
-        z=z * 1e3,
+        x=x,
+        y=y,
+        z=z,
         surfacecolor=B.n,
         colorscale=colorscale,
         opacity=opacity,
@@ -488,7 +504,7 @@ def _draw_surface_slice(
     )
 
 
-def _draw_mesh(vertices, magnet_opacity):
+def _draw_mesh(vertices, magnet_opacity, magnet_color):
     """Generates mesh of magnet for drawing in plotly plot
 
     Args:
@@ -504,6 +520,7 @@ def _draw_mesh(vertices, magnet_opacity):
         z=vertices[2],
         alphahull=0,
         opacity=magnet_opacity,
+        color=magnet_color,
         # vertexcolor=(0, 0, 0),
         flatshading=True,
         hoverinfo="skip",
@@ -533,9 +550,9 @@ def _draw_cones(x, y, z, B, NA=10, cone_opacity=1.0):
     maxB = B.n[::NA, ::NA].ravel()
     cscale = [[0, "rgb(255,255,255)"], [1, "rgb(255,255,255)"]]
     data_object = _go.Cone(
-        x=x[::NA, ::NA].ravel() * 1e3,
-        y=y[::NA, ::NA].ravel() * 1e3,
-        z=z[::NA, ::NA].ravel() * 1e3,
+        x=x[::NA, ::NA].ravel(),
+        y=y[::NA, ::NA].ravel(),
+        z=z[::NA, ::NA].ravel(),
         u=B.x[::NA, ::NA].ravel() / maxB,
         v=B.y[::NA, ::NA].ravel() / maxB,
         w=B.z[::NA, ::NA].ravel() / maxB,
@@ -552,23 +569,23 @@ def _generate_all_meshes(magnet_opacity=1.0):
     data_objects = []
     for magnet in _mag.Magnet_3D.instances:
         if issubclass(magnet.__class__, _mag.Mesh):
-            mesh_data = Graphic_Mesh(magnet.plot_data)
-            data_objects.append(mesh_data.plot_data)
+            mesh_data = Graphic_Mesh(magnet.mesh_vectors, magnet.start, magnet.stop)
+            data_objects.append(mesh_data.generate_vertices())
 
         else:
             if issubclass(magnet.__class__, _mag.Prism):
                 polyhed = Graphic_Cuboid(
-                    center=magnet.center() / 1e-3,
-                    size=magnet.size() / 1e-3,
+                    center=magnet.center(),
+                    size=magnet.size(),
                     alpha=magnet.alpha,
                     beta=magnet.beta,
                     gamma=magnet.gamma,
                 )
             elif issubclass(magnet.__class__, _mag.Cylinder):
                 polyhed = Graphic_Cylinder(
-                    center=magnet.center() / 1e-3,
-                    radius=magnet.radius / 1e-3,
-                    length=magnet.length / 1e-3,
+                    center=magnet.center(),
+                    radius=magnet.radius,
+                    length=magnet.length,
                     alpha=magnet.alpha,
                     beta=magnet.beta,
                     gamma=magnet.gamma,
@@ -576,14 +593,16 @@ def _generate_all_meshes(magnet_opacity=1.0):
 
             elif issubclass(magnet.__class__, _mag.Sphere):
                 polyhed = Graphic_Sphere(
-                    center=magnet.center() / 1e-3,
-                    radius=magnet.radius / 1e-3,
+                    center=magnet.center(),
+                    radius=magnet.radius,
                     alpha=magnet.alpha,
                     beta=magnet.beta,
                     gamma=magnet.gamma,
                 )
 
-            data_objects.append(_draw_mesh(polyhed.vertices, magnet_opacity))
+            data_objects.append(
+                _draw_mesh(polyhed.vertices, magnet_opacity, polyhed.color)
+            )
 
     return data_objects
 
@@ -619,9 +638,9 @@ def _generate_volume_data(x, y, z, B, **kwargs):
             ]
 
     return _go.Volume(
-        x=x.flatten() / 1e-3,
-        y=y.flatten() / 1e-3,
-        z=z.flatten() / 1e-3,
+        x=x.flatten(),
+        y=y.flatten(),
+        z=z.flatten(),
         value=B.n.flatten(),
         colorscale=colorscale,
         cmin=cmin,
@@ -676,9 +695,9 @@ def surface_slice3(**kwargs):
     if show_magnets:
         data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
 
-    xlim = kwargs.pop("xlim", 30e-3)
-    ylim = kwargs.pop("ylim", 30e-3)
-    zlim = kwargs.pop("zlim", 30e-3)
+    xlim = kwargs.pop("xlim", 30)
+    ylim = kwargs.pop("ylim", 30)
+    zlim = kwargs.pop("zlim", 30)
 
     if "xz" in planes:
         x, z = _mag.grid2D(xlim, zlim, NP=num_points)
@@ -800,9 +819,9 @@ def volume_plot(**kwargs):
     if show_magnets:
         data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
 
-    xlim = kwargs.pop("xlim", 30e-3)
-    ylim = kwargs.pop("ylim", 30e-3)
-    zlim = kwargs.pop("zlim", 30e-3)
+    xlim = kwargs.pop("xlim", 30)
+    ylim = kwargs.pop("ylim", 30)
+    zlim = kwargs.pop("zlim", 30)
     colorscale = kwargs.pop("colorscale", "viridis")
 
     x, y, z = _mag.grid3D(xlim, ylim, zlim, NP=num_points)
@@ -833,9 +852,9 @@ def volume_plot(**kwargs):
 
     fig.update_layout(
         scene=dict(
-            xaxis_title="x (mm)",
-            yaxis_title="y (mm)",
-            zaxis_title="z (mm)",
+            xaxis_title="x (m)",
+            yaxis_title="y (m)",
+            zaxis_title="z (m)",
         ),
         width=700,
         margin=dict(r=20, b=10, l=10, t=10),

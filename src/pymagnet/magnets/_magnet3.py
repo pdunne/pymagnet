@@ -23,12 +23,16 @@ TODO:
     * Add __del__ method for removing strong ref in class instance list
     * Update __str__ and __repr__ methods to show orientation and magnetisation
 """
-from numba import vectorize, float64
 import numpy as _np
 from ._fields import Point3
 from ._magnet import Magnet
 from ._quaternion import Quaternion
 
+from numba import vectorize, float64
+
+# from math import sqrt
+
+PI = _np.pi
 # from pymagma import PI
 
 __all__ = ["Magnet_3D", "Prism", "Cube", "Cylinder", "Sphere"]
@@ -38,9 +42,9 @@ class Magnet_3D(Magnet):
     """3D Magnet Class
 
     Args:
-         width: magnet width [default 10e-3]
-         depth: magnet depth [default 20e-3]
-         height: magnet height [default 30e-3]
+         width: magnet width [default 10]
+         depth: magnet depth [default 20]
+         height: magnet height [default 30]
 
     Optional Arguments:
          centre: magnet centre (Point3_3D object) [default Point3(.0, .0, .0)]
@@ -233,9 +237,9 @@ class Prism(Magnet_3D):
     """Prism Magnet Class. Cuboid (width, depth height).
 
     Args:
-          width (float): magnet width [default 10e-3]
-          depth (float): magnet depth [default 20e-3]
-          height (float): magnet height [default 30e-3]
+          width (float): magnet width [default 10]
+          depth (float): magnet depth [default 20]
+          height (float): magnet height [default 30]
           Jr (float): remnant magnetisation in Tesla [default 1.0]
 
      Optional Arguments:
@@ -249,9 +253,9 @@ class Prism(Magnet_3D):
 
     def __init__(
         self,
-        width=10e-3,
-        depth=20e-3,
-        height=30e-3,  # magnet dimensions
+        width=10,
+        depth=20,
+        height=30,  # magnet dimensions
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):
@@ -429,7 +433,7 @@ class Prism(Magnet_3D):
         """
 
         try:
-            data = -(Jr / (4 * _np.pi)) * (
+            data = -(Jr / (4 * PI)) * (
                 self._F1(a, b, c, -x, y, z)
                 + self._F1(a, b, c, -x, y, -z)
                 + self._F1(a, b, c, -x, -y, z)
@@ -466,7 +470,7 @@ class Prism(Magnet_3D):
                 * self._F2(a, b, c, x, y, z)
                 / (self._F2(a, b, c, -x, y, z) * self._F2(a, b, c, x, -y, z))
             )
-            data *= Jr / (4 * _np.pi)
+            data *= Jr / (4 * PI)
         except ValueError:
             data = _np.NaN
         return data
@@ -492,7 +496,7 @@ class Prism(Magnet_3D):
                     * self._F2(a, c, b, x, z, y)
                     / (self._F2(a, c, b, -x, z, y) * self._F2(a, c, b, x, -z, y))
                 )
-            data *= Jr / (4 * _np.pi)
+            data *= Jr / (4 * PI)
         except ValueError:
             data = _np.NaN
         return data
@@ -603,7 +607,7 @@ class Cube(Prism):
     """Cube Magnet Class. Cuboid width x depth x height.
 
     Args:
-          width [float]: magnet side length [default 10e-3]
+          width [float]: magnet side length [default 10]
           J: remnant magnetisation in Tesla [default 1.0]
 
      Optional Arguments:
@@ -617,7 +621,7 @@ class Cube(Prism):
 
     def __init__(
         self,
-        width=10e-3,  # magnet dimensions
+        width=10,  # magnet dimensions
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):
@@ -629,8 +633,8 @@ class Cylinder(Magnet_3D):
     """Cylinder Magnet Class
 
     Args:
-         radius: radius [default 10e-3]
-         length: length [default 10e-3]
+         radius: radius [default 10]
+         length: length [default 10]
          J: remnant magnetisation in Tesla [default 1.0]
 
 
@@ -643,8 +647,8 @@ class Cylinder(Magnet_3D):
 
     def __init__(
         self,
-        radius=10e-3,
-        length=10e-3,  # magnet dimensions
+        radius=10,
+        length=10,  # magnet dimensions
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):
@@ -741,7 +745,7 @@ class Cylinder(Magnet_3D):
                 pp = g + pp
                 g = em
                 em = k + em
-            data = (_np.pi / 2.0) * (ss + cc * em) / (em * (em + pp))
+            data = (PI / 2.0) * (ss + cc * em) / (em * (em + pp))
             return data
 
     def _calcB_local(self, x, y, z):
@@ -789,7 +793,7 @@ class Cylinder(Magnet_3D):
         """
         a = self.radius
         b = self.length / 2
-        B0 = self.Jr / _np.pi
+        B0 = self.Jr / PI
 
         zp = z + b
         zn = z - b
@@ -846,7 +850,7 @@ class Sphere(Magnet_3D):
     """Sphere Magnet Class
 
     Args:
-         radius: radius [default 10e-3]
+         radius: radius [default 10]
          J: remnant magnetisation in Tesla [default 1.0]
 
 
@@ -860,7 +864,7 @@ class Sphere(Magnet_3D):
 
     def __init__(
         self,
-        radius=10e-3,
+        radius=10,
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):

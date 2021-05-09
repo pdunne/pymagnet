@@ -190,6 +190,8 @@ class Quaternion:
         """
         if type(vec) is list or type(vec) is tuple:
             vec = _np.asarray(vec)
+        if _np.fabs(_np.linalg.norm(vec, axis=0)) < 1e-7:
+            raise ValueError("Vec norm should be non-zero")
         return vec / _np.linalg.norm(vec, axis=0)
 
     @staticmethod
