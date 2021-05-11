@@ -418,7 +418,7 @@ class Graphic_Mesh(Polyhedron):
         self.color = kwargs.pop("color", "C0")
         self.mesh_vectors = mesh_vectors[start:stop]
 
-    def generate_vertices(self):
+    def generate_vertices(self, magnet_opacity):
         # return super().generate_vertices()
         p, q, r = self.mesh_vectors.shape  # (p, 3, 3)
 
@@ -436,7 +436,10 @@ class Graphic_Mesh(Polyhedron):
 
         # optional parameters to make it look nicer
         trace.update(
-            flatshading=True, lighting_facenormalsepsilon=0, lighting_ambient=0.7
+            flatshading=True,
+            lighting_facenormalsepsilon=0,
+            lighting_ambient=0.7,
+            opacity=magnet_opacity,
         )
         return trace
 
@@ -570,7 +573,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
     for magnet in _mag.Magnet_3D.instances:
         if issubclass(magnet.__class__, _mag.Mesh):
             mesh_data = Graphic_Mesh(magnet.mesh_vectors, magnet.start, magnet.stop)
-            data_objects.append(mesh_data.generate_vertices())
+            data_objects.append(mesh_data.generate_vertices(magnet_opacity))
 
         else:
             if issubclass(magnet.__class__, _mag.Prism):
@@ -613,7 +616,7 @@ def _generate_volume_data(x, y, z, B, **kwargs):
     cmax = kwargs.pop("cmax", 0.5)
     colorscale = kwargs.pop("colorscale", "viridis")
 
-    opacityscale = kwargs.pop("opacityscale", None)
+    opacityscale = kwargs.pop("opacityscale", "uniform")
 
     caps = kwargs.pop("no_caps", False)
     if caps:
@@ -693,15 +696,16 @@ def surface_slice3(**kwargs):
     show_magnets = kwargs.pop("show_magnets", True)
 
     if show_magnets:
-        data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
+        data_objects.extend(_generate_all_meshes(magnet_opacity))
 
-    xlim = kwargs.pop("xlim", 30)
-    ylim = kwargs.pop("ylim", 30)
-    zlim = kwargs.pop("zlim", 30)
+    xlim = kwargs.pop("xlim", 3)
+    ylim = kwargs.pop("ylim", 3)
+    zlim = kwargs.pop("zlim", 3)
+    lz = kwargs.pop("lz", -3)
 
     if "xz" in planes:
-        x, z = _mag.grid2D(xlim, zlim, NP=num_points)
-        y = _np.array([0])
+        x, z = _mag.grid2D(xlim, zlim, ly=lz, NP=num_points)
+        y = _np.array([0.0])
         B = _mag.B_calc_3D(x, y, z)
 
         cache["xz"] = {"x": x, "y": y, "z": z, "B": B}
@@ -726,7 +730,7 @@ def surface_slice3(**kwargs):
 
     if "xy" in planes:
         x, y = _mag.grid2D(xlim, ylim, NP=num_points)
-        z = _np.array([0])
+        z = _np.array([0.0])
         B = _mag.B_calc_3D(x, y, z)
         cache["xy"] = {"x": x, "y": y, "z": z, "B": B}
 
@@ -749,8 +753,8 @@ def surface_slice3(**kwargs):
         data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
 
     if "yz" in planes:
-        y, z = _mag.grid2D(ylim, zlim, NP=num_points)
-        x = _np.array([0])
+        y, z = _mag.grid2D(ylim, zlim, ly=lz, NP=num_points)
+        x = _np.array([0.0])
         B = _mag.B_calc_3D(x, y, z)
         cache["yz"] = {"x": x, "y": y, "z": z, "B": B}
         x = _np.tile(x, y.shape)
@@ -812,6 +816,7 @@ def volume_plot(**kwargs):
     num_levels = kwargs.pop("num_levels", 5)
 
     show_magnets = kwargs.pop("show_magnets", True)
+    opacityscale = kwargs.pop("opacityscale", "uniform")
 
     data_objects = []
     cache = {}
@@ -837,6 +842,7 @@ def volume_plot(**kwargs):
             opacity=opacity,
             colorscale=colorscale,
             num_levels=num_levels,
+            opacityscale=opacityscale,
         )
     )
 

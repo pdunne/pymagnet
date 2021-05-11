@@ -408,8 +408,11 @@ class Mesh(Magnet_3D):
         B.x = B.x.ravel()
         B.y = B.y.ravel()
         B.z = B.z.ravel()
-
+        # print_step = self.stop // 100
+        print(f"Num faces: {self.stop}")
         for i in range(self.start, self.stop):
+            # if i % print_step == 0:
+            # print(i / print_step)
             # for i in range(len(self.mesh_vectors)):
             if _np.fabs(self.Jnorm[i] / self.Jr) > 1e-4:
                 triangle = self.mesh_vectors[i].copy()

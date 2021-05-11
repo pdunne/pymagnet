@@ -70,7 +70,7 @@ A = \frac{1}{2} \left(
    + \begin{vmatrix}
         x_2 & x_3 \\
         y_2 & y_3  \\
-    \end{vmatrix} 
+    \end{vmatrix}
     + \cdots
     + \begin{vmatrix}
         x_n & x_1 \\
