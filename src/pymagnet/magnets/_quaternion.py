@@ -90,6 +90,37 @@ class Quaternion:
     #         return _np.asarray([x])
     #     else:
     #         return x
+    @staticmethod
+    def gen_rotation_quaternion(alpha_rad=0.0, beta_rad=0.0, gamma_rad=0.0):
+        """Generates quaternion for rotation around z, y, x axes
+
+        Args:
+            alpha_rad (float): angle to z-axis. Defaults to 0.0.
+            beta_rad (float): angle to y-axis. Defaults to 0.0.
+            gamma_rad (float): angle to x-axis. Defaults to 0.0.
+
+        Returns:
+            Quaternion: rotation quaternion
+        """
+
+        rotate_about_x = Quaternion()
+        rotate_about_y = Quaternion()
+        rotate_about_z = Quaternion()
+
+        forward_rotation = Quaternion()
+
+        if _np.fabs(alpha_rad) > 1e-4:
+            rotate_about_z = Quaternion.q_angle_from_axis(alpha_rad, (0, 0, 1))
+
+        if _np.fabs(beta_rad) > 1e-4:
+            rotate_about_y = Quaternion.q_angle_from_axis(beta_rad, (0, 1, 0))
+
+        if _np.fabs(gamma_rad) > 1e-4:
+            rotate_about_x = Quaternion.q_angle_from_axis(gamma_rad, (1, 0, 0))
+
+        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
+
+        return forward_rotation
 
     @staticmethod
     def _prepare_vector(x, y, z):
@@ -159,6 +190,8 @@ class Quaternion:
         """
         if type(vec) is list or type(vec) is tuple:
             vec = _np.asarray(vec)
+        if _np.fabs(_np.linalg.norm(vec, axis=0)) < 1e-7:
+            raise ValueError("Vec norm should be non-zero")
         return vec / _np.linalg.norm(vec, axis=0)
 
     @staticmethod
@@ -236,30 +269,30 @@ class Quaternion:
         vec = _np.hstack([self.x, self.y, self.z])
         return theta, self._normalise_axis(vec)
 
-    # @staticmethod
-    # def euler_to_quaternion(alpha, beta, gamma):
-    #     """Converts Euler angles to quaternion
+    @staticmethod
+    def euler_to_quaternion(alpha, beta, gamma):
+        """Converts Euler angles to quaternion
 
-    #     Args:
-    #         alpha (float): X angle
-    #         beta (float): XX angle
-    #         psi (float): angle
+        Args:
+            alpha (float): X angle
+            beta (float): XX angle
+            gamma (float): angle
 
-    #     Returns:
-    #         [type]: [description]
-    #     """
+        Returns:
+            [type]: [description]
+        """
 
-    #     qw = _np.cos(alpha / 2) * _np.cos(beta / 2) * _np.cos(gamma / 2) + _np.sin(
-    #         alpha / 2
-    #     ) * _np.sin(beta / 2) * _np.sin(gamma / 2)
-    #     qx = _np.sin(alpha / 2) * _np.cos(beta / 2) * _np.cos(gamma / 2) - _np.cos(
-    #         alpha / 2
-    #     ) * _np.sin(beta / 2) * _np.sin(gamma / 2)
-    #     qy = _np.cos(alpha / 2) * _np.sin(beta / 2) * _np.cos(gamma / 2) + _np.sin(
-    #         alpha / 2
-    #     ) * _np.cos(beta / 2) * _np.sin(gamma / 2)
-    #     qz = _np.cos(alpha / 2) * _np.cos(beta / 2) * _np.sin(gamma / 2) - _np.sin(
-    #         alpha / 2
-    #     ) * _np.sin(beta / 2) * _np.cos(gamma / 2)
+        qw = _np.cos(alpha / 2) * _np.cos(beta / 2) * _np.cos(gamma / 2) + _np.sin(
+            alpha / 2
+        ) * _np.sin(beta / 2) * _np.sin(gamma / 2)
+        qx = _np.sin(alpha / 2) * _np.cos(beta / 2) * _np.cos(gamma / 2) - _np.cos(
+            alpha / 2
+        ) * _np.sin(beta / 2) * _np.sin(gamma / 2)
+        qy = _np.cos(alpha / 2) * _np.sin(beta / 2) * _np.cos(gamma / 2) + _np.sin(
+            alpha / 2
+        ) * _np.cos(beta / 2) * _np.sin(gamma / 2)
+        qz = _np.cos(alpha / 2) * _np.cos(beta / 2) * _np.sin(gamma / 2) - _np.sin(
+            alpha / 2
+        ) * _np.sin(beta / 2) * _np.cos(gamma / 2)
 
-    #     return Quaternion(qw, qx, qy, qz)
+        return Quaternion(qw, qx, qy, qz)
