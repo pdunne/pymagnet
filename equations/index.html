@@ -14,7 +14,7 @@
     
     
       
-        <title>Field Equations - Pymagnet</title>
+        <title>Magnets - Pymagnet</title>
       
     
     
@@ -92,7 +92,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Field Equations
+              Magnets
             
           </span>
         </div>
@@ -199,12 +199,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Field Equations
+          Magnets
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Field Equations
+        Magnets
       </a>
       
         
@@ -263,8 +263,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#circles" class="md-nav__link">
-    Circles
+  <a href="#biaxial-rods-circle" class="md-nav__link">
+    Biaxial Rods (Circle)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#line-elements" class="md-nav__link">
+    Line Elements
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composite-polygons" class="md-nav__link">
+    Composite Polygons
   </a>
   
 </li>
@@ -343,8 +357,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2d-quadrupoles" class="md-nav__link">
-    2D Quadrupoles
+  <a href="#polyhedra" class="md-nav__link">
+    Polyhedra
   </a>
   
 </li>
@@ -384,18 +398,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../transforms/" class="md-nav__link">
+        Transforms
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
       
-      <label class="md-nav__link" for="__nav_4">
+      <label class="md-nav__link" for="__nav_5">
         Code Reference
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Code Reference" data-md-level="1">
-        <label class="md-nav__title" for="__nav_4">
+        <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
           Code Reference
         </label>
@@ -522,8 +551,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#circles" class="md-nav__link">
-    Circles
+  <a href="#biaxial-rods-circle" class="md-nav__link">
+    Biaxial Rods (Circle)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#line-elements" class="md-nav__link">
+    Line Elements
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composite-polygons" class="md-nav__link">
+    Composite Polygons
   </a>
   
 </li>
@@ -602,8 +645,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2d-quadrupoles" class="md-nav__link">
-    2D Quadrupoles
+  <a href="#polyhedra" class="md-nav__link">
+    Polyhedra
   </a>
   
 </li>
@@ -678,12 +721,13 @@ B_z = \frac{\mu_0 M_r}{2}  {\left[ \tan^{-1}{\left(
     <figcaption>2D Magnet Rectangle</figcaption>
 </figure>
 
-<p>The magnetic field due to rectangle and magnetised in <span class="arithmatex">\(x\)</span> is:</p>
+<p>The magnetic field due to rectangle and magnetised in <span class="arithmatex">\(x\)</span> is:
+TODO:
+$$
+B_x = \frac{\mu_0 M_r}{2\pi}
+$$</p>
 <div class="arithmatex">\[
-B_x = Bx
-\]</div>
-<div class="arithmatex">\[
-B_y = By
+B_y = \frac{\mu_0 M_r}{4\pi}
 \]</div>
 <p>and if magnetised in <span class="arithmatex">\(y\)</span> is:</p>
 <div class="arithmatex">\[
@@ -697,12 +741,12 @@ B_x = \frac{\mu_0 M_r}{4\pi} \left[\ln {\left(
 \right)}\right]
 \]</div>
 <div class="arithmatex">\[
-B_y = \frac{\mu_0M_r}{2\pi}
+B_y = \frac{\mu_0 M_r}{2\pi}
 \left[{\tan}^{-1}{\left( \frac{2b \left(x+a\right)}{y^2-b^2+{\left(x+a\right)}^2}
 \right)}
 - {\tan}^{-1}{\left(\frac{2b\left(x-a\right)}{y^2-b^2+{\left(x-a\right)}^2}\right)}\right]
 \]</div>
-<h3 id="circles">Circles</h3>
+<h3 id="biaxial-rods-circle">Biaxial Rods (Circle)</h3>
 <figure>
   <!-- <img src="../img/cylinder.png" /> -->
     <img src="../img/biaxial_rod.png"/>
@@ -716,6 +760,28 @@ stray field is most conveniently written in polar coordinates, as:</p>
     \cos(\phi) \mathbf{\hat{r}} + \sin(\phi) \mathbf{\hat{\phi}}
      \right]
 \]</div>
+<h3 id="line-elements">Line Elements</h3>
+<p>The magnetic field due to an infinitely long, thin magnetic sheet of height <span class="arithmatex">\(2h\)</span>
+with a surface current density <span class="arithmatex">\(\mathbf{K} = K_0 \mathbf{\hat{z}}\)</span> is</p>
+<div class="arithmatex">\[
+B_x = \frac{\mu_0 K_0}{4\pi} \ln \left( \frac{x^2 + (y-h)^2}{x^2 + (y+h)^2} \right)
+\]</div>
+<p>and</p>
+<div class="arithmatex">\[
+B_y = \frac{\mu_0 K_0}{2\pi} \tan^{-1} \left( \frac{2hx}{x^2 + y^2 - h^2} \right)
+\]</div>
+<h3 id="composite-polygons">Composite Polygons</h3>
+<p>An object consisting of two vertical sheets, one at <span class="arithmatex">\(-w\)</span> with <span class="arithmatex">\(\mathbf{K} = -K_0 \mathbf{\hat{z}}\)</span>, and one
+at <span class="arithmatex">\(+w\)</span> with with <span class="arithmatex">\(\mathbf{K} = K_0\mathbf{\hat{z}}\)</span> will produce the same field as a rectangular magnetic of
+width <span class="arithmatex">\(2w\)</span>, height <span class="arithmatex">\(2h\)</span>, and remnant magnetisation <span class="arithmatex">\(\mathbf{J_r} = J_y \mathbf{\hat{y}}\)</span>,</p>
+<p>The surface current <span class="arithmatex">\(\mu_0 \mathbf{K}\)</span></p>
+<div class="arithmatex">\[
+\mu_0 \mathbf{K} =  \mathbf{J} \times \mathbf{\hat{n}}  = \left( J_x n_y - J_y n_x  \right)\mathbf{\hat{z}}
+\]</div>
+<p>where  <span class="arithmatex">\(\mathbf{\hat{n}} = n_x  \mathbf{\hat{x}}  + n_y  \mathbf{\hat{y}}  + 0  \mathbf{\hat{z}}\)</span>
+is the unit normal vector to the magnetic sheet, and
+<span class="arithmatex">\(\mathbf{J} = J_x  \mathbf{\hat{x}}  + J_y  \mathbf{\hat{y}}  + 0  \mathbf{\hat{z}}\)</span>
+is the remnant magnetisation vector of the composite polygonal magnet.</p>
 <h2 id="3d-calculations">3D Calculations</h2>
 <p>The derived equations for 3D magnets were performed using the Coulombic Charge model
 rather than the Amperian current model of the 2D systems. More correctly they are
@@ -857,39 +923,81 @@ Numba for improved performance:</p>
 </code></pre></div>
 <h3 id="spheres">Spheres</h3>
 <p>Outside a uniformly magnetised sphere of radius <span class="arithmatex">\(a\)</span>, the stray field is identical to a magnetic
-dipole, and has a convenient representation is spherical coordinates:</p>
+dipole, and has a convenient representation in spherical coordinates:</p>
 <div class="arithmatex">\[
 \mathbf{B} = \frac{\mu_0 M_r}{3} \left( \frac{a^3}{r^3}\right) \left[
     2\cos(\theta) \mathbf{\hat{r}} + \sin(\theta) \mathbf{\hat{\theta}}
      \right]
 \]</div>
 <h2 id="composite-objects">Composite Objects</h2>
-<h3 id="2d-quadrupoles">2D Quadrupoles</h3>
-<p>The magnetic field due to a pseudo-quadrupolar configuration of four 2D rectangles of width <span class="arithmatex">\(2a\)</span>, height, <span class="arithmatex">\(2b\)</span>, with uniform
-remnant magnetisation <span class="arithmatex">\(M_r\)</span> in <span class="arithmatex">\(y\)</span> with a gap <span class="arithmatex">\(2w\)</span> can be written as</p>
+<h3 id="polyhedra">Polyhedra</h3>
+<p>For polyhedra composed of right angled triangles, the magnetic field can be calculated as the sum of magnetic fields due to these elements:</p>
+<div class="arithmatex">\[
+\sigma_m = \mathbf{M} \cdot \mathbf{\hat{n}}
+\]</div>
 <div class="arithmatex">\[
 \begin{align}
-H_x &amp;= \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{y^{2} + \left(- 2 a - w + x\right)^{2}}{y^{2} + \left(- w + x\right)^{2}} \right )} + \ln{\left (\frac{\left(- 2 b - y\right)^{2} + \left(- 2 a - w + x\right)^{2}}{\left(- 2 b - y\right)^{2} + \left(- w + x\right)^{2}} \right )}\right) \nonumber\\
-&amp;- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{y^{2} + \left(- 2 a - w + x\right)^{2}}{y^{2} + \left(- w + x\right)^{2}} \right )} - \ln{\left (\frac{\left(2 b - y\right)^{2} + \left(- 2 a - w + x\right)^{2}}{\left(2 b - y\right)^{2} + \left(- w + x\right)^{2}} \right )}\right) \nonumber\\
-&amp; + \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{y^{2} + \left(w + x\right)^{2}}{y^{2} + \left(2 a + w + x\right)^{2}} \right )} + \ln{\left (\frac{\left(- 2 b - y\right)^{2} + \left(w + x\right)^{2}}{\left(- 2 b - y\right)^{2} + \left(2 a + w + x\right)^{2}} \right )}\right) \nonumber\\
-&amp;- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{y^{2} + \left(w + x\right)^{2}}{y^{2} + \left(2 a + w + x\right)^{2}} \right )} - \ln{\left (\frac{\left(2 b - y\right)^{2} + \left(w + x\right)^{2}}{\left(2 b - y\right)^{2} + \left(2 a + w + x\right)^{2}} \right )}\right) \label{eqn:quad_hx}
+H_x &amp;= \frac{\sigma_m}{2\pi\mu_0} \left[
+  \ln \left( \frac{ b + \sqrt{ (a - x)^2 + y^2 + (b - z)^2 } - z }{ \sqrt{(a-x)^2 + y^2 + z^2} - z}\right)\right.\\
+    &amp; + \left. \frac{b}{c}  \ln \left(   \frac{r - s }{ \sqrt{(a-x)^2 + y^2 + (b-z)^2} + t } \right) \right]
 \end{align}
 \]</div>
-<p>and</p>
+<p>and similarly</p>
 <div class="arithmatex">\[
 \begin{align}
-H_y &amp; = \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{1}{w^{2} + y^{2}} \left(y^{2} + \left(- 2 a - w\right)^{2}\right) \right )} + \ln{\left (\frac{\left(- 2 a - w\right)^{2} + \left(- 2 b - y\right)^{2}}{w^{2} + \left(- 2 b - y\right)^{2}} \right )}\right) \nonumber\\
-&amp;- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{1}{w^{2} + y^{2}} \left(y^{2} + \left(- 2 a - w\right)^{2}\right) \right )} - \ln{\left (\frac{\left(- 2 a - w\right)^{2} + \left(2 b - y\right)^{2}}{w^{2} + \left(2 b - y\right)^{2}} \right )}\right)\nonumber\\
- &amp;+ \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{w^{2} + y^{2}}{y^{2} + \left(2 a + w\right)^{2}} \right )} + \ln{\left (\frac{w^{2} + \left(- 2 b - y\right)^{2}}{\left(2 a + w\right)^{2} + \left(- 2 b - y\right)^{2}} \right )}\right)\nonumber\\
-  &amp;- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{w^{2} + y^{2}}{y^{2} + \left(2 a + w\right)^{2}} \right )} - \ln{\left (\frac{w^{2} + \left(2 b - y\right)^{2}}{\left(2 a + w\right)^{2} + \left(2 b - y\right)^{2}} \right )}\right)
+H_z &amp;= \frac{\sigma_m}{2\pi\mu_0} \left[
+  \ln \left( \frac{ r - x }{\sqrt{(a-x)^2 + y^2 + z^2} + a}\right)\right.\\
+    &amp; + \left. \frac{a}{c}  \ln \left(  \frac{ \sqrt{(a-x)^2 + y^2 + (b-z)^2} + t}{r - s } \right) \right]
+\end{align}
+\]</div>
+<p>where</p>
+<p><span class="arithmatex">\(r = \sqrt{x^2 + y^2 + z^2},\, c = \sqrt{a^2 + b^2}\)</span></p>
+<p><span class="arithmatex">\(s = \frac{ax + bz}{c },\, t = \frac{a (a-x) + b(b-z)}{c}\)</span></p>
+<div class="arithmatex">\[
+\begin{align}
+H_y = \frac{\sigma_m}{2\pi\mu_0} &amp;\left[
+  \tan^{-1}\left(\frac{(x-a) + z + \sqrt{(x-a)^2 + y^2 + z^2}}{y}\right)\right.\\
+  &amp; - \tan^{-1} \left(\frac{x+z+r}{y} \right) \\
+  &amp; + \frac{y}{\alpha\sqrt{B^2 - A^2 - C^2}} \left\{ \tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \frac{(\alpha+\beta)^2}{\gamma^2}} + \frac{\alpha + \beta}{\gamma} \right)}{\sqrt{B^2 - A^2 - C^2}} \right) \right. \\
+  &amp;\,\, \left.\left.  -\tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \frac{\beta^2}{\gamma^2}} + \frac{\beta}{\gamma} \right)}{\sqrt{B^2 - A^2 - C^2}} \right) \right\} \right]
+\end{align}
+\]</div>
+<p>where</p>
+<p><span class="arithmatex">\(\alpha = \sqrt{1 + \frac{b^2}{a^2}}, \, \beta = - \frac{x + \frac{bz}{a}}{1 + \frac{b^2}{a^2}}, \, \gamma = \sqrt{\frac{r^2}{1 + \frac{b^2}{a^2}} - \beta^2}\)</span></p>
+<p><span class="arithmatex">\(A = -\gamma \frac{b}{a},\, B = \gamma\sqrt{1 + \frac{b^2}{a^2}},\, C = z + \beta\frac{b}{a}\)</span></p>
+<!-- ### 2D Quadrupoles
+
+The magnetic field due to a pseudo-quadrupolar configuration of four 2D rectangles of width $2a$, height, $2b$, with uniform
+remnant magnetisation $M_r$ in $y$ with a gap $2w$ can be written as
+
+$$
+\begin{align}
+H_x &= \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{y^{2} + \left(- 2 a - w + x\right)^{2}}{y^{2} + \left(- w + x\right)^{2}} \right )} + \ln{\left (\frac{\left(- 2 b - y\right)^{2} + \left(- 2 a - w + x\right)^{2}}{\left(- 2 b - y\right)^{2} + \left(- w + x\right)^{2}} \right )}\right) \nonumber\\
+&- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{y^{2} + \left(- 2 a - w + x\right)^{2}}{y^{2} + \left(- w + x\right)^{2}} \right )} - \ln{\left (\frac{\left(2 b - y\right)^{2} + \left(- 2 a - w + x\right)^{2}}{\left(2 b - y\right)^{2} + \left(- w + x\right)^{2}} \right )}\right) \nonumber\\
+& + \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{y^{2} + \left(w + x\right)^{2}}{y^{2} + \left(2 a + w + x\right)^{2}} \right )} + \ln{\left (\frac{\left(- 2 b - y\right)^{2} + \left(w + x\right)^{2}}{\left(- 2 b - y\right)^{2} + \left(2 a + w + x\right)^{2}} \right )}\right) \nonumber\\
+&- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{y^{2} + \left(w + x\right)^{2}}{y^{2} + \left(2 a + w + x\right)^{2}} \right )} - \ln{\left (\frac{\left(2 b - y\right)^{2} + \left(w + x\right)^{2}}{\left(2 b - y\right)^{2} + \left(2 a + w + x\right)^{2}} \right )}\right) \label{eqn:quad_hx}
+\end{align}
+$$
+
+and
+
+$$
+\begin{align}
+H_y & = \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{1}{w^{2} + y^{2}} \left(y^{2} + \left(- 2 a - w\right)^{2}\right) \right )} + \ln{\left (\frac{\left(- 2 a - w\right)^{2} + \left(- 2 b - y\right)^{2}}{w^{2} + \left(- 2 b - y\right)^{2}} \right )}\right) \nonumber\\
+&- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{1}{w^{2} + y^{2}} \left(y^{2} + \left(- 2 a - w\right)^{2}\right) \right )} - \ln{\left (\frac{\left(- 2 a - w\right)^{2} + \left(2 b - y\right)^{2}}{w^{2} + \left(2 b - y\right)^{2}} \right )}\right)\nonumber\\
+ &+ \frac{M_{r}}{4 \pi} \left(- \ln{\left (\frac{w^{2} + y^{2}}{y^{2} + \left(2 a + w\right)^{2}} \right )} + \ln{\left (\frac{w^{2} + \left(- 2 b - y\right)^{2}}{\left(2 a + w\right)^{2} + \left(- 2 b - y\right)^{2}} \right )}\right)\nonumber\\
+  &- \frac{M_{r}}{4 \pi} \left(\ln{\left (\frac{w^{2} + y^{2}}{y^{2} + \left(2 a + w\right)^{2}} \right )} - \ln{\left (\frac{w^{2} + \left(2 b - y\right)^{2}}{\left(2 a + w\right)^{2} + \left(2 b - y\right)^{2}} \right )}\right)
 \label{eqn:quad_hy}
 \end{align}
-\]</div>
-<p>By using a Maclaurin expansion, the magnetic field magnitude <span class="arithmatex">\(H_{2w}\)</span> in the gap, along <span class="arithmatex">\(x\)</span> for <span class="arithmatex">\(y = 0\)</span>, or along <span class="arithmatex">\(y\)</span> for <span class="arithmatex">\(x = 0\)</span>, assuming <span class="arithmatex">\(a,b &gt; w\)</span>, is</p>
-<div class="arithmatex">\[
+$$
+
+By using a Maclaurin expansion, the magnetic field magnitude $H_{2w}$ in the gap, along $x$ for $y = 0$, or along $y$ for $x = 0$, assuming $a,b > w$, is
+
+$$
 \label{eqn:h_2w}
 H_{2w} = \frac{2M_r x}{\pi w}
-\]</div>
+$$ -->
+
 <div class="footnote">
 <hr />
 <ol>

@@ -191,7 +191,7 @@
   
     <li class="md-nav__item">
       <a href="../equations/" class="md-nav__link">
-        Field Equations
+        Magnets
       </a>
     </li>
   
@@ -218,6 +218,21 @@
 
   
   
+  
+    <li class="md-nav__item">
+      <a href="../transforms/" class="md-nav__link">
+        Transforms
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
     
   
   
@@ -225,14 +240,14 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
       
-      <label class="md-nav__link" for="__nav_4">
+      <label class="md-nav__link" for="__nav_5">
         Code Reference
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Code Reference" data-md-level="1">
-        <label class="md-nav__title" for="__nav_4">
+        <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
           Code Reference
         </label>
@@ -2108,7 +2123,9 @@ using <code>pymagnet.reset_magnets()</code>.</p>
           <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">reset_magnets</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Returns a list of all instantiated magnets.&quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">._magnet2</span> <span class="kn">import</span> <span class="n">Magnet_2D</span><span class="p">,</span> <span class="n">Rectangle</span><span class="p">,</span> <span class="n">Square</span><span class="p">,</span> <span class="n">Circle</span>
+    <span class="kn">from</span> <span class="nn">._poly2D</span> <span class="kn">import</span> <span class="n">PolyMagnet</span>
     <span class="kn">from</span> <span class="nn">._magnet3</span> <span class="kn">import</span> <span class="n">Magnet_3D</span><span class="p">,</span> <span class="n">Prism</span><span class="p">,</span> <span class="n">Cube</span><span class="p">,</span> <span class="n">Cylinder</span><span class="p">,</span> <span class="n">Sphere</span>
+    <span class="kn">from</span> <span class="nn">._poly3D</span> <span class="kn">import</span> <span class="n">Mesh</span>
 
     <span class="n">magnet_classes</span> <span class="o">=</span> <span class="p">[</span>
         <span class="c1"># Registry,</span>
@@ -2117,11 +2134,13 @@ using <code>pymagnet.reset_magnets()</code>.</p>
         <span class="n">Rectangle</span><span class="p">,</span>
         <span class="n">Square</span><span class="p">,</span>
         <span class="n">Circle</span><span class="p">,</span>
+        <span class="n">PolyMagnet</span><span class="p">,</span>
         <span class="n">Magnet_3D</span><span class="p">,</span>
         <span class="n">Prism</span><span class="p">,</span>
         <span class="n">Cube</span><span class="p">,</span>
         <span class="n">Cylinder</span><span class="p">,</span>
         <span class="n">Sphere</span><span class="p">,</span>
+        <span class="n">Mesh</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">magnet_classes</span><span class="p">:</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -2348,9 +2367,9 @@ axial symmetry center.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        [float]: Bz</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">._magnet3</span> <span class="kn">import</span> <span class="n">Magnet_3D</span>
+    <span class="kn">from</span> <span class="nn">._magnet3</span> <span class="kn">import</span> <span class="n">Prism</span>
 
-    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">magnet</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">Magnet_3D</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">magnet</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">Prism</span><span class="p">):</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">a</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">b</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">c</span>
@@ -2421,6 +2440,7 @@ axial symmetry center.</p>
 
 
 
+
   <div class="doc doc-object doc-class">
 
 
@@ -2450,7 +2470,7 @@ axial symmetry center.</p>
       <tr>
         <td><code>radius</code></td>
         <td><code>[float]</code></td>
-        <td><p>magnet radius [m] (defaults to 10e-3)</p></td>
+        <td><p>magnet radius [m] (defaults to 10)</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -2561,7 +2581,7 @@ axial symmetry center.</p>
 
         <span class="c1"># Convert magnetic fields from cylindrical to cartesian</span>
         <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">vector_pol2cart</span><span class="p">(</span><span class="n">Brho</span><span class="p">,</span> <span class="n">Bphi</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
-        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
+        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">PI</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span>
 
     <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">cart2pol</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">)</span>
@@ -2841,13 +2861,13 @@ Point2(0.0, 0.0)</p>
       <tr>
         <td><code>width</code></td>
         <td><code>[float]</code></td>
-        <td><p>magnet width [m] (defaults to 20e-3)</p></td>
+        <td><p>magnet width [m] (defaults to 20)</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
         <td><code>height</code></td>
         <td><code>[float]</code></td>
-        <td><p>magnet height [m] (defaults to 40e-3)</p></td>
+        <td><p>magnet height [m] (defaults to 40)</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -2965,7 +2985,7 @@ Point2(0.0, 0.0)</p>
             <span class="n">Bty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBy_mag_x</span><span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yi</span> <span class="o">-</span> <span class="n">yci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
             <span class="c1"># Rotate fields to global frame</span>
-            <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Btx</span><span class="p">,</span> <span class="n">Bty</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
+            <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Btx</span><span class="p">,</span> <span class="n">Bty</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">PI</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">Bx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBx_mag_x</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">yc</span><span class="p">)</span>
@@ -2978,7 +2998,7 @@ Point2(0.0, 0.0)</p>
             <span class="n">Btx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBx_mag_y</span><span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yi</span> <span class="o">-</span> <span class="n">yci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">Bty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calcBy_mag_y</span><span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xci</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yi</span> <span class="o">-</span> <span class="n">yci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-            <span class="n">Bxt</span><span class="p">,</span> <span class="n">Byt</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Btx</span><span class="p">,</span> <span class="n">Bty</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
+            <span class="n">Bxt</span><span class="p">,</span> <span class="n">Byt</span> <span class="o">=</span> <span class="n">rotate_points_2D</span><span class="p">(</span><span class="n">Btx</span><span class="p">,</span> <span class="n">Bty</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">PI</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_radians</span><span class="p">)</span>
             <span class="n">Bx</span> <span class="o">+=</span> <span class="n">Bxt</span>
             <span class="n">By</span> <span class="o">+=</span> <span class="n">Byt</span>
         <span class="k">else</span><span class="p">:</span>
@@ -3125,7 +3145,7 @@ Point2(0.0, 0.0)</p>
       <tr>
         <td><code>width</code></td>
         <td><code>[float]</code></td>
-        <td><p>magnet side length [m] (defaults to 20e-3)</p></td>
+        <td><p>magnet side length [m] (defaults to 20)</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -3215,6 +3235,7 @@ are also implicitly created anytime a new section starts.</p>
 
 
 
+
   <div class="doc doc-object doc-class">
 
 
@@ -3244,7 +3265,7 @@ are also implicitly created anytime a new section starts.</p>
       <tr>
         <td><code>width</code></td>
         <td><code>[float]</code></td>
-        <td><p>magnet side length [default 10e-3]</p></td>
+        <td><p>magnet side length [default 10]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -3314,13 +3335,13 @@ are also implicitly created anytime a new section starts.</p>
       <tr>
         <td><code>radius</code></td>
         <td><code></code></td>
-        <td><p>radius [default 10e-3]</p></td>
+        <td><p>radius [default 10]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
         <td><code>length</code></td>
         <td><code></code></td>
-        <td><p>length [default 10e-3]</p></td>
+        <td><p>length [default 10]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -3463,19 +3484,19 @@ are also implicitly created anytime a new section starts.</p>
       <tr>
         <td><code>width</code></td>
         <td><code></code></td>
-        <td><p>magnet width [default 10e-3]</p></td>
+        <td><p>magnet width [default 10]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
         <td><code>depth</code></td>
         <td><code></code></td>
-        <td><p>magnet depth [default 20e-3]</p></td>
+        <td><p>magnet depth [default 20]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
         <td><code>height</code></td>
         <td><code></code></td>
-        <td><p>magnet height [default 30e-3]</p></td>
+        <td><p>magnet height [default 30]</p></td>
         <td><em>required</em></td>
       </tr>
   </tbody>
@@ -3825,19 +3846,19 @@ The calculations are always performed in local coordinates with the centre of th
       <tr>
         <td><code>width</code></td>
         <td><code>float</code></td>
-        <td><p>magnet width [default 10e-3]</p></td>
+        <td><p>magnet width [default 10]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
         <td><code>depth</code></td>
         <td><code>float</code></td>
-        <td><p>magnet depth [default 20e-3]</p></td>
+        <td><p>magnet depth [default 20]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
         <td><code>height</code></td>
         <td><code>float</code></td>
-        <td><p>magnet height [default 30e-3]</p></td>
+        <td><p>magnet height [default 30]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -3982,7 +4003,7 @@ The calculations are always performed in local coordinates with the centre of th
       <tr>
         <td><code>radius</code></td>
         <td><code></code></td>
-        <td><p>radius [default 10e-3]</p></td>
+        <td><p>radius [default 10]</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -5159,6 +5180,8 @@ J = mu_0 M</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        tuple: (x&#39;, y&#39;) rotated array of points</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must have same number of points in x and y&quot;</span><span class="p">)</span>
 
