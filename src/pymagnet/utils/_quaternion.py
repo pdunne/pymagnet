@@ -16,9 +16,10 @@ Example:
         vector2 = rotate_about_z * vector1
 
 """
-import numpy as _np
-
 __all__ = ["Quaternion"]
+
+import numpy as _np
+from ..utils.global_const import FP_CUTOFF
 
 
 class Quaternion:
@@ -74,20 +75,6 @@ class Quaternion:
         """
         return Quaternion(self.w, -self.x, -self.y, -self.z)
 
-    # @staticmethod
-    # def _input_to_numpy(x):
-    #     """Converts input to numpy ndarray
-
-    #     Args:
-    #         x (float, list, tuple): input
-
-    #     Returns:
-    #         ndarry: returns ndarry
-    #     """
-    #     if type(x) is not _np.ndarray:
-    #         return _np.asarray([x])
-    #     else:
-    #         return x
     @staticmethod
     def gen_rotation_quaternion(alpha_rad=0.0, beta_rad=0.0, gamma_rad=0.0):
         """Generates quaternion for rotation around z, y, x axes
@@ -186,9 +173,8 @@ class Quaternion:
         Returns:
             [type]: [description]
         """
-        if type(vec) is list or type(vec) is tuple:
-            vec = _np.asarray(vec)
-        if _np.fabs(_np.linalg.norm(vec, axis=0)) < 1e-7:
+        vec = _np.asarray(vec)
+        if _np.fabs(_np.linalg.norm(vec, axis=0)) < FP_CUTOFF:
             raise ValueError("Vec norm should be non-zero")
         return vec / _np.linalg.norm(vec, axis=0)
 
@@ -267,6 +253,7 @@ class Quaternion:
         vec = _np.hstack([self.x, self.y, self.z])
         return theta, self._normalise_axis(vec)
 
+    # FIXME: update docstring
     @staticmethod
     def euler_to_quaternion(alpha, beta, gamma):
         """Converts Euler angles to quaternion

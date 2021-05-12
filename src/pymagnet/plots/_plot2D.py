@@ -8,14 +8,12 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources, and 
 
 """
-from numpy.core.numerictypes import issubsctype
-from ..magnets._magnet import Registry
+import numpy as _np
+from pymagnet import magnets as _mag
 import matplotlib.pyplot as _plt
 from matplotlib.patches import Rectangle as _Rect
 from matplotlib.patches import Circle as _Circ
 from matplotlib.patches import Arrow as _Arrow
-import numpy as _np
-from pymagnet import magnets as _mag
 from matplotlib.transforms import Affine2D
 
 
@@ -292,7 +290,7 @@ def _num_patch_2D(scale_x, scale_y):
     Returns:
         [tuple(list, list)]: lists of patch and arrow objects
     """
-    from ..magnets._magnet2 import Magnet_2D, Rectangle, Circle
+    from ..magnets._magnet2D import Magnet_2D, Rectangle, Circle
 
     patch_array = []
     for magnet in Magnet_2D.instances:
@@ -317,7 +315,7 @@ def _gen_rect_patch(magnet, scale_x, scale_y):
     Returns:
         struct: magnet_patch data structure
     """
-    from matplotlib.transforms import Affine2D
+    # from matplotlib.transforms import Affine2D
 
     patch_tmp = patch(
         x=(magnet.center()[0] - magnet.a) * scale_x,
@@ -358,7 +356,7 @@ def _gen_circle_patch(magnet, scale_x, scale_y):
     Returns:
         struct: magnet_patch data structure
     """
-    from matplotlib.transforms import Affine2D
+    # from matplotlib.transforms import Affine2D
 
     patch_tmp = patch(
         x=(magnet.center()[0]) * scale_x,

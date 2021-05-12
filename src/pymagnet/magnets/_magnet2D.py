@@ -11,7 +11,7 @@ TODO:
 
 """
 import numpy as _np
-from ._magnet import Magnet
+from ._magnet_base import Magnet
 from ..utils._point_structs import Point2
 from ..utils.global_const import PI
 

@@ -6,7 +6,7 @@ TODO:
 
 """
 import numpy as _np
-from ._magnet2 import Magnet_2D
+from ._magnet2D import Magnet_2D
 from ..utils.global_const import PI, MAG_TOL
 
 

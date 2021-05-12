@@ -25,7 +25,7 @@ TODO:
 """
 import numpy as _np
 from ..utils._point_structs import Point3
-from ._magnet import Magnet
+from ._magnet_base import Magnet
 from ..utils._quaternion import Quaternion
 from ..utils.global_const import PI
 

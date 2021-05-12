@@ -5,12 +5,12 @@
 """3D Plotting routines
 
 This module contains all functions needed to plot 3D contours for 3D magnetic sources.
-Unlike the plot2 module, here plotly is used as the backend.
+Unlike the plot2D module, here plotly is used as the backend.
 
 TODO:
     * Update __str__ and __repr__ for polyhedra
 """
-from ..magnets._magnet import Registry
+from ..magnets._magnet_base import Registry
 import numpy as _np
 from ..magnets import *
 from ..utils import grid2D, grid3D, B_calc_3D
@@ -25,6 +25,7 @@ class Polyhedron(Registry):
         Cuboid
         Cylinder
         Sphere
+        Mesh
     """
 
     # Tolerance for minimum angle needed for rotation of object
@@ -70,11 +71,6 @@ class Polyhedron(Registry):
         """
         from ..utils._quaternion import Quaternion
 
-        # from functools import reduce
-
-        # Initialise quaternions
-        # rotate_about_x, rotate_about_y, rotate_about_z = None, None, None
-        # forward_rotation, reverse_rotation = None, None
         rotate_about_x = Quaternion()
         rotate_about_y = Quaternion()
         rotate_about_z = Quaternion()

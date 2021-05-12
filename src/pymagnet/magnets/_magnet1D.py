@@ -26,7 +26,7 @@ def magnetic_field_prism_1D(magnet, z):
     Returns:
         [float]: Bz
     """
-    from ._magnet3 import Prism
+    from ._magnet3D import Prism
 
     if issubclass(magnet.__class__, Prism):
         a = magnet.a
@@ -69,7 +69,7 @@ def magnetic_field_cylinder_1D(magnet, z):
     Returns:
         [float]: Bz
     """
-    from ._magnet3 import Cylinder
+    from ._magnet3D import Cylinder
 
     if issubclass(magnet.__class__, Cylinder):
         L = magnet.length

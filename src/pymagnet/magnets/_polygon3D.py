@@ -1,6 +1,6 @@
 import numpy as _np
 
-from ._magnet3 import Magnet_3D
+from ._magnet3D import Magnet_3D
 from ..utils._routines3D import Vector3
 from ..utils._quaternion import Quaternion
 

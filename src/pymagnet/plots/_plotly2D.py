@@ -1,3 +1,13 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+# Copyright 2021 Peter Dunne
+"""2D plotting routines using Plotly as the backend
+
+This module contains all functions needed to plot lines and contours for 2D
+magnetic sources.
+
+"""
 import plotly.graph_objects as _go
 import plotly.figure_factory as _ff
 import numpy as _np

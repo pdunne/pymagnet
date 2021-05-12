@@ -10,7 +10,7 @@ This module imports the classes and functions in the private modules to create a
 - 3D surface and volume plots are rendered using plotly.
 
 """
-from ._plot1 import *
-from ._plot2 import *
-from ._plot3 import *
-from ._plotly2 import *
+from ._plot1D import *
+from ._plot2D import *
+from ._plotly3D import *
+from ._plotly2D import *

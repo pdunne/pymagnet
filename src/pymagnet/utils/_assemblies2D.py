@@ -190,7 +190,7 @@ def radial_extraction_2D(magnet_half_width, radius, x, y, B):
 
 def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
     from .. import reset_magnets
-    from ..magnets._magnet2 import Rectangle
+    from ..magnets._magnet2D import Rectangle
     from ._routines2D import grid2D
 
     """Initialise 

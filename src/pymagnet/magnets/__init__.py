@@ -11,9 +11,9 @@ TODO:
     * Conversion between cylindrical and cartesian coordinates
 
 """
-from ._magnet import *
-from ._magnet1 import *
-from ._magnet2 import *
-from ._magnet3 import *
+from ._magnet_base import *
+from ._magnet1D import *
+from ._magnet2D import *
+from ._magnet3D import *
 from ._polygon2D import *
 from ._polygon3D import *
