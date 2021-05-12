@@ -34,8 +34,8 @@ import pymagnet as pm
 pm.reset_magnets() # clear magnet registry
 
 center = (0, 0, 0)    
-radius = 5e-3    
-length = 20e-3
+radius = 5    
+length = 20
 
 # Create a magnet instance
 m_cyl = pm.magnets.Cylinder(radius = radius, length = length, Jr = 1.0,
@@ -95,7 +95,7 @@ pm.reset_magnets() # clear magnet registry
 
 cmap = 'viridis' # set the colormap
 
-radius = 10e-3
+radius = 10
 center = (0, 0)
 
 # Create magnet
@@ -141,8 +141,8 @@ pm.reset_magnets() # clear magnet registry
 
 cmap = 'viridis' # set the colormap
 
-width = 20e-3
-height = 20e-3
+width = 20
+height = 20
 
 # Set the space between magnets to be the width of one
 half_gap = width / 2 
@@ -206,7 +206,7 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 
 !!! Warning
     - For spheres, rotate them using alpha, beta, gamma,
-    rather than the magnetisation angles theta and phi, as phi rotations are not working correctly.
+    rather than the magnetisation angles theta and phi, as phi rotations are not implemented.
     - Similarly, for circles, rotate them using alpha, not phi.
 
 ## Licensing

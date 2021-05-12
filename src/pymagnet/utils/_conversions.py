@@ -4,7 +4,6 @@
 # Copyright 2021 Peter Dunne
 """Routines for converting between coordinate systems
 """
-
 import numpy as _np
 
 

@@ -2,13 +2,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
 # Copyright 2021 Peter Dunne
-"""pymagnets._fields
+"""pymagnets.utils._fields
 
 Private module consiting of point/vector classes and their methods.
 """
-import numpy as _np
 
 __all__ = ["Point2", "Point3", "Vector2", "Vector3"]
+
+import numpy as _np
 
 
 class Point2(object):

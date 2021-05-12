@@ -2,12 +2,11 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-
-# __all__ = ['B_calc_2D']
 """Routines for Two Dimensional Magnet Classes
 """
 import numpy as _np
-from ._fields import Vector2
+from ._point_structs import Vector2
+from .global_const import u0
 
 
 def grid2D(ux, uy, **kwargs):
@@ -32,7 +31,7 @@ def B_calc_2D(x, y):
     It sums the magnetic field B over each component of the magnetisation
     J = mu_0 M
     """
-    from ._magnet2 import Magnet_2D
+    from ..magnets import Magnet_2D
 
     # Empty data structure
     B = _allocate_field_array2(x, y)
@@ -86,7 +85,6 @@ def gradB_2D(B, x, y):
     Returns:
         Vector2: Magnetic field gradient vector
     """
-    from ._fields import Vector2
 
     dB = Vector2(_np.zeros_like(B), _np.zeros_like(B))
     Nx = x.shape[0]
@@ -109,8 +107,6 @@ def FgradB_2D(B, x, y, chi_m, c):
     Returns:
         Vector2: Magnetic field gradient force vector
     """
-    from ._fields import Vector2
-    from .. import u0
 
     BgB = Vector2(_np.zeros_like(B.n), _np.zeros_like(B.n))
     FB = Vector2(_np.zeros_like(B.n), _np.zeros_like(B.n))
@@ -162,10 +158,8 @@ def _get_field_array_shape2(x, y):
     """
 
     # Ensure x,y,z are numpy arrays (even of element 1)
-    if _np.isscalar(x):
-        x = _np.atleast_1d(x)
-    if _np.isscalar(y):
-        y = _np.atleast_1d(y)
+    x = _np.atleast_1d(x)
+    y = _np.atleast_1d(y)
 
     # Determine array shape:
     if _np.ndim(x) == 2:  # planar slice

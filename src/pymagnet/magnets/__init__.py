@@ -15,11 +15,5 @@ from ._magnet import *
 from ._magnet1 import *
 from ._magnet2 import *
 from ._magnet3 import *
-from ._poly2D import *
-from ._poly3D import *
-from ._fields import *
-from ._routines import *
-from ._routines2 import *
-from ._routines3 import *
-from ._assembly2 import *
-from ._quaternion import *
+from ._polygon2D import *
+from ._polygon3D import *

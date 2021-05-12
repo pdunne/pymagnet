@@ -2,10 +2,10 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
 # Copyright 2021 Peter Dunne
-# __all__ = ['B_calc_2D']
-"""Routines for Two Dimensional Magnet Classes
+""" Routines for creation of known magnet assemblies 
 """
 import numpy as _np
+from ..utils.global_const import PI, PI_2
 from matplotlib.path import Path as _Path
 
 
@@ -23,7 +23,6 @@ def mask_poly(num_sides, apothem, xc, yc, x, y):
     Returns:
         ndarray: boolean array of masked points
     """
-    from .. import PI
 
     # Stack x and y arrays
     points = _np.vstack((x.flatten(), y.flatten())).T
@@ -50,16 +49,14 @@ def mask_poly(num_sides, apothem, xc, yc, x, y):
 
 
 def _angle_offset(num_sides):
-    from .. import PI, PI_2
-
     """Case structure for setting angle offset
 
-        Args:
-            num_sides (int): number of sides in polygon
+    Args:
+        num_sides (int): number of sides in polygon
 
-        Returns:
-            float: offset angle in radians
-        """
+    Returns:
+        float: offset angle in radians
+    """
     # Even number of sides
     if num_sides % 2 == 0:
         return {
@@ -68,8 +65,8 @@ def _angle_offset(num_sides):
     # odd number of sides
     else:
         return {
-            3: PI / 2,
-            7: PI / 2,
+            3: PI_2,
+            7: PI_2,
         }.get(num_sides, PI_2 / num_sides)
 
 
@@ -95,7 +92,7 @@ def mask_data_2D(magnet_half_width, num_sides, radius, B, x, y, **kwargs):
     Returns:
         Vector2: new vector of masked points
     """
-    from ._fields import Vector2
+    from ..utils._point_structs import Vector2
 
     apothem = radius - magnet_half_width
     center = kwargs.pop("center", (0.0, 0.0))
@@ -193,9 +190,8 @@ def radial_extraction_2D(magnet_half_width, radius, x, y, B):
 
 def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
     from .. import reset_magnets
-    from .. import PI
-    from ._magnet2 import Rectangle
-    from ._routines2 import grid2D
+    from ..magnets._magnet2 import Rectangle
+    from ._routines2D import grid2D
 
     """Initialise 
 
@@ -291,7 +287,7 @@ def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
 
 
 def calc_magnetic_field(mag_prop, grid_prop):
-    from ._routines2 import B_calc_2D
+    from ..utils._routines2D import B_calc_2D
 
     """Run magnetic calculation and mask data to central bore
 

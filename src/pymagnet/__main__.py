@@ -11,16 +11,16 @@ def main():
 
     import pymagnet as pm
 
-    R = 5e-3
-    L = 25e-3
+    R = 5
+    L = 25
     m_cyl = pm.magnets.Cylinder(radius=R, length=L, Jr=1.2, center=(0.0, 0.0, 0))
     pm.plot.plot_1D_field(m_cyl)
 
     print("Contour Plot of 2D Magnets")
     pm.reset_magnets()
     cmap = "viridis"  # colormap
-    width = 20e-3
-    height = 20e-3
+    width = 20
+    height = 20
     hgap_x = width / 2
 
     center = (-width / 2 - hgap_x, 0)

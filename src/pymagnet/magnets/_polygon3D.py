@@ -1,23 +1,19 @@
 import numpy as _np
+
+from ._magnet3 import Magnet_3D
+from ..utils._routines3D import Vector3
+from ..utils._quaternion import Quaternion
+
 from stl import mesh
 import plotly.graph_objects as _go
-from traitlets.traitlets import All
 
-
-# from ._magnet import Magnet
-from ._magnet3 import Magnet_3D
-from ._routines3 import Vector3
-from ._quaternion import Quaternion
-
-from numba import vectorize, float64
+from numba import jit, vectorize, float64
 from math import sqrt, log, fabs, atan2
 
-PI = _np.pi
-u0 = PI * 4e-7
-FP_CUTOFF = 1e-8
-ALIGN_CUTOFF = 1e-5
+from ..utils.global_const import PI, FP_CUTOFF, ALIGN_CUTOFF
 
 
+@jit
 def signed_area(triangle):
     """Calculates signed area of a triangle. Area area < 0 for clockwise ordering.
     Assumes the triangle is in the xz plane (i.e. with the normal parallel to y).
@@ -31,7 +27,7 @@ def signed_area(triangle):
 
     j = 1
     NP = 3
-    area = 0
+    area = 0.0
 
     for i in range(NP):
         j = j % NP
@@ -188,7 +184,7 @@ def align_triangle_to_y(triangle, rot_axis, norm_vec):
         if check_sign(y_axis, norm_vec):
             # Parallel
             first_rotation = Quaternion()
-            aligned_triangle = triangle.copy()
+            aligned_triangle = triangle
 
         else:
             # Anti-parallel
@@ -222,7 +218,7 @@ def align_triangle_xz(triangle, longest_side):
         if check_sign(x_axis, vec_x):
             # Parallel
             second_rotation = Quaternion()
-            tri_x = triangle.copy()
+            tri_x = triangle
         else:
             # Anti-parallel
             second_rotation = Quaternion.q_angle_from_axis(PI, y_axis)
@@ -233,7 +229,7 @@ def align_triangle_xz(triangle, longest_side):
         second_rotation = Quaternion.q_angle_from_axis(angle, rot_axis)
         tri_x = rot_points(triangle, second_rotation)
 
-    vec_z, new_vertex = return_z_vector(tri_x.copy(), longest_side)
+    vec_z, new_vertex = return_z_vector(tri_x, longest_side)
     rot_axis = _np.cross(z_axis, vec_z)
 
     if _np.all(_np.fabs([rot_axis]) < ALIGN_CUTOFF):
@@ -401,7 +397,7 @@ class Mesh(Magnet_3D):
         Returns:
             Vector3: Magnetic field array
         """
-        from ._routines3 import _allocate_field_array3
+        from ..utils._routines3D import _allocate_field_array3
 
         B = _allocate_field_array3(x, y, z)
         vec_shape = B.x.shape
@@ -412,9 +408,9 @@ class Mesh(Magnet_3D):
         for i in range(self.start, self.stop):
             # for i in range(len(self.mesh_vectors)):
             if _np.fabs(self.Jnorm[i] / self.Jr) > 1e-4:
-                triangle = self.mesh_vectors[i].copy()
+                # triangle = self.mesh_vectors[i].copy()
                 Btx, Bty, Btz, _, _, _ = self.calcB_triangle(
-                    triangle,
+                    self.mesh_vectors[i],
                     # 1.0,  # FIXME: Temporary change for testing values
                     self.Jnorm[i],
                     x,
@@ -499,7 +495,7 @@ class Mesh(Magnet_3D):
             offset,
             RA_triangle1,
             RA_triangle2,
-        ) = _rotate_triangle(triangle.copy(), Jr)
+        ) = _rotate_triangle(triangle, Jr)
 
         # Prepare points and quaternion
         pos_vec = Quaternion._prepare_vector(x, y, z)
@@ -588,14 +584,16 @@ class Mesh(Magnet_3D):
     @staticmethod
     def _charge_sheet(a, b, Jr, x, y, z):
         sigma = Jr / (4 * PI)
-
-        Bx = _charge_sheet_x(a, b, sigma, x, y, z)
-        By = _charge_sheet_y(a, b, sigma, x, y, z)
-        Bz = _charge_sheet_z(a, b, sigma, x, y, z)
+        with _np.errstate(all="ignore"):
+            Bx = _charge_sheet_x(a, b, sigma, x, y, z)
+            By = _charge_sheet_y(a, b, sigma, x, y, z)
+            Bz = _charge_sheet_z(a, b, sigma, x, y, z)
         return Bx, By, Bz
 
 
-@vectorize([float64(float64, float64, float64, float64, float64, float64)])
+@vectorize(
+    [float64(float64, float64, float64, float64, float64, float64)], target="parallel"
+)
 def _charge_sheet_x(a, b, sigma, x, y, z):
     """Calculates the magnetic field of a right angled charge sheet
 
@@ -610,9 +608,9 @@ def _charge_sheet_x(a, b, sigma, x, y, z):
     Returns:
         tuple: Bx, By, Bz
     """
-    FP_CUTOFF = 1e-8
 
-    S_ab = 1 / sqrt(a ** 2 + b ** 2)
+    S_ab = 1.0 / sqrt(a ** 2 + b ** 2)
+
     r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
 
     ax = a - x
@@ -621,31 +619,37 @@ def _charge_sheet_x(a, b, sigma, x, y, z):
     r2 = sqrt(ax ** 2 + y ** 2 + bz ** 2)
     r3 = sqrt(ax ** 2 + y ** 2 + z ** 2)
     t1_log = r1 - (a * x + b * z) * S_ab
+
+    t2_log = r2 + (a * ax + b * bz) * S_ab
+
     if fabs(t1_log) > FP_CUTOFF:
         t1 = log(t1_log)
     else:
         t1 = 0.0
-
-    t2_log = r2 + (a * ax + b * bz) * S_ab
 
     if fabs(t2_log) > FP_CUTOFF:
         t2 = log(t2_log)
     else:
         t2 = 0.0
 
-    Bx = b * S_ab * (t1 - t2)
+    dt = t1 - t2
+    Bx = b * S_ab * dt
 
     r3_minus_z = r3 - z
     r2_plus_bz = r2 + bz
-    if fabs(r3_minus_z) > FP_CUTOFF and fabs(r2_plus_bz) > FP_CUTOFF:
-        Bx += log(r2_plus_bz / r3_minus_z)
+    if fabs(r3_minus_z) > 0.0:
+        r2_over_r3 = r2_plus_bz / r3_minus_z
+        if fabs(r2_over_r3) > FP_CUTOFF:
+            Bx += log(r2_plus_bz / r3_minus_z)
 
     Bx *= sigma
 
     return Bx
 
 
-@vectorize([float64(float64, float64, float64, float64, float64, float64)])
+@vectorize(
+    [float64(float64, float64, float64, float64, float64, float64)], target="parallel"
+)
 def _charge_sheet_z(a, b, sigma, x, y, z):
     """Calculates the magnetic field of a right angled charge sheet
 
@@ -660,11 +664,9 @@ def _charge_sheet_z(a, b, sigma, x, y, z):
     Returns:
         tuple: Bx, By, Bz
     """
-    FP_CUTOFF = 1e-8
 
-    # ----Bx, Bz
+    S_ab = 1.0 / sqrt(a ** 2 + b ** 2)
 
-    S_ab = 1 / sqrt(a ** 2 + b ** 2)
     r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
 
     ax = a - x
@@ -672,13 +674,14 @@ def _charge_sheet_z(a, b, sigma, x, y, z):
 
     r2 = sqrt(ax ** 2 + y ** 2 + bz ** 2)
     r3 = sqrt(ax ** 2 + y ** 2 + z ** 2)
+
     t1_log = r1 - (a * x + b * z) * S_ab
+    t2_log = r2 + (a * ax + b * bz) * S_ab
+
     if fabs(t1_log) > FP_CUTOFF:
         t1 = log(t1_log)
     else:
         t1 = 0.0
-
-    t2_log = r2 + (a * ax + b * bz) * S_ab
 
     if fabs(t2_log) > FP_CUTOFF:
         t2 = log(t2_log)
@@ -689,14 +692,19 @@ def _charge_sheet_z(a, b, sigma, x, y, z):
 
     r3_plus_ax = r3 + ax
     r1_minus_x = r1 - x
-    if fabs(r3_plus_ax / a) > FP_CUTOFF and fabs(r1_minus_x) > FP_CUTOFF:
-        Bz += log(r1_minus_x / r3_plus_ax)
+
+    if fabs(r3_plus_ax) > 0.0:
+        r1_over_r3 = r1_minus_x / r3_plus_ax
+        if fabs(r1_over_r3) > FP_CUTOFF:
+            Bz += log(r1_over_r3)
     Bz *= sigma
 
     return Bz
 
 
-@vectorize([float64(float64, float64, float64, float64, float64, float64)])
+@vectorize(
+    [float64(float64, float64, float64, float64, float64, float64)], target="parallel"
+)
 def _charge_sheet_y(a, b, sigma, x, y, z):
     """Calculates the magnetic field of a right angled charge sheet
 
@@ -711,17 +719,14 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
     Returns:
         tuple: Bx, By, Bz
     """
-    FP_CUTOFF = 1e-8
-
-    a_ab = sqrt(1 + b ** 2 / a ** 2)
-    r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
-
-    ax = a - x
-
-    r3 = sqrt(ax ** 2 + y ** 2 + z ** 2)
-
-    # ----By
     if fabs(y) > FP_CUTOFF:
+        a_ab = sqrt(1 + b ** 2 / a ** 2)
+        r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
+
+        ax = a - x
+
+        r3 = sqrt(ax ** 2 + y ** 2 + z ** 2)
+
         g = b / a
 
         si_alpha = 1.0 / (a_ab ** 2)
@@ -729,7 +734,7 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
         beta = -(x + z * g) * si_alpha
         gamma_sq = (r1 ** 2 * si_alpha) - (beta ** 2)
         if gamma_sq > 0.0:
-            gamma = sqrt((r1 ** 2 * si_alpha) - (beta ** 2))
+            gamma = sqrt(gamma_sq)
         else:
             gamma = 0.0
 
@@ -738,14 +743,14 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
         C = z + beta * g
         ABC_diff = B ** 2 - A ** 2 - C ** 2
 
-        if fabs(gamma) > 0:
+        if fabs(gamma) > 0.0:
             t3 = (a + beta) / gamma
             t4 = beta / gamma
         else:
             t3 = 0.0
             t4 = 0.0
 
-        if ABC_diff > 0:
+        if ABC_diff > 0.0:
             t1 = sqrt(ABC_diff)
             t2 = 1.0 / t1
         else:
@@ -757,139 +762,29 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
         atan_y = atan_1 - atan_2
         atan_x = 1 + atan_1 * atan_2
 
+        a_ab_t1 = a_ab * t1
+
         if fabs(atan_y) < FP_CUTOFF and fabs(atan_x) < FP_CUTOFF:
-            By = 0
+            By = 0.0
+        elif a_ab_t1 > FP_CUTOFF:
+            By = (y / (a_ab_t1)) * atan2(atan_y, atan_x)
         else:
-            By = (y / (a_ab * t1)) * atan2(atan_y, atan_x)
+            By = 0.0
 
         t2 = 1 / y
         atan_1 = t2 * (r3 + z + (x - a))
         atan_2 = t2 * (r1 + z + x)
-        By = By + atan2(atan_1 - atan_2, 1 + atan_1 * atan_2)
+        atan_y = atan_1 - atan_2
+        atan_x = 1 + atan_1 * atan_2
+
+        if fabs(atan_y) < FP_CUTOFF and fabs(atan_x) < FP_CUTOFF:
+            By = 0.0
+        else:
+            By = By + atan2(atan_y, atan_x)
+
         By = sigma * By
 
     else:
-        By = 0
+        By = 0.0
 
     return By
-
-
-#     @staticmethod
-#     def _charge_sheet(a, b, Jr, x, y, z):
-#         """Calculates the magnetic field of a right angled charge sheet
-#
-#         Args:
-#             a ([type]): [description]
-#             b ([type]): [description]
-#             Jr ([type]): [description]
-#             x ([type]): [description]
-#             y ([type]): [description]
-#             z ([type]): [description]
-#
-#         Returns:
-#             tuple: Bx, By, Bz
-#         """
-#
-#         sig = Jr / (4 * PI)
-#
-#         # ----Bx, Bz
-#
-#         S_ab = 1 / _np.sqrt(a ** 2 + b ** 2)
-#         a_ab = _np.sqrt(1 + b ** 2 / a ** 2)
-#         r1 = _np.sqrt(x ** 2 + y ** 2 + z ** 2)
-#
-#         ax = a - x
-#         bz = b - z
-#
-#         r2 = _np.sqrt(ax ** 2 + y ** 2 + bz ** 2)
-#         r3 = _np.sqrt(ax ** 2 + y ** 2 + z ** 2)
-#
-#         t1 = _np.log(r1 - (a * x + b * z) * S_ab)
-#         t2 = _np.log(r2 + (a * ax + b * bz) * S_ab)
-#
-#         Bx = b * S_ab * (t1 - t2)
-#
-#         r3_minus_z = r3 - z
-#         r2_plus_bz = r2 + bz
-#
-#         mask = _np.logical_and(
-#             _np.fabs(r3_minus_z) > 0,
-#             _np.fabs(r2_plus_bz) > 0,
-#         )
-#
-#         Bx_2 = _np.zeros_like(Bx)
-#         Bx_2[mask] = _np.log(r2_plus_bz[mask] / r3_minus_z[mask])
-#         # Bx_2[~mask] = 0
-#         Bx += Bx_2
-#
-#         Bx *= sig
-#         Bx[~mask] = 0.0
-#
-#         # ----Bz
-#         Bz = a * S_ab * (t2 - t1)
-#
-#         r3_plus_ax = r3 + ax
-#         r1_minus_x = r1 - x
-#         mask_z = _np.logical_and(
-#             _np.fabs(r3_plus_ax) > 0,
-#             _np.fabs(r1_minus_x) > 0,
-#         )
-#
-#         Bz_2 = _np.zeros_like(Bz)
-#         Bz_2[mask_z] = _np.log(r1_minus_x[mask_z] / r3_plus_ax[mask_z])
-#         Bz_2[~mask_z] = 0
-#
-#         Bz += Bz_2
-#         Bz *= sig
-#
-#         # Bz = sig * (a * S_ab * (t2 - t1) + _np.log((r1 - x) / (r3 + ax)))
-#         # Bz[(r1 - x) == 0] = 0
-#
-#         # Bz[_np.fabs(r1 - x) < FP_CUTOFF] = 0
-#
-#         # ----By
-#         g = b / a
-#         si_alpha = 1.0 / (a_ab ** 2)
-#         beta = -(x + z * g) * si_alpha
-#         gamma = _np.sqrt((r1 ** 2 * si_alpha) - (beta ** 2))
-#
-#         A = -gamma * g
-#         B = gamma * a_ab
-#         C = z + beta * g
-#         ABC_diff = B ** 2 - A ** 2 - C ** 2
-#
-#         ABC_diff[ABC_diff <= 0] = _np.NaN
-#         t3 = (a + beta) / gamma
-#         t4 = beta / gamma
-#
-#         t1 = _np.sqrt(ABC_diff)
-#         t2 = _np.empty_like(t1)
-#         t2[t1 > 0] = 1.0 / t1[t1 > 0]
-#         t2[t1 <= 0] = _np.NaN
-#
-#         atan_1 = t2 * (C + (A + B) * (_np.sqrt(1 + t3 * t3) + t3))
-#         atan_2 = t2 * (C + (A + B) * (_np.sqrt(1 + t4 * t4) + t4))
-#         By = (y / (a_ab * t1)) * _np.arctan2(atan_1 - atan_2, 1 + atan_1 * atan_2)
-#
-#         t2 = _np.empty_like(y)
-#         t2[y > 0] = 1.0 / t1[y > 0]
-#         t2[y <= 0] = _np.NaN
-#         # t2 = 1.0 / y
-#         atan_1 = t2 * (r3 + z + (x - a))
-#         atan_2 = t2 * (r1 + z + x)
-#         By = By + _np.arctan2(atan_1 - atan_2, 1 + atan_1 * atan_2)
-#         By = sig * By
-#
-#         By[_np.fabs(y) < FP_CUTOFF] = 0
-#
-#         Bx[_np.isnan(Bx)] = 0
-#         Bz[_np.isnan(Bz)] = 0
-#         By[_np.isnan(By)] = 0
-#
-#         Bx[_np.isinf(Bx)] = 0
-#         Bz[_np.isinf(Bz)] = 0
-#         By[_np.isinf(By)] = 0
-#
-#         By[:] = 0
-#         Bx[:] = 0
-#         return Bx, By, Bz

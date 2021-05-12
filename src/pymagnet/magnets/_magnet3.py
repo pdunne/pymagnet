@@ -24,16 +24,13 @@ TODO:
     * Update __str__ and __repr__ methods to show orientation and magnetisation
 """
 import numpy as _np
-from ._fields import Point3
+from ..utils._point_structs import Point3
 from ._magnet import Magnet
-from ._quaternion import Quaternion
+from ..utils._quaternion import Quaternion
+from ..utils.global_const import PI
 
 from numba import vectorize, float64
 
-# from math import sqrt
-
-PI = _np.pi
-# from pymagma import PI
 
 __all__ = ["Magnet_3D", "Prism", "Cube", "Cylinder", "Sphere"]
 
@@ -157,7 +154,7 @@ class Magnet_3D(Magnet):
         Returns:
             tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector
         """
-        from ._routines3 import _tile_arrays, _apply_mask
+        from ..utils._routines3D import _tile_arrays, _apply_mask
 
         # If any rotation angle is set, transform the data
         if _np.any(
@@ -390,7 +387,7 @@ class Prism(Magnet_3D):
         Returns:
             Vector3: Magnetic field array
         """
-        from ._routines3 import _allocate_field_array3
+        from ..utils._routines3D import _allocate_field_array3
 
         B = _allocate_field_array3(x, y, z)
         # Magnetic field due to component of M magnetised in x
@@ -698,7 +695,7 @@ class Cylinder(Magnet_3D):
 
     # Use Numba to create compiled Numpy ufunc that accepts arrays
     @staticmethod
-    @vectorize([float64(float64, float64, float64, float64)])
+    @vectorize([float64(float64, float64, float64, float64)], target="parallel")
     def _cel(kc, p, c, s):
         """Bulirsch's complete elliptic integral
         See NIST Handbook of Mathematical Functions, http://dlmf.nist.gov/19.2
@@ -761,8 +758,8 @@ class Cylinder(Magnet_3D):
         Returns:
             Vector3: Magnetic field array
         """
-        from ._routines import cart2pol, pol2cart
-        from ._routines3 import _allocate_field_array3
+        from ..utils._conversions import cart2pol, pol2cart
+        from ..utils._routines3D import _allocate_field_array3
 
         B = _allocate_field_array3(x, y, z)
 
@@ -938,8 +935,8 @@ class Sphere(Magnet_3D):
         Returns:
             Vector3: Magnetic field array
         """
-        from ._routines import cart2sph, sphere_sph2cart
-        from ._routines3 import _allocate_field_array3
+        from ..utils._conversions import cart2sph, sphere_sph2cart
+        from ..utils._routines3D import _allocate_field_array3
 
         B = _allocate_field_array3(x, y, z)
 

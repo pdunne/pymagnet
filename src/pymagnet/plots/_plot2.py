@@ -111,19 +111,19 @@ def plot_2D_line(x, Field, **kwargs):
         x ([array]): [assumes in m]
         Field ([field vector_2D]): [field vector object]
     """
-    scale_x = kwargs.pop("scale_x", 1e-3)
+    scale_x = kwargs.pop("scale_x", 1)
     scale_cb = kwargs.pop("scale_cb", 1)
 
-    xlab = kwargs.pop("xlab", f"x (mm)")
+    xlab = kwargs.pop("xlab", f"x (m)")
     ylab = kwargs.pop("ylab", f"B (T)")
     axis_scale = kwargs.pop("axis_scale", "equal")
 
     SAVE = kwargs.pop("save_fig", False)
 
     _, ax = _plt.subplots()
-    _plt.plot(x / scale_x, Field.n / scale_cb, label=r"$|\mathbf{B}|$")
-    _plt.plot(x / scale_x, Field.x / scale_cb, label=r"$B_x$")
-    _plt.plot(x / scale_x, Field.y / scale_cb, label=r"$B_y$")
+    _plt.plot(x * scale_x, Field.n * scale_cb, label=r"$|\mathbf{B}|$")
+    _plt.plot(x * scale_x, Field.x * scale_cb, label=r"$B_x$")
+    _plt.plot(x * scale_x, Field.y * scale_cb, label=r"$B_y$")
     _plt.legend(loc="best")
     _plt.xlabel(xlab)
     _plt.ylabel(ylab)
@@ -144,16 +144,16 @@ def plot_2D_contour(x, y, Field, **kwargs):
         Field ([field vector_2D]): [field vector object]
     """
     import matplotlib.cm as _cm
-    from ..magnets._poly2D import PolyMagnet
+    from ..magnets._polygon2D import PolyMagnet
 
-    scale_x = kwargs.pop("scale_x", 1e-3)
-    scale_y = kwargs.pop("scale_y", 1e-3)
+    scale_x = kwargs.pop("scale_x", 1)
+    scale_y = kwargs.pop("scale_y", 1)
     scale_cb = kwargs.pop("scale_cb", 1)
 
     show_magnets = kwargs.pop("show_magnets", True)
 
-    xlab = kwargs.pop("xlab", f"x (mm)")
-    ylab = kwargs.pop("ylab", f"y (mm)")
+    xlab = kwargs.pop("xlab", f"x (m)")
+    ylab = kwargs.pop("ylab", f"y (m)")
     clab = kwargs.pop("clab", f"B (T)")
     axis_scale = kwargs.pop("axis_scale", "equal")
 
@@ -177,7 +177,7 @@ def plot_2D_contour(x, y, Field, **kwargs):
         else:
             field_chosen = Field.n
 
-        finite_field = field_chosen[_np.isfinite(field_chosen)] / scale_cb
+        finite_field = field_chosen[_np.isfinite(field_chosen)] * scale_cb
         cmin = kwargs.pop("cmin", 0)
         cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
         num_levels = kwargs.pop("num_levels", 11)
@@ -185,9 +185,9 @@ def plot_2D_contour(x, y, Field, **kwargs):
         lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
 
         CS = _plt.contourf(
-            x / scale_x,
-            y / scale_y,
-            field_chosen / scale_cb,
+            x * scale_x,
+            y * scale_y,
+            field_chosen * scale_cb,
             levels=lev2,
             cmap=_plt.get_cmap(cmap),
             extend="max",
@@ -197,9 +197,9 @@ def plot_2D_contour(x, y, Field, **kwargs):
         if num_levels > 1:
             lev1 = _np.linspace(cmin, cmax, num_levels, endpoint=True)
             _ = _plt.contour(
-                x / scale_x,
-                y / scale_y,
-                field_chosen / scale_cb,
+                x * scale_x,
+                y * scale_y,
+                field_chosen * scale_cb,
                 vmin=cmin,
                 vmax=cmax,
                 levels=lev1,
@@ -216,8 +216,8 @@ def plot_2D_contour(x, y, Field, **kwargs):
 
     elif plot_type.lower() == "streamplot":
 
-        xpl = x[:, 0] / scale_x
-        ypl = y[0, :] / scale_y
+        xpl = x[:, 0] * scale_x
+        ypl = y[0, :] * scale_y
         cmap = kwargs.pop("cmap", None)
 
         if cmap is not None:
@@ -267,7 +267,7 @@ def plot_2D_contour(x, y, Field, **kwargs):
         if len(PolyMagnet.instances) > 0:
             for magnet in PolyMagnet.instances:
                 poly = _plt.Polygon(
-                    _np.array(magnet.polygon.vertices) / scale_x,
+                    _np.array(magnet.polygon.vertices) * scale_x,
                     ec="k",
                     fc="w",
                     zorder=5,
@@ -320,13 +320,13 @@ def _gen_rect_patch(magnet, scale_x, scale_y):
     from matplotlib.transforms import Affine2D
 
     patch_tmp = patch(
-        x=(magnet.center()[0] - magnet.a) / scale_x,
-        y=(magnet.center()[1] - magnet.b) / scale_y,
-        width=(2 * magnet.a) / scale_x,
-        height=(2 * magnet.b) / scale_y,
+        x=(magnet.center()[0] - magnet.a) * scale_x,
+        y=(magnet.center()[1] - magnet.b) * scale_y,
+        width=(2 * magnet.a) * scale_x,
+        height=(2 * magnet.b) * scale_y,
         transform=Affine2D().rotate_deg_around(
-            (magnet.center()[0]) / scale_x,
-            (magnet.center()[1]) / scale_y,
+            (magnet.center()[0]) * scale_x,
+            (magnet.center()[1]) * scale_y,
             -magnet.alpha,
         ),
         type="rectangle",
@@ -336,11 +336,11 @@ def _gen_rect_patch(magnet, scale_x, scale_y):
     offset = _np.multiply(Jnorm, magnet.size()) / 2
 
     arrow_tmp = arrow(
-        x=(magnet.center()[0] - offset[0]) / scale_x,
-        y=(magnet.center()[1] - offset[1] / scale_y),
-        dx=(2 * offset[0]) / scale_x,
-        dy=(2 * offset[1]) / scale_y,
-        transform=Affine2D().translate(0, magnet.center()[1] / scale_y),
+        x=(magnet.center()[0] - offset[0]) * scale_x,
+        y=(magnet.center()[1] - offset[1] * scale_y),
+        dx=(2 * offset[0]) * scale_x,
+        dy=(2 * offset[1]) * scale_y,
+        transform=Affine2D().translate(0, magnet.center()[1] * scale_y),
     )
 
     magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
@@ -361,13 +361,13 @@ def _gen_circle_patch(magnet, scale_x, scale_y):
     from matplotlib.transforms import Affine2D
 
     patch_tmp = patch(
-        x=(magnet.center()[0]) / scale_x,
-        y=(magnet.center()[1]) / scale_y,
-        width=(magnet.radius) / scale_x,
-        height=(magnet.radius) / scale_y,
+        x=(magnet.center()[0]) * scale_x,
+        y=(magnet.center()[1]) * scale_y,
+        width=(magnet.radius) * scale_x,
+        height=(magnet.radius) * scale_y,
         transform=Affine2D().rotate_deg_around(
-            (magnet.center()[0]) / scale_x,
-            (magnet.center()[1]) / scale_y,
+            (magnet.center()[0]) * scale_x,
+            (magnet.center()[1]) * scale_y,
             -magnet.alpha,
         ),
         type="circle",
@@ -376,10 +376,10 @@ def _gen_circle_patch(magnet, scale_x, scale_y):
     Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
     offset = magnet.radius * Jnorm[0] / 2
     arrow_tmp = arrow(
-        x=(magnet.center()[0] - offset) / scale_x,
-        y=(magnet.center()[1]) / scale_y,
-        dx=(2 * offset) / scale_x,
-        dy=(2 * 0) / scale_y,
+        x=(magnet.center()[0] - offset) * scale_x,
+        y=(magnet.center()[1]) * scale_y,
+        dx=(2 * offset) * scale_x,
+        dy=(2 * 0) * scale_y,
         transform=Affine2D().translate(0, 0),
     )
     magnet_patch_tmp = magnet_patch(patch_tmp, arrow_tmp)
@@ -458,8 +458,8 @@ def _vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color):
         NSx, NSy = NPx // NQ, NPy // NQ
         with _np.errstate(divide="ignore", invalid="ignore"):
             _plt.quiver(
-                x[::NSx, ::NSy] / scale_x,
-                y[::NSx, ::NSy] / scale_y,
+                x[::NSx, ::NSy] * scale_x,
+                y[::NSx, ::NSy] * scale_y,
                 Field.x[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
                 Field.y[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
                 color=vector_color,
@@ -476,24 +476,24 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         Field ([field vector]): [field vector object]
     """
     import matplotlib.cm as _cm
-    from ..magnets._fields import Vector2
+    from ..utils._point_structs import Vector2
 
-    scale_x = kwargs.pop("scale_x", 1e-3)
-    scale_y = kwargs.pop("scale_y", 1e-3)
-    scale_z = kwargs.pop("scale_z", 1e-3)
+    scale_x = kwargs.pop("scale_x", 1)
+    scale_y = kwargs.pop("scale_y", 1)
+    scale_z = kwargs.pop("scale_z", 1)
     scale_cb = kwargs.pop("scale_cb", 1)
     axis_scale = kwargs.pop("axis_scale", "equal")
 
     plot_type = kwargs.pop("plot_type", "contour")
 
-    xlab = kwargs.pop("xlab", f"x (mm)")
-    ylab = kwargs.pop("ylab", f"y (mm)")
-    zlab = kwargs.pop("zlab", f"z (mm)")
+    xlab = kwargs.pop("xlab", f"x (m)")
+    ylab = kwargs.pop("ylab", f"y (m)")
+    zlab = kwargs.pop("zlab", f"z (m)")
     clab = kwargs.pop("clab", f"B (T)")
 
     SAVE = kwargs.pop("save_fig", False)
 
-    finite_field = Field.n[_np.isfinite(Field.n)] / scale_cb
+    finite_field = Field.n[_np.isfinite(Field.n)] * scale_cb
 
     cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
     num_levels = kwargs.pop("num_levels", 11)
@@ -502,8 +502,8 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         orientation = "xy"
         stream_x = Field.x
         stream_y = Field.y
-        plot_x = x / scale_x
-        plot_y = y / scale_y
+        plot_x = x * scale_x
+        plot_y = y * scale_y
         plot_xlab = xlab
         plot_ylab = ylab
 
@@ -511,8 +511,8 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         orientation = "xz"
         stream_x = Field.x
         stream_y = Field.z
-        plot_x = x / scale_x
-        plot_y = z / scale_z
+        plot_x = x * scale_x
+        plot_y = z * scale_z
         plot_xlab = xlab
         plot_ylab = zlab
 
@@ -520,8 +520,8 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         orientation = "yz"
         stream_x = Field.y
         stream_y = Field.z
-        plot_x = y / scale_y
-        plot_y = z / scale_z
+        plot_x = y * scale_y
+        plot_y = z * scale_z
         plot_xlab = ylab
         plot_ylab = zlab
 
@@ -539,7 +539,7 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         CS = _plt.contourf(
             plot_x,
             plot_y,
-            Field.n / scale_cb,
+            Field.n * scale_cb,
             levels=lev2,
             cmap=_plt.get_cmap(cmap),
             extend="max",
@@ -551,7 +551,7 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
             _ = _plt.contour(
                 plot_x,
                 plot_y,
-                Field.n / scale_cb,
+                Field.n * scale_cb,
                 vmin=cmin,
                 vmax=cmax,
                 levels=lev1,
@@ -635,8 +635,8 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
     """
 
     cmap = kwargs.pop("cmap", "seismic")
-    xlab = kwargs.pop("xlab", f"x (mm)")
-    ylab = kwargs.pop("ylab", f"y (mm)")
+    xlab = kwargs.pop("xlab", f"x (m)")
+    ylab = kwargs.pop("ylab", f"y (m)")
     clab = kwargs.pop("clab", f"B (T)")
 
     axis_scale = kwargs.pop("axis_scale", "equal")
@@ -691,8 +691,8 @@ def line_plot_cylinder(magnet, **kwargs):
 
     Br, Bz = magnet._calcB_cyl(rho, z)
     _, _ = _plt.subplots()
-    _plt.plot(rho * 1e3, Bz, label="Bz")
-    _plt.plot(rho * 1e3, Br, label="Br")
+    _plt.plot(rho * 1, Bz, label="Bz")
+    _plt.plot(rho * 1, Br, label="Br")
     _plt.legend(loc="best")
     _plt.show()
 
@@ -716,15 +716,15 @@ def contour_plot_cylinder(magnet, **kwargs):
     Br, Bz = magnet._calcB_cyl(rho, z)
     Bn = _np.sqrt(Bz ** 2 + Br ** 2)
 
-    xlab = f"r (mm)"
-    ylab = "z (mm)"
+    xlab = f"r (m)"
+    ylab = "z (m)"
 
     # plot_B = Bn
     clab = r"$|B|$ (T)"
     cmap = "viridis"
     plot_sub_contour_3D(
-        rho * 1e3,
-        z * 1e3,
+        rho * 1,
+        z * 1,
         Bn,
         xlab=xlab,
         ylab=ylab,
@@ -745,7 +745,7 @@ def param_test_2D(width, height):
         height ([type]): [description]
     """
     x = _np.linspace(-2 * width, 2 * width, 100)
-    y = 1e-3 + height
+    y = 1 + height
 
     B = _mag._routines2.B_calc_2D(x, y)
     plot_2D_line(x, B)

@@ -7,7 +7,12 @@
 """
 import matplotlib.pyplot as _plt
 import numpy as _np
-from pymagnet import magnets as _mag
+from ..magnets import (
+    Cylinder,
+    Prism,
+    magnetic_field_prism_1D,
+    magnetic_field_cylinder_1D,
+)
 
 
 def plot_1D_field(magnet, **kwargs):
@@ -29,24 +34,24 @@ def plot_1D_field(magnet, **kwargs):
     NP = kwargs.pop("NP", 101)
     return_data = kwargs.pop("return_data", False)
 
-    if issubclass(magnet.__class__, _mag.Cylinder):
+    if issubclass(magnet.__class__, Cylinder):
         mag_boundary = magnet.length / 2
         z = _np.linspace(
             -2 * magnet.length + magnet.zc, 2 * magnet.length + magnet.zc, NP
         )
-        Bz = _mag.magnetic_field_cylinder_1D(magnet, z)
+        Bz = magnetic_field_cylinder_1D(magnet, z)
 
         # if true, apply NaNs to inside the magnet
         if magnet._mask_magnet:
             mask = _generate_mask_1D(mag_boundary, magnet.zc, z)
             Bz[mask] = _np.NaN
 
-    elif issubclass(magnet.__class__, _mag.Prism):
+    elif issubclass(magnet.__class__, Prism):
         mag_boundary = magnet.height / 2
         z = _np.linspace(
             -2 * magnet.height + magnet.zc, 2 * magnet.height + magnet.zc, NP
         )
-        Bz = _mag.magnetic_field_prism_1D(magnet, z)
+        Bz = magnetic_field_prism_1D(magnet, z)
 
         # if true, apply NaNs to inside the magnet
         if magnet._mask_magnet:

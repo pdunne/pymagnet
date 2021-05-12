@@ -60,13 +60,13 @@ $$
 </figure>
 
 The magnetic field due to rectangle and magnetised in $x$ is:
+TODO:
+$$
+B_x = \frac{\mu_0 M_r}{2\pi}
+$$
 
 $$
-B_x = Bx
-$$
-
-$$
-B_y = By
+B_y = \frac{\mu_0 M_r}{4\pi}
 $$
 
 and if magnetised in $y$ is:
@@ -83,7 +83,7 @@ B_x = \frac{\mu_0 M_r}{4\pi} \left[\ln {\left(
 $$
 
 $$
-B_y = \frac{\mu_0M_r}{2\pi}
+B_y = \frac{\mu_0 M_r}{2\pi}
 \left[{\tan}^{-1}{\left( \frac{2b \left(x+a\right)}{y^2-b^2+{\left(x+a\right)}^2}
 \right)}
 - {\tan}^{-1}{\left(\frac{2b\left(x-a\right)}{y^2-b^2+{\left(x-a\right)}^2}\right)}\right]
@@ -331,29 +331,55 @@ $$
 
 ## Composite Objects
 
-<!-- ### Polygons
+### Polyhedra
+For polyhedra composed of right angled triangles, the magnetic field can be calculated as the sum of magnetic fields due to these elements:
 
 $$
 \sigma_m = \mathbf{M} \cdot \mathbf{\hat{n}}
 $$
 
 $$
-H_x = \frac{\sigma_m}{4\pi\mu_0} \left[
-  \ln \left( \frac{\sqrt{L^2 + (x-a)^2 + y^2} + L}{\sqrt{L^2 + (x-a)^2 + y^2} - L} \right) +
-  \ln \left( \frac{\sqrt{L^2 + (x+a)^2 + y^2} + L}{\sqrt{L^2 + (x+a)^2 + y^2} - L} \right)
-\right]
+\begin{align}
+H_x &= \frac{\sigma_m}{2\pi\mu_0} \left[
+  \ln \left( \frac{ b + \sqrt{ (a - x)^2 + y^2 + (b - z)^2 } - z }{ \sqrt{(a-x)^2 + y^2 + z^2} - z}\right)\right.\\
+    & + \left. \frac{b}{c}  \ln \left(   \frac{r - s }{ \sqrt{(a-x)^2 + y^2 + (b-z)^2} + t } \right) \right]
+\end{align}
 $$
+
+and similarly
 
 $$
 \begin{align}
-H_y = \frac{\sigma_m}{2\pi\mu_0 y} &\left[
-  \tan^{-1} \left( \frac{L(x-a)}{y\sqrt{ (x-a)^2 + y^2 + L^2 }} \right) \right.\\
-  + &\left. \tan^{-1} \left( \frac{L(x+a)}{y\sqrt{ (x+a)^2 + y^2 + L^2 }} \right)
-\right]
+H_z &= \frac{\sigma_m}{2\pi\mu_0} \left[
+  \ln \left( \frac{ r - x }{\sqrt{(a-x)^2 + y^2 + z^2} + a}\right)\right.\\
+    & + \left. \frac{a}{c}  \ln \left(  \frac{ \sqrt{(a-x)^2 + y^2 + (b-z)^2} + t}{r - s } \right) \right]
 \end{align}
-$$ -->
+$$
 
-### 2D Quadrupoles
+where
+
+$r = \sqrt{x^2 + y^2 + z^2},\, c = \sqrt{a^2 + b^2}$
+
+$s = \frac{ax + bz}{c },\, t = \frac{a (a-x) + b(b-z)}{c}$
+
+$$
+\begin{align}
+H_y = \frac{\sigma_m}{2\pi\mu_0} &\left[
+  \tan^{-1}\left(\frac{(x-a) + z + \sqrt{(x-a)^2 + y^2 + z^2}}{y}\right)\right.\\
+  & - \tan^{-1} \left(\frac{x+z+r}{y} \right) \\
+  & + \frac{y}{\alpha\sqrt{B^2 - A^2 - C^2}} \left\{ \tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \frac{(\alpha+\beta)^2}{\gamma^2}} + \frac{\alpha + \beta}{\gamma} \right)}{\sqrt{B^2 - A^2 - C^2}} \right) \right. \\
+  &\,\, \left.\left.  -\tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \frac{\beta^2}{\gamma^2}} + \frac{\beta}{\gamma} \right)}{\sqrt{B^2 - A^2 - C^2}} \right) \right\} \right]
+\end{align}
+$$
+
+where
+
+$\alpha = \sqrt{1 + \frac{b^2}{a^2}}, \, \beta = - \frac{x + \frac{bz}{a}}{1 + \frac{b^2}{a^2}}, \, \gamma = \sqrt{\frac{r^2}{1 + \frac{b^2}{a^2}} - \beta^2}$
+
+$A = -\gamma \frac{b}{a},\, B = \gamma\sqrt{1 + \frac{b^2}{a^2}},\, C = z + \beta\frac{b}{a}$
+
+
+<!-- ### 2D Quadrupoles
 
 The magnetic field due to a pseudo-quadrupolar configuration of four 2D rectangles of width $2a$, height, $2b$, with uniform
 remnant magnetisation $M_r$ in $y$ with a gap $2w$ can be written as
@@ -384,7 +410,7 @@ By using a Maclaurin expansion, the magnetic field magnitude $H_{2w}$ in the gap
 $$
 \label{eqn:h_2w}
 H_{2w} = \frac{2M_r x}{\pi w}
-$$
+$$ -->
 
 [^1]: J. M. D. Coey, Magnetism and Magnetic Materials (Cambridge University Press, 2010).
 [^2]: E. P. Furlani, Permanent Magnet and Electromechanical Devices (Academic Press, San Diego, 2001).

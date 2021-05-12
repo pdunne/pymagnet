@@ -12,9 +12,8 @@ TODO:
 """
 import numpy as _np
 from ._magnet import Magnet
-from ._fields import Point2
-
-# from typing import List, Any, Union
+from ..utils._point_structs import Point2
+from ..utils.global_const import PI
 
 __all__ = ["Magnet_2D", "Rectangle", "Square", "Circle"]
 
@@ -73,8 +72,8 @@ class Rectangle(Magnet_2D):
     """Rectangle Magnet Class
 
     Args:
-        width [float]: magnet width [m] (defaults to 20e-3)
-        height [float]: magnet height [m] (defaults to 40e-3)
+        width [float]: magnet width [m] (defaults to 20)
+        height [float]: magnet height [m] (defaults to 40)
         Jr [float]: Remnant magnetisation [T] (defaults to 1.0)
 
     Optional Arguments:
@@ -85,7 +84,7 @@ class Rectangle(Magnet_2D):
 
     mag_type = "Rectangle"
 
-    def __init__(self, width=20e-3, height=40e-3, Jr=1.0, **kwargs):
+    def __init__(self, width=20, height=40, Jr=1.0, **kwargs):
         super().__init__(Jr, **kwargs)
         self.width = width
         self.height = height
@@ -146,7 +145,7 @@ class Rectangle(Magnet_2D):
         Returns:
             Vector2: magnetic field vector
         """
-        from ._routines2 import rotate_points_2D, _get_field_array_shape2
+        from ..utils._routines2D import rotate_points_2D, _get_field_array_shape2
 
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
@@ -166,7 +165,7 @@ class Rectangle(Magnet_2D):
                 Bty = self._calcBy_mag_x(xi - xci[0], yi - yci[0])
 
                 # Rotate fields to global frame
-                Bx, By = rotate_points_2D(Btx, Bty, 2 * _np.pi - self.alpha_radians)
+                Bx, By = rotate_points_2D(Btx, Bty, 2 * PI - self.alpha_radians)
 
             else:
                 Bx = self._calcBx_mag_x(x - self.xc, y - self.yc)
@@ -179,7 +178,7 @@ class Rectangle(Magnet_2D):
                 Btx = self._calcBx_mag_y(xi - xci[0], yi - yci[0])
                 Bty = self._calcBy_mag_y(xi - xci[0], yi - yci[0])
 
-                Bxt, Byt = rotate_points_2D(Btx, Bty, 2 * _np.pi - self.alpha_radians)
+                Bxt, Byt = rotate_points_2D(Btx, Bty, 2 * PI - self.alpha_radians)
                 Bx += Bxt
                 By += Byt
             else:
@@ -205,7 +204,7 @@ class Rectangle(Magnet_2D):
         # Hide the warning for situtations where there is a divide by zero.
         # This returns a NaN in the array, which is ignored for plotting.
         with _np.errstate(divide="ignore", invalid="ignore"):
-            return (J / (2 * _np.pi)) * (
+            return (J / (2 * PI)) * (
                 _np.arctan2((2 * a * (b + y)), (x ** 2 - a ** 2 + (y + b) ** 2))
                 + _np.arctan2((2 * a * (b - y)), (x ** 2 - a ** 2 + (y - b) ** 2))
             )
@@ -227,7 +226,7 @@ class Rectangle(Magnet_2D):
         # Hide the warning for situtations where there is a divide by zero.
         # This returns a NaN in the array, which is ignored for plotting.
         with _np.errstate(divide="ignore", invalid="ignore"):
-            return (-J / (4 * _np.pi)) * (
+            return (-J / (4 * PI)) * (
                 _np.log(((x - a) ** 2 + (y - b) ** 2) / ((x + a) ** 2 + (y - b) ** 2))
                 - _np.log(((x - a) ** 2 + (y + b) ** 2) / ((x + a) ** 2 + (y + b) ** 2))
             )
@@ -249,7 +248,7 @@ class Rectangle(Magnet_2D):
         # Hide the warning for situtations where there is a divide by zero.
         # This returns a NaN in the array, which is ignored for plotting.
         with _np.errstate(divide="ignore", invalid="ignore"):
-            return (J / (4 * _np.pi)) * (
+            return (J / (4 * PI)) * (
                 _np.log(((x + a) ** 2 + (y - b) ** 2) / ((x + a) ** 2 + (y + b) ** 2))
                 - _np.log(((x - a) ** 2 + (y - b) ** 2) / ((x - a) ** 2 + (y + b) ** 2))
             )
@@ -268,7 +267,7 @@ class Rectangle(Magnet_2D):
         a = self.a
         b = self.b
         J = self.Jy
-        return (J / (2 * _np.pi)) * (
+        return (J / (2 * PI)) * (
             _np.arctan2((2 * b * (x + a)), ((x + a) ** 2 + y ** 2 - b ** 2))
             - _np.arctan2((2 * b * (x - a)), ((x - a) ** 2 + y ** 2 - b ** 2))
         )
@@ -278,7 +277,7 @@ class Square(Rectangle):
     """Square Magnet Class
 
     Args:
-        width [float]: magnet side length [m] (defaults to 20e-3)
+        width [float]: magnet side length [m] (defaults to 20)
         Jr [float]: Remnant magnetisation [T] (defaults to 1.0)
 
     Optional Arguments:
@@ -289,7 +288,7 @@ class Square(Rectangle):
 
     mag_type = "Square"
 
-    def __init__(self, width=20e-3, Jr=1.0, **kwargs):
+    def __init__(self, width=20, Jr=1.0, **kwargs):
         super().__init__(width=width, height=width, Jr=Jr, **kwargs)
 
 
@@ -297,7 +296,7 @@ class Circle(Magnet_2D):
     """Circle Magnet Class
 
     Args:
-        radius [float]: magnet radius [m] (defaults to 10e-3)
+        radius [float]: magnet radius [m] (defaults to 10)
         Jr [float]: Remnant magnetisation [T] (defaults to 1.0)
 
     Optional Arguments:
@@ -309,7 +308,7 @@ class Circle(Magnet_2D):
 
     def __init__(
         self,
-        radius=10e-3,
+        radius=10,
         Jr=1.0,  # local magnetisation
         **kwargs,
     ):
@@ -362,8 +361,8 @@ class Circle(Magnet_2D):
         Returns:
             tuple: Bx, By magnetic field in cartesian coordinates
         """
-        from ._routines import cart2pol, vector_pol2cart
-        from ._routines2 import rotate_points_2D
+        from ..utils._conversions import cart2pol, vector_pol2cart
+        from ..utils._routines2D import rotate_points_2D
 
         if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
             xi, yi = rotate_points_2D(x, y, self.alpha_radians)
@@ -376,7 +375,7 @@ class Circle(Magnet_2D):
 
             # Convert magnetic fields from cylindrical to cartesian
             Bx, By = vector_pol2cart(Brho, Bphi, phi)
-            Bx, By = rotate_points_2D(Bx, By, 2 * _np.pi - self.alpha_radians)
+            Bx, By = rotate_points_2D(Bx, By, 2 * PI - self.alpha_radians)
             return Bx, By
 
         rho, phi = cart2pol(x - self.xc, y - self.yc)

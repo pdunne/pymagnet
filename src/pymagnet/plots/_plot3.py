@@ -12,11 +12,10 @@ TODO:
 """
 from ..magnets._magnet import Registry
 import numpy as _np
-from pymagnet import magnets as _mag
+from ..magnets import *
+from ..utils import grid2D, grid3D, B_calc_3D
 import plotly.graph_objects as _go
-
-# from plotly.subplots import _make_subplots
-PI = _np.pi
+from ..utils.global_const import PI, MAG_TOL
 
 
 class Polyhedron(Registry):
@@ -29,7 +28,7 @@ class Polyhedron(Registry):
     """
 
     # Tolerance for minimum angle needed for rotation of object
-    tol = 1e-4
+    tol = MAG_TOL
 
     def __init__(self, center, size, **kwargs):
         """Initialises a cuboid
@@ -49,7 +48,7 @@ class Polyhedron(Registry):
         self.beta_rad = _np.deg2rad(self.beta)
         self.gamma = kwargs.pop("gamma", 0.0)
         self.gamma_rad = _np.deg2rad(self.gamma)
-        self.color = kwargs.pop("color", "pink")
+        self.color = kwargs.pop("color", "white")
 
     def __repr__(self) -> str:
         return f"(center: {self.center}, size: {self.size} )"
@@ -69,7 +68,7 @@ class Polyhedron(Registry):
         Returns:
             Quaternion: total rotation quaternion
         """
-        from ..magnets._quaternion import Quaternion
+        from ..utils._quaternion import Quaternion
 
         # from functools import reduce
 
@@ -90,22 +89,6 @@ class Polyhedron(Registry):
 
         if _np.fabs(self.gamma_rad) > 1e-4:
             rotate_about_x = Quaternion.q_angle_from_axis(self.gamma_rad, (1, 0, 0))
-
-        # Generate compound rotations
-        # Order of rotation: beta  about y, alpha about z, gamma about x
-        #         q_forward = [
-        #             q for q in [rotate_about_y, rotate_about_z, rotate_about_x] if q is not None
-        #         ]
-        #
-        #         forward_rotation = reduce(lambda x, y: x * y, q_forward)
-        #
-        #         q_reverse = [
-        #             q.get_conjugate()
-        #             for q in [rotate_about_x, rotate_about_z, rotate_about_y]
-        #             if q is not None
-        #         ]
-        #
-        #         reverse_rotation = reduce(lambda x, y: x * y, q_reverse)
 
         forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
         reverse_rotation = forward_rotation.get_conjugate()
@@ -165,7 +148,7 @@ class Graphic_Cuboid(Polyhedron):
             > Polyhedron.tol
         ):
 
-            forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
+            _, reverse_rotation = self._generate_rotation_quaternions()
 
             # Generate 3xN array for quaternion rotation
 
@@ -258,7 +241,7 @@ class Graphic_Sphere(Polyhedron):
             > Polyhedron.tol
         ):
 
-            forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
+            _, reverse_rotation = self._generate_rotation_quaternions()
 
             # Generate 3xN array for quaternion rotation
 
@@ -350,7 +333,7 @@ class Graphic_Cylinder(Polyhedron):
             > Polyhedron.tol
         ):
 
-            forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
+            _, reverse_rotation = self._generate_rotation_quaternions()
 
             # Generate 3xN array for quaternion rotation
 
@@ -415,7 +398,7 @@ class Graphic_Mesh(Polyhedron):
             center (tuple, optional): [description]. Defaults to (0, 0, 0).
             size (tuple, optional): [description]. Defaults to (1, 1, 1).
         """
-        self.color = kwargs.pop("color", "C0")
+        self.color = kwargs.pop("color", "white")
         self.mesh_vectors = mesh_vectors[start:stop]
 
     def generate_vertices(self):
@@ -431,8 +414,7 @@ class Graphic_Mesh(Polyhedron):
         J = _np.take(ixr, [3 * k + 1 for k in range(p)])
         K = _np.take(ixr, [3 * k + 2 for k in range(p)])
         x, y, z = vertices.T
-        # FIXME: Color-Pink
-        trace = _go.Mesh3d(x=x, y=y, z=z, i=I, j=J, k=K, color="pink")
+        trace = _go.Mesh3d(x=x, y=y, z=z, i=I, j=J, k=K, color=self.color)
 
         # optional parameters to make it look nicer
         trace.update(
@@ -567,13 +549,13 @@ def _draw_cones(x, y, z, B, NA=10, cone_opacity=1.0):
 def _generate_all_meshes(magnet_opacity=1.0):
 
     data_objects = []
-    for magnet in _mag.Magnet_3D.instances:
-        if issubclass(magnet.__class__, _mag.Mesh):
+    for magnet in Magnet_3D.instances:
+        if issubclass(magnet.__class__, Mesh):
             mesh_data = Graphic_Mesh(magnet.mesh_vectors, magnet.start, magnet.stop)
             data_objects.append(mesh_data.generate_vertices())
 
         else:
-            if issubclass(magnet.__class__, _mag.Prism):
+            if issubclass(magnet.__class__, Prism):
                 polyhed = Graphic_Cuboid(
                     center=magnet.center(),
                     size=magnet.size(),
@@ -581,7 +563,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
                     beta=magnet.beta,
                     gamma=magnet.gamma,
                 )
-            elif issubclass(magnet.__class__, _mag.Cylinder):
+            elif issubclass(magnet.__class__, Cylinder):
                 polyhed = Graphic_Cylinder(
                     center=magnet.center(),
                     radius=magnet.radius,
@@ -591,7 +573,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
                     gamma=magnet.gamma,
                 )
 
-            elif issubclass(magnet.__class__, _mag.Sphere):
+            elif issubclass(magnet.__class__, Sphere):
                 polyhed = Graphic_Sphere(
                     center=magnet.center(),
                     radius=magnet.radius,
@@ -665,10 +647,6 @@ def surface_slice3(**kwargs):
         containing subdictionaries, whose keys are 'x','y', 'z', 'B'.
     """
 
-    import plotly.graph_objects as go
-
-    # from plotly.subplots import make_subplots
-
     reset_polyhedra()
 
     opacity = kwargs.pop("opacity", 0.1)
@@ -700,9 +678,9 @@ def surface_slice3(**kwargs):
     zlim = kwargs.pop("zlim", 30)
 
     if "xz" in planes:
-        x, z = _mag.grid2D(xlim, zlim, NP=num_points)
+        x, z = grid2D(xlim, zlim, NP=num_points)
         y = _np.array([0])
-        B = _mag.B_calc_3D(x, y, z)
+        B = B_calc_3D(x, y, z)
 
         cache["xz"] = {"x": x, "y": y, "z": z, "B": B}
 
@@ -725,9 +703,9 @@ def surface_slice3(**kwargs):
         data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
 
     if "xy" in planes:
-        x, y = _mag.grid2D(xlim, ylim, NP=num_points)
+        x, y = grid2D(xlim, ylim, NP=num_points)
         z = _np.array([0])
-        B = _mag.B_calc_3D(x, y, z)
+        B = B_calc_3D(x, y, z)
         cache["xy"] = {"x": x, "y": y, "z": z, "B": B}
 
         # Tile for plotting
@@ -749,9 +727,9 @@ def surface_slice3(**kwargs):
         data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
 
     if "yz" in planes:
-        y, z = _mag.grid2D(ylim, zlim, NP=num_points)
+        y, z = grid2D(ylim, zlim, NP=num_points)
         x = _np.array([0])
-        B = _mag.B_calc_3D(x, y, z)
+        B = B_calc_3D(x, y, z)
         cache["yz"] = {"x": x, "y": y, "z": z, "B": B}
         x = _np.tile(x, y.shape)
 
@@ -793,10 +771,6 @@ def volume_plot(**kwargs):
         containing subdictionaries, whose keys are 'x','y', 'z', 'B'.
     """
 
-    # import plotly.graph_objects as _go
-
-    # from plotly.subplots import make_subplots
-
     reset_polyhedra()
 
     opacity = kwargs.pop("opacity", 1)
@@ -824,8 +798,8 @@ def volume_plot(**kwargs):
     zlim = kwargs.pop("zlim", 30)
     colorscale = kwargs.pop("colorscale", "viridis")
 
-    x, y, z = _mag.grid3D(xlim, ylim, zlim, NP=num_points)
-    B = _mag.B_calc_3D(x, y, z)
+    x, y, z = grid3D(xlim, ylim, zlim, NP=num_points)
+    B = B_calc_3D(x, y, z)
     data_objects.append(
         _generate_volume_data(
             x,

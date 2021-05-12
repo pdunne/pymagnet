@@ -43,8 +43,8 @@ def plotly_2D_contour(x, y, Field, **kwargs):
         Field ([field vector_2D]): [field vector object]
     """
 
-    scale_x = kwargs.pop("scale_x", 1e-3)
-    scale_y = kwargs.pop("scale_y", 1e-3)
+    scale_x = kwargs.pop("scale_x", 1)
+    scale_y = kwargs.pop("scale_y", 1)
     scale_cb = kwargs.pop("scale_cb", 1)
 
     colorscale = kwargs.pop("colorscale", "viridis")
@@ -92,8 +92,8 @@ def plotly_2D_contour(x, y, Field, **kwargs):
         scaleratio=1,
     )
 
-    fig.update_xaxes(range=[x.min() * 1e3, x.max() * 1e3])
-    fig.update_yaxes(range=[y.min() * 1e3, y.max() * 1e3])
+    fig.update_xaxes(range=[x.min() * 1, x.max() * 1])
+    fig.update_yaxes(range=[y.min() * 1, y.max() * 1])
     # fig.update_yaxes(automargin=True)
 
     fig.update_layout(

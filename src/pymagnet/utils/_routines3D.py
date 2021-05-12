@@ -7,11 +7,7 @@
 __all__ = ["B_calc_3D", "grid3D"]
 
 import numpy as _np
-from ._fields import Vector3
-
-
-# TODO:
-# - Default grid size in calc_3D for x, y, z slices
+from ._point_structs import Vector3
 
 
 def grid3D(ux, uy, uz, **kwargs):
@@ -47,7 +43,7 @@ def grid3D(ux, uy, uz, **kwargs):
 
 
 def B_calc_3D(x, y, z):
-    from ._magnet3 import Magnet_3D, Sphere
+    from ..magnets import Magnet_3D
 
     """Function to calculate magnetic field due to any array of points
        It sums the magnetic field B over each component of the magnetisation
@@ -78,12 +74,9 @@ def _allocate_field_array3(x, y, z):
     """
 
     # Ensure x,y,z are numpy arrays (even of element 1)
-    if _np.isscalar(x):
-        x = _np.atleast_1d(x)
-    if _np.isscalar(y):
-        y = _np.atleast_1d(y)
-    if _np.isscalar(z):
-        z = _np.atleast_1d(z)
+    x = _np.atleast_1d(x)
+    y = _np.atleast_1d(y)
+    z = _np.atleast_1d(z)
 
     # Determine array shape:
     if _np.ndim(x) == 3:  # Volume meshgrid
@@ -164,8 +157,7 @@ def _apply_mask(magnet, field, mask):
     Returns:
         Vector3: masked magnetic field vector
     """
-    from .. import u0
-    from ._magnet3 import Prism, Cylinder, Sphere
+    from ..magnets import Prism, Cylinder, Sphere
 
     J = magnet.get_Jr()
     mask_magnet = magnet._mask_magnet

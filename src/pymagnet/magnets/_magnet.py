@@ -6,11 +6,10 @@
 
 This private module implements the registry and base magnet classes
 """
-# __all__ = ['Magnet', 'reset_magnets', 'list_magnets']
 __all__ = ["Magnet"]
 
-from typing import List, Any, Union, Type, Optional
 from weakref import WeakSet
+from ..utils.global_const import MAG_TOL
 
 
 class Registry:
@@ -39,11 +38,11 @@ class Registry:
         cls._register_instance(o)
         return o
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__()
         self.__class__._class_instances.append(self)
 
-    def __del__(self):
+    def __del__(self) -> None:
         if self in self.__class__._class_instances:
             self.__class__._class_instances.remove(self)
 
@@ -87,7 +86,7 @@ class Registry:
                 b._register_instance(instance)
 
     @classmethod
-    def reset(cls) -> None:
+    def reset(cls):
         """Removes all instances from registry."""
         for magnet in cls._class_instances:
             del magnet
@@ -107,18 +106,19 @@ class Magnet(Registry):
         Magnet: magnet base class
     """
 
-    tol = 1e-4  # tolerance for rotations, sufficient for 0.01 degree accuracy
+    tol = MAG_TOL  # tolerance for rotations, sufficient for 0.01 degree accuracy
     mag_type = "Magnet"
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs):
         super().__init__()
 
 
 def reset_magnets():
     """Returns a list of all instantiated magnets."""
     from ._magnet2 import Magnet_2D, Rectangle, Square, Circle
-    from ._poly2D import PolyMagnet
+    from ._polygon2D import PolyMagnet
     from ._magnet3 import Magnet_3D, Prism, Cube, Cylinder, Sphere
+    from ._polygon3D import Mesh
 
     magnet_classes = [
         # Registry,
@@ -133,6 +133,7 @@ def reset_magnets():
         Cube,
         Cylinder,
         Sphere,
+        Mesh,
     ]
     for cls in magnet_classes:
         cls.reset()

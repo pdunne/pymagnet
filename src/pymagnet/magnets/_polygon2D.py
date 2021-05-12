@@ -6,16 +6,11 @@ TODO:
 
 """
 import numpy as _np
-
-# from ._magnet import Magnet
 from ._magnet2 import Magnet_2D
+from ..utils.global_const import PI, MAG_TOL
 
 
-PI = _np.pi
-u0 = PI * 4e-7
-
-
-def _furlani(x, y, h, Kr=1):
+def _sheet_field(x, y, h, Kr=1):
     """[summary]
 
     Args:
@@ -249,6 +244,7 @@ class Line(object):
         self.xc = center[0]
         self.yc = center[1]
         self.K = K
+        self.tol = MAG_TOL
 
     def __str__(self):
         str = (
@@ -278,17 +274,17 @@ class Line(object):
         Returns:
             [type]: [description]
         """
-        from ._routines2 import rotate_points_2D, _get_field_array_shape2
+        from ..utils._routines2D import rotate_points_2D, _get_field_array_shape2
 
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
-        if _np.fabs(self.beta_rad) > 1e-4:
+        if _np.fabs(self.beta_rad) > self.tol:
             xt, yt = rotate_points_2D(x - self.xc, y - self.yc, 2 * PI - self.beta_rad)
-            Btx, Bty = _furlani(xt, yt, self.length / 2, self.K)
+            Btx, Bty = _sheet_field(xt, yt, self.length / 2, self.K)
             Bx, By = rotate_points_2D(Btx, Bty, self.beta_rad)
 
         else:
-            Bx, By = _furlani(x - self.xc, y - self.yc, self.length / 2, self.K)
+            Bx, By = _sheet_field(x - self.xc, y - self.yc, self.length / 2, self.K)
         return Bx, By
 
 
@@ -309,7 +305,7 @@ class PolyMagnet(Magnet_2D):
     mag_type = "PolyMagnet"
 
     def __init__(self, Jr, **kwargs) -> None:
-        from ._routines2 import rotate_points_2D
+        from ..utils._routines2D import rotate_points_2D
 
         super().__init__(Jr, **kwargs)
 
@@ -328,7 +324,7 @@ class PolyMagnet(Magnet_2D):
         self.tol = 1e-4  # sufficient for 0.01 degree accuracy
         self.area = None
 
-        # self.length = kwargs.pop("length", 10e-3)
+        # self.length = kwargs.pop("length", 10)
         self.length = kwargs.pop("length", None)
         self.apothem = kwargs.pop("apothem", None)
         self.radius = kwargs.pop("radius", None)
@@ -403,7 +399,7 @@ class PolyMagnet(Magnet_2D):
         return beta, length, center, K
 
     def calcB(self, x, y):
-        from ._routines2 import rotate_points_2D, _get_field_array_shape2
+        from ..utils._routines2D import rotate_points_2D, _get_field_array_shape2
 
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)

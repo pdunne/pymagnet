@@ -9,6 +9,7 @@ symmetry centre of a cylindrical or cuboidal magnet.
 
 """
 import numpy as _np
+from ..utils.global_const import PI
 
 __all__ = ["magnetic_field_prism_1D", "magnetic_field_cylinder_1D"]
 
@@ -25,9 +26,9 @@ def magnetic_field_prism_1D(magnet, z):
     Returns:
         [float]: Bz
     """
-    from ._magnet3 import Magnet_3D
+    from ._magnet3 import Prism
 
-    if issubclass(magnet.__class__, Magnet_3D):
+    if issubclass(magnet.__class__, Prism):
         a = magnet.a
         b = magnet.b
         c = magnet.c
@@ -48,7 +49,7 @@ def magnetic_field_prism_1D(magnet, z):
         data = _np.arctan2(zc * _np.sqrt(a_sq + b_sq + zc_sq), ab) - _np.arctan2(
             z_local * _np.sqrt(a_sq + b_sq + z_sq), ab
         )
-        data *= Jr / _np.pi
+        data *= Jr / PI
 
         return data
     else:
