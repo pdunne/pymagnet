@@ -7,7 +7,7 @@
 __all__ = ["B_calc_3D", "grid3D"]
 
 import numpy as _np
-from ._point_structs import Vector3
+from ._vector_structs import Vector3
 
 
 def grid3D(ux, uy, uz, **kwargs):

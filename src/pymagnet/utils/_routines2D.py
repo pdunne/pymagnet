@@ -5,11 +5,11 @@
 """Routines for Two Dimensional Magnet Classes
 """
 import numpy as _np
-from ._point_structs import Vector2
+from ._vector_structs import Point_Array2, Vector2
 from .global_const import u0
 
 
-def grid2D(ux, uy, **kwargs):
+def grid2D(xmax, ymax, **kwargs):
     """Grid of x,y points.
     Args:
 
@@ -17,16 +17,18 @@ def grid2D(ux, uy, **kwargs):
         uy ([float]): [y upper limit]
         lx ([float, optional]): [x lower limit defaults to -ux]
         ly ([optional]): [x lower limit defaults to -ux]
-        NP (int, optional): [number of points in each direction]. Defaults to 100.
+        num_points (int, optional): number of points in each direction. Defaults to 100.
     """
-    NP = kwargs.pop("NP", 100)
-    lx = kwargs.pop("lx", -1 * ux)
-    ly = kwargs.pop("ly", -1 * uy)
-    NPJ = NP * 1j
-    return _np.mgrid[lx:ux:NPJ, ly:uy:NPJ]
+    num_points = kwargs.pop("num_points", 100)
+    xmin = kwargs.pop("xmin", -1 * xmax)
+    ymin = kwargs.pop("ymin", -1 * ymax)
+    unit = kwargs.pop("unit", "mm")
+    NPJ = num_points * 1j
+    x, y = _np.mgrid[xmin:xmax:NPJ, ymin:ymax:NPJ]
+    return Point_Array2(x, y, unit=unit)
 
 
-def B_calc_2D(x, y):
+def B_calc_2D(Point_Array2, unit="mm"):
     """Function to calculate magnetic field due to any array of points
     It sums the magnetic field B over each component of the magnetisation
     J = mu_0 M
@@ -34,10 +36,10 @@ def B_calc_2D(x, y):
     from ..magnets import Magnet_2D
 
     # Empty data structure
-    B = _allocate_field_array2(x, y)
+    B = _allocate_field_array2(Point_Array2.x, Point_Array2.y)
 
     for magnet in Magnet_2D.instances:
-        Bx, By = magnet.calcB(x, y)
+        Bx, By = magnet.calcB(Point_Array2.x, Point_Array2.y)
         B.x += Bx
         B.y += By
 

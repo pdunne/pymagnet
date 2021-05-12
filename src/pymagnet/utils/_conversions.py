@@ -138,3 +138,64 @@ def sphere_sph2cart(Br, Btheta, theta, phi):
 
     Bz = Br * _np.cos(theta) - Btheta * _np.sin(theta)
     return Bx, By, Bz
+
+
+def get_unit_value_meter(unit):
+
+    si_prefixes = {
+        "Ym": 1e24,
+        "Zm": 1e21,
+        "Em": 1e18,
+        "Pm": 1e15,
+        "Tm": 1e12,
+        "Gm": 1e9,
+        "Mm": 1e6,
+        "km": 1e3,
+        "hm": 1e2,
+        "dam": 1e1,
+        "m": 1,
+        "dm": 1e-1,
+        "cm": 1e-2,
+        "mm": 1e-3,
+        "µm": 1e-6,
+        "um": 1e-6,
+        "nm": 1e-9,
+        "Ang": 1e-10,
+        "pm": 1e-12,
+        "fm": 1e-15,
+        "am": 1e-18,
+        "zm": 1e-21,
+        "ym": 1e-24,
+    }
+
+    return si_prefixes.get(unit, None)
+
+
+def get_unit_value_tesla(unit):
+
+    si_prefixes = {
+        "YT": 1e24,
+        "ZT": 1e21,
+        "ET": 1e18,
+        "PT": 1e15,
+        "TT": 1e12,
+        "GT": 1e9,
+        "MT": 1e6,
+        "kT": 1e3,
+        "hT": 1e2,
+        "daT": 1e1,
+        "T": 1,
+        "dT": 1e-1,
+        "cT": 1e-2,
+        "mT": 1e-3,
+        "µT": 1e-6,
+        "uT": 1e-6,
+        "nT": 1e-9,
+        "pT": 1e-12,
+        "fT": 1e-15,
+        "aT": 1e-18,
+        "zT": 1e-21,
+        "yT": 1e-24,
+    }
+
+    return si_prefixes.get(unit, None)

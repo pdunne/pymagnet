@@ -10,6 +10,7 @@ __all__ = ["Magnet"]
 
 from weakref import WeakSet
 from ..utils.global_const import MAG_TOL
+import numpy as _np
 
 
 class Registry:
@@ -111,6 +112,7 @@ class Magnet(Registry):
 
     def __init__(self, *args, **kwargs):
         super().__init__()
+        self.center = _np.array([0.0, 0.0])
 
 
 def reset_magnets():

@@ -13,7 +13,7 @@ TODO:
 import numpy as _np
 from ._magnet_base import Magnet
 from ..utils._point_structs import Point2
-from ..utils.global_const import PI
+from ..utils.global_const import MAG_TOL, PI
 
 __all__ = ["Magnet_2D", "Rectangle", "Square", "Circle"]
 
@@ -91,15 +91,16 @@ class Rectangle(Magnet_2D):
 
         self.a = width / 2
         self.b = height / 2
+        # self.size = _np.array([self.width, self.height])
 
         self.phi = kwargs.pop("phi", 90)
         self.phi_rad = _np.deg2rad(self.phi)
 
         self.Jx = _np.around(Jr * _np.cos(self.phi_rad), decimals=6)
         self.Jy = _np.around(Jr * _np.sin(self.phi_rad), decimals=6)
-        self.tol = 1e-4  # sufficient for 0.01 degree accuracy
+        self.tol = MAG_TOL  # sufficient for 0.01 degree accuracy
 
-    def size(self):
+    def get_size(self):
         """Returns magnet dimesions
 
         Returns:
@@ -157,7 +158,7 @@ class Rectangle(Magnet_2D):
             )
 
         # Calculate field due to x-component of magnetisation
-        if _np.fabs(self.Jx) > Magnet_2D.tol:
+        if _np.fabs(self.Jx / self.Jr) > Magnet_2D.tol:
             if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
 
                 # Calculate fields in local frame
@@ -172,7 +173,7 @@ class Rectangle(Magnet_2D):
                 By = self._calcBy_mag_x(x - self.xc, y - self.yc)
 
         # Calculate field due to y-component of magnetisation
-        if _np.fabs(self.Jy) > Magnet_2D.tol:
+        if _np.fabs(self.Jy / self.Jr) > Magnet_2D.tol:
             if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
 
                 Btx = self._calcBx_mag_y(xi - xci[0], yi - yci[0])
@@ -314,6 +315,7 @@ class Circle(Magnet_2D):
     ):
         super().__init__(Jr, **kwargs)
         self.radius = radius
+        self.size = _np.array([self.radius])
 
         center = kwargs.pop("center", Point2(0.0, 0.0))
 
@@ -342,6 +344,9 @@ class Circle(Magnet_2D):
             + f"Orientation: alpha {self.get_orientation()}\n"
         )
         return str
+
+    def get_size(self):
+        return self.size
 
     def get_Jr(self):
         """Returns Magnetisation components [Jr]

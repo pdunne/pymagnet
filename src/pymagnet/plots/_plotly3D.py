@@ -14,8 +14,9 @@ from ..magnets._magnet_base import Registry
 import numpy as _np
 from ..magnets import *
 from ..utils import grid2D, grid3D, B_calc_3D
-import plotly.graph_objects as _go
 from ..utils.global_const import PI, MAG_TOL
+from ..utils._conversions import get_unit_value_meter
+import plotly.graph_objects as _go
 
 
 class Polyhedron(Registry):

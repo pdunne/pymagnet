@@ -338,7 +338,7 @@ class PolyMagnet(Magnet_2D):
         )
 
         self.custom_polygon = kwargs.pop("custom_polygon", False)
-        self.center = kwargs.pop("center", (0, 0))
+        self.center = kwargs.pop("center", (0.0, 0.0))
         if self.custom_polygon:
             vertices = kwargs.pop("vertices", None)
             if vertices is None:
@@ -354,7 +354,7 @@ class PolyMagnet(Magnet_2D):
             vertices = _np.stack([x_rot, y_rot]).T + _np.array(self.center)
             self.polygon = Polygon(vertices=vertices.tolist())
         else:
-            self.center = kwargs.pop("center", (0, 0))
+            self.center = kwargs.pop("center", (0.0, 0.0))
             self.polygon = Polygon(
                 vertices=Polygon.gen_polygon(
                     self.num_sides,
@@ -366,7 +366,7 @@ class PolyMagnet(Magnet_2D):
                 ),
                 center=self.center,
             )
-
+        self.center = _np.asarray(self.center)
         self.xc = self.center[0]
         self.yc = self.center[1]
 

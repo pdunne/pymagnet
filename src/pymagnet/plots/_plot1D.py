@@ -7,6 +7,7 @@
 """
 import matplotlib.pyplot as _plt
 import numpy as _np
+from ..utils._conversions import get_unit_value_meter
 from ..magnets import (
     Cylinder,
     Prism,
@@ -15,7 +16,7 @@ from ..magnets import (
 )
 
 
-def plot_1D_field(magnet, **kwargs):
+def plot_1D_field(magnet, unit="mm", **kwargs):
     """Calculates and plots the magnetic field along the central symmetry axis
     of a cylinder or cuboid magnet, assuming the magnetic field is collinear
 
@@ -63,16 +64,18 @@ def plot_1D_field(magnet, **kwargs):
         return None
 
     _, _ = _plt.subplots()
-    _plt.xlabel(r"$z$ (mm)")
+    unit_string = "(" + unit + ")"
+    _plt.xlabel(r"$z$ " + unit_string)
     _plt.ylabel(r"$B_z$ (mT)")
-    _plt.plot(z * 1e3, Bz * 1e3, label="Cube")
-    _plt.axvline(x=-mag_boundary * 1e3 + magnet.zc * 1e3, c="blue", ls="--")
-    _plt.axvline(x=mag_boundary * 1e3 + magnet.zc * 1e3, c="red", ls="--")
+    _plt.plot(z, Bz * 1e3, label="Cube")
+    _plt.axvline(x=-mag_boundary + magnet.zc, c="blue", ls="--")
+    _plt.axvline(x=mag_boundary + magnet.zc, c="red", ls="--")
     _plt.axvline(x=0.0, c="k", ls="-")
     _plt.show()
 
     if return_data:
-        return z, Bz
+        length_scale = get_unit_value_meter(unit)
+        return z * length_scale, Bz
 
 
 def _generate_mask_1D(mag_boundary, zc, z):

@@ -10,7 +10,7 @@ Top level module for exposing the public API of usable modules
 from . import plots
 from . import magnets
 from . import utils
-from .magnets._magnet import reset_magnets, list_magnets
+from .magnets._magnet_base import reset_magnets, list_magnets
 from .utils._routines2D import grid2D, B_calc_2D
 from .utils._routines3D import grid3D, B_calc_3D
 

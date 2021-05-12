@@ -11,6 +11,7 @@ magnetic sources.
 import plotly.graph_objects as _go
 import plotly.figure_factory as _ff
 import numpy as _np
+from ..utils._conversions import get_unit_value_meter
 
 
 def _plotly_vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color):

@@ -1,13 +1,13 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-"""pymagnets.utils._fields
+"""pymagnets.utils._point_structs
 
-Private module consiting of point/vector classes and their methods.
+Private module consiting of point classes and their methods.
 """
 
-__all__ = ["Point2", "Point3", "Vector2", "Vector3"]
+__all__ = ["Point2", "Point3"]
 
 import numpy as _np
 
@@ -171,57 +171,3 @@ class Point3(Point2):
 
     def distance_to_origin(self):
         return self._norm()
-
-
-class Vector2(object):
-    """2D Field vector class consisting of numpy arrays of x and y values
-
-    Args:
-        x:
-        y:
-
-    Methods:
-        calc_norm: calculates the magnitude of the fields at every point and
-                    stores in self.n
-    """
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.n = _np.zeros_like(x)
-
-    def calc_norm(self):
-        self.n = _np.linalg.norm([self.x, self.y], axis=0)
-
-    # def __repr__(self) -> str:
-    #     return f"({self.x}, {self.y}, {self.n})"
-
-    def __str__(self) -> str:
-        return f"({self.x}, {self.y}, {self.n})"
-
-
-class Vector3(Vector2):
-    """3D Field vector class consisting of numpy arrays of x and y values
-
-    Args:
-        x:
-        y:
-        z:
-
-    Methods:
-        calc_norm: calculates the magnitude of the fields at every point and
-                    stores in self.n
-    """
-
-    def __init__(self, x, y, z):
-        super().__init__(x, y)
-        self.z = z
-
-    def calc_norm(self):
-        self.n = _np.linalg.norm([self.x, self.y, self.z], axis=0)
-
-    # def __repr__(self) -> str:
-    #     return f"({self.x}, {self.y}, {self.z}, {self.n})"
-
-    def __str__(self) -> str:
-        return f"({self.x}, {self.y}, {self.z}, {self.n})"
