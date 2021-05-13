@@ -148,7 +148,7 @@ class Vector3(Point_Array3):
     """
 
     def __init__(self, x, y, z, unit="T"):
-        super().__init__(x, y, z, unit=unit)
+        super().__init__(x, y, z)
         self.n = _np.zeros_like(x)
 
     def calc_norm(self):

@@ -25,20 +25,20 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
         or Cylinder.
 
     Kwargs:
-        NP (int): Number of points to calculate. Defaults to 101.
+        num_points (int): Number of points to calculate. Defaults to 101.
 
     Returns:
         tuple: z,Bz: arrays of z the distance from the magnet surface, and Bz the
         magnetic field.
     """
 
-    NP = kwargs.pop("NP", 101)
+    num_points = kwargs.pop("num_points", 101)
     return_data = kwargs.pop("return_data", False)
 
     if issubclass(magnet.__class__, Cylinder):
         mag_boundary = magnet.length / 2
         z = _np.linspace(
-            -2 * magnet.length + magnet.zc, 2 * magnet.length + magnet.zc, NP
+            -2 * magnet.length + magnet.zc, 2 * magnet.length + magnet.zc, num_points
         )
         Bz = magnetic_field_cylinder_1D(magnet, z)
 
@@ -50,7 +50,7 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
     elif issubclass(magnet.__class__, Prism):
         mag_boundary = magnet.height / 2
         z = _np.linspace(
-            -2 * magnet.height + magnet.zc, 2 * magnet.height + magnet.zc, NP
+            -2 * magnet.height + magnet.zc, 2 * magnet.height + magnet.zc, num_points
         )
         Bz = magnetic_field_prism_1D(magnet, z)
 

@@ -105,26 +105,24 @@ class magnet_patch(object):
         return self.patch.__str__() + self.arrow.__str__()
 
 
-def plot_2D_line(x, Field, **kwargs):
+def plot_2D_line(point_array, Field, **kwargs):
     """Line Plot of field from 2D magnet
 
     Args:
         x ([array]): [assumes in m]
         Field ([field vector_2D]): [field vector object]
     """
-    scale_x = kwargs.pop("scale_x", 1)
-    scale_cb = kwargs.pop("scale_cb", 1)
 
-    xlab = kwargs.pop("xlab", f"x (m)")
-    ylab = kwargs.pop("ylab", f"B (T)")
+    xlab = kwargs.pop("xlab", f"x ({point_array.unit})")
+    ylab = kwargs.pop("ylab", f"B ({Field.unit})")
     axis_scale = kwargs.pop("axis_scale", "equal")
 
     SAVE = kwargs.pop("save_fig", False)
 
     _, ax = _plt.subplots()
-    _plt.plot(x * scale_x, Field.n * scale_cb, label=r"$|\mathbf{B}|$")
-    _plt.plot(x * scale_x, Field.x * scale_cb, label=r"$B_x$")
-    _plt.plot(x * scale_x, Field.y * scale_cb, label=r"$B_y$")
+    _plt.plot(point_array.x, Field.n, label=r"$|\mathbf{B}|$")
+    _plt.plot(point_array.x, Field.x, label=r"$B_x$")
+    _plt.plot(point_array.x, Field.y, label=r"$B_y$")
     _plt.legend(loc="best")
     _plt.xlabel(xlab)
     _plt.ylabel(ylab)
@@ -146,10 +144,6 @@ def plot_2D_contour(point_array, Field, **kwargs):
     """
     import matplotlib.cm as _cm
     from ..magnets._polygon2D import PolyMagnet
-
-    scale_x = get_unit_value_meter(point_array.unit)
-    scale_y = get_unit_value_meter(point_array.unit)
-    scale_cb = get_unit_value_tesla(Field.unit)
 
     show_magnets = kwargs.pop("show_magnets", True)
 
@@ -178,7 +172,7 @@ def plot_2D_contour(point_array, Field, **kwargs):
         else:
             field_chosen = Field.n
 
-        finite_field = field_chosen[_np.isfinite(field_chosen)] * scale_cb
+        finite_field = field_chosen[_np.isfinite(field_chosen)]
         cmin = kwargs.pop("cmin", 0)
         cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
         num_levels = kwargs.pop("num_levels", 11)
@@ -188,7 +182,7 @@ def plot_2D_contour(point_array, Field, **kwargs):
         CS = _plt.contourf(
             point_array.x,
             point_array.y,
-            field_chosen * scale_cb,
+            field_chosen,
             levels=lev2,
             cmap=_plt.get_cmap(cmap),
             extend="max",
@@ -357,13 +351,13 @@ def _gen_circle_patch(magnet):
     # from matplotlib.transforms import Affine2D
 
     patch_tmp = patch(
-        x=(magnet.center()[0]),
-        y=(magnet.center()[1]),
+        x=(magnet.center[0]),
+        y=(magnet.center[1]),
         width=(magnet.radius),
         height=(magnet.radius),
         transform=Affine2D().rotate_deg_around(
-            (magnet.center()[0]),
-            (magnet.center()[1]),
+            (magnet.center[0]),
+            (magnet.center[1]),
             -magnet.alpha,
         ),
         type="circle",
@@ -372,8 +366,8 @@ def _gen_circle_patch(magnet):
     Jnorm = magnet.get_Jr() / _np.abs(magnet.Jr)
     offset = magnet.radius * Jnorm[0] / 2
     arrow_tmp = arrow(
-        x=(magnet.center()[0] - offset),
-        y=(magnet.center()[1]),
+        x=(magnet.center[0] - offset),
+        y=(magnet.center[1]),
         dx=(2 * offset),
         dy=(2 * 0),
         transform=Affine2D().translate(0, 0),
@@ -468,7 +462,7 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         Field ([field vector]): [field vector object]
     """
     import matplotlib.cm as _cm
-    from ..utils._point_structs import Vector2
+    from ..utils._vector_structs import Vector2
 
     scale_x = kwargs.pop("scale_x", 1)
     scale_y = kwargs.pop("scale_y", 1)

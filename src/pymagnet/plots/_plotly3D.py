@@ -675,7 +675,9 @@ def surface_slice3(**kwargs):
     zlim = kwargs.pop("zlim", 30)
 
     if "xz" in planes:
-        x, z = grid2D(xlim, zlim, NP=num_points)
+        points = grid2D(xlim, zlim, num_points=num_points)
+        x = points.x
+        z = points.y
         y = _np.array([0])
         B = B_calc_3D(x, y, z)
 
@@ -700,7 +702,9 @@ def surface_slice3(**kwargs):
         data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
 
     if "xy" in planes:
-        x, y = grid2D(xlim, ylim, NP=num_points)
+        points = grid2D(xlim, ylim, num_points=num_points)
+        x = points.x
+        y = points.y
         z = _np.array([0])
         B = B_calc_3D(x, y, z)
         cache["xy"] = {"x": x, "y": y, "z": z, "B": B}
@@ -724,7 +728,9 @@ def surface_slice3(**kwargs):
         data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
 
     if "yz" in planes:
-        y, z = grid2D(ylim, zlim, NP=num_points)
+        points = grid2D(ylim, zlim, num_points=num_points)
+        y = points.x
+        z = points.y
         x = _np.array([0])
         B = B_calc_3D(x, y, z)
         cache["yz"] = {"x": x, "y": y, "z": z, "B": B}

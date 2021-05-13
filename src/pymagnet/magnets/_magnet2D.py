@@ -42,21 +42,16 @@ class Magnet_2D(Magnet):
         self.alpha = kwargs.pop("alpha", 0.0)
         self.alpha_radians = _np.deg2rad(self.alpha)
 
-        center = kwargs.pop("center", Point2(0.0, 0.0))
+        self.center = kwargs.pop("center", _np.array([0.0, 0.0]))
+        self.center = _np.asarray(self.center)
 
-        if type(center) is tuple:
-            center = Point2(center[0], center[1])
-
-        self.xc = center.x
-        self.yc = center.y
-
-    def center(self):
+    def get_center(self):
         """Returns magnet centre
 
         Returns:
             center (ndarray): numpy array [xc, yc]
         """
-        return _np.array([self.xc, self.yc])
+        return self.center
 
     def get_orientation(self):
         """Returns magnet orientation, `alpha` in degrees
@@ -91,7 +86,6 @@ class Rectangle(Magnet_2D):
 
         self.a = width / 2
         self.b = height / 2
-        # self.size = _np.array([self.width, self.height])
 
         self.phi = kwargs.pop("phi", 90)
         self.phi_rad = _np.deg2rad(self.phi)
@@ -112,8 +106,8 @@ class Rectangle(Magnet_2D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()} (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size()}\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation: alpha {self.get_orientation()}\n"
         )
         return str
@@ -122,8 +116,8 @@ class Rectangle(Magnet_2D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()} (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size()}\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation: alpha {self.get_orientation()}\n"
         )
         return str
@@ -152,40 +146,42 @@ class Rectangle(Magnet_2D):
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
 
         if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
-            xi, yi = rotate_points_2D(x, y, self.alpha_radians)
-            xci, yci = rotate_points_2D(
-                _np.array([self.xc]), _np.array([self.yc]), self.alpha_radians
+            xi, yi = rotate_points_2D(
+                x - self.center[0], y - self.center[1], self.alpha_radians
             )
+            # xci, yci = rotate_points_2D(
+            #     self.center[0], self.center[1], self.alpha_radians
+            # )
 
         # Calculate field due to x-component of magnetisation
         if _np.fabs(self.Jx / self.Jr) > Magnet_2D.tol:
             if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
 
                 # Calculate fields in local frame
-                Btx = self._calcBx_mag_x(xi - xci[0], yi - yci[0])
-                Bty = self._calcBy_mag_x(xi - xci[0], yi - yci[0])
+                Btx = self._calcBx_mag_x(xi, yi)
+                Bty = self._calcBy_mag_x(xi, yi)
 
                 # Rotate fields to global frame
                 Bx, By = rotate_points_2D(Btx, Bty, 2 * PI - self.alpha_radians)
 
             else:
-                Bx = self._calcBx_mag_x(x - self.xc, y - self.yc)
-                By = self._calcBy_mag_x(x - self.xc, y - self.yc)
+                Bx = self._calcBx_mag_x(x - self.center[0], y - self.center[1])
+                By = self._calcBy_mag_x(x - self.center[0], y - self.center[1])
 
         # Calculate field due to y-component of magnetisation
         if _np.fabs(self.Jy / self.Jr) > Magnet_2D.tol:
             if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
 
-                Btx = self._calcBx_mag_y(xi - xci[0], yi - yci[0])
-                Bty = self._calcBy_mag_y(xi - xci[0], yi - yci[0])
+                Btx = self._calcBx_mag_y(xi, yi)
+                Bty = self._calcBy_mag_y(xi, yi)
 
                 Bxt, Byt = rotate_points_2D(Btx, Bty, 2 * PI - self.alpha_radians)
                 Bx += Bxt
                 By += Byt
             else:
 
-                Bx += self._calcBx_mag_y(x - self.xc, y - self.yc)
-                By += self._calcBy_mag_y(x - self.xc, y - self.yc)
+                Bx += self._calcBx_mag_y(x - self.center[0], y - self.center[1])
+                By += self._calcBy_mag_y(x - self.center[0], y - self.center[1])
         return Bx, By
 
     def _calcBx_mag_x(self, x, y):
@@ -315,22 +311,16 @@ class Circle(Magnet_2D):
     ):
         super().__init__(Jr, **kwargs)
         self.radius = radius
-        self.size = _np.array([self.radius])
 
-        center = kwargs.pop("center", Point2(0.0, 0.0))
-
-        if type(center) is tuple:
-            center = Point2(center[0], center[1])
-
-        self.xc = center.x
-        self.yc = center.y
+        self.center = kwargs.pop("center", _np.array([0.0, 0.0]))
+        self.center = _np.asarray(self.center)
 
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()} (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size()}\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation: alpha {self.get_orientation()}\n"
         )
         return str
@@ -339,14 +329,14 @@ class Circle(Magnet_2D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()} (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size()}\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation: alpha {self.get_orientation()}\n"
         )
         return str
 
     def get_size(self):
-        return self.size
+        return _np.array([self.radius])
 
     def get_Jr(self):
         """Returns Magnetisation components [Jr]
@@ -370,11 +360,13 @@ class Circle(Magnet_2D):
         from ..utils._routines2D import rotate_points_2D
 
         if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
-            xi, yi = rotate_points_2D(x, y, self.alpha_radians)
-            xci, yci = rotate_points_2D(
-                _np.array([self.xc]), _np.array([self.yc]), self.alpha_radians
+            xi, yi = rotate_points_2D(
+                x - self.center[0], y - self.center[1], self.alpha_radians
             )
-            rho, phi = cart2pol(xi - xci[0], yi - yci[0])
+            # xci, yci = rotate_points_2D(
+            #     _np.array([self.xc]), _np.array([self.yc]), self.alpha_radians
+            # )
+            rho, phi = cart2pol(xi, yi)
 
             Brho, Bphi = self._calcB_polar(rho, phi)
 
@@ -383,7 +375,7 @@ class Circle(Magnet_2D):
             Bx, By = rotate_points_2D(Bx, By, 2 * PI - self.alpha_radians)
             return Bx, By
 
-        rho, phi = cart2pol(x - self.xc, y - self.yc)
+        rho, phi = cart2pol(x - self.center[0], y - self.center[1])
 
         Brho, Bphi = self._calcB_polar(rho, phi)
 

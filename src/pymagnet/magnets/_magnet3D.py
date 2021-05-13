@@ -56,16 +56,16 @@ class Magnet_3D(Magnet):
 
         self.Jr = Jr
 
-        center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
+        self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
 
         self._mask_magnet = kwargs.pop("mask_magnet", False)
 
-        if type(center) is tuple:
-            center = Point3(center[0], center[1], center[2])
-
-        self.xc = center.x
-        self.yc = center.y
-        self.zc = center.z
+        # if type(self.center) is tuple:
+        #     center = Point3(self.center[0], self.center[1], self.center[2])
+        self.center = _np.asarray(self.center)
+        # self.xc = self.center[0]
+        # self.yc = self.center[1]
+        # self.zc = self.center[2]
 
         self.alpha = kwargs.pop("alpha", 0.0)  # rotation angle about z
         self.beta = kwargs.pop("beta", 0.0)  # rotation angle about y
@@ -75,13 +75,13 @@ class Magnet_3D(Magnet):
         self.beta_rad = _np.deg2rad(self.beta)
         self.gamma_rad = _np.deg2rad(self.gamma)
 
-    def center(self):
+    def get_center(self):
         """Returns magnet center
 
         Returns:
             ndarray: [center_x, center_y, center_z]
         """
-        return _np.array([self.xc, self.yc, self.zc])
+        return self.center
 
     def get_Jr(self):
         """Returns local magnetisation orientation
@@ -173,7 +173,9 @@ class Magnet_3D(Magnet):
             forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
 
             # Generate 3xN array for quaternion rotation
-            pos_vec = Quaternion._prepare_vector(x - self.xc, y - self.yc, z - self.zc)
+            pos_vec = Quaternion._prepare_vector(
+                x - self.center[0], y - self.center[1], z - self.center[2]
+            )
 
             # Rotate points
             x_rot, y_rot, z_rot = forward_rotation * pos_vec
@@ -193,9 +195,13 @@ class Magnet_3D(Magnet):
             # finally return the fields
             return Bx, By, Bz
         else:
-            B = self._calcB_local(x - self.xc, y - self.yc, z - self.zc)
+            B = self._calcB_local(
+                x - self.center[0], y - self.center[1], z - self.center[2]
+            )
 
-            xloc, yloc, zloc = _tile_arrays(x - self.xc, y - self.yc, z - self.zc)
+            xloc, yloc, zloc = _tile_arrays(
+                x - self.center[0], y - self.center[1], z - self.center[2]
+            )
             mask = self._generate_mask(xloc, yloc, zloc)
             B = _apply_mask(self, B, mask)
 
@@ -284,8 +290,8 @@ class Prism(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()} (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size()} (m)\n"
+            + f"Center {self.get_center()} \n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
@@ -294,19 +300,16 @@ class Prism(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()} (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size()} \n"
+            + f"Center {self.get_center()} \n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
-    def size(self):
-        return _np.array([self.a, self.b, self.c])
-
     def get_Jr(self):
         return _np.array([self.Jx, self.Jy, self.Jz])
 
-    def size(self):
+    def get_size(self):
         """Returns magnet dimesions
 
         Returns:
@@ -581,7 +584,7 @@ class Prism(Magnet_3D):
             y (ndarray/float): y-coordinates
             z (ndarray/float): z-coordinates
         """
-        w, d, h = self.size()
+        w, d, h = self.get_size()
         xn = -w / 2
         xp = w / 2
         yn = -d / 2

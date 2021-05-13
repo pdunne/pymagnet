@@ -10,7 +10,7 @@ import plotly.graph_objects as _go
 from numba import jit, vectorize, float64
 from math import sqrt, log, fabs, atan2
 
-from ..utils.global_const import PI, FP_CUTOFF, ALIGN_CUTOFF
+from ..utils.global_const import MAG_TOL, PI, FP_CUTOFF, ALIGN_CUTOFF
 
 
 @jit
@@ -319,7 +319,7 @@ class Mesh(Magnet_3D):
             Jr * _np.sin(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
         )
         self.Jz = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
-        self.tol = 1e-4  # sufficient for 0.01 degree accuracy
+        self.tol = MAG_TOL  # sufficient for 0.01 degree accuracy
 
         self.J = _np.array([self.Jx, self.Jy, self.Jz])
 
@@ -334,7 +334,7 @@ class Mesh(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Center {self.get_center()} (m)\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
@@ -343,7 +343,7 @@ class Mesh(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Center {self.get_center()} (m)\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
@@ -359,6 +359,9 @@ class Mesh(Magnet_3D):
         """
         # return _np.array([self.width, self.depth, self.height])
         pass
+
+    def get_center(self):
+        return self.center
 
     def calcB(self, x, y, z):
         """Calculates the magnetic field at point(s) x,y,z due to a 3D magnet
@@ -442,7 +445,7 @@ class Mesh(Magnet_3D):
     def _import_mesh(self):
         stl_mesh = mesh.Mesh.from_file(self._filename)
 
-        offset = self.center()
+        offset = self.get_center()
 
         stl_mesh.translate(offset / self.mesh_scale)
 
