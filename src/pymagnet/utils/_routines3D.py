@@ -7,7 +7,7 @@
 __all__ = ["B_calc_3D", "grid3D"]
 
 import numpy as _np
-from ._vector_structs import Vector3
+from ._vector_structs import Field3
 
 
 def grid3D(ux, uy, uz, **kwargs):
@@ -62,7 +62,7 @@ def B_calc_3D(x, y, z):
 
 
 def _allocate_field_array3(x, y, z):
-    """Allocates empty Vector3 data structure
+    """Allocates empty Field3 data structure
 
     Args:
         x (float/array): x co-ordinates
@@ -70,7 +70,7 @@ def _allocate_field_array3(x, y, z):
         z (float/array): z co-ordinates
 
     Returns:
-        Vector3: Empty data structure
+        Field3: Empty data structure
     """
 
     # Ensure x,y,z are numpy arrays (even of element 1)
@@ -80,16 +80,16 @@ def _allocate_field_array3(x, y, z):
 
     # Determine array shape:
     if _np.ndim(x) == 3:  # Volume meshgrid
-        B = Vector3(_np.zeros_like(x), _np.zeros_like(x), _np.zeros_like(x))
+        B = Field3(_np.zeros_like(x), _np.zeros_like(x), _np.zeros_like(x))
 
     elif _np.ndim(x) == 2:  # planar slice
-        B = Vector3(_np.zeros_like(x), _np.zeros_like(x), _np.zeros_like(x))
+        B = Field3(_np.zeros_like(x), _np.zeros_like(x), _np.zeros_like(x))
 
     elif _np.ndim(y) == 2:  # planar slice
-        B = Vector3(_np.zeros_like(y), _np.zeros_like(y), _np.zeros_like(y))
+        B = Field3(_np.zeros_like(y), _np.zeros_like(y), _np.zeros_like(y))
 
     else:  # line or single point
-        B = Vector3(
+        B = Field3(
             _np.zeros(max(x.size, y.size, z.size)),
             _np.zeros(max(x.size, y.size, z.size)),
             _np.zeros(max(x.size, y.size, z.size)),
@@ -151,11 +151,11 @@ def _apply_mask(magnet, field, mask):
 
     Args:
         magnet (Magnet_3D): instantiated magnet
-        field (Vector3): magnetic field vector
+        field (Field3): magnetic field vector
         mask (array): boolean array where True marks coordinates inside the magnet
 
     Returns:
-        Vector3: masked magnetic field vector
+        Field3: masked magnetic field vector
     """
     from ..magnets import Prism, Cylinder, Sphere
 

@@ -1,291 +1,12 @@
-import numpy as _np
-
 from ._magnet3D import Magnet_3D
-from ..utils._routines3D import Vector3
 from ..utils._quaternion import Quaternion
+from ..utils.global_const import MAG_TOL, PI, FP_CUTOFF, ALIGN_CUTOFF
+from ..utils._trigonometry3D import norm_plane, _rotate_triangle
 
 from stl import mesh
-import plotly.graph_objects as _go
-
+import numpy as _np
 from numba import jit, vectorize, float64
 from math import sqrt, log, fabs, atan2
-
-from ..utils.global_const import MAG_TOL, PI, FP_CUTOFF, ALIGN_CUTOFF
-
-
-@jit
-def signed_area(triangle):
-    """Calculates signed area of a triangle. Area area < 0 for clockwise ordering.
-    Assumes the triangle is in the xz plane (i.e. with the normal parallel to y).
-
-    Args:
-        triangle (ndarray): 3x3 array of vertices
-
-    Returns:
-        float: signed area
-    """
-
-    j = 1
-    NP = 3
-    area = 0.0
-
-    for i in range(NP):
-        j = j % NP
-
-        area += (triangle[j][0] - triangle[i][0]) * (triangle[j][2] + triangle[i][2])
-        j += 1
-
-    # check winding order of polygon, area < 0 for clockwise ordering of points
-    area /= 2.0
-
-    return area
-
-
-def norm_plane(vec):
-    """Calculates the normal to a triangular plane
-
-    Args:
-        vec (ndarray/list/tuple): (N,1) array
-
-    Returns:
-        ndarray: normal vector (N,)
-    """
-    norm = _np.cross(vec[1] - vec[0], vec[2] - vec[0])
-    norm = norm / _np.linalg.norm(norm)
-    return norm
-
-
-def rot_points(points, rotation_quaternion):
-    """Rotates a set of points
-
-    Args:
-        points ([type]): [description]
-        rotation_quaternion ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-    x_rot, y_rot, z_rot = rotation_quaternion * points.T
-    rot_points = _np.vstack([x_rot, y_rot, z_rot]).T
-
-    return rot_points
-
-
-def altitude(a, b, c):
-    """Gets altitude to side `a` of a triangle.
-
-    Args:
-        a (float): longest side
-        b (float): triangle side
-        c (float): triangle side
-
-    Returns:
-        float: altitude to side `a`
-    """
-    s = (a + b + c) / 2
-    return 2 * _np.sqrt(s * (s - a) * (s - b) * (s - c)) / a
-
-
-def largest_side_RA(triangle):
-    """Determines largest side of triangle
-
-    Args:
-        triangle (ndarray): triangle vertices
-
-    Returns:
-        tuple: longest_side (int), length (float), right_angle (bool)
-    """
-    A = _np.linalg.norm([triangle[1] - triangle[0]])
-    B = _np.linalg.norm([triangle[2] - triangle[1]])
-    C = _np.linalg.norm([triangle[2] - triangle[0]])
-    sides = _np.array([[0, 1, 2], [A, B, C]]).T
-    sorted_sides = sides[sides[:, 1].argsort()][::-1]
-    longest_side = int(sorted_sides[0, 0])
-
-    # Get sizes of two right angled triangles
-
-    # Get Altitude to longest side
-    alt_side = altitude(sorted_sides[0, 1], sorted_sides[1, 1], sorted_sides[2, 1])
-    left_side = sides[(longest_side + 1) % 3, 1]
-    right_side = sides[(longest_side - 1) % 3, 1]
-
-    p = _np.sqrt(left_side ** 2 - alt_side ** 2)
-    q = _np.sqrt(right_side ** 2 - alt_side ** 2)
-
-    RA_triangle1 = _np.array([p, alt_side])
-    RA_triangle2 = _np.array([q, alt_side])
-
-    return longest_side, RA_triangle1, RA_triangle2
-
-
-def check_sign(vector_1, vector_2):
-    """Returns true if the signs of all elements of two arrays are the same
-
-    Args:
-        vector_1 (ndarray): input array 2
-        vector_2 (ndarray): input array 2
-
-    Returns:
-        boolean: True if elements in two arrays have the same sign
-    """
-    sign_comp_1 = _np.fabs(vector_1 + vector_2)
-    sign_comp_2 = _np.fabs(vector_1) + _np.fabs(vector_2)
-
-    return _np.allclose(sign_comp_1, sign_comp_2, atol=1e-6)
-
-
-def return_axis_vector(triangle, longest_side):
-    vector_A = triangle[1] - triangle[0]
-    vector_A = vector_A / _np.linalg.norm(vector_A)
-
-    vector_B = triangle[2] - triangle[1]
-    vector_B = vector_B / _np.linalg.norm(vector_B)
-    vector_C = triangle[2] - triangle[0]
-    vector_C = vector_C / _np.linalg.norm(vector_C)
-
-    vec_dict = {
-        0: vector_A,
-        1: vector_B,
-        2: vector_C,
-    }
-
-    vec = vec_dict[longest_side]
-
-    return vec
-
-
-def return_z_vector(triangle, longest_side):
-    new_vertex_dict = {
-        0: [triangle[2, 0], triangle[0, 1], triangle[0, 2]],
-        1: [triangle[0, 0], triangle[0, 1], triangle[1, 2]],
-        2: [triangle[1, 0], triangle[2, 1], triangle[2, 2]],
-    }
-    new_vertex = _np.array(new_vertex_dict[longest_side])
-    vec_z_dict = {
-        0: triangle[2] - new_vertex,
-        1: triangle[0] - new_vertex,
-        2: triangle[1] - new_vertex,
-    }
-    vec_z = vec_z_dict[longest_side]
-    vec_z = vec_z / _np.linalg.norm(vec_z)
-
-    return vec_z, new_vertex
-
-
-def align_triangle_to_y(triangle, rot_axis, norm_vec):
-
-    y_axis = _np.array([0, 1, 0])
-    # null_vector = _np.array([0, 0, 0])
-
-    # if _np.all(_np.fabs([rot_axis]) < ALIGN_CUTOFF):
-    if _np.linalg.norm(rot_axis) < ALIGN_CUTOFF:
-
-        # Check if anti-parallel
-        if check_sign(y_axis, norm_vec):
-            # Parallel
-            first_rotation = Quaternion()
-            aligned_triangle = triangle
-
-        else:
-            # Anti-parallel
-            first_rotation = Quaternion.q_angle_from_axis(PI, y_axis)
-            aligned_triangle = rot_points(triangle, first_rotation)
-
-    else:
-        angle = -_np.arccos(_np.dot(y_axis, norm_vec))
-        first_rotation = Quaternion.q_angle_from_axis(angle, rot_axis)
-        aligned_triangle = rot_points(triangle, first_rotation)
-    return aligned_triangle, first_rotation
-
-
-def align_triangle_xz(triangle, longest_side):
-
-    x_axis = _np.array([1, 0, 0])
-    y_axis = _np.array([0, 1, 0])
-    z_axis = _np.array([0, 0, 1])
-
-    side_list = [0, 1, 2]
-    side_list.pop(longest_side)
-
-    vec_x = return_axis_vector(triangle, longest_side)
-    rot_axis = _np.cross(x_axis, vec_x)
-
-    # if _np.allclose(rot_axis, null_vector, atol=1e-4):
-    # if _np.all(_np.fabs([rot_axis]) < ALIGN_CUTOFF):
-    if _np.linalg.norm(rot_axis) < ALIGN_CUTOFF:
-
-        # Check if anti-parallel
-        if check_sign(x_axis, vec_x):
-            # Parallel
-            second_rotation = Quaternion()
-            tri_x = triangle
-        else:
-            # Anti-parallel
-            second_rotation = Quaternion.q_angle_from_axis(PI, y_axis)
-            tri_x = rot_points(triangle, second_rotation)
-
-    else:
-        angle = -_np.arccos(_np.dot(x_axis, vec_x))
-        second_rotation = Quaternion.q_angle_from_axis(angle, rot_axis)
-        tri_x = rot_points(triangle, second_rotation)
-
-    vec_z, new_vertex = return_z_vector(tri_x, longest_side)
-    rot_axis = _np.cross(z_axis, vec_z)
-
-    if _np.all(_np.fabs([rot_axis]) < ALIGN_CUTOFF):
-        # Check if anti-parallel
-        if check_sign(z_axis, vec_z):
-            # Parallel
-            third_rotation = Quaternion()
-        else:
-            # Anti-parallel
-            third_rotation = Quaternion.q_angle_from_axis(PI, y_axis)
-
-    else:
-        angle = -_np.arccos(_np.dot(z_axis, vec_z))
-        third_rotation = Quaternion.q_angle_from_axis(angle, rot_axis)
-
-    return second_rotation, third_rotation, new_vertex
-
-
-def _rotate_triangle(triangle, Jr):
-    """Gets rotation angles needed for transformation of coordinates from
-    global frame to a local frame
-
-    Args:
-        triangle (ndarray): vertices of a triangular plane
-
-    Returns:
-        tuple: rotated_triangle (ndarray), right_angled (Boolean), total_rotation (Quaternion)
-    """
-
-    loc_triangle = triangle - triangle[0]
-
-    y_axis = _np.array([0, 1, 0])
-
-    longest_side, RA_triangle1, RA_triangle2 = largest_side_RA(loc_triangle)
-
-    # align norm to y axis
-    norm_vec_y = norm_plane(loc_triangle)
-    rot_axis = _np.cross(y_axis, norm_vec_y)
-
-    aligned_triangle, first_rotation = align_triangle_to_y(
-        loc_triangle, rot_axis, norm_vec_y
-    )
-
-    second_rotation, third_rotation, _ = align_triangle_xz(
-        aligned_triangle, longest_side
-    )
-    total_rotation = third_rotation * second_rotation * first_rotation
-
-    rotated_triangle = rot_points(triangle, total_rotation)
-    origin_vertex = _np.argwhere(
-        rotated_triangle[:, 0] == rotated_triangle[:, 0].min()
-    ).ravel()[0]
-
-    offset = rotated_triangle[origin_vertex]
-
-    return total_rotation, rotated_triangle, offset, RA_triangle1, RA_triangle2
 
 
 class Mesh(Magnet_3D):
@@ -334,7 +55,7 @@ class Mesh(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Center {self.get_center()} (m)\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
@@ -343,7 +64,7 @@ class Mesh(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Center {self.get_center()} (m)\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
@@ -355,12 +76,16 @@ class Mesh(Magnet_3D):
         """Returns magnet dimesions
 
         Returns:
-            size[ndarray]: numpy array [width, depth, height]
+            size (ndarray): numpy array [width, depth, height]
         """
-        # return _np.array([self.width, self.depth, self.height])
         pass
 
     def get_center(self):
+        """Returns magnet center
+
+        Returns:
+            ndarray: magnet center
+        """
         return self.center
 
     def calcB(self, x, y, z):
@@ -377,20 +102,13 @@ class Mesh(Magnet_3D):
         Returns:
             tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector
         """
-        # from ._routines3 import _tile_arrays, _apply_mask
-
         B = self._calcB_local(x, y, z)
-
-        # xloc, yloc, zloc = _tile_arrays(x - self.xc, y - self.yc, z - self.zc)
-        # mask = self._generate_mask(xloc, yloc, zloc)
-        # B = _apply_mask(self, B, mask)
 
         return B.x, B.y, B.z
 
     def _calcB_local(self, x, y, z):
         """Internal magnetic field calculation methods.
-        Iterates over each component of the prism magnetised in x, y, and z
-        (in local coordinates).
+        Iterates over each triangle that makes up the mesh magnet and calculates the magnetic field
 
         Args:
             x (float/array): x co-ordinates
@@ -398,7 +116,7 @@ class Mesh(Magnet_3D):
             z (float/array): z co-ordinates
 
         Returns:
-            Vector3: Magnetic field array
+            Field3: Magnetic field array
         """
         from ..utils._routines3D import _allocate_field_array3
 
@@ -408,13 +126,11 @@ class Mesh(Magnet_3D):
         B.y = B.y.ravel()
         B.z = B.z.ravel()
 
-        for i in range(self.start, self.stop):
-            # for i in range(len(self.mesh_vectors)):
+        # for i in range(self.start, self.stop):
+        for i in range(len(self.mesh_vectors)):
             if _np.fabs(self.Jnorm[i] / self.Jr) > 1e-4:
-                # triangle = self.mesh_vectors[i].copy()
                 Btx, Bty, Btz, _, _, _ = self.calcB_triangle(
                     self.mesh_vectors[i],
-                    # 1.0,  # FIXME: Temporary change for testing values
                     self.Jnorm[i],
                     x,
                     y,
@@ -433,23 +149,21 @@ class Mesh(Magnet_3D):
         B.n = _np.linalg.norm([B.x, B.y, B.z], axis=0)
         return B
 
-    #     def _import_mesh(self):
-    #         plot_data, magnet_mesh = self.stl2mesh3d()
-    #         magnet_mesh.vectors *= self.mesh_scale
-    #
-    #         magnet_mesh.normals = magnet_mesh.normals / _np.linalg.norm(
-    #             magnet_mesh.normals, axis=1, keepdims=True
-    #         )
-    #         return plot_data, magnet_mesh
-
     def _import_mesh(self):
+        """Imports mesh from STL file
+
+        Returns:
+            tuple: mesh_vectors (ndarray of mesh triangles), mesh_normals (ndarray of normals to each triangle)
+        """
         stl_mesh = mesh.Mesh.from_file(self._filename)
 
         offset = self.get_center()
 
         stl_mesh.translate(offset / self.mesh_scale)
 
-        if _np.any(_np.fabs([self.alpha_rad, self.beta_rad, self.gamma_rad]) > 1e-5):
+        if _np.any(
+            _np.fabs([self.alpha_rad, self.beta_rad, self.gamma_rad]) > ALIGN_CUTOFF
+        ):
             mesh_rotation = Quaternion.gen_rotation_quaternion(
                 self.alpha_rad, self.beta_rad, self.gamma_rad
             )
@@ -470,7 +184,7 @@ class Mesh(Magnet_3D):
 
     def _generate_mask(self, x, y, z):
         """Generates mask of points inside a magnet
-
+        NOTE: not implemented for Mesh magnets.
         Args:
             x (ndarray/float): x-coordinates
             y (ndarray/float): y-coordinates
@@ -482,8 +196,8 @@ class Mesh(Magnet_3D):
         """Calculates the magnetic field due to a triangle
 
         Args:
-            triangle2(ndarray): Vertices of triangle
-            Jr (float): normal remnant magnetisation
+            triangle (ndarray): Vertices of a triangle
+            Jr (float): Remnant magnetisation component normal to triangle
             x (ndarray): x coordinates
             y (ndarray): y coordinates
             z (ndarray): z coordinates
@@ -506,29 +220,10 @@ class Mesh(Magnet_3D):
         # Rotate points
         x_rot, y_rot, z_rot = total_rotation * pos_vec
 
-        # FIXME:
         norm1 = norm_plane(triangle)
 
-        # if (
-        #     _np.fabs(norm1[1]) < 1e-4 > 0
-        #     and _np.all(norm1[0::2] > ALIGN_CUTOFF)
-        #     and Jr > 0
-        # ):
-        #     print("Trig 1", i)
-        # RA_triangle1, RA_triangle2 = RA_triangle2, RA_triangle1
-        #     if (
-        #         not _np.allclose(_np.fabs(norm1), [0, 0, 1], atol=1e-5)
-        #         and not _np.allclose(_np.fabs(norm1), [1, 0, 0], atol=1e-5)
-        #         and not _np.allclose(_np.fabs(norm1), [1, 0, 1], atol=1e-5)
-        #     ):
-        #         print("Trig 2")
-
-        if _np.allclose(norm1, [0, -1, 0], atol=1e-5) and Jr < 0:
-            # print("Trig 2", i)
+        if _np.allclose(norm1, [0, -1, 0], atol=ALIGN_CUTOFF) and Jr < 0:
             RA_triangle1, RA_triangle2 = RA_triangle2, RA_triangle1
-
-        # pass
-        # print(f"{i},{norm1[0]},{norm1[1]},{norm1[2]},{Jr}")
 
         Btx, Bty, Btz = self._calcB_2_triangles(
             RA_triangle1,
@@ -568,7 +263,7 @@ class Mesh(Magnet_3D):
         pos_vec_RA2 = Quaternion._prepare_vector(x - triangle1[0], y, z)
 
         x_local, y_local, z_local = rotate_about_z * pos_vec_RA2
-        # print("Jr:", Jr)
+
         # Calc RA2 Field
         Btx2, Bty2, Btz2 = self._charge_sheet(
             triangle2[0], triangle2[1], Jr, x_local + triangle2[0], y_local, z_local
@@ -598,20 +293,19 @@ class Mesh(Magnet_3D):
     [float64(float64, float64, float64, float64, float64, float64)], target="parallel"
 )
 def _charge_sheet_x(a, b, sigma, x, y, z):
-    """Calculates the magnetic field of a right angled charge sheet
+    """Calculates the x-component of the magnetic field of a right angled charge sheet
 
     Args:
-        a ([type]): [description]
-        b ([type]): [description]
-        Jr ([type]): [description]
-        x ([type]): [description]
-        y ([type]): [description]
-        z ([type]): [description]
+        a (float): triangle base
+        b (float): triangle altitude
+        sigma (float): normal magnetic charge density in tesla
+        x (ndarray): x-coordinates
+        y (ndarray): y-coordinates
+        z (ndarray): z-coordinates
 
     Returns:
-        tuple: Bx, By, Bz
+        ndarray: Bx magnetic field component
     """
-
     S_ab = 1.0 / sqrt(a ** 2 + b ** 2)
 
     r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
@@ -625,6 +319,7 @@ def _charge_sheet_x(a, b, sigma, x, y, z):
 
     t2_log = r2 + (a * ax + b * bz) * S_ab
 
+    # To avoid introduction of noise when taking log of values
     if fabs(t1_log) > FP_CUTOFF:
         t1 = log(t1_log)
     else:
@@ -640,6 +335,8 @@ def _charge_sheet_x(a, b, sigma, x, y, z):
 
     r3_minus_z = r3 - z
     r2_plus_bz = r2 + bz
+
+    # if statements are used to avoid singularities such as divide by zero and miminise noise
     if fabs(r3_minus_z) > 0.0:
         r2_over_r3 = r2_plus_bz / r3_minus_z
         if fabs(r2_over_r3) > FP_CUTOFF:
@@ -654,18 +351,18 @@ def _charge_sheet_x(a, b, sigma, x, y, z):
     [float64(float64, float64, float64, float64, float64, float64)], target="parallel"
 )
 def _charge_sheet_z(a, b, sigma, x, y, z):
-    """Calculates the magnetic field of a right angled charge sheet
+    """Calculates the z-component of the magnetic field of a right angled charge sheet
 
     Args:
-        a ([type]): [description]
-        b ([type]): [description]
-        Jr ([type]): [description]
-        x ([type]): [description]
-        y ([type]): [description]
-        z ([type]): [description]
+    a (float): triangle base
+    b (float): triangle altitude
+    sigma (float): normal magnetic charge density in tesla
+    x (ndarray): x-coordinates
+    y (ndarray): y-coordinates
+    z (ndarray): z-coordinates
 
     Returns:
-        tuple: Bx, By, Bz
+    ndarray: Bz magnetic field component
     """
 
     S_ab = 1.0 / sqrt(a ** 2 + b ** 2)
@@ -681,6 +378,7 @@ def _charge_sheet_z(a, b, sigma, x, y, z):
     t1_log = r1 - (a * x + b * z) * S_ab
     t2_log = r2 + (a * ax + b * bz) * S_ab
 
+    # To avoid introduction of noise when taking log of values
     if fabs(t1_log) > FP_CUTOFF:
         t1 = log(t1_log)
     else:
@@ -696,6 +394,7 @@ def _charge_sheet_z(a, b, sigma, x, y, z):
     r3_plus_ax = r3 + ax
     r1_minus_x = r1 - x
 
+    # if statements are used to avoid singularities such as divide by zero and miminise noise
     if fabs(r3_plus_ax) > 0.0:
         r1_over_r3 = r1_minus_x / r3_plus_ax
         if fabs(r1_over_r3) > FP_CUTOFF:
@@ -709,19 +408,21 @@ def _charge_sheet_z(a, b, sigma, x, y, z):
     [float64(float64, float64, float64, float64, float64, float64)], target="parallel"
 )
 def _charge_sheet_y(a, b, sigma, x, y, z):
-    """Calculates the magnetic field of a right angled charge sheet
+    """Calculates the y-component of the magnetic field of a right angled charge sheet
 
     Args:
-        a ([type]): [description]
-        b ([type]): [description]
-        Jr ([type]): [description]
-        x ([type]): [description]
-        y ([type]): [description]
-        z ([type]): [description]
+    a (float): triangle base
+    b (float): triangle altitude
+    sigma (float): normal magnetic charge density in tesla
+    x (ndarray): x-coordinates
+    y (ndarray): y-coordinates
+    z (ndarray): z-coordinates
 
     Returns:
-        tuple: Bx, By, Bz
+    ndarray: By magnetic field component
     """
+
+    # if statements are used to avoid singularities such as divide by zero
     if fabs(y) > FP_CUTOFF:
         a_ab = sqrt(1 + b ** 2 / a ** 2)
         r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
@@ -767,6 +468,7 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
 
         a_ab_t1 = a_ab * t1
 
+        # To avoid undefined atan2 behaviour
         if fabs(atan_y) < FP_CUTOFF and fabs(atan_x) < FP_CUTOFF:
             By = 0.0
         elif a_ab_t1 > FP_CUTOFF:

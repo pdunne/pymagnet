@@ -5,7 +5,7 @@
 """Routines for Two Dimensional Magnet Classes
 """
 import numpy as _np
-from ._vector_structs import Point_Array2, Vector2
+from ._vector_structs import Point_Array2, Field2
 from .global_const import u0
 
 
@@ -80,15 +80,15 @@ def gradB_2D(B, x, y):
     """Calculates the magnetic field gradient for a 2D field.
 
     Args:
-        B (Vector2): Magnetic field vector
+        B (Field2): Magnetic field vector
         x (float/array): x coordinates
         y (float/array): y coordinates
 
     Returns:
-        Vector2: Magnetic field gradient vector
+        Field2: Magnetic field gradient vector
     """
 
-    dB = Vector2(_np.zeros_like(B), _np.zeros_like(B))
+    dB = Field2(_np.zeros_like(B), _np.zeros_like(B))
     Nx = x.shape[0]
     Ny = x.shape[1]
     dx = (x.max() - x.min()) / Nx
@@ -102,16 +102,16 @@ def FgradB_2D(B, x, y, chi_m, c):
     """Calculates the magnetic field gradient force for a 2D field.
 
     Args:
-        B (Vector2): Magnetic field vector
+        B (Field2): Magnetic field vector
         x (float/array): x coordinates
         y (float/array): y coordinates
 
     Returns:
-        Vector2: Magnetic field gradient force vector
+        Field2: Magnetic field gradient force vector
     """
 
-    BgB = Vector2(_np.zeros_like(B.n), _np.zeros_like(B.n))
-    FB = Vector2(_np.zeros_like(B.n), _np.zeros_like(B.n))
+    BgB = Field2(_np.zeros_like(B.n), _np.zeros_like(B.n))
+    FB = Field2(_np.zeros_like(B.n), _np.zeros_like(B.n))
 
     dB = gradB_2D(B, x, y)
     BgB.n = dB.n * B.n
@@ -124,14 +124,14 @@ def FgradB_2D(B, x, y, chi_m, c):
 
 
 def _allocate_field_array2(x, y):
-    """Allocates empty Vector2 data structure
+    """Allocates empty Field2 data structure
 
     Args:
         x (float/array): x co-ordinates
         y (float/array): y co-ordinates
 
     Returns:
-        Vector2: Empty data structure
+        Field2: Empty data structure
     """
 
     # Ensure x,y,z are numpy arrays (even of element 1)
@@ -142,21 +142,21 @@ def _allocate_field_array2(x, y):
 
     # Determine array shape:
     if _np.ndim(x) == 2:  # planar slice
-        B = Vector2(_np.zeros_like(x), _np.zeros_like(x))
+        B = Field2(_np.zeros_like(x), _np.zeros_like(x))
     else:  # line or single point
-        B = Vector2(_np.zeros(max(x.size, y.size)), _np.zeros(max(x.size, y.size)))
+        B = Field2(_np.zeros(max(x.size, y.size)), _np.zeros(max(x.size, y.size)))
     return B
 
 
 def _get_field_array_shape2(x, y):
-    """Allocates empty Vector2 data structure
+    """Allocates empty Field2 data structure
 
     Args:
         x (float/array): x co-ordinates
         y (float/array): y co-ordinates
 
     Returns:
-        Vector2: Empty data structure
+        Field2: Empty data structure
     """
 
     # Ensure x,y,z are numpy arrays (even of element 1)

@@ -3,8 +3,9 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
 """Global Constants
+PI, PI/2, PI/4, µ0, and three internally used constants:
+FP_CUTOFF = 1e-8, ALIGN_CUTOFF = 1e-5, MAG_TOL = 1e-4
 """
-
 
 __all__ = ["PI", "PI_2", "PI_4", "u0", "FP_CUTOFF", "ALIGN_CUTOFF", "MAG_TOL"]
 
@@ -27,4 +28,5 @@ FP_CUTOFF = 1e-8
 ALIGN_CUTOFF = 1e-5
 
 # Tolerance for computation of fields due to each magnetisation component Jx, Jy, Jz
+# sufficient for 0.01 degree accuracy
 MAG_TOL = 1e-4

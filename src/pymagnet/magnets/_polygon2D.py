@@ -258,11 +258,20 @@ class Line(object):
     def __repr__(self):
         str = (
             f"K: {self.K} (T)\n"
-            + f"Length: {self.length} (m)\n"
-            + f"Center {self.center} (m)\n"
+            + f"Length: {self.length}\n"
+            + f"Center {self.center}\n"
             + f"Orientation: {self.beta}\n"
         )
         return str
+
+    def get_center(self):
+        """Returns line center
+
+        Returns:
+            ndarray: center (x,y)
+        """
+
+        return self.center
 
     def calcB(self, x, y):
         """[summary]
@@ -321,7 +330,7 @@ class PolyMagnet(Magnet_2D):
 
         self.Jx = _np.around(Jr * _np.cos(self.phi_rad), decimals=6)
         self.Jy = _np.around(Jr * _np.sin(self.phi_rad), decimals=6)
-        self.tol = 1e-4  # sufficient for 0.01 degree accuracy
+        self.tol = MAG_TOL
         self.area = None
 
         # self.length = kwargs.pop("length", 10)
@@ -338,7 +347,9 @@ class PolyMagnet(Magnet_2D):
         )
 
         self.custom_polygon = kwargs.pop("custom_polygon", False)
-        self.center = kwargs.pop("center", (0.0, 0.0))
+        self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
+        self.center = _np.asarray(self.center)
+
         if self.custom_polygon:
             vertices = kwargs.pop("vertices", None)
             if vertices is None:
@@ -351,10 +362,10 @@ class PolyMagnet(Magnet_2D):
                 vertices[:, 1],
                 self.theta_radians,  # + self.alpha_radians,
             )
-            vertices = _np.stack([x_rot, y_rot]).T + _np.array(self.center)
+            vertices = _np.stack([x_rot, y_rot]).T + self.center
             self.polygon = Polygon(vertices=vertices.tolist())
         else:
-            self.center = kwargs.pop("center", (0.0, 0.0))
+            # Generate Polygon
             self.polygon = Polygon(
                 vertices=Polygon.gen_polygon(
                     self.num_sides,
@@ -366,17 +377,14 @@ class PolyMagnet(Magnet_2D):
                 ),
                 center=self.center,
             )
-        self.center = _np.asarray(self.center)
-        self.xc = self.center[0]
-        self.yc = self.center[1]
 
-    def center(self):
+    def get_center(self):
         """Returns magnet centre
 
         Returns:
             center (ndarray): numpy array [xc, yc]
         """
-        return _np.array([self.xc, self.yc])
+        return self.center
 
     def get_orientation(self):
         """Returns magnet orientation, `alpha` in degrees

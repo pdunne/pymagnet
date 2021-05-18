@@ -12,7 +12,6 @@ TODO:
 """
 import numpy as _np
 from ._magnet_base import Magnet
-from ..utils._point_structs import Point2
 from ..utils.global_const import MAG_TOL, PI
 
 __all__ = ["Magnet_2D", "Rectangle", "Square", "Circle"]
@@ -28,8 +27,8 @@ class Magnet_2D(Magnet):
         **kwargs: Arbitrary keyword arguments.
 
     kwargs:
-        center [Tuple(float, float), or Point2]: center of magnet, defaults to
-        Point2(0.0, 0.0)
+        center [Tuple(float, float), or numpy array]: center of magnet, defaults to
+        numpy.array([0.0, 0.0])
     """
 
     mag_type = "Magnet_2D"
@@ -149,9 +148,6 @@ class Rectangle(Magnet_2D):
             xi, yi = rotate_points_2D(
                 x - self.center[0], y - self.center[1], self.alpha_radians
             )
-            # xci, yci = rotate_points_2D(
-            #     self.center[0], self.center[1], self.alpha_radians
-            # )
 
         # Calculate field due to x-component of magnetisation
         if _np.fabs(self.Jx / self.Jr) > Magnet_2D.tol:

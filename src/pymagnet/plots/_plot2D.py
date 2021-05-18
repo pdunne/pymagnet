@@ -12,7 +12,6 @@ import numpy as _np
 from pymagnet import magnets as _mag
 from ..utils._conversions import get_unit_value_meter, get_unit_value_tesla
 
-# from ..utils._point_structs import Point_Array2
 import matplotlib.pyplot as _plt
 from matplotlib.patches import Rectangle as _Rect
 from matplotlib.patches import Circle as _Circ
@@ -677,8 +676,8 @@ def line_plot_cylinder(magnet, **kwargs):
 
     Br, Bz = magnet._calcB_cyl(rho, z)
     _, _ = _plt.subplots()
-    _plt.plot(rho * 1, Bz, label="Bz")
-    _plt.plot(rho * 1, Br, label="Br")
+    _plt.plot(rho * 1, Bz, label=r"$B_z$")
+    _plt.plot(rho * 1, Br, label=r"$B_r$")
     _plt.legend(loc="best")
     _plt.show()
 

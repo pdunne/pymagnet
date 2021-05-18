@@ -24,12 +24,12 @@ TODO:
     * Update __str__ and __repr__ methods to show orientation and magnetisation
 """
 import numpy as _np
-from ..utils._point_structs import Point3
 from ._magnet_base import Magnet
 from ..utils._quaternion import Quaternion
-from ..utils.global_const import PI
+from ..utils.global_const import MAG_TOL, PI
 
 from numba import vectorize, float64
+from math import sqrt, fabs
 
 
 __all__ = ["Magnet_3D", "Prism", "Cube", "Cylinder", "Sphere"]
@@ -57,12 +57,12 @@ class Magnet_3D(Magnet):
         self.Jr = Jr
 
         self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
+        self.center = _np.asarray(self.center)
 
         self._mask_magnet = kwargs.pop("mask_magnet", False)
 
         # if type(self.center) is tuple:
         #     center = Point3(self.center[0], self.center[1], self.center[2])
-        self.center = _np.asarray(self.center)
         # self.xc = self.center[0]
         # self.yc = self.center[1]
         # self.zc = self.center[2]
@@ -130,10 +130,6 @@ class Magnet_3D(Magnet):
 
         # Generate compound rotations
         # Order of rotation: beta  about y, alpha about z, gamma about x
-        # q_forward = [
-        #     q for q in [rotate_about_y, rotate_about_z, rotate_about_x] if q is not None
-        # ]
-
         forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
 
         reverse_rotation = forward_rotation.get_conjugate()
@@ -284,13 +280,13 @@ class Prism(Magnet_3D):
             Jr * _np.sin(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
         )
         self.Jz = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
-        self.tol = 1e-4  # sufficient for 0.01 degree accuracy
+        self.tol = MAG_TOL  # sufficient for 0.01 degree accuracy
 
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.get_size()} (m)\n"
+            + f"Size: {self.get_size()}\n"
             + f"Center {self.get_center()} \n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
@@ -300,7 +296,7 @@ class Prism(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.get_size()} \n"
+            + f"Size: {self.get_size()}\n"
             + f"Center {self.get_center()} \n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
@@ -656,21 +652,15 @@ class Cylinder(Magnet_3D):
         self.radius = radius
         self.length = length
 
-        center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
-
-        if type(center) is tuple:
-            center = Point3(center[0], center[1], center[2])
-
-        self.xc = center.x
-        self.yc = center.y
-        self.zc = center.z
+        self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
+        self.center = _np.asarray(self.center)
 
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()} (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size()}\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
@@ -679,13 +669,13 @@ class Cylinder(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.Jr} (T)\n"
-            + f"Size: {self.size() } (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size() }\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
-    def size(self):
+    def get_size(self):
         """Returns magnet dimesions
 
         Returns:
@@ -708,14 +698,14 @@ class Cylinder(Magnet_3D):
             return data
         else:
             errtol = 0.000001
-            k = _np.abs(kc)
+            k = fabs(kc)
             pp = p
             cc = c
             ss = s
             em = 1.0
 
             if p > 0:
-                pp = _np.sqrt(p)
+                pp = sqrt(p)
                 ss = s / pp
             else:
                 f = kc * kc
@@ -723,7 +713,7 @@ class Cylinder(Magnet_3D):
                 g = 1.0 - pp
                 f = f - pp
                 q = q * (ss - c * pp)
-                pp = _np.sqrt(f / g)
+                pp = sqrt(f / g)
                 cc = (c - ss) / g
                 ss = -q / (g * g * pp) + cc * pp
             f = cc
@@ -735,8 +725,8 @@ class Cylinder(Magnet_3D):
             em = k + em
             kk = k
 
-            while _np.abs(g - k) > g * errtol:
-                k = 2 * _np.sqrt(kk)
+            while fabs(g - k) > g * errtol:
+                k = 2 * sqrt(kk)
                 kk = k * em
                 f = cc
                 cc = cc + ss / pp
@@ -774,7 +764,7 @@ class Cylinder(Magnet_3D):
         # Convert magnetic fields from cylindrical to cartesian
         # We use pol2cart because Bphi is zero
         # If Bphi was != 0, then would have to use
-        # `._routines.vector_pol2cart(Brho, Bphi, phi)`
+        # `..utils._conversions.vector_pol2cart(Brho, Bphi, phi)`
 
         B.x, B.y = pol2cart(Brho, phi)
 
@@ -885,21 +875,15 @@ class Sphere(Magnet_3D):
         # )
         # self.Jz = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
 
-        center = kwargs.pop("center", Point3(0.0, 0.0, 0.0))
-
-        if type(center) is tuple:
-            center = Point3(center[0], center[1], center[2])
-
-        self.xc = center.x
-        self.yc = center.y
-        self.zc = center.z
+        self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
+        self.center = _np.asarray(self.center)
 
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()} (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.size()}\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
@@ -908,13 +892,13 @@ class Sphere(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size() } (m)\n"
-            + f"Center {self.center()} (m)\n"
+            + f"Size: {self.get_size() }\n"
+            + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
         return str
 
-    def size(self):
+    def get_size(self):
         """Returns magnet dimesions
 
         Returns:
