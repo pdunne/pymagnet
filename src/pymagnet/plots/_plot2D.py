@@ -8,11 +8,13 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources, and 
 
 """
-import numpy as _np
-from pymagnet import magnets as _mag
+from .. import magnets as _mag
 from ..utils._conversions import get_unit_value_meter, get_unit_value_tesla
+from ..utils._vector_structs import Field2, Point_Array2
 
+import numpy as _np
 import matplotlib.pyplot as _plt
+import matplotlib.cm as _cm
 from matplotlib.patches import Rectangle as _Rect
 from matplotlib.patches import Circle as _Circ
 from matplotlib.patches import Arrow as _Arrow
@@ -104,24 +106,24 @@ class magnet_patch(object):
         return self.patch.__str__() + self.arrow.__str__()
 
 
-def plot_2D_line(point_array, Field, **kwargs):
+def plot_2D_line(point_array, field, **kwargs):
     """Line Plot of field from 2D magnet
 
     Args:
         x ([array]): [assumes in m]
-        Field ([field vector_2D]): [field vector object]
+        field ([field vector_2D]): [field vector object]
     """
 
     xlab = kwargs.pop("xlab", f"x ({point_array.unit})")
-    ylab = kwargs.pop("ylab", f"B ({Field.unit})")
+    ylab = kwargs.pop("ylab", f"B ({field.unit})")
     axis_scale = kwargs.pop("axis_scale", "equal")
 
     SAVE = kwargs.pop("save_fig", False)
 
     _, ax = _plt.subplots()
-    _plt.plot(point_array.x, Field.n, label=r"$|\mathbf{B}|$")
-    _plt.plot(point_array.x, Field.x, label=r"$B_x$")
-    _plt.plot(point_array.x, Field.y, label=r"$B_y$")
+    _plt.plot(point_array.x, field.n, label=r"$|\mathbf{B}|$")
+    _plt.plot(point_array.x, field.x, label=r"$B_x$")
+    _plt.plot(point_array.x, field.y, label=r"$B_y$")
     _plt.legend(loc="best")
     _plt.xlabel(xlab)
     _plt.ylabel(ylab)
@@ -133,13 +135,13 @@ def plot_2D_line(point_array, Field, **kwargs):
         # _plt.savefig('contour_plot.pdf', dpi=300)
 
 
-def plot_2D_contour(point_array, Field, **kwargs):
+def plot_2D_contour(point_array, field, **kwargs):
     """Contour Plot of field
 
     Args:
         x ([array]): [assumes in µm]
         y ([array]): [assumes in nm]
-        Field ([field vector_2D]): [field vector object]
+        field ([field vector_2D]): [field vector object]
     """
     import matplotlib.cm as _cm
     from ..magnets._polygon2D import PolyMagnet
@@ -148,7 +150,7 @@ def plot_2D_contour(point_array, Field, **kwargs):
 
     xlab = kwargs.pop("xlab", f"x ({point_array.unit})")
     ylab = kwargs.pop("ylab", f"y ({point_array.unit})")
-    clab = kwargs.pop("clab", f"B ({Field.unit})")
+    clab = kwargs.pop("clab", f"B ({field.unit})")
     axis_scale = kwargs.pop("axis_scale", "equal")
 
     SAVE = kwargs.pop("save_fig", False)
@@ -165,11 +167,11 @@ def plot_2D_contour(point_array, Field, **kwargs):
         NQ = kwargs.pop("vector_arrows", 11)
 
         if field_component == "x":
-            field_chosen = Field.x
+            field_chosen = field.x
         elif field_component == "y":
-            field_chosen = Field.y
+            field_chosen = field.y
         else:
-            field_chosen = Field.n
+            field_chosen = field.n
 
         finite_field = field_chosen[_np.isfinite(field_chosen)]
         cmin = kwargs.pop("cmin", 0)
@@ -206,7 +208,7 @@ def plot_2D_contour(point_array, Field, **kwargs):
 
         # Draw field vectors
         if vector_plot:
-            _vector_plot2(point_array, Field, NQ, vector_color)
+            _vector_plot2(point_array, field, NQ, vector_color)
 
     elif plot_type.lower() == "streamplot":
 
@@ -215,22 +217,22 @@ def plot_2D_contour(point_array, Field, **kwargs):
         cmap = kwargs.pop("cmap", None)
 
         if cmap is not None:
-            cmin = kwargs.pop("cmin", -round(_np.nanmean(Field.n), 1))
-            cmax = kwargs.pop("cmax", round(_np.nanmean(Field.n), 1))
+            cmin = kwargs.pop("cmin", -round(_np.nanmean(field.n), 1))
+            cmax = kwargs.pop("cmax", round(_np.nanmean(field.n), 1))
             stream_shading = kwargs.pop("stream_color", "vertical")
             norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
 
             stream_dict = {
-                "normal": Field.n.T,
-                "horizontal": Field.x.T,
-                "vertical": Field.y.T,
+                "normal": field.n.T,
+                "horizontal": field.x.T,
+                "vertical": field.y.T,
             }
 
             CS = _plt.streamplot(
                 xpl,
                 ypl,
-                Field.x.T / Field.n.T,
-                Field.y.T / Field.n.T,
+                field.x.T / field.n.T,
+                field.y.T / field.n.T,
                 color=stream_dict.get(stream_shading, "normal"),
                 density=1.2,
                 norm=norm,
@@ -244,8 +246,8 @@ def plot_2D_contour(point_array, Field, **kwargs):
             CS = _plt.streamplot(
                 xpl,
                 ypl,
-                Field.x.T / Field.n.T,
-                Field.y.T / Field.n.T,
+                field.x.T / field.n.T,
+                field.y.T / field.n.T,
                 density=1.2,
                 linewidth=0.5,
                 color=color,
@@ -428,13 +430,13 @@ def _draw_magnets2(ax):
         ax.add_patch(ar)
 
 
-def _vector_plot2(point_array, Field, NQ, vector_color):
+def _vector_plot2(point_array, field, NQ, vector_color):
     """Draws quiver plot of field vectors
 
     Args:
         x (float/array): x coordinates
         y (float/array): y coordinates
-        Field (Vector2): Field structure
+        field (Vector2): field structure
         NQ (int): Plot every NQth vector
         vector_color (string): quiver color
     """
@@ -445,68 +447,60 @@ def _vector_plot2(point_array, Field, NQ, vector_color):
             _plt.quiver(
                 point_array.x[::NSx, ::NSy],
                 point_array.y[::NSx, ::NSy],
-                Field.x[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
-                Field.y[::NSx, ::NSy] / Field.n[::NSx, ::NSy],
+                field.x[::NSx, ::NSy] / field.n[::NSx, ::NSy],
+                field.y[::NSx, ::NSy] / field.n[::NSx, ::NSy],
                 color=vector_color,
                 alpha=1,
             )
 
 
-def plot_3D_contour(x, y, z, Field, **kwargs):
+def plot_3D_contour(points, field, plane, **kwargs):
     """Contour Plot of field
 
     Args:
         x ([array]): [assumes in µm]
         y ([array]): [assumes in nm]
-        Field ([field vector]): [field vector object]
+        field ([field vector]): [field vector object]
     """
-    import matplotlib.cm as _cm
-    from ..utils._vector_structs import Vector2
+    # import matplotlib.cm as _cm
 
-    scale_x = kwargs.pop("scale_x", 1)
-    scale_y = kwargs.pop("scale_y", 1)
-    scale_z = kwargs.pop("scale_z", 1)
-    scale_cb = kwargs.pop("scale_cb", 1)
     axis_scale = kwargs.pop("axis_scale", "equal")
 
     plot_type = kwargs.pop("plot_type", "contour")
 
-    xlab = kwargs.pop("xlab", f"x (m)")
-    ylab = kwargs.pop("ylab", f"y (m)")
-    zlab = kwargs.pop("zlab", f"z (m)")
-    clab = kwargs.pop("clab", f"B (T)")
+    xlab = kwargs.pop("xlab", "x (" + points.unit + ")")
+    ylab = kwargs.pop("ylab", "y (" + points.unit + ")")
+    zlab = kwargs.pop("zlab", "z (" + points.unit + ")")
+    clab = kwargs.pop("clab", "B (" + field.unit + ")")
 
     SAVE = kwargs.pop("save_fig", False)
 
-    finite_field = Field.n[_np.isfinite(Field.n)] * scale_cb
+    finite_field = field.n[_np.isfinite(field.n)]
 
     cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
     num_levels = kwargs.pop("num_levels", 11)
 
-    if _np.ndim(z) < 2:
-        orientation = "xy"
-        stream_x = Field.x
-        stream_y = Field.y
-        plot_x = x * scale_x
-        plot_y = y * scale_y
+    if plane.lower() == "xy":
+        plot_x = points.x
+        plot_y = points.y
         plot_xlab = xlab
         plot_ylab = ylab
+        stream_x = field.x
+        stream_y = field.z
 
-    elif _np.ndim(y) < 2:
-        orientation = "xz"
-        stream_x = Field.x
-        stream_y = Field.z
-        plot_x = x * scale_x
-        plot_y = z * scale_z
+    elif plane.lower() == "xz":
+        stream_x = field.x
+        stream_y = field.z
+        plot_x = points.x
+        plot_y = points.z
         plot_xlab = xlab
         plot_ylab = zlab
 
     else:
-        orientation = "yz"
-        stream_x = Field.y
-        stream_y = Field.z
-        plot_x = y * scale_y
-        plot_y = z * scale_z
+        stream_x = field.y
+        stream_y = field.z
+        plot_x = points.y
+        plot_y = points.z
         plot_xlab = ylab
         plot_ylab = zlab
 
@@ -524,7 +518,7 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
         CS = _plt.contourf(
             plot_x,
             plot_y,
-            Field.n * scale_cb,
+            field.n,
             levels=lev2,
             cmap=_plt.get_cmap(cmap),
             extend="max",
@@ -536,7 +530,7 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
             _ = _plt.contour(
                 plot_x,
                 plot_y,
-                Field.n * scale_cb,
+                field.n,
                 vmin=cmin,
                 vmax=cmax,
                 levels=lev1,
@@ -549,9 +543,10 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
             CB = _plt.colorbar(CS)
 
         if vector_plot:
-            B_2D = Vector2(stream_x, stream_y)
+            B_2D = Field2(stream_x, stream_y, unit=field.unit)
             B_2D.calc_norm()
-            _vector_plot2(plot_x, plot_y, B_2D, NQ, 1, 1, vector_color)
+            points_2D = Point_Array2(plot_x, plot_y, unit=points.unit)
+            _vector_plot2(points_2D, B_2D, NQ, vector_color)
 
     # Generates streamplot
     elif plot_type.lower() == "streamplot":
@@ -566,7 +561,7 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
             norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
 
             stream_dict = {
-                "normal": Field.n.T,
+                "normal": field.n.T,
                 "horizontal": stream_x.T,
                 "vertical": stream_y.T,
             }
@@ -574,8 +569,8 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
             CS = _plt.streamplot(
                 xpl,
                 ypl,
-                stream_x.T / Field.n.T,
-                stream_y.T / Field.n.T,
+                stream_x.T / field.n.T,
+                stream_y.T / field.n.T,
                 color=stream_dict.get(stream_shading, "normal"),
                 density=1.2,
                 norm=norm,
@@ -588,8 +583,8 @@ def plot_3D_contour(x, y, z, Field, **kwargs):
             CS = _plt.streamplot(
                 xpl,
                 ypl,
-                stream_x.T / Field.n.T,
-                stream_y.T / Field.n.T,
+                stream_x.T / field.n.T,
+                stream_y.T / field.n.T,
                 density=1.2,
                 linewidth=0.5,
                 color=color,

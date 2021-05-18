@@ -10,14 +10,20 @@ from .global_const import u0
 
 
 def grid2D(xmax, ymax, **kwargs):
-    """Grid of x,y points.
-    Args:
+    """Generates grid of x and y points
 
-        ux ([float]): [x upper limit]
-        uy ([float]): [y upper limit]
-        lx ([float, optional]): [x lower limit defaults to -ux]
-        ly ([optional]): [x lower limit defaults to -ux]
-        num_points (int, optional): number of points in each direction. Defaults to 100.
+    Args:
+        xmax (float): maximum x value
+        ymax (float): maximum y value
+
+    Kwargs:
+        num_points (int): Number of points in each direction. Defaults to 100
+        xmin (float): minimum x value. Defaults to -xmax
+        ymin (float): minimum y value. Defaults to -ymax
+        unit (string): unit length. Defaults to 'mm'
+
+    Returns:
+        Point_Array2: array of x and y values of shape (num_points, num_points) and associated unit
     """
     num_points = kwargs.pop("num_points", 100)
     xmin = kwargs.pop("xmin", -1 * xmax)

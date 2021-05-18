@@ -12,6 +12,6 @@ from . import magnets
 from . import utils
 from .magnets._magnet_base import reset_magnets, list_magnets
 from .utils._routines2D import grid2D, B_calc_2D
-from .utils._routines3D import grid3D, B_calc_3D
+from .utils._routines3D import grid3D, slice3D, B_calc_3D
 
 __all__ = ["magnets", "plots", "utils"]

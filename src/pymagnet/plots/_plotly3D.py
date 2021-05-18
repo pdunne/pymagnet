@@ -13,9 +13,8 @@ TODO:
 from ..magnets._magnet_base import Registry
 import numpy as _np
 from ..magnets import *
-from ..utils import grid2D, grid3D, B_calc_3D
+from ..utils import grid2D, grid3D, slice3D, B_calc_3D
 from ..utils.global_const import PI, MAG_TOL
-from ..utils._conversions import get_unit_value_meter
 import plotly.graph_objects as _go
 
 
@@ -58,39 +57,39 @@ class Polyhedron(Registry):
     def __str__(self) -> str:
         return f"(center: {self.center}, size: {self.size} )"
 
-    # FIXME: Move below function into quaternion class, do the same for Magnet_3D class
-    def _generate_rotation_quaternions(self):
-        """Generates single rotation quaternion for all non-zero rotation angles,
-        which are:
-
-            alpha (float): angle in degrees around z-axis
-            beta (float): angle in degrees around y-axis
-            gamma (float): angle in degrees around x-axis
-
-        Returns:
-            Quaternion: total rotation quaternion
-        """
-        from ..utils._quaternion import Quaternion
-
-        rotate_about_x = Quaternion()
-        rotate_about_y = Quaternion()
-        rotate_about_z = Quaternion()
-
-        forward_rotation, reverse_rotation = Quaternion(), Quaternion()
-
-        if _np.fabs(self.alpha_rad) > 1e-4:
-            rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
-
-        if _np.fabs(self.beta_rad) > 1e-4:
-            rotate_about_y = Quaternion.q_angle_from_axis(self.beta_rad, (0, 1, 0))
-
-        if _np.fabs(self.gamma_rad) > 1e-4:
-            rotate_about_x = Quaternion.q_angle_from_axis(self.gamma_rad, (1, 0, 0))
-
-        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
-        reverse_rotation = forward_rotation.get_conjugate()
-
-        return forward_rotation, reverse_rotation
+    #     # FIXME: Move below function into quaternion class, do the same for Magnet_3D class
+    #     def _generate_rotation_quaternions(self):
+    #         """Generates single rotation quaternion for all non-zero rotation angles,
+    #         which are:
+    #
+    #             alpha (float): angle in degrees around z-axis
+    #             beta (float): angle in degrees around y-axis
+    #             gamma (float): angle in degrees around x-axis
+    #
+    #         Returns:
+    #             Quaternion: total rotation quaternion
+    #         """
+    #         from ..utils._quaternion import Quaternion
+    #
+    #         rotate_about_x = Quaternion()
+    #         rotate_about_y = Quaternion()
+    #         rotate_about_z = Quaternion()
+    #
+    #         forward_rotation, reverse_rotation = Quaternion(), Quaternion()
+    #
+    #         if _np.fabs(self.alpha_rad) > MAG_TOL:
+    #             rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
+    #
+    #         if _np.fabs(self.beta_rad) > MAG_TOL:
+    #             rotate_about_y = Quaternion.q_angle_from_axis(self.beta_rad, (0, 1, 0))
+    #
+    #         if _np.fabs(self.gamma_rad) > MAG_TOL:
+    #             rotate_about_x = Quaternion.q_angle_from_axis(self.gamma_rad, (1, 0, 0))
+    #
+    #         forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
+    #         reverse_rotation = forward_rotation.get_conjugate()
+    #
+    #         return forward_rotation, reverse_rotation
 
     def generate_vertices(self):
         """Generates vertices of a polyhedron
@@ -145,8 +144,11 @@ class Graphic_Cuboid(Polyhedron):
             > Polyhedron.tol
         ):
 
-            _, reverse_rotation = self._generate_rotation_quaternions()
-
+            # _, reverse_rotation = self._generate_rotation_quaternions()
+            forward_rotation = Quaternion.gen_rotation_quaternion(
+                self.alpha_rad, self.beta_rad, self.gamma_rad
+            )
+            reverse_rotation = forward_rotation.get_conjugate()
             # Generate 3xN array for quaternion rotation
 
             vertex_coords = self._gen_vertices(center=(0, 0, 0), size=self.size)
@@ -238,7 +240,11 @@ class Graphic_Sphere(Polyhedron):
             > Polyhedron.tol
         ):
 
-            _, reverse_rotation = self._generate_rotation_quaternions()
+            # _, reverse_rotation = self._generate_rotation_quaternions()
+            forward_rotation = Quaternion.gen_rotation_quaternion(
+                self.alpha_rad, self.beta_rad, self.gamma_rad
+            )
+            reverse_rotation = forward_rotation.get_conjugate()
 
             # Generate 3xN array for quaternion rotation
 
@@ -330,7 +336,11 @@ class Graphic_Cylinder(Polyhedron):
             > Polyhedron.tol
         ):
 
-            _, reverse_rotation = self._generate_rotation_quaternions()
+            # _, reverse_rotation = self._generate_rotation_quaternions()
+            forward_rotation = Quaternion.gen_rotation_quaternion(
+                self.alpha_rad, self.beta_rad, self.gamma_rad
+            )
+            reverse_rotation = forward_rotation.get_conjugate()
 
             # Generate 3xN array for quaternion rotation
 
@@ -443,10 +453,8 @@ def list_polyhedra():
 
 
 def _draw_surface_slice(
-    x,
-    y,
-    z,
-    B,
+    points,
+    field,
     colorscale="viridis",
     opacity=1.0,
     cmin=0.0,
@@ -470,16 +478,16 @@ def _draw_surface_slice(
         Surface object: plotly graphics object (Surface)
     """
     return _go.Surface(
-        x=x,
-        y=y,
-        z=z,
-        surfacecolor=B.n,
+        x=points.x,
+        y=points.y,
+        z=points.z,
+        surfacecolor=field.n,
         colorscale=colorscale,
         opacity=opacity,
         showscale=showscale,
         cmin=cmin,
         cmax=cmax,
-        colorbar=dict(title="|B| (T)"),
+        colorbar=dict(title="|B| (" + field.unit + ")"),
     )
 
 
@@ -508,7 +516,7 @@ def _draw_mesh(vertices, magnet_opacity, magnet_color):
     )
 
 
-def _draw_cones(x, y, z, B, NA=10, cone_opacity=1.0):
+def _draw_cones(points, field, NA=10, cone_opacity=1.0):
     """Generates cones object for drawing vector field in 3D in plotly.
     Arrows are white and normalised.
 
@@ -523,18 +531,18 @@ def _draw_cones(x, y, z, B, NA=10, cone_opacity=1.0):
     Returns:
         Cone object: plotly graphics object (Cone)
     """
-    x = x.reshape(B.x.shape)
-    y = y.reshape(B.y.shape)
-    z = z.reshape(B.z.shape)
-    maxB = B.n[::NA, ::NA].ravel()
+    x = points.x.reshape(field.x.shape)
+    y = points.y.reshape(field.y.shape)
+    z = points.z.reshape(field.z.shape)
+    maxB = field.n[::NA, ::NA].ravel()
     cscale = [[0, "rgb(255,255,255)"], [1, "rgb(255,255,255)"]]
     data_object = _go.Cone(
         x=x[::NA, ::NA].ravel(),
         y=y[::NA, ::NA].ravel(),
         z=z[::NA, ::NA].ravel(),
-        u=B.x[::NA, ::NA].ravel() / maxB,
-        v=B.y[::NA, ::NA].ravel() / maxB,
-        w=B.z[::NA, ::NA].ravel() / maxB,
+        u=field.x[::NA, ::NA].ravel() / maxB,
+        v=field.y[::NA, ::NA].ravel() / maxB,
+        w=field.z[::NA, ::NA].ravel() / maxB,
         sizemode="scaled",
         colorscale=cscale,
         showscale=False,
@@ -554,15 +562,15 @@ def _generate_all_meshes(magnet_opacity=1.0):
         else:
             if issubclass(magnet.__class__, Prism):
                 polyhed = Graphic_Cuboid(
-                    center=magnet.center(),
-                    size=magnet.size(),
+                    center=magnet.center,
+                    size=magnet.get_size(),
                     alpha=magnet.alpha,
                     beta=magnet.beta,
                     gamma=magnet.gamma,
                 )
             elif issubclass(magnet.__class__, Cylinder):
                 polyhed = Graphic_Cylinder(
-                    center=magnet.center(),
+                    center=magnet.center,
                     radius=magnet.radius,
                     length=magnet.length,
                     alpha=magnet.alpha,
@@ -572,7 +580,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
 
             elif issubclass(magnet.__class__, Sphere):
                 polyhed = Graphic_Sphere(
-                    center=magnet.center(),
+                    center=magnet.center,
                     radius=magnet.radius,
                     alpha=magnet.alpha,
                     beta=magnet.beta,
@@ -586,7 +594,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
     return data_objects
 
 
-def _generate_volume_data(x, y, z, B, **kwargs):
+def _generate_volume_data(points, field, **kwargs):
 
     cmin = kwargs.pop("cmin", 0.0)
     cmax = kwargs.pop("cmax", 0.5)
@@ -617,10 +625,10 @@ def _generate_volume_data(x, y, z, B, **kwargs):
             ]
 
     return _go.Volume(
-        x=x.flatten(),
-        y=y.flatten(),
-        z=z.flatten(),
-        value=B.n.flatten(),
+        x=points.x.flatten(),
+        y=points.y.flatten(),
+        z=points.z.flatten(),
+        value=field.n.flatten(),
         colorscale=colorscale,
         cmin=cmin,
         cmax=cmax,
@@ -632,7 +640,7 @@ def _generate_volume_data(x, y, z, B, **kwargs):
         surface_count=kwargs.pop("num_levels", 10),
         showscale=True,
         caps=caps,
-        colorbar=dict(title="|B| (T)"),
+        colorbar=dict(title="|B| (" + field.unit + ")"),
     )
 
 
@@ -645,6 +653,11 @@ def surface_slice3(**kwargs):
     """
 
     reset_polyhedra()
+
+    max1 = kwargs.pop("max1", 30)
+    max2 = kwargs.pop("max", 30)
+    slice_value = kwargs.pop("slice_value", 0.0)
+    unit = kwargs.pop("unit", "mm")
 
     opacity = kwargs.pop("opacity", 0.1)
     magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
@@ -670,28 +683,23 @@ def surface_slice3(**kwargs):
     if show_magnets:
         data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
 
-    xlim = kwargs.pop("xlim", 30)
-    ylim = kwargs.pop("ylim", 30)
-    zlim = kwargs.pop("zlim", 30)
+    for plane in planes:
+        points = slice3D(
+            plane=plane,
+            max1=max1,
+            max2=max2,
+            slice_value=slice_value,
+            unit=unit,
+            num_points=num_points,
+        )
+        field = B_calc_3D(points)
 
-    if "xz" in planes:
-        points = grid2D(xlim, zlim, num_points=num_points)
-        x = points.x
-        z = points.y
-        y = _np.array([0])
-        B = B_calc_3D(x, y, z)
-
-        cache["xz"] = {"x": x, "y": y, "z": z, "B": B}
-
-        # Tile for plotting
-        y = _np.tile(y, x.shape)
+        cache[plane] = {"points": points, "field": field}
 
         data_objects.append(
             _draw_surface_slice(
-                x,
-                y,
-                z,
-                B,
+                points,
+                field,
                 colorscale,
                 opacity=opacity,
                 cmin=cmin,
@@ -699,74 +707,26 @@ def surface_slice3(**kwargs):
                 showscale=True,
             )
         )
-        data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
-
-    if "xy" in planes:
-        points = grid2D(xlim, ylim, num_points=num_points)
-        x = points.x
-        y = points.y
-        z = _np.array([0])
-        B = B_calc_3D(x, y, z)
-        cache["xy"] = {"x": x, "y": y, "z": z, "B": B}
-
-        # Tile for plotting
-        z = _np.tile(z, x.shape)
-
         data_objects.append(
-            _draw_surface_slice(
-                x,
-                y,
-                z,
-                B,
-                colorscale,
-                opacity=opacity,
-                cmin=cmin,
-                cmax=cmax,
-                showscale=len(planes) < 2,
-            )
+            _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
         )
-        data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
-
-    if "yz" in planes:
-        points = grid2D(ylim, zlim, num_points=num_points)
-        y = points.x
-        z = points.y
-        x = _np.array([0])
-        B = B_calc_3D(x, y, z)
-        cache["yz"] = {"x": x, "y": y, "z": z, "B": B}
-        x = _np.tile(x, y.shape)
-
-        data_objects.append(
-            _draw_surface_slice(
-                x,
-                y,
-                z,
-                B,
-                colorscale,
-                opacity=opacity,
-                cmin=cmin,
-                cmax=cmax,
-                showscale=len(planes) < 2,
-            )
-        )
-        data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
 
     fig = _go.Figure(data=data_objects)
 
     fig.update_layout(
         scene=dict(
-            xaxis_title="x (mm)",
-            yaxis_title="y (mm)",
-            zaxis_title="z (mm)",
+            xaxis_title="x (" + points.unit + ")",
+            yaxis_title="y (" + points.unit + ")",
+            zaxis_title="z (" + points.unit + ")",
         ),
         width=700,
         margin=dict(r=20, b=10, l=10, t=10),
     )
     fig.show()
-    return cache, data_objects
+    return fig, cache, data_objects
 
 
-def volume_plot(**kwargs):
+def volume_plot(points, field, **kwargs):
     """Calculates and plots magnetic field vol
 
     Returns:
@@ -777,10 +737,11 @@ def volume_plot(**kwargs):
     reset_polyhedra()
 
     opacity = kwargs.pop("opacity", 1)
+    opacityscale = kwargs.pop("opacityscale", None)
     magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
     cone_opacity = kwargs.pop("cone_opacity", 1.0)
 
-    num_points = kwargs.pop("num_points", 30)
+    num_points = kwargs.pop("num_points", None)
 
     num_arrows = kwargs.pop("num_arrows", None)
 
@@ -791,51 +752,86 @@ def volume_plot(**kwargs):
     show_magnets = kwargs.pop("show_magnets", True)
 
     data_objects = []
-    cache = {}
 
     if show_magnets:
         data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
 
-    xlim = kwargs.pop("xlim", 30)
-    ylim = kwargs.pop("ylim", 30)
-    zlim = kwargs.pop("zlim", 30)
     colorscale = kwargs.pop("colorscale", "viridis")
 
-    x, y, z = grid3D(xlim, ylim, zlim, NP=num_points)
-    B = B_calc_3D(x, y, z)
+    #     kernel_size = 1
+    #     kernel = np.ones([kernel_size, kernel_size, kernel_size]) / kernel_size
+    #     B.n = ndimage.convolve(B.n, kernel)
+
     data_objects.append(
         _generate_volume_data(
-            x,
-            y,
-            z,
-            B,
+            points,
+            field,
             cmim=cmin,
             cmax=cmax,
             opacity=opacity,
             colorscale=colorscale,
             num_levels=num_levels,
+            opacityscale=opacityscale,
         )
     )
-
-    cache = {"x": x, "y": y, "z": z, "B": B}
 
     if num_arrows is not None:
         NA = num_points // num_arrows
         if NA < 1:
             NA = 1
-        data_objects.append(_draw_cones(x, y, z, B, NA=NA, cone_opacity=cone_opacity))
+        data_objects.append(
+            _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
+        )
 
     fig = _go.Figure(data=data_objects)
 
     fig.update_layout(
         scene=dict(
-            xaxis_title="x (m)",
-            yaxis_title="y (m)",
-            zaxis_title="z (m)",
+            xaxis_title="x (" + points.unit + ")",
+            yaxis_title="y (" + points.unit + ")",
+            zaxis_title="z (" + points.unit + ")",
         ),
         width=700,
         margin=dict(r=20, b=10, l=10, t=10),
     )
     fig.show()
 
-    return cache
+    return data_objects, fig
+
+
+def volume_calculate_plot(**kwargs):
+
+    """Calculates and plots magnetic field vol
+
+    Returns:
+        dictionary: cached data for each plane with potential keys: 'xy', 'xz', 'yz'
+        containing subdictionaries, whose keys are 'x','y', 'z', 'B'.
+    """
+
+    num_points = kwargs.pop("num_points", 30)
+
+    unit = kwargs.pop("unit", "mm")
+
+    xmax = kwargs.pop("xmax", 30)
+    ymax = kwargs.pop("ymax", 30)
+    zmax = kwargs.pop("zmax", 30)
+
+    xmin = kwargs.pop("xmin", -1 * xmax)
+    ymin = kwargs.pop("ymin", -1 * ymax)
+    zmin = kwargs.pop("zmin", -1 * zmax)
+
+    points = grid3D(
+        xmax,
+        ymax,
+        zmax,
+        num_points=num_points,
+        xmin=xmin,
+        ymin=ymin,
+        zmin=zmin,
+        unit=unit,
+    )
+    field = B_calc_3D(points)
+
+    data_objects, fig = volume_plot(points, field, num_points=num_points, **kwargs)
+
+    return fig, data_objects, points, field

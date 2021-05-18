@@ -224,7 +224,7 @@ class Magnet_3D(Magnet):
         """
         pass
 
-    def size(self):
+    def get_size(self):
         """Returns magnet dimesions
 
         Must be implemented for each magnet
@@ -824,7 +824,7 @@ class Cylinder(Magnet_3D):
             z (ndarray/float): z-coordinates
         """
 
-        radius, length = self.size()
+        radius, length = self.get_size()
         data_norm = x ** 2 + y ** 2
         zn = -length / 2
         zp = length / 2
@@ -882,7 +882,7 @@ class Sphere(Magnet_3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.size()}\n"
+            + f"Size: {self.get_size()}\n"
             + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )

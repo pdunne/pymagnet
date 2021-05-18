@@ -1,8 +1,9 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at https: // mozilla.org / MPL / 2.0 / .
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-""" Routines for creation of known magnet assemblies 
+""" INCOMPLETE Routines for creation of known magnet assemblies consisting of Halbachs, quadrupoles, and others. This does not yet work.
+
 """
 import numpy as _np
 from ..utils.global_const import PI, PI_2

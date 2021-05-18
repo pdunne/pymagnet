@@ -17,12 +17,6 @@ class Point2(object):
 
     Note that multiplication of two points is done elementwise, dot product is
     a separate method.
-
-    Args:
-        object ([type]): [description]
-
-    Examples:
-        TODO:
     """
 
     def __init__(self, x, y):
@@ -96,16 +90,11 @@ class Point2(object):
 
 
 class Point3(Point2):
-    """ "3D point class
+    """3D point class
 
     Note that multiplication of two points is done elementwise, dot product is
     a separate method.
 
-    Args:
-        object ([type]): [description]
-
-    Examples:
-        TODO:
     """
 
     def __init__(self, x, y, z):

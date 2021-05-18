@@ -4,55 +4,126 @@
 # Copyright 2021 Peter Dunne
 """Routines for Three Dimensional Magnet Classes
 """
-__all__ = ["B_calc_3D", "grid3D"]
+__all__ = ["B_calc_3D", "grid3D", "slice3D"]
 
 import numpy as _np
-from ._vector_structs import Field3
+from ._vector_structs import Field3, Point_Array3
 
 
-def grid3D(ux, uy, uz, **kwargs):
-    """Grid of x,y, z points.
+def grid3D(xmax, ymax, zmax, **kwargs):
+    """Generates grid of x and y points
+
     Args:
+        xmax (float): maximum x value
+        ymax (float): maximum y value
+        zmax (float): maximum y value
 
-        ux ([float]): [x upper limit]
-        uy ([float]): [y upper limit]
-        uz ([float]): [z upper limit]
-        lx ([float, optional]): [x lower limit defaults to -ux]
-        ly ([optional]): [y lower limit defaults to -uy]
-        lz ([optional]): [x lower limit defaults to -ux]
-        NP (int, optional): [number of points in each direction]. Defaults to 100.
+    Kwargs:
+        num_points (int): Number of points in each direction. Defaults to 100
+        xmin (float): minimum x value. Defaults to -xmax
+        ymin (float): minimum y value. Defaults to -ymax
+        unit (string): unit length. Defaults to 'mm'
 
     Returns:
-        grid: numpy array
+        Point_Array2: array of x and y values of shape (num_points, num_points) and associated unit
     """
-    NP = kwargs.pop("NP", None)
+    num_points = kwargs.pop("num_points", None)
 
-    if NP is None:
-        NPx = kwargs.pop("NPx", 100)
-        NPy = kwargs.pop("NPy", 100)
-        NPz = kwargs.pop("NPz", 100)
+    xmin = kwargs.pop("xmin", -1 * xmax)
+    ymin = kwargs.pop("ymin", -1 * ymax)
+    zmin = kwargs.pop("zmin", -1 * zmax)
+    unit = kwargs.pop("unit", "mm")
+    NPJ = num_points * 1j
+
+    if num_points is None:
+        num_points_x = kwargs.pop("num_points_x", 100)
+        num_points_y = kwargs.pop("num_points_y", 100)
+        num_points_z = kwargs.pop("num_points_z", 100)
     else:
-        NPx = NP
-        NPy = NP
-        NPz = NP
+        num_points_x = num_points
+        num_points_y = num_points
+        num_points_z = num_points
 
-    lx = kwargs.pop("lx", -1 * ux)
-    ly = kwargs.pop("ly", -1 * uy)
-    lz = kwargs.pop("lz", -1 * uz)
-    return _np.mgrid[lx : ux : NPx * 1j, ly : uy : NPy * 1j, lz : uz : NPz * 1j]
+    xmin = kwargs.pop("lx", -1 * xmax)
+    ymin = kwargs.pop("ly", -1 * ymax)
+    zmin = kwargs.pop("lz", -1 * zmax)
+    x, y, z = _np.mgrid[
+        xmin : xmax : num_points_x * 1j,
+        ymin : ymax : num_points_y * 1j,
+        zmin : zmax : num_points_z * 1j,
+    ]
+
+    return Point_Array3(x, y, z, unit=unit)
 
 
-def B_calc_3D(x, y, z):
+def slice3D(plane="xy", max1=1.0, max2=1.0, slice_value=0.0, unit="mm", **kwargs):
+    """Generates a planar slice of values
+
+    Args:
+        plane (str, optional): plane. Defaults to "xy".
+        max1 (float, optional): maximum along axis 1. Defaults to 1.0.
+        max2 (float, optional): maximum along axis 2. Defaults to 1.0.
+        slice_value (float, optional): constant value for third axis. Defaults to 0.0.
+        unit (str, optional): length scale units. Defaults to "mm".
+
+    Kwargs:
+        num_points (int): Number of points in each direction. Defaults to 100
+        min1 (float): minimum along axis 1. Defaults to -min1
+        min2 (float): minimum along axis 2. Defaults to -min2
+
+    Raises:
+        Exception: plane type, must be one of 'xy', 'xz, 'yz', or 'custom'
+
+    Returns:
+        Point_Array3: array of x, y, and z values of shape (num_points, num_points) and associated unit
+    """
+    num_points = kwargs.pop("num_points", 100)
+    min1 = kwargs.pop("xmin", -1 * max1)
+    min2 = kwargs.pop("ymin", -1 * max2)
+    NPj = num_points * 1j
+
+    if plane.lower() == "xy":
+        x, y = _np.mgrid[min1:max1:NPj, min2:max2:NPj]
+        z = _np.asarray([slice_value])
+        z = _np.tile(z, x.shape)
+
+    elif plane.lower() == "xz":
+        x, z = _np.mgrid[min1:max1:NPj, min2:max2:NPj]
+        y = _np.asarray([slice_value])
+        y = _np.tile(y, x.shape)
+
+    elif plane.lower() == "yz":
+        y, z = _np.mgrid[min1:max1:NPj, min2:max2:NPj]
+        x = _np.asarray([slice_value])
+        x = _np.tile(x, y.shape)
+
+    elif plane.lower() == "custom":
+        x = kwargs.pop("custom_x", _np.array([0.0]))
+        y = kwargs.pop("custom_y", _np.array([0.0]))
+        z = kwargs.pop("custom_z", _np.array([0.0]))
+
+    else:
+        raise Exception("plane must be one of 'xy', 'xz, 'yz', or 'custom'")
+
+    return Point_Array3(x, y, z, unit=unit)
+
+
+def B_calc_3D(points):
+    """Calculates the magnetic field at a series of points due to all `Magnet_3D`
+    instances.
+
+    Args:
+        points (Point_Array3): array of x,y,z points and associated unit
+
+    Returns:
+        Field3: array of Bx,By,Bz,|B| values and associated unit (defaults to 'T')
+    """
     from ..magnets import Magnet_3D
 
-    """Function to calculate magnetic field due to any array of points
-       It sums the magnetic field B over each component of the magnetisation
-       J = mu_0 M
-    """
-    B = _allocate_field_array3(x, y, z)
+    B = _allocate_field_array3(points.x, points.y, points.z)
 
     for magnet in Magnet_3D.instances:
-        Bx, By, Bz = magnet.calcB(x, y, z)
+        Bx, By, Bz = magnet.calcB(points.x, points.y, points.z)
         B.x += Bx.reshape(B.x.shape)
         B.y += By.reshape(B.y.shape)
         B.z += Bz.reshape(B.z.shape)

@@ -2,7 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-"""Routines for converting between coordinate systems
+"""Routines for converting between coordinate systems, between 2D cartesian and polar,
+as well as 3D cartesian, cylindrical, and spherical.
+
 """
 import numpy as _np
 
@@ -46,7 +48,7 @@ def vector_pol2cart(Brho, Bphi, phi):
         phi (float/array): azimuthal coordinates
 
     Returns:
-        tuple: x,y
+        tuple: Bx, By
     """
     Bx = Brho * _np.cos(phi) - Bphi * _np.sin(phi)
     By = Brho * _np.sin(phi) + Bphi * _np.cos(phi)
@@ -141,7 +143,17 @@ def sphere_sph2cart(Br, Btheta, theta, phi):
 
 
 def get_unit_value_meter(unit):
+    """Returns a queried metre unit as a number
+    Example:
+        factor = get_unit_value_meter('cm')
+        print(f"factor for 'cm' is {factor}")
 
+    Args:
+        unit (string): SI length unit
+
+    Returns:
+        float: SI prefix factor
+    """
     si_prefixes = {
         "Ym": 1e24,
         "Zm": 1e21,
@@ -172,6 +184,17 @@ def get_unit_value_meter(unit):
 
 
 def get_unit_value_tesla(unit):
+    """Returns a queried magnetic flux density unit as a number
+    Example:
+        factor = get_unit_value_meter('mT')
+        print(f"factor for 'mT' is {factor}")
+
+    Args:
+        unit (string): SI length unit
+
+    Returns:
+        float: SI prefix factor
+    """
 
     si_prefixes = {
         "YT": 1e24,

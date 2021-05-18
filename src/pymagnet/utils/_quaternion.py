@@ -19,7 +19,7 @@ Example:
 __all__ = ["Quaternion"]
 
 import numpy as _np
-from ..utils.global_const import FP_CUTOFF
+from ..utils.global_const import FP_CUTOFF, MAG_TOL
 
 
 class Quaternion:
@@ -94,13 +94,13 @@ class Quaternion:
 
         forward_rotation = Quaternion()
 
-        if _np.fabs(alpha_rad) > 1e-4:
+        if _np.fabs(alpha_rad) > MAG_TOL:
             rotate_about_z = Quaternion.q_angle_from_axis(alpha_rad, (0, 0, 1))
 
-        if _np.fabs(beta_rad) > 1e-4:
+        if _np.fabs(beta_rad) > MAG_TOL:
             rotate_about_y = Quaternion.q_angle_from_axis(beta_rad, (0, 1, 0))
 
-        if _np.fabs(gamma_rad) > 1e-4:
+        if _np.fabs(gamma_rad) > MAG_TOL:
             rotate_about_x = Quaternion.q_angle_from_axis(gamma_rad, (1, 0, 0))
 
         forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y

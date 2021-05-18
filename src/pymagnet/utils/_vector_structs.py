@@ -258,6 +258,7 @@ class Field3(Point_Array3):
     def __init__(self, x, y, z, unit="T"):
         super().__init__(x, y, z)
         self.n = _np.zeros_like(x)
+        self.unit = unit
 
     def calc_norm(self):
         self.n = _np.linalg.norm([self.x, self.y, self.z], axis=0)

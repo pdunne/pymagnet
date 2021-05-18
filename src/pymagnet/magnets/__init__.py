@@ -6,10 +6,6 @@
 
 This module imports the classes and functions in the private modules to create a public API.
 
-TODO:
-    * Quaternions and arbitrary rotation
-    * Conversion between cylindrical and cartesian coordinates
-
 """
 from ._magnet_base import *
 from ._magnet1D import *
