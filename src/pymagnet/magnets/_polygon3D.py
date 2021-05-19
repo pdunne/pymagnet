@@ -70,6 +70,11 @@ class Mesh(Magnet_3D):
         return str
 
     def get_Jr(self):
+        """Returns Magnetisation vector
+
+        Returns:
+            ndarray: [Jx, Jy, Jz]
+        """
         return self.J
 
     def size(self):

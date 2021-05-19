@@ -376,7 +376,7 @@ class Graphic_Cylinder(Polyhedron):
         Returns:
             ndarray: numpy array of shape (3, 8)
         """
-        rho, z = _np.mgrid[0 : 2 * PI : 20j, -length / 2 : length / 2 : 2j]
+        rho, z = _np.mgrid[0 : 2 * PI : 40j, -length / 2 : length / 2 : 2j]
         x = radius * _np.cos(rho)
         y = radius * _np.sin(rho)
 

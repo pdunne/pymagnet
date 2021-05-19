@@ -24,6 +24,7 @@ The magnetic field directly above the centre of a cylinder is:
   <figcaption>Magnetic cylinder schematic</figcaption>
 </figure>
 
+
 $$
 B_z = \frac{\mu_0 M_r}{2} \left[ \frac{z+L}{\sqrt{(z+L)^2 + R^2} } - \frac{z}{\sqrt{z^2 + R^2}} \right]
 $$
@@ -332,7 +333,7 @@ $$
 ## Composite Objects
 
 ### Polyhedra
-For polyhedra composed of right angled triangles, the magnetic field can be calculated as the sum of magnetic fields due to these elements:
+For polyhedra composed of right angled triangles, the magnetic field can be calculated as the sum of magnetic fields due to these elements[^8]:
 
 $$
 \sigma_m = \mathbf{M} \cdot \mathbf{\hat{n}}
@@ -419,3 +420,4 @@ $$ -->
 [^5]: R. Bulirsch, Numerical Calculation of Elliptic Integrals and Elliptic Functions. III, Numer. Math. 13, 305 (1969).
 [^6]: [http://dlmf.nist.gov/19.2](http://dlmf.nist.gov/19.2)
 [^7]: N. Derby and S. Olbert, Cylindrical Magnets and Ideal Solenoids, American Journal of Physics 78, 229 (2010).
+[^8]: J. Hilton, Computational Modelling of Novel Permanent Magnetic Designs, Ph.D. thesis, Trinity College (Dublin, Ireland), School of Physics, (2005).

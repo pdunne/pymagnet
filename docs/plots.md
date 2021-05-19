@@ -1,6 +1,7 @@
 # Plots module
 
 ::: pymagnet.plots
-::: pymagnet.plots._plot1
-::: pymagnet.plots._plot2
-::: pymagnet.plots._plot3
+::: pymagnet.plots._plot1D
+::: pymagnet.plots._plot2D
+::: pymagnet.plots._plotly2D
+::: pymagnet.plots._plotly3D

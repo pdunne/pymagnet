@@ -5,6 +5,7 @@ theme:
 
 nav:
   - Home: index.md
+  - Examples: examples.md
   - Magnets: equations.md
   - Methods: methods.md
   - Transforms: transforms.md
@@ -12,7 +13,7 @@ nav:
       - pymagnet: pymagnet.md
       - magnets: magnets.md
       - plots: plots.md
-      - quaternions: quaternions.md
+      - utils: utils.md
 
 plugins:
   - search

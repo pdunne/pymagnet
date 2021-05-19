@@ -21,12 +21,14 @@ requirements:
     - pip
     - plotly
     - python
+    - numpy-stl
   run:
     - matplotlib
     - numba
     - numpy
     - plotly
     - python
+    - numpy-stl
 
 # test:
 #   imports:
