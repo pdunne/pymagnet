@@ -48,16 +48,16 @@ simple magnets:
 * 3D: cubes, prisms (cuboids), cylinders, spheres
 
 <figure>
-  <img src="img/3d_example_slice_1.png" width=400/>
-  <img src="img/3d_example_volume_2.png" width=400/>
+  <img src="docs/img/3d_example_slice_1.png" width=400/>
+  <img src="docs/img/3d_example_volume_2.png" width=400/>
   <figcaption>Cylinder Plots</figcaption>
 </figure>
 
 * 2D: rectangles, squares, circles
 
 <figure>
-  <img src="img/2d_circle_contour.png" width=400/>
-  <img src="img/2d_circle_stream.png" width=400/>
+  <img src="docs/img/2d_circle_contour.png" width=400/>
+  <img src="docs/img/2d_circle_stream.png" width=400/>
   <figcaption>2D contour plot and streamplot of a long bipolar rod</figcaption>
 </figure>
 
