@@ -6,30 +6,34 @@ theme:
 nav:
   - Home: index.md
   - Examples: examples.md
-  - Magnets: equations.md
-  - Methods: methods.md
-  - Transforms: transforms.md
+  - Magnets: magnets/magnets_overview.md
+  - Plots: plots/plots_overview.md
+  - Magnet Details:
+      - 1D Methods: magnets/magnets_1d.md
+      - 2D Magnets: magnets/magnets_2d.md
+      - 3D Magnets: magnets/magnets_3d.md
+      - Composite Magnets: magnets/composite_magnets.md
+  - Plot Details:
+      - 2D Plots: plots/plots_2d.md
+      - 3D Plots: plots/plots_3d.md
+  - Methods:
+      - Class Methods: methods/methods.md
+      - Transforms: methods/transforms.md
   - Code Reference:
-      - pymagnet: pymagnet.md
-      - magnets: magnets.md
-      - plots: plots.md
-      - utils: utils.md
+      - pymagnet: code_reference/pymagnet.md
+      - magnets: code_reference/magnets.md
+      - plots: code_reference/plots.md
+      - utils: code_reference/utils.md
 
 plugins:
   - search
   - autorefs
   - mkdocstrings:
-      # watch:
-      # - src/pymagnet:
       handlers:
         python:
           setup_commands:
             - import sys
             - sys.path.append("src")
-  # - bibtex:
-  #     bib_file: "docs/refs.bib"
-  #     cite_style: "pandoc"
-  # csl_file: "docs/physical-review-letters.csl"
 
 markdown_extensions:
   - admonition
