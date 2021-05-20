@@ -1,4 +1,4 @@
-# Magnet Overview
+# Magnets Overview
 
 ## 2D Magnets
 

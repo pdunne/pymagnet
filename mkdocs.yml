@@ -6,14 +6,14 @@ theme:
 nav:
   - Home: index.md
   - Examples: examples.md
-  - Magnets: magnets/magnets_overview.md
-  - Plots: plots/plots_overview.md
-  - Magnet Details:
+  - Magnets:
+      - Overview: magnets/magnets_overview.md
       - 1D Methods: magnets/magnets_1d.md
       - 2D Magnets: magnets/magnets_2d.md
       - 3D Magnets: magnets/magnets_3d.md
       - Composite Magnets: magnets/composite_magnets.md
-  - Plot Details:
+  - Plots:
+      - Overview: plots/plots_overview.md
       - 2D Plots: plots/plots_2d.md
       - 3D Plots: plots/plots_3d.md
   - Methods:
