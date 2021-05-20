@@ -11,11 +11,14 @@ TODO:
     * Update __str__ and __repr__ for polyhedra
 """
 from ..magnets._magnet_base import Registry
-import numpy as _np
 from ..magnets import *
 from ..utils import grid2D, grid3D, slice3D, B_calc_3D
 from ..utils.global_const import PI, MAG_TOL
+import numpy as _np
 import plotly.graph_objects as _go
+
+
+__all__ = ["surface_slice3", "volume_plot", "volume_calculate_plot"]
 
 
 class Polyhedron(Registry):
@@ -57,7 +60,7 @@ class Polyhedron(Registry):
     def __str__(self) -> str:
         return f"(center: {self.center}, size: {self.size} )"
 
-    #     # FIXME: Move below function into quaternion class, do the same for Magnet_3D class
+    #     # FIXME: Move below function into quaternion class, do the same for Magnet3D class
     #     def _generate_rotation_quaternions(self):
     #         """Generates single rotation quaternion for all non-zero rotation angles,
     #         which are:
@@ -100,25 +103,20 @@ class Polyhedron(Registry):
 
 
 class Graphic_Cuboid(Polyhedron):
-    """Generates
-
-    Args:
-        center (tuple, optional): Cuboid center. Defaults to (0, 0, 0).
-        size (tuple, optional): Size of cuboid. Defaults to (1, 1, 1).
-
-    Kwargs:
-        alpha (float):
-        beta (float):
-        gamma (float):
-        color (float):
-    """
+    """Generates Cuboid for plotly rendering"""
 
     def __init__(self, center=(0, 0, 0), size=(1, 1, 1), **kwargs):
         """Init method
 
         Args:
-            center (tuple, optional): [description]. Defaults to (0, 0, 0).
-            size (tuple, optional): [description]. Defaults to (1, 1, 1).
+            center (tuple, optional): Cuboid center. Defaults to (0, 0, 0).
+            size (tuple, optional): Size of cuboid. Defaults to (1, 1, 1).
+
+        Kwargs:
+            alpha (float): rotation wit respect to ? axis. Defaults to 0.0.
+            beta (float): rotation wit respect to ? axis. Defaults to 0.0.
+            gamma (float): rotation wit respect to ? axis. Defaults to 0.0.
+            color (str): color. Defaults to 'w'
         """
         super().__init__(center, size, **kwargs)
 
@@ -196,25 +194,20 @@ class Graphic_Cuboid(Polyhedron):
 
 
 class Graphic_Sphere(Polyhedron):
-    """Generates vertices for a sphere
-
-    Args:
-        center (tuple, optional): [description]. Defaults to (0, 0, 0).
-        radius (float, optional): [description]. Defaults to 1.
-
-    Kwargs:
-        alpha (float):
-        beta (float):
-        gamma (float):
-        color (float):
-    """
+    """Generates vertices for a sphere for plotly rendering"""
 
     def __init__(self, center=(0, 0, 0), radius=1, **kwargs):
         """Init method
 
         Args:
             center (tuple, optional): [description]. Defaults to (0, 0, 0).
-            size (float, optional): [description]. Defaults to (1).
+            radius (float, optional): [description]. Defaults to 1.
+
+        Kwargs:
+            alpha (float): rotation wit respect to ? axis. Defaults to 0.0.
+            beta (float): rotation wit respect to ? axis. Defaults to 0.0.
+            gamma (float): rotation wit respect to ? axis. Defaults to 0.0.
+            color (str): color. Defaults to 'w'
         """
         super().__init__(center, size=(radius, radius, radius), **kwargs)
         self.radius = radius
@@ -290,26 +283,21 @@ class Graphic_Sphere(Polyhedron):
 
 
 class Graphic_Cylinder(Polyhedron):
-    """Generates vertices for a Cylinder
-
-    Args:
-        center (tuple, optional): [description]. Defaults to (0, 0, 0).
-        radius (float, optional): [description]. Defaults to 1.
-        length (float, optional): [description]. Defaults to 1.
-
-    Kwargs:
-        alpha (float):
-        beta (float):
-        gamma (float):
-        color (float):
-    """
+    """Generates vertices for a Cylinder for plotly rendering"""
 
     def __init__(self, center=(0, 0, 0), radius=1, length=1, **kwargs):
         """Init method
 
         Args:
             center (tuple, optional): [description]. Defaults to (0, 0, 0).
-            size (float, optional): [description]. Defaults to (1).
+            radius (float, optional): [description]. Defaults to 1.
+            length (float, optional): [description]. Defaults to 1.
+
+        Kwargs:
+            alpha (float): rotation wit respect to ? axis. Defaults to 0.0.
+            beta (float): rotation wit respect to ? axis. Defaults to 0.0.
+            gamma (float): rotation wit respect to ? axis. Defaults to 0.0.
+            color (str): color. Defaults to 'w'
         """
         super().__init__(center, size=(radius, radius, length), **kwargs)
         self.radius = radius
@@ -388,27 +376,26 @@ class Graphic_Cylinder(Polyhedron):
 
 
 class Graphic_Mesh(Polyhedron):
-    """Generates
+    """Generates Mesh from STL file for plotly rendering"""
 
-    Args:
-        center (tuple, optional): Cuboid center. Defaults to (0, 0, 0).
-        size (tuple, optional): Size of cuboid. Defaults to (1, 1, 1).
-
-    Kwargs:
-        color (float):
-    """
-
-    def __init__(self, mesh_vectors, start, stop, **kwargs):
-        """Init method
+    def __init__(self, mesh_vectors, **kwargs):
+        """Init Method
 
         Args:
-            center (tuple, optional): [description]. Defaults to (0, 0, 0).
-            size (tuple, optional): [description]. Defaults to (1, 1, 1).
+            mesh_vectors (ndarray): array of mesh vectors
+
+        Kwargs:
+            color (str): magnet color. Defaults to 'w'.
         """
         self.color = kwargs.pop("color", "white")
-        self.mesh_vectors = mesh_vectors[start:stop]
+        self.mesh_vectors = mesh_vectors
 
     def generate_vertices(self):
+        """Generates vertices from STL file
+
+        Returns:
+            dict: Dictionary of rendering properties for plotly
+        """
         # return super().generate_vertices()
         p, q, r = self.mesh_vectors.shape  # (p, 3, 3)
 
@@ -461,21 +448,19 @@ def _draw_surface_slice(
     cmax=1.0,
     showscale=True,
 ):
-    """Generates plotly surface object for plotting.
+    """Generates plotly surface object for plotting
 
     Args:
-        x (ndarray): x-coordinates
-        y (ndarray): y-coordinates
-        z (ndarray): z-coordinates
-        B (Vector3): Magnetic field vector
+        points (Point_Array3): coordinates
+        field (Field3): Magnetic field vectors
         colorscale (str, optional): colormap. Defaults to "viridis".
-        opacity (float, optional): surface opacity. Defaults to 1.0.
-        cmin (float, optional): color scale lower limit. Defaults to 0.0.
-        cmax (float, optional): color scale upper limit. Defaults to 1.0.
+        opacity (float, optional): Opacity of slice. Defaults to 1.0.
+        cmin (float, optional): minimum color scale value. Defaults to 0.0.
+        cmax (float, optional): maximum color scale value. Defaults to 1.0.
         showscale (bool, optional): show colorbar. Defaults to True.
 
     Returns:
-        Surface object: plotly graphics object (Surface)
+        dict: plotly surface data structure for plotting
     """
     return _go.Surface(
         x=points.x,
@@ -521,15 +506,13 @@ def _draw_cones(points, field, NA=10, cone_opacity=1.0):
     Arrows are white and normalised.
 
     Args:
-        x (ndarray): x-coordinates
-        y (ndarray): y-coordinates
-        z (ndarray): z-coordinates
-        B (Vector3): Magnetic field vectors for plotting
-        NA (int, optional): step size, number of elements to skip for drawing cones. Defaults to 10.
-        cone_opacity (float, optional): Cone opacity. Defaults to 1.0.
+        points (Point_Array3): coordinates
+        field (Field3): Magnetic field vector
+        NA (int, optional): Number of cones per axis. Defaults to 10.
+        cone_opacity (float, optional): opacity of cones. Defaults to 1.0.
 
     Returns:
-        Cone object: plotly graphics object (Cone)
+        dict: cone data structure for plotting
     """
     x = points.x.reshape(field.x.shape)
     y = points.y.reshape(field.y.shape)
@@ -552,9 +535,17 @@ def _draw_cones(points, field, NA=10, cone_opacity=1.0):
 
 
 def _generate_all_meshes(magnet_opacity=1.0):
+    """Generates polyhedra of all magnets for rendering in 3D
+
+    Args:
+        magnet_opacity (float, optional): Opacity of magnets. Defaults to 1.0.
+
+    Returns:
+        dict: plotly data structure for rendering magnets
+    """
 
     data_objects = []
-    for magnet in Magnet_3D.instances:
+    for magnet in Magnet3D.instances:
         if issubclass(magnet.__class__, Mesh):
             mesh_data = Graphic_Mesh(magnet.mesh_vectors, magnet.start, magnet.stop)
             data_objects.append(mesh_data.generate_vertices())
@@ -595,6 +586,15 @@ def _generate_all_meshes(magnet_opacity=1.0):
 
 
 def _generate_volume_data(points, field, **kwargs):
+    """Generates volume data plot for plotly
+
+    Args:
+        points (Point_Array3): coordinates
+        field (Field3): Magnetic field vector
+
+    Returns:
+        dict: plotly volume data structure
+    """
 
     cmin = kwargs.pop("cmin", 0.0)
     cmax = kwargs.pop("cmax", 0.5)
@@ -645,11 +645,11 @@ def _generate_volume_data(points, field, **kwargs):
 
 
 def surface_slice3(**kwargs):
-    """Calculates and plots magnetic field slices a
+    """Calculates and plots magnetic field slices.
+    A convenience function.
 
     Returns:
-        dictionary: cached data for each plane with potential keys: 'xy', 'xz', 'yz'
-        containing subdictionaries, whose keys are 'x','y', 'z', 'B'.
+        tuple: fig (reference to figure), cache (cached data for each plane with potential keys: 'xy', 'xz', 'yz'), data_objects (plotly dict)
     """
 
     reset_polyhedra()
@@ -727,11 +727,14 @@ def surface_slice3(**kwargs):
 
 
 def volume_plot(points, field, **kwargs):
-    """Calculates and plots magnetic field vol
+    """Plots magnetic field volume.
+
+    Args:
+        points (Point_Array3): coordinates
+        field (Field3): Magnetic field vector
 
     Returns:
-        dictionary: cached data for each plane with potential keys: 'xy', 'xz', 'yz'
-        containing subdictionaries, whose keys are 'x','y', 'z', 'B'.
+        tuple: fig (reference to figure), data_objects (plotly dict)
     """
 
     reset_polyhedra()
@@ -796,16 +799,25 @@ def volume_plot(points, field, **kwargs):
     )
     fig.show()
 
-    return data_objects, fig
+    return fig, data_objects
 
 
 def volume_calculate_plot(**kwargs):
+    """Calculates and plots magnetic field slices.
+    A convenience function.
 
-    """Calculates and plots magnetic field vol
+    Kwargs:
+        num_points (int): = kwargs.pop("num_points", 30)
+        unit (str): = kwargs.pop("unit", "mm")
+        xmax (float): Maximum x value. Defaults to 30.0.
+        ymax (float): Maximum y value. Defaults to 30.0.
+        zmax (float): Maximum z value. Defaults to 30.0.
+        xmin (float): Minimum x value. Defaults to -xmax
+        ymin (float): Minimum y value. Defaults to -ymax
+        zmin (float): Minimum z value. Defaults to -zmax
 
     Returns:
-        dictionary: cached data for each plane with potential keys: 'xy', 'xz', 'yz'
-        containing subdictionaries, whose keys are 'x','y', 'z', 'B'.
+        tuple: fig (reference to figure), cache (cached data dict), data_objects (plotly dict)
     """
 
     num_points = kwargs.pop("num_points", 30)
@@ -832,6 +844,7 @@ def volume_calculate_plot(**kwargs):
     )
     field = B_calc_3D(points)
 
-    data_objects, fig = volume_plot(points, field, num_points=num_points, **kwargs)
+    fig, data_objects = volume_plot(points, field, num_points=num_points, **kwargs)
+    cache = {"points": points, "field": field}
 
-    return fig, data_objects, points, field
+    return fig, cache, data_objects

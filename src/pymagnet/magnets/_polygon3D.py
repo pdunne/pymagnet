@@ -1,4 +1,4 @@
-from ._magnet3D import Magnet_3D
+from ._magnet3D import Magnet3D
 from ..utils._quaternion import Quaternion
 from ..utils.global_const import MAG_TOL, PI, FP_CUTOFF, ALIGN_CUTOFF
 from ..utils._trigonometry3D import norm_plane, _rotate_triangle
@@ -9,7 +9,7 @@ from numba import jit, vectorize, float64
 from math import sqrt, log, fabs, atan2
 
 
-class Mesh(Magnet_3D):
+class Mesh(Magnet3D):
     """Mesh Magnet Class."""
 
     mag_type = "Mesh"
@@ -20,12 +20,22 @@ class Mesh(Magnet_3D):
         Jr=1.0,  # local magnetisation
         **kwargs,
     ):
+        """Init Method
 
+        Args:
+            filename (string): path to stl file to be imported
+            Jr (float, optional): Signed remnant magnetisation. Defaults to 1.0.
+
+        Kwargs:
+            phi (float):
+            theta (float):
+            mesh_scale (float): scaling factor if mesh needs to be resized. Defaults to 1.0
+        """
         super().__init__(Jr, **kwargs)
 
-        self.phi = kwargs.pop("theta", 90)
+        self.phi = kwargs.pop("theta", 90.0)
         self.phi_rad = _np.deg2rad(self.phi)
-        self.theta = kwargs.pop("phi", 0)
+        self.theta = kwargs.pop("phi", 0.0)
         self.theta_rad = _np.deg2rad(self.theta)
 
         self.mesh_scale = kwargs.pop("mesh_scale", 1.0)
@@ -46,10 +56,11 @@ class Mesh(Magnet_3D):
 
         self.Jnorm = _np.dot(self.J, self.mesh_normals.T)
 
-        self.start = kwargs.pop("start", 0)
-        self.start = _np.min([self.start, len(self.mesh_vectors) - 1])
-        self.stop = kwargs.pop("stop", len(self.mesh_vectors))
-        self.stop = _np.min([self.stop, len(self.mesh_vectors)])
+        # Debug parameters for
+        # self.start = kwargs.pop("start", 0)
+        # self.start = _np.min([self.start, len(self.mesh_vectors) - 1])
+        # self.stop = kwargs.pop("stop", len(self.mesh_vectors))
+        # self.stop = _np.min([self.stop, len(self.mesh_vectors)])
 
     def __str__(self):
         str = (
@@ -131,6 +142,7 @@ class Mesh(Magnet_3D):
         B.y = B.y.ravel()
         B.z = B.z.ravel()
 
+        # debug for loop, used when needing to check certain triangles, or groups of triangles
         # for i in range(self.start, self.stop):
         for i in range(len(self.mesh_vectors)):
             if _np.fabs(self.Jnorm[i] / self.Jr) > 1e-4:

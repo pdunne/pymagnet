@@ -16,14 +16,15 @@ from ..magnets import (
     magnetic_field_cylinder_1D,
 )
 
+__all__ = ["plot_1D_field"]
+
 
 def plot_1D_field(magnet, unit="mm", **kwargs):
     """Calculates and plots the magnetic field along the central symmetry axis
     of a cylinder or cuboid magnet, assuming the magnetic field is collinear
 
     Args:
-        magnet (magnet object): Must be a Magnet_3D type of magnet, either Prism, Cube,
-        or Cylinder.
+        magnet (Magnet3D): Must be a Magnet3D type of magnet, either Prism, Cube,or Cylinder.
 
     Kwargs:
         num_points (int): Number of points to calculate. Defaults to 101.

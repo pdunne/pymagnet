@@ -13,4 +13,5 @@ This module imports the classes and functions in the private modules to create a
 from ._plot1D import *
 from ._plot2D import *
 from ._plotly3D import *
-from ._plotly2D import *
+
+# from ._plotly2D import *

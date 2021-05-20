@@ -1,26 +1,23 @@
 """2D Polygon Magnet class
 
 
-TODO:
-    * Add __del__ method for removing strong ref in class instance list
-
 """
 import numpy as _np
-from ._magnet2D import Magnet_2D
+from ._magnet2D import Magnet2D
 from ..utils.global_const import PI, MAG_TOL
 
 
 def _sheet_field(x, y, h, Kr=1):
-    """[summary]
+    """Calculates the magnetic field due to an infinite current sheet
 
     Args:
-        x ([type]): [description]
-        y ([type]): [description]
-        h ([type]): [description]
-        Kr (int, optional): [description]. Defaults to 1.
+        x (ndarray): x-coordinates
+        y (ndarray): y-coordinates
+        h (float): sheet length
+        Kr (float, optional): Sheet current Density as T. Defaults to 1.
 
     Returns:
-        [type]: [description]
+        tuple: Bx (ndarray), By (ndarray) magnetic field vector
     """
     x = _np.asarray(x)
     y = _np.asarray(y)
@@ -31,14 +28,9 @@ def _sheet_field(x, y, h, Kr=1):
 
 
 class Polygon(object):
-    """[summary]
-
-    Args:
-        object ([type]): [description]
-    """
+    """Polygon class for generating list of vertices"""
 
     def __init__(self, **kwargs):
-
         vertices = kwargs.pop("vertices", None)
         center = kwargs.pop("center", None)
         if vertices is not None:
@@ -58,10 +50,10 @@ class Polygon(object):
             self.center = _np.NaN
 
     def append(self, vertex):
-        """[summary]
+        """Appends vertex to list of vertices
 
         Args:
-            vertex ([type]): [description]
+            vertex (list): list of vertices
         """
         if len(vertex) != 2:
             print("Error")
@@ -72,32 +64,31 @@ class Polygon(object):
         self.set_center()
 
     def num_vertices(self):
-        """[summary]
+        """Gets number of vertices
 
         Returns:
-            [type]: [description]
+            int: number of vertices
         """
         return len(self.vertices)
 
     def set_center(self):
-        """[summary]"""
+        """Sets center of polygon to be centroid"""
         self.center = _np.mean(_np.asarray(self.vertices), axis=0)
 
     @staticmethod
-    def gen_polygon(N=6, center=(0, 0), alpha=0, **kwargs):
-        """[summary]
+    def gen_polygon(N=6, center=(0.0, 0.0), alpha=0.0, **kwargs):
+        """Generates regular polygon. One of apothem, side length or radius must be defined.
 
         Args:
-            N (int, optional): [description]. Defaults to 6.
-            apo (int, optional): [description]. Defaults to 1.
-            center (tuple, optional): [description]. Defaults to (0,0).
-            offset (int, optional): [description]. Defaults to 0.
+            N (int, optional): Number of sides. Defaults to 6.
+            center (tuple, optional): Polygon center. Defaults to (0.0, 0.0).
+            alpha (float, optional): Orientration with respect to x-axis. Defaults to 0.0.
 
         Raises:
-            Exception: [description]
+            Exception: N must be > 2
 
         Returns:
-            [type]: [description]
+            ndarray: polygon vertices
         """
         N = int(N)
 
@@ -128,6 +119,21 @@ class Polygon(object):
 
     @staticmethod
     def check_radius(N, apothem, length, radius):
+        """Checks which of apothem, side length, or radius has been passed as kwargs
+        to `gen_polygon()`. Order of precendence is apothem, length, radius.
+
+        Args:
+            N (int): Number of sides
+            apothem (float): polygon apothem
+            length (float): side length
+            radius (float): outcircle radius
+
+        Raises:
+            Exception: One of apothem, length, or raduis must be defined
+
+        Returns:
+            float: returns radius
+        """
         if apothem is not None:
             return apothem / _np.around(_np.cos(PI / N), 4)
         elif length is not None:
@@ -139,30 +145,23 @@ class Polygon(object):
 
 
 class LineUtils(object):
-    """[summary]
-
-    Args:
-        object ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
+    """Utility class consisting of rountines for 2D line elements"""
 
     @staticmethod
-    def unit_norm(ver1, ver2, clockwise=True):
-        """[summary]
+    def unit_norm(vertex_1, vertex_2, clockwise=True):
+        """Get unit normal to vertex
 
         Args:
-            ver1 ([type]): [description]
-            ver2 ([type]): [description]
-            clockwise (bool, optional): [description]. Defaults to True.
+            vertex_1 (ndarray): vertex 1
+            vertex_2 (ndarray): vertex 2
+            clockwise (bool, optional): Clockwise orientation of points. Defaults to True.
 
         Returns:
-            [type]: [description]
+            tuple: normal vector (ndarray), length i.e. distance between vertices (float)
         """
 
-        dx = ver1[0] - ver2[0]
-        dy = ver1[1] - ver2[1]
+        dx = vertex_1[0] - vertex_2[0]
+        dy = vertex_1[1] - vertex_2[1]
 
         # Clockwise winding of points:
         if clockwise:
@@ -174,31 +173,30 @@ class LineUtils(object):
         return norm, length
 
     @staticmethod
-    def line_center(ver1, ver2):
-        """[summary]
+    def line_center(vertex_1, vertex_2):
+        """Gets midpoint of two vertices
 
         Args:
-            ver1 ([type]): [description]
-            ver2 ([type]): [description]
+            vertex_1 (ndarray): vertex 1
+            vertex_2 (ndarray): vertex 2
 
         Returns:
-            [type]: [description]
+            ndarray: midpoint
         """
-
-        xc = (ver1[0] + ver2[0]) / 2
-        yc = (ver1[1] + ver2[1]) / 2
+        xc = (vertex_1[0] + vertex_2[0]) / 2
+        yc = (vertex_1[1] + vertex_2[1]) / 2
 
         return _np.array([xc, yc])
 
     @staticmethod
     def signed_area(polygon):
-        """Calculates signed area,
+        """Calculates signed area of a polygon
 
         Args:
-            polygon ([type]): [description]
+            polygon (Polygon): Polygon instance
 
         Returns:
-            [type]: [description]
+            float: signed area
         """
         j = 1
         NP = polygon.num_vertices()
@@ -230,13 +228,17 @@ class LineUtils(object):
 
 
 class Line(object):
-    """[summary]
-
-    Args:
-        object ([type]): [description]
-    """
+    """Line Class for storing properties of a sheet manget"""
 
     def __init__(self, length, center, beta, K):
+        """Init Method
+
+        Args:
+            length (float): side length
+            center (ndarray): magnet center (x, y)
+            beta (float): Orientation w.r.t. z-axis in degrees
+            K (float): Sheet current density in tesla
+        """
         self.length = length
         self.center = center
         self.beta = beta
@@ -274,14 +276,16 @@ class Line(object):
         return self.center
 
     def calcB(self, x, y):
-        """[summary]
+        """Calculates the magnetic field due to a sheet magnet
+        First a transformation into the local coordinates is made, the field calculated
+        and then the magnetic field it rotated out to the global coordinates
 
         Args:
-            x ([type]): [description]
-            y ([type]): [description]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
 
         Returns:
-            [type]: [description]
+            tuple: Bx (ndarray), By (ndarray) magnetic field vector
         """
         from ..utils._routines2D import rotate_points_2D, _get_field_array_shape2
 
@@ -297,23 +301,36 @@ class Line(object):
         return Bx, By
 
 
-class PolyMagnet(Magnet_2D):
-    """2D Magnet Polygon class.
-
-    Args:
-        width [float]: magnet width
-        height [float]: magnet height
-        Jr [float]: Remnant magnetisation
-        **kwargs: Arbitrary keyword arguments.
-
-    kwargs:
-        center [Tuple(float, float), or Point2]: center of magnet, defaults to
-        Point2(0.0, 0.0)
-    """
+class PolyMagnet(Magnet2D):
+    """2D Magnet Polygon class."""
 
     mag_type = "PolyMagnet"
 
     def __init__(self, Jr, **kwargs) -> None:
+        """Init method
+
+        NOTE:
+            * When creating a regular polygon, one of apothem, radius, or length must be defined as a kwarg or an exception will be raised.
+            * When creating a regular polygon, the number of sides `num_sides` must be at least 3 or an exception will be raised.
+            * When creating a custom polygon at least one vertex pair must be defined with `vertices` or an exception will be raised.
+
+        Args:
+            Jr (float): signed magnitude of remnant magnetisation
+
+        Kwargs:
+            alpha (float): Not used
+            theta (float): Orientation of magnet w.r.t x-axis of magnet
+            phi (float): Orientation of magnetisation w.r.t x-axis of magnet in degrees. Defaults to 90.0.
+            center (ndarray): magnet center (x, y). Defaults to (0.0, 0.0)
+            length (float): side length if creating a regular polygon
+            apothem (float): apothem (incircle radius) if creating a regular polygon
+            num_sides (int): number of sides of a regular polygon. Defaults to 6.
+            custom_polygon (bool): Flag to define a custom polygon. Defaults to False.
+            vertices (ndarray, list): List of custom vertices. Defaults to None.
+
+        Raises:
+            Exception: If creating a custom polygon, `vertices` must not be None.
+        """
         from ..utils._routines2D import rotate_points_2D
 
         super().__init__(Jr, **kwargs)
@@ -325,7 +342,7 @@ class PolyMagnet(Magnet_2D):
         self.theta = kwargs.pop("theta", 0.0)
         self.theta_radians = _np.deg2rad(self.theta)
 
-        self.phi = kwargs.pop("phi", 90)
+        self.phi = kwargs.pop("phi", 90.0)
         self.phi_rad = _np.deg2rad(self.phi)
 
         self.Jx = _np.around(Jr * _np.cos(self.phi_rad), decimals=6)
@@ -396,10 +413,11 @@ class PolyMagnet(Magnet_2D):
         return self.alpha
 
     def _gen_sheet_magnets(self):
-        """[summary]
+        """Generates orientation, size, and centre of sheet magnets for a given
+        polygon
 
         Returns:
-            [type]: [description]
+            tuple: beta (ndarray), length (ndarray), centre (ndarray), K (ndarray) - sheet current density in tesla.
         """
         area, norms, beta, length, center = LineUtils.signed_area(self.polygon)
         K = self.Jx * norms[:, 1] - self.Jy * norms[:, 0]
@@ -407,6 +425,15 @@ class PolyMagnet(Magnet_2D):
         return beta, length, center, K
 
     def calcB(self, x, y):
+        """Calculates the magnetic field of a polygon due to each face
+
+        Args:
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+
+        Returns:
+            tuple: Bx (ndarray), By (ndarray) magnetic field vector
+        """
         from ..utils._routines2D import rotate_points_2D, _get_field_array_shape2
 
         array_shape = _get_field_array_shape2(x, y)

@@ -7,25 +7,28 @@
 Private module consiting of vector and point array classes and their methods.
 """
 
-__all__ = ["Field1", "Field2", "Field3", "Point_Array2", "Point_Array3"]
-
 import numpy as _np
 from ._conversions import get_unit_value_meter, get_unit_value_tesla
 
+__all__ = ["Field1", "Field2", "Field3", "Point_Array2", "Point_Array3"]
+
 
 class Point_Array1(object):
-    """2D vector class consisting of numpy arrays of x and y coordinates
-
-    Args:
-        x:
-        y:
-
-    Methods:
-        calc_norm: calculates the magnitude of the fields at every point and
-                    stores in self.n
+    """1D point structure
+    This is used to contain one position array (z), and the units
+    ('mm', 'cm', etc)
     """
 
     def __init__(self, z, unit="m"):
+        """Init method
+
+        Args:
+            z (ndarray): z coordinates
+            unit (str, optional): Unit of length. Defaults to "m".
+
+        Raises:
+            ValueError: Unit must an SI prefix, e.g. km, m, cm, mm
+        """
         self.z = _np.asarray(z)
         if get_unit_value_meter(unit) is not None:
             self.unit = unit
@@ -39,13 +42,19 @@ class Point_Array1(object):
         return f"[(Unit:{self.unit}) Array:{self.z}]"
 
     def get_unit(self):
+        """Gets unit
+
+        Returns:
+            str: unit
+        """
         return self.unit
 
     def change_unit(self, new_unit, get_unit_value=get_unit_value_meter):
-        """Converts vector from one unit scale to another
+        """Converts point array to a different unit. e.g from 'cm' to 'mm'
 
         Args:
-            new_unit (string): SI prefix, eg cm, mm
+            new_unit (str): unit to be converted to
+            get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_meter.
         """
         from ..magnets import Magnet, Prism, Cylinder
 
@@ -71,18 +80,22 @@ class Point_Array1(object):
 
 
 class Point_Array2(object):
-    """2D vector class consisting of numpy arrays of x and y coordinates
-
-    Args:
-        x:
-        y:
-
-    Methods:
-        calc_norm: calculates the magnitude of the fields at every point and
-                    stores in self.n
+    """2D point structure
+    This is used to contain two position arrays (x, y), and the units
+    ('mm', 'cm', etc)
     """
 
     def __init__(self, x, y, unit="m"):
+        """Init Method
+
+        Args:
+            x (ndarray): x coordinates
+            y (ndarray): y coordinates
+            unit (str, optional): Unit of length. Defaults to "m".
+
+        Raises:
+            ValueError: Unit must an SI prefix, e.g. km, m, cm, mm
+        """
         self.x = _np.asarray(x)
         self.y = _np.asarray(y)
         if get_unit_value_meter(unit) is not None:
@@ -96,14 +109,15 @@ class Point_Array2(object):
     def __str__(self) -> str:
         return f"[Unit: {self.unit}\nx: {self.x}\ny: {self.y}]"
 
-    def get_unit(self):
-        return self.unit
+    # def get_unit(self):
+    #     return self.unit
 
     def change_unit(self, new_unit, get_unit_value=get_unit_value_meter):
-        """Converts vector from one unit scale to another
+        """Converts point array to a different unit. e.g from 'cm' to 'mm'
 
         Args:
-            new_unit (string): SI prefix, eg cm, mm
+            new_unit (str): unit to be converted to
+            get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_meter.
         """
         from ..magnets import Magnet, Rectangle, Square, Circle, PolyMagnet
 
@@ -133,7 +147,23 @@ class Point_Array2(object):
 
 
 class Point_Array3(Point_Array2):
+    """3D point structure
+    This is used to contain three position arrays (x, y, z), and the units
+    ('mm', 'cm', etc)
+    """
+
     def __init__(self, x, y, z, unit="m"):
+        """Init Method
+
+        Args:
+            x (ndarray): x coordinates
+            y (ndarray): y coordinates
+            z (ndarray): z coordinates
+            unit (str, optional): Unit of length. Defaults to "m".
+
+        Raises:
+            ValueError: Unit must an SI prefix, e.g. km, m, cm, mm
+        """
         super().__init__(x, y, unit=unit)
         self.z = _np.asarray(z)
 
@@ -144,10 +174,11 @@ class Point_Array3(Point_Array2):
         return f"[Unit: {self.unit}\nx: {self.x}\ny: {self.y}\nz: {self.z}]"
 
     def change_unit(self, new_unit, get_unit_value=get_unit_value_meter):
-        """Converts vector from one unit scale to another
+        """Converts point array to a different unit. e.g from 'cm' to 'mm'
 
         Args:
-            new_unit (string): SI prefix, eg cm, mm
+            new_unit (str): unit to be converted to
+            get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_meter.
         """
         from ..magnets import Magnet, Prism, Cube, Cylinder, Sphere, Mesh
 
@@ -181,18 +212,21 @@ class Point_Array3(Point_Array2):
 
 
 class Field1(Point_Array1):
-    """1D Field vector class consisting of numpy arrays of z values
-
-    Args:
-        x:
-        y:
-
-    Methods:
-        calc_norm: calculates the magnitude of the fields at every point and
-                    stores in self.n
+    """1D Field vector
+    This is used to contain one component (Bz as z), and the units
+    ('T', 'mT', etc)
     """
 
     def __init__(self, z, unit="T"):
+        """Init method
+
+        Args:
+            z (ndarray): Magnetic field component
+            unit (str, optional): Unit of field. Defaults to "T".
+
+        Raises:
+            ValueError: Unit must an SI prefix, e.g. T, mT, uT, nT
+        """
         super().__init__(z)
         if get_unit_value_tesla(unit) is not None:
             self.unit = unit
@@ -206,22 +240,32 @@ class Field1(Point_Array1):
         return f"[Unit: {self.unit}\nBz: {self.z}]"
 
     def change_unit(self, new_unit, get_unit_value=get_unit_value_tesla):
+        """Converts field array to a different unit. e.g from 'T' to 'mT'
+
+        Args:
+            new_unit (str): unit to be converted to
+            get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_tesla.
+        """
         super().change_unit(new_unit, get_unit_value)
 
 
 class Field2(Point_Array2):
-    """2D Field vector class consisting of numpy arrays of x and y values
-
-    Args:
-        x:
-        y:
-
-    Methods:
-        calc_norm: calculates the magnitude of the fields at every point and
-                    stores in self.n
+    """2D Field vector
+    This is used to contain two components (x, y), and the units
+    ('T', 'mT', etc)
     """
 
     def __init__(self, x, y, unit="T"):
+        """Init method
+
+        Args:
+            x (ndarray): Magnetic field component Bx
+            y (ndarray): Magnetic field component By
+            unit (str, optional): Unit of field. Defaults to "T".
+
+        Raises:
+            ValueError: Unit must an SI prefix, e.g. T, mT, uT, nT
+        """
         super().__init__(x, y)
         self.n = _np.zeros_like(x)
         if get_unit_value_tesla(unit) is not None:
@@ -230,6 +274,7 @@ class Field2(Point_Array2):
             raise ValueError("Error, not an SI prefix, e.g. T, mT, uT, nT ")
 
     def calc_norm(self):
+        """Calculates the norm of the 2D vector"""
         self.n = _np.linalg.norm([self.x, self.y], axis=0)
 
     def __repr__(self) -> str:
@@ -239,31 +284,48 @@ class Field2(Point_Array2):
         return f"[Unit: {self.unit}\nBx: {self.x}\nBy: {self.y}\nBn: {self.n}]"
 
     def change_unit(self, new_unit, get_unit_value=get_unit_value_tesla):
+        """Converts field array to a different unit. e.g from 'T' to 'mT'
+
+        Args:
+            new_unit (str): unit to be converted to
+            get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_tesla.
+        """
         super().change_unit(new_unit, get_unit_value)
 
 
 class Field3(Point_Array3):
-    """3D Field vector class consisting of numpy arrays of x and y values
-
-    Args:
-        x:
-        y:
-        z:
-
-    Methods:
-        calc_norm: calculates the magnitude of the fields at every point and
-                    stores in self.n
+    """2D Field vector
+    This is used to contain three components (x, y), and the units
+    ('T', 'mT', etc)
     """
 
     def __init__(self, x, y, z, unit="T"):
+        """Init method
+
+        Args:
+            x (ndarray): Magnetic field component Bx
+            y (ndarray): Magnetic field component By
+            z (ndarray): Magnetic field component Bz
+            unit (str, optional): Unit of field. Defaults to "T".
+
+        Raises:
+            ValueError: Unit must an SI prefix, e.g. T, mT, uT, nT
+        """
         super().__init__(x, y, z)
         self.n = _np.zeros_like(x)
         self.unit = unit
 
     def calc_norm(self):
+        """Calculates the norm of the 3D vector"""
         self.n = _np.linalg.norm([self.x, self.y, self.z], axis=0)
 
     def change_unit(self, new_unit, get_unit_value=get_unit_value_tesla):
+        """Converts field array to a different unit. e.g from 'T' to 'mT'
+
+        Args:
+            new_unit (str): unit to be converted to
+            get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_tesla.
+        """
         super().change_unit(new_unit, get_unit_value)
 
     def __repr__(self) -> str:

@@ -20,7 +20,7 @@ def magnetic_field_prism_1D(magnet, z):
     axial symmetry center.
 
     Args:
-        magnet (Magnet3D): magnet object, one of Prism, Cube, or Cylinder
+        magnet (Magnet3D): magnet object, one of Prism, or Cube
         z (ndarray): Array of points along the symmetry axis
 
     Returns:
@@ -55,16 +55,15 @@ def magnetic_field_prism_1D(magnet, z):
 
 
 def magnetic_field_cylinder_1D(magnet, z):
-    """Calculates the magnetic field z-component due to a cylinder along its
+    """Calculates the magnetic field z-component due to a cuboid along its
     axial symmetry center.
 
     Args:
-        magnet_object ([type]): [description]
-        Jr ([type]): [description]
-        z ([type]): [description]
+        magnet (Magnet3D): magnet object, Cylinder
+        z (ndarray): Array of points along the symmetry axis
 
     Returns:
-        [float]: Bz
+        Field1: z-component of the magnetic field and associated unit ('T')
     """
     from ._magnet3D import Cylinder
 

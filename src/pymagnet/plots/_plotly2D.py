@@ -7,6 +7,7 @@
 This module contains all functions needed to plot lines and contours for 2D
 magnetic sources.
 
+Incomplete.
 """
 import plotly.graph_objects as _go
 import plotly.figure_factory as _ff

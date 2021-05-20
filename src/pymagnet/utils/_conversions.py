@@ -13,8 +13,8 @@ def cart2pol(x, y):
     """Converts from cartesian to polar coordinates
 
     Args:
-        x (float/array): x coordinates
-        y (float/array): y coordinates
+        x (ndarray): x coordinates
+        y (ndarray): y coordinates
 
     Returns:
         tuple: rho, phi
@@ -28,8 +28,8 @@ def pol2cart(rho, phi):
     """Converts from polar to cartesian coordinates
 
     Args:
-        rho (float/array): radial coordinates
-        phi (float/array): azimuthal coordinates
+        rho (ndarray): radial coordinates
+        phi (ndarray): azimuthal coordinates
 
     Returns:
         tuple: x,y
@@ -43,9 +43,9 @@ def vector_pol2cart(Brho, Bphi, phi):
     """Converts Vectors from polar to cartesian coordinates
 
     Args:
-        Brho (float/array): radial vector component
-        Bphi (float/array): azimuthal vector component
-        phi (float/array): azimuthal coordinates
+        Brho (ndarray): radial vector component
+        Bphi (ndarray): azimuthal vector component
+        phi (ndarray): azimuthal coordinates
 
     Returns:
         tuple: Bx, By
@@ -59,9 +59,9 @@ def cart2sph(x, y, z):
     """Converts from cartesian to spherical coordinates
 
     Args:
-        x (float/array): x coordinates
-        y (float/array): y coordinates
-        z (float/array): z coordinates
+        x (ndarray): x coordinates
+        y (ndarray): y coordinates
+        z (ndarray): z coordinates
 
     Returns:
         tuple: r, theta, phi
@@ -80,9 +80,9 @@ def sph2cart(r, theta, phi):
     """Converts from spherical to cartesian coordinates
 
     Args:
-        r (float/array): radial coordinates
-        theta (float/array): azimuthal angles
-        phi (float/array): polar angle
+        r (ndarray): radial coordinates
+        theta (ndarray): azimuthal angles
+        phi (ndarray): polar angle
 
     Returns:
         tuple: x,y,z
@@ -97,11 +97,11 @@ def vector_sph2cart(Br, Btheta, Bphi, theta, phi):
     """Converts Vectors from spherical to cartesian coordinates
 
     Args:
-        Br (float/array): radial vector component
-        Btheta (float/array): polar vector component
-        Bphi (float/array): azimuthal vector component
-        theta (float/array): azimuthal angles
-        phi (float/array): polar angle
+        Br (ndarray): radial vector component
+        Btheta (ndarray): polar vector component
+        Bphi (ndarray): azimuthal vector component
+        theta (ndarray): azimuthal angles
+        phi (ndarray): polar angle
 
     Returns:
         tuple: Bx,By,Bz
@@ -126,10 +126,10 @@ def sphere_sph2cart(Br, Btheta, theta, phi):
     """Converts magnetic field of a sphere from spherical to cartesian coordinates
 
     Args:
-        Br (float/array): radial vector component
-        Btheta (float/array): polar vector component
-        theta (float/array): azimuthal angles
-        phi (float/array): polar angle
+        Br (ndarray): radial vector component
+        Btheta (ndarray): polar vector component
+        theta (ndarray): azimuthal angles
+        phi (ndarray): polar angle
 
     Returns:
         tuple: Bx,By,Bz

@@ -8,6 +8,8 @@ import numpy as _np
 from ._vector_structs import Point_Array2, Field2
 from .global_const import u0
 
+__all__ = ["grid2D", "B_calc_2D", "rotate_points_2D"]
+
 
 def grid2D(xmax, ymax, **kwargs):
     """Generates grid of x and y points
@@ -20,7 +22,7 @@ def grid2D(xmax, ymax, **kwargs):
         num_points (int): Number of points in each direction. Defaults to 100
         xmin (float): minimum x value. Defaults to -xmax
         ymin (float): minimum y value. Defaults to -ymax
-        unit (string): unit length. Defaults to 'mm'
+        unit (str): unit length. Defaults to 'mm'
 
     Returns:
         Point_Array2: array of x and y values of shape (num_points, num_points) and associated unit
@@ -34,17 +36,17 @@ def grid2D(xmax, ymax, **kwargs):
     return Point_Array2(x, y, unit=unit)
 
 
-def B_calc_2D(Point_Array2, unit="mm"):
+def B_calc_2D(Point_Array2):
     """Function to calculate magnetic field due to any array of points
     It sums the magnetic field B over each component of the magnetisation
     J = mu_0 M
     """
-    from ..magnets import Magnet_2D
+    from ..magnets import Magnet2D
 
     # Empty data structure
     B = _allocate_field_array2(Point_Array2.x, Point_Array2.y)
 
-    for magnet in Magnet_2D.instances:
+    for magnet in Magnet2D.instances:
         Bx, By = magnet.calcB(Point_Array2.x, Point_Array2.y)
         B.x += Bx
         B.y += By
@@ -59,8 +61,8 @@ def rotate_points_2D(x, y, alpha):
     Rotates 2D coordinates using a rotation matrix
 
     Args:
-        x (float/array): array of x coordinates
-        y (float/array): array of x coordinates
+        x (ndarray): array of x coordinates
+        y (ndarray): array of x coordinates
         alpha (float): rotation angle w.r.t. x-axis
 
     Returns:
@@ -87,8 +89,8 @@ def gradB_2D(B, x, y):
 
     Args:
         B (Field2): Magnetic field vector
-        x (float/array): x coordinates
-        y (float/array): y coordinates
+        x (ndarray): x coordinates
+        y (ndarray): y coordinates
 
     Returns:
         Field2: Magnetic field gradient vector
@@ -109,8 +111,8 @@ def FgradB_2D(B, x, y, chi_m, c):
 
     Args:
         B (Field2): Magnetic field vector
-        x (float/array): x coordinates
-        y (float/array): y coordinates
+        x (ndarray): x coordinates
+        y (ndarray): y coordinates
 
     Returns:
         Field2: Magnetic field gradient force vector
@@ -133,8 +135,8 @@ def _allocate_field_array2(x, y):
     """Allocates empty Field2 data structure
 
     Args:
-        x (float/array): x co-ordinates
-        y (float/array): y co-ordinates
+        x (ndarray): x co-ordinates
+        y (ndarray): y co-ordinates
 
     Returns:
         Field2: Empty data structure
@@ -158,8 +160,8 @@ def _get_field_array_shape2(x, y):
     """Allocates empty Field2 data structure
 
     Args:
-        x (float/array): x co-ordinates
-        y (float/array): y co-ordinates
+        x (ndarray): x co-ordinates
+        y (ndarray): y co-ordinates
 
     Returns:
         Field2: Empty data structure

@@ -5,22 +5,11 @@
 """3D Magnet classes
 
 This private module implements the `Prism`, `Cube`, `Cylinder`, and `Sphere`
-3D magnet classes. The parent class `Magnet_3D` implements the location and orientation
+3D magnet classes. The parent class `Magnet3D` implements the location and orientation
 methods, i.e. magnet center and quaternion methods for rotating the magnet with respect
 to each principal axis.
 
-Example:
-    Examples can be given using either the ``Example`` or ``Examples``
-    sections. Sections support any reStructuredText formatting, including
-    literal blocks::
-
-        $ python example_google.py
-
-Section breaks are created by resuming unindented text. Section breaks
-are also implicitly created anytime a new section starts.
-
 TODO:
-    * Add __del__ method for removing strong ref in class instance list
     * Update __str__ and __repr__ methods to show orientation and magnetisation
 """
 import numpy as _np
@@ -32,26 +21,34 @@ from numba import vectorize, float64
 from math import sqrt, fabs
 
 
-__all__ = ["Magnet_3D", "Prism", "Cube", "Cylinder", "Sphere"]
+__all__ = ["Magnet3D", "Prism", "Cube", "Cylinder", "Sphere"]
 
 
-class Magnet_3D(Magnet):
-    """3D Magnet Class
+class Magnet3D(Magnet):
+    """3D Magnet Base Class
 
     Args:
-         width: magnet width [default 10]
-         depth: magnet depth [default 20]
-         height: magnet height [default 30]
+        Magnet (Magnet): Magnet base parent class
 
-    Optional Arguments:
-         centre: magnet centre (Point3_3D object) [default Point3(.0, .0, .0)]
-         J: remnant magnetisation in Tesla [default 1.0]
-
+    Returns:
+        Magnet3D: 3D magnet object
     """
 
-    mag_type = "Magnet_3D"
+    mag_type = "Magnet3D"
 
     def __init__(self, Jr, **kwargs) -> None:
+        """Init Method
+
+        Args:
+            Jr (float): Signed remnant magnetisation
+
+        Kwargs:
+            center (ndarray): Magnet center. Defaults to (0.0, 0.0, 0.0)
+            mask_magnet (bool): Flag to mask magnet or not in plots
+            alpha (float): Magnet Orientation angle about z (degrees). Defaults to 0.0
+            beta (float): Magnet Orientation angle about y (degrees). Defaults to 0.0
+            gamma (float): Magnet Orientation angle about x (degrees). Defaults to 0.0
+        """
         super().__init__()
 
         self.Jr = Jr
@@ -100,6 +97,7 @@ class Magnet_3D(Magnet):
         return _np.array([self.alpha, self.beta, self.gamma])
 
     def _generate_rotation_quaternions(self):
+
         """Generates single rotation quaternion for all non-zero rotation angles,
         which are:
 
@@ -110,7 +108,6 @@ class Magnet_3D(Magnet):
         Returns:
             Quaternion: total rotation quaternion
         """
-        # from functools import reduce
 
         # Initialise quaternions
         rotate_about_x = Quaternion()
@@ -143,12 +140,12 @@ class Magnet_3D(Magnet):
         The rotations and translations are performed first, and the internal field calculation functions are called.
 
         Args:
-            x (float/array): x co-ordinates
-            y (float/array): y co-ordinates
-            z (float/array): z co-ordinates
+            x (ndarray): x co-ordinates
+            y (ndarray): y co-ordinates
+            z (ndarray): z co-ordinates
 
         Returns:
-            tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector
+            tuple: Bx(ndarray), By(ndarray), Bz(ndarray) field vector
         """
         from ..utils._routines3D import _tile_arrays, _apply_mask
 
@@ -190,7 +187,9 @@ class Magnet_3D(Magnet):
 
             # finally return the fields
             return Bx, By, Bz
+
         else:
+            # Otherwise directly calculate the magnetic fields
             B = self._calcB_local(
                 x - self.center[0], y - self.center[1], z - self.center[2]
             )
@@ -208,9 +207,9 @@ class Magnet_3D(Magnet):
         for each magnet type.
 
         Args:
-            x (float/array): x co-ordinates
-            y (float/array): y co-ordinates
-            z (float/array): z co-ordinates
+            x (ndarray): x co-ordinates
+            y (ndarray): y co-ordinates
+            z (ndarray): z co-ordinates
         """
         pass
 
@@ -218,9 +217,9 @@ class Magnet_3D(Magnet):
         """Generates mask of points inside a magnet
 
         Args:
-            x (ndarray/float): x-coordinates
-            y (ndarray/float): y-coordinates
-            z (ndarray/float): z-coordinates
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
         """
         pass
 
@@ -232,32 +231,42 @@ class Magnet_3D(Magnet):
         pass
 
 
-class Prism(Magnet_3D):
-    """Prism Magnet Class. Cuboid (width, depth height).
+class Prism(Magnet3D):
+    """Prism 3D Magnet Class
 
     Args:
-          width (float): magnet width [default 10]
-          depth (float): magnet depth [default 20]
-          height (float): magnet height [default 30]
-          Jr (float): remnant magnetisation in Tesla [default 1.0]
+        Magnet3D (Magnet3D): 3D magnet parent class
 
-     Optional Arguments:
-          centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
-          theta: Angle between magnetisation and x-axis [default 90.0 degrees]
-          phi: Angle between magnetisation and z-axis [default 0.0 degrees]
-
+    Returns:
+        Prism: Prism magnet object
     """
 
     mag_type = "Prism"
 
     def __init__(
         self,
-        width=10,
-        depth=20,
-        height=30,  # magnet dimensions
+        width=10.0,
+        depth=20.0,
+        height=30.0,  # magnet dimensions
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):
+        """Init Method
+
+        Args:
+            width (float, optional): Magnet width in x. Defaults to 10.0.
+            depth (float, optional): Magnet depth in y. Defaults to 20.0.
+            height (float, optional): Magnet height in z. Defaults to 30.0.
+
+        Kwargs:
+            center (ndarray): Magnet center. Defaults to (0.0, 0.0, 0.0)
+            mask_magnet (bool): Flag to mask magnet or not in plots
+            alpha (float): Magnet Orientation angle about z (degrees). Defaults to 0.0
+            beta (float): Magnet Orientation angle about y (degrees). Defaults to 0.0
+            gamma (float): Magnet Orientation angle about x (degrees). Defaults to 0.0
+            phi (float): Angle of magnetisation vector (in degrees) with respect to x-axis. Defaults to 90.0
+            theta (float): Angle of magnetisation vector (in degrees) with respect to z-axis. Defaults to 0.0
+        """
         self.width = width
         self.depth = depth
         self.height = height
@@ -268,9 +277,9 @@ class Prism(Magnet_3D):
 
         super().__init__(Jr, **kwargs)
 
-        self.phi = kwargs.pop("theta", 90)
+        self.phi = kwargs.pop("theta", 90.0)
         self.phi_rad = _np.deg2rad(self.phi)
-        self.theta = kwargs.pop("phi", 0)
+        self.theta = kwargs.pop("phi", 0.0)
         self.theta_rad = _np.deg2rad(self.theta)
 
         self.Jx = _np.around(
@@ -303,13 +312,18 @@ class Prism(Magnet_3D):
         return str
 
     def get_Jr(self):
+        """Returns magnetisation vector J
+
+        Returns:
+            ndarray: [Jx, Jy, Jz]
+        """
         return _np.array([self.Jx, self.Jy, self.Jz])
 
     def get_size(self):
         """Returns magnet dimesions
 
         Returns:
-            size[ndarray]: numpy array [width, depth, height]
+        ndarray: [width, depth, height]
         """
         return _np.array([self.width, self.depth, self.height])
 
@@ -318,14 +332,16 @@ class Prism(Magnet_3D):
         """Helper Function F1 for 3D prismatic magnets
 
         Args:
-            x ([type]): [description]
-            y ([type]): [description]
-            z ([type]): [description]
+            a (float): magnet half width
+            b (float): magnet half depth
+            c (float): magnet half height
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
 
         Returns:
-            [array]:
+            ndarray: F1 values
         """
-
         try:
             # Hide the warning for situtations where there is a divide by zero.
             # This returns a NaN in the array, which is ignored for plotting.
@@ -350,14 +366,16 @@ class Prism(Magnet_3D):
         """Helper Function F2 for 3D prismatic magnets
 
         Args:
+            a (float): magnet half width
+            b (float): magnet half depth
+            c (float): magnet half height
             x (ndarray): x-coordinates
             y (ndarray): y-coordinates
             z (ndarray): z-coordinates
 
         Returns:
-            [array]: [description]
+            ndarray: F2 values
         """
-
         try:
             xa_sq = _np.power((x + a), 2)
             yb_sq = _np.power((y + b), 2)
@@ -379,12 +397,12 @@ class Prism(Magnet_3D):
         (in local coordinates).
 
         Args:
-            x (float/array): x co-ordinates
-            y (float/array): y co-ordinates
-            z (float/array): z co-ordinates
+            x (ndarray): x co-ordinates
+            y (ndarray): y co-ordinates
+            z (ndarray): z co-ordinates
 
         Returns:
-            Vector3: Magnetic field array
+            Field3: Magnetic field array structure
         """
         from ..utils._routines3D import _allocate_field_array3
 
@@ -412,20 +430,21 @@ class Prism(Magnet_3D):
         return B
 
     def _calcBx_prism_x(self, a, b, c, Jr, x, y, z):
-        """x component of magnetic field for prism magnet
+        """Calculates x component of magnetic field for prism magnet
         magnetised in x
 
         Args:
-            a ([type]): [description]
-            b ([type]): [description]
-            c ([type]): [description]
-            Jr ([type]): [description]
-            x ([type]): [description]
-            y ([type]): [description]
-            z ([type]): [description]
+            Args:
+            a (float): magnet half width
+            b (float): magnet half depth
+            c (float): magnet half height
+            Jr (float): Remnant magnetisation
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
 
         Returns:
-            [array]: [description]
+            ndarray: Bx magnetic field component
         """
 
         try:
@@ -444,20 +463,20 @@ class Prism(Magnet_3D):
         return data
 
     def _calcBy_prism_x(self, a, b, c, Jr, x, y, z):
-        """y component of magnetic field for prism magnet
+        """Calculates y component of magnetic field for prism magnet
         magnetised in x
 
         Args:
-            a ([type]): [description]
-            b ([type]): [description]
-            c ([type]): [description]
-            Jr ([type]): [description]
-            x ([type]): [description]
-            y ([type]): [description]
-            z ([type]): [description]
+            a (float): magnet half width
+            b (float): magnet half depth
+            c (float): magnet half height
+            Jr (float): Remnant magnetisation
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
 
         Returns:
-            [array]: [description]
+            ndarray: By magnetic field component
         """
 
         try:
@@ -472,16 +491,20 @@ class Prism(Magnet_3D):
         return data
 
     def _calcBz_prism_x(self, a, b, c, Jr, x, y, z):
-        """z component of magnetic field for prism magnet
+        """Calculates z component of magnetic field for prism magnet
         magnetised in x
 
         Args:
-            x ([type]): [description]
-            y ([type]): [description]
-            z ([type]): [description]
+            a (float): magnet half width
+            b (float): magnet half depth
+            c (float): magnet half height
+            Jr (float): Remnant magnetisation
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
 
         Returns:
-            [array]: [description]
+            ndarray: Bz magnetic field component
         """
         try:
             # Hide the warning for situtations where there is a divide by zero.
@@ -498,20 +521,17 @@ class Prism(Magnet_3D):
         return data
 
     def _calcB_prism_x(self, x, y, z):
-        """Magnetic field vector due to magnet magnetised in x
+        """Calculates agnetic field vector due to magnet magnetised in x
 
         Args:
-            a ([type]): [description]
-            b ([type]): [description]
-            c ([type]): [description]
-            Jr ([type]): [description]
-            x ([type]): [description]
-            y ([type]): [description]
-            z ([type]): [description]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
 
         Returns:
-            [tuple]: Bx, By, Bz
+            tuple: Bx (ndarray), By (ndarray), Bz (ndarray)
         """
+
         a = self.a
         b = self.b
         c = self.c
@@ -523,19 +543,15 @@ class Prism(Magnet_3D):
         return Bx, By, Bz
 
     def _calcB_prism_z(self, x, y, z):
-        """Magnetic field vector due to magnet magnetised in y
+        """Calculates agnetic field vector due to magnet magnetised in y
 
         Args:
-            a ([type]): [description]
-            b ([type]): [description]
-            c ([type]): [description]
-            Jr ([type]): [description]
-            x ([type]): [description]
-            y ([type]): [description]
-            z ([type]): [description]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
 
         Returns:
-            [tuple]: Bx, By, Bz
+            tuple: Bx (ndarray), By (ndarray), Bz (ndarray)
         """
         a = self.a
         b = self.b
@@ -548,19 +564,15 @@ class Prism(Magnet_3D):
         return Bx, By, Bz
 
     def _calcB_prism_y(self, x, y, z):
-        """Magnetic field vector due to magnet magnetised in z
+        """Calculates agnetic field vector due to magnet magnetised in z
 
         Args:
-            a ([type]): [description]
-            b ([type]): [description]
-            c ([type]): [description]
-            Jr ([type]): [description]
-            x ([type]): [description]
-            y ([type]): [description]
-            z ([type]): [description]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
 
         Returns:
-            [tuple]: Bx, By, Bz
+            tuple: Bx (ndarray), By (ndarray), Bz (ndarray)
         """
         a = self.a
         b = self.b
@@ -576,9 +588,9 @@ class Prism(Magnet_3D):
         """Generates mask of points inside a magnet
 
         Args:
-            x (ndarray/float): x-coordinates
-            y (ndarray/float): y-coordinates
-            z (ndarray/float): z-coordinates
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
         """
         w, d, h = self.get_size()
         xn = -w / 2
@@ -600,54 +612,72 @@ class Prism(Magnet_3D):
 
 
 class Cube(Prism):
-    """Cube Magnet Class. Cuboid width x depth x height.
+    """Cube 3D Magnet Class
 
     Args:
-          width [float]: magnet side length [default 10]
-          J: remnant magnetisation in Tesla [default 1.0]
-
-     Optional Arguments:
-          centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
-          theta: Angle between magnetisation and x-axis [default 90.0 degrees]
-          phi: Angle between magnetisation and z-axis [default 0.0 degrees]
-
+        Prism (Prism): Prism magnet parent class
     """
 
     mag_type = "Cube"
 
     def __init__(
         self,
-        width=10,  # magnet dimensions
+        width=10.0,  # magnet dimensions
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):
+        """Init method
+
+        Args:
+            width (float, optional): Cube side length. Defaults to 10.0.
+
+        Kwargs:
+            center (ndarray): Magnet center. Defaults to (0.0, 0.0, 0.0)
+            mask_magnet (bool): Flag to mask magnet or not in plots
+            alpha (float): Magnet Orientation angle about z (degrees). Defaults to 0.0
+            beta (float): Magnet Orientation angle about y (degrees). Defaults to 0.0
+            gamma (float): Magnet Orientation angle about x (degrees). Defaults to 0.0
+            phi (float): Angle of magnetisation vector (in degrees) with respect to x-axis. Defaults to 90.0
+            theta (float): Angle of magnetisation vector (in degrees) with respect to z-axis. Defaults to 0.0
+        """
 
         super().__init__(width=width, depth=width, height=width, Jr=Jr, **kwargs)
 
 
-class Cylinder(Magnet_3D):
-    """Cylinder Magnet Class
+class Cylinder(Magnet3D):
+    """Cylinder 3D Magnet Class
 
     Args:
-         radius: radius [default 10]
-         length: length [default 10]
-         J: remnant magnetisation in Tesla [default 1.0]
+        Magnet3D (Magnet3D): 3D magnet parent class
 
-
-    Optional Arguments:
-         centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
-
+    Returns:
+        Cylinder: Cylinder 3D magnet object
     """
 
     mag_type = "Cylinder"
 
     def __init__(
         self,
-        radius=10,
-        length=10,  # magnet dimensions
+        radius=10.0,
+        length=10.0,  # magnet dimensions
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):
+        """Init Method
+
+        Args:
+            radius (float, optional): radius. Defaults to 10.0.
+            length (float, optional): length. Defaults to 10.0.
+
+        Kwargs:
+            center (ndarray): Magnet center. Defaults to (0.0, 0.0, 0.0)
+            mask_magnet (bool): Flag to mask magnet or not in plots
+            alpha (float): Magnet Orientation angle about z (degrees). Defaults to 0.0
+            beta (float): Magnet Orientation angle about y (degrees). Defaults to 0.0
+            gamma (float): Magnet Orientation angle about x (degrees). Defaults to 0.0
+            phi (float): Angle of magnetisation vector (in degrees) with respect to x-axis. Defaults to 90.0
+            theta (float): Angle of magnetisation vector (in degrees) with respect to z-axis. Defaults to 0.0
+        """
         super().__init__(Jr, **kwargs)
         self.radius = radius
         self.length = length
@@ -686,12 +716,22 @@ class Cylinder(Magnet_3D):
     def get_Jr(self):
         return _np.array([0.0, 0.0, self.Jr])
 
-    # Use Numba to create compiled Numpy ufunc that accepts arrays
     @staticmethod
     @vectorize([float64(float64, float64, float64, float64)], target="parallel")
     def _cel(kc, p, c, s):
         """Bulirsch's complete elliptic integral
         See NIST Handbook of Mathematical Functions, http://dlmf.nist.gov/19.2
+
+        Numba is used to create a compiled Numpy ufunc that accepts numpy arrays.
+
+        Args:
+            kc (float/ndarray): elliptical modulus
+            p (float/ndarray): real parameter
+            c (float/ndarray): real parameter
+            s (float/ndarray): real parameter
+
+        Returns:
+            float/ndarray: result of computing complete elliptic integral
         """
         if kc == 0:
             data = _np.NaN
@@ -744,12 +784,12 @@ class Cylinder(Magnet_3D):
         (in local coordinates).
 
         Args:
-            x (float/array): x co-ordinates
-            y (float/array): y co-ordinates
-            z (float/array): z co-ordinates
+            x (array): x co-ordinates
+            y (array): y co-ordinates
+            z (array): z co-ordinates
 
         Returns:
-            Vector3: Magnetic field array
+            Field: Magnetic field array
         """
         from ..utils._conversions import cart2pol, pol2cart
         from ..utils._routines3D import _allocate_field_array3
@@ -775,11 +815,11 @@ class Cylinder(Magnet_3D):
         polar cylindrical coordinates
 
         Args:
-            rho (float/array): radial coordinates
-            z (float/array): axial coordinates
+            rho (array): radial coordinates
+            z (array): axial coordinates
 
         Returns:
-            tuple: Brho, Bz - magnetic field components
+            tuple: Brho (ndarray), Bz (ndarray) magnetic field components
         """
         a = self.radius
         b = self.length / 2
@@ -819,9 +859,9 @@ class Cylinder(Magnet_3D):
         """Generates mask of points inside a cylindrical magnet
 
         Args:
-            x (ndarray/float): x-coordinates
-            y (ndarray/float): y-coordinates
-            z (ndarray/float): z-coordinates
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
+            z (ndarray): z-coordinates
         """
 
         radius, length = self.get_size()
@@ -836,29 +876,37 @@ class Cylinder(Magnet_3D):
         return mask
 
 
-class Sphere(Magnet_3D):
-    """Sphere Magnet Class
+class Sphere(Magnet3D):
+    """Sphere 3D Magnet Class
 
     Args:
-         radius: radius [default 10]
-         J: remnant magnetisation in Tesla [default 1.0]
+        Magnet3D (Magnet3D): 3D magnet parent class
 
-
-    Optional Arguments:
-         centre: magnet centre (tuple or Point3) [default Point3(.0, .0, .0)]
-         theta: Angle between magnetisation and x-axis [default 90.0 degrees]
-         phi: Angle between magnetisation and z-axis [default 0.0 degrees]
+    Returns:
+        Sphere: Sphere 3D magnet object
     """
 
     mag_type = "Sphere"
 
     def __init__(
         self,
-        radius=10,
+        radius=10.0,
         Jr=1.0,  # local magnetisation direction
         **kwargs,
     ):
+        """Init Method
 
+        Args:
+            radius (float, optional): radius. Defaults to 10.0.
+            Jr (float, optional): remnant magnetisation. Defaults to 1.0.
+
+        Kwargs:
+            center (ndarray): Magnet center. Defaults to (0.0, 0.0, 0.0)
+            mask_magnet (bool): Flag to mask magnet or not in plots
+            alpha (float): Magnet Orientation angle about z (degrees). Defaults to 0.0
+            beta (float): Magnet Orientation angle about y (degrees). Defaults to 0.0
+            gamma (float): Magnet Orientation angle about x (degrees). Defaults to 0.0
+        """
         super().__init__(Jr, **kwargs)
         self.radius = radius
 

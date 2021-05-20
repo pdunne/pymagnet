@@ -32,10 +32,10 @@ class Quaternion:
         """Initialse a pure quaternion (1; 0, 0, 0)
 
         Args:
-            w (float/array, optional): scalar quaternion. Defaults to 1.0.
-            x (float/array, optional): vector component. Defaults to 0.0.
-            y (float/array, optional): vector component. Defaults to 0.0.
-            z (float/array, optional): vector component. Defaults to 0.0.
+            w (ndarray, optional): scalar quaternion. Defaults to 1.0.
+            x (ndarray, optional): vector component. Defaults to 0.0.
+            y (ndarray, optional): vector component. Defaults to 0.0.
+            z (ndarray, optional): vector component. Defaults to 0.0.
         """
         self.w = _np.asarray(w)
         self.x = _np.asarray(x)
@@ -114,9 +114,9 @@ class Quaternion:
         to ensure and array of (x,y,z) points for quaternion rotation.
 
         Args:
-            x (float/array): x coordinates
-            y (float/arrray): y coordinates
-            z (float/array): z coordinates
+            x (ndarray): x coordinates
+            y (ndarray): y coordinates
+            z (ndarray): z coordinates
 
         Returns:
             ndarray: 3xN numpy ndarray
@@ -183,9 +183,9 @@ class Quaternion:
         """Normalises each x,y,z vector
 
         Args:
-            x (float/array): x array
-            y (float/array): y array
-            z (float/array): z array
+            x (ndarray): x array
+            y (ndarray): y array
+            z (ndarray): z array
 
         Returns:
             array: 3xN array of normalised vectors
@@ -253,18 +253,17 @@ class Quaternion:
         vec = _np.hstack([self.x, self.y, self.z])
         return theta, self._normalise_axis(vec)
 
-    # FIXME: update docstring
     @staticmethod
     def euler_to_quaternion(alpha, beta, gamma):
         """Converts Euler angles to quaternion
 
         Args:
-            alpha (float): X angle
-            beta (float): XX angle
-            gamma (float): angle
+            alpha (float): angle to z-axis
+            beta (float): angle to y-axis
+            gamma (float): angle to x-axis
 
         Returns:
-            [type]: [description]
+            Quaternion: Euler angles as a Quaternion
         """
 
         qw = _np.cos(alpha / 2) * _np.cos(beta / 2) * _np.cos(gamma / 2) + _np.sin(

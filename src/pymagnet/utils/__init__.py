@@ -3,6 +3,12 @@
 # Copyright 2021 Peter Dunne
 """pymagnets.utils
 
+This module imports the classes and functions in the private modules to create a public API, including:
+
+- Quaternion()
+- Global Constants
+- Point structures
+- Vector structures
 
 """
 
@@ -11,5 +17,8 @@ from .global_const import *
 from ._point_structs import *
 from ._routines2D import *
 from ._routines3D import *
-from ._assemblies2D import *
 from ._trigonometry3D import *
+
+# Not implemented yet:
+# from ._assemblies2D import *
+# from ._fit import *

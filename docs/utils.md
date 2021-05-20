@@ -9,5 +9,3 @@
 ::: pymagnet.utils._trigonometry3D
 ::: pymagnet.utils._vector_structs
 ::: pymagnet.utils.global_const
-
-

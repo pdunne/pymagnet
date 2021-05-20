@@ -20,6 +20,12 @@ class Point2(object):
     """
 
     def __init__(self, x, y):
+        """Init method
+
+        Args:
+            x (ndarray): x coordinates
+            y (ndarray): y coordinates
+        """
         self.x = x
         self.y = y
 
@@ -70,23 +76,47 @@ class Point2(object):
         return self.x != other.x or self.y != other.y
 
     def distance_to(self, point):
+        """Calculates distance to a point
+
+        Args:
+            point (Point2): Target point
+
+        Returns:
+            float: distance
+        """
         return _np.sqrt(_np.power(point.x - self.x, 2) + _np.power(point.y - self.y, 2))
 
     def distance_to_origin(self):
+        """Calculates distance to a origin
+
+        Returns:
+            float: distance
+        """
         return self._norm()
 
     def _norm(self):
+        """Norm of Point
+
+        Returns:
+            float: norm
+        """
         return _np.linalg.norm([self.x, self.y], axis=0)
 
-    def move(self, point):
-        try:
-            if type(point) is tuple:
-                self.x += point[0]
-                self.y += point[1]
-            else:
-                self + point
-        except ValueError as e:
-            print(f"Invalid input {0}, should be a 2-element tuple or Point2 object", e)
+
+#     def move(self, point):
+#         """Translates point by
+#
+#         Args:
+#             point (Point2): point
+#         """
+#         try:
+#             if type(point) is tuple:
+#                 self.x += point[0]
+#                 self.y += point[1]
+#             else:
+#                 self + point
+#         except ValueError as e:
+#             print(f"Invalid input {0}, should be a 2-element tuple or Point2 object", e)
 
 
 class Point3(Point2):

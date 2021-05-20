@@ -4,7 +4,7 @@
 # Copyright 2021 Peter Dunne
 """pymagnets.magnets
 
-This module imports the classes and functions in the private modules to create a public API.
+This module imports the classes and functions in the private modules to create a public API. 
 
 """
 from ._magnet_base import *

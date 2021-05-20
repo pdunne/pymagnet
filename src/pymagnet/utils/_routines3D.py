@@ -109,7 +109,7 @@ def slice3D(plane="xy", max1=1.0, max2=1.0, slice_value=0.0, unit="mm", **kwargs
 
 
 def B_calc_3D(points):
-    """Calculates the magnetic field at a series of points due to all `Magnet_3D`
+    """Calculates the magnetic field at a series of points due to all `Magnet3D`
     instances.
 
     Args:
@@ -118,11 +118,11 @@ def B_calc_3D(points):
     Returns:
         Field3: array of Bx,By,Bz,|B| values and associated unit (defaults to 'T')
     """
-    from ..magnets import Magnet_3D
+    from ..magnets import Magnet3D
 
     B = _allocate_field_array3(points.x, points.y, points.z)
 
-    for magnet in Magnet_3D.instances:
+    for magnet in Magnet3D.instances:
         Bx, By, Bz = magnet.calcB(points.x, points.y, points.z)
         B.x += Bx.reshape(B.x.shape)
         B.y += By.reshape(B.y.shape)
@@ -136,9 +136,9 @@ def _allocate_field_array3(x, y, z):
     """Allocates empty Field3 data structure
 
     Args:
-        x (float/array): x co-ordinates
-        y (float/array): y co-ordinates
-        z (float/array): z co-ordinates
+        x (ndarray): x co-ordinates
+        y (ndarray): y co-ordinates
+        z (ndarray): z co-ordinates
 
     Returns:
         Field3: Empty data structure
@@ -221,7 +221,7 @@ def _apply_mask(magnet, field, mask):
     """Calculates B, or applies Nan, inside magnets
 
     Args:
-        magnet (Magnet_3D): instantiated magnet
+        magnet (Magnet3D): instantiated magnet
         field (Field3): magnetic field vector
         mask (array): boolean array where True marks coordinates inside the magnet
 

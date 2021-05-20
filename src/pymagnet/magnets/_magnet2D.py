@@ -2,38 +2,35 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-"""2D Magnet classes
+"""2D Magnet Classes
 
-This private module implements the rectangle and square 2D magnet classes
-
-TODO:
-    * Add __del__ method for removing strong ref in class instance list
+This private module implements the `Rectangle` and `Square` and `Circle` 2D magnet classes. The parent class `Magnet2D` implements the location and orientation
+methods, i.e. magnet center and quaternion methods for rotating the magnet with respect
+to each principal axis.
 
 """
 import numpy as _np
 from ._magnet_base import Magnet
 from ..utils.global_const import MAG_TOL, PI
 
-__all__ = ["Magnet_2D", "Rectangle", "Square", "Circle"]
+__all__ = ["Magnet2D", "Rectangle", "Square", "Circle"]
 
 
-class Magnet_2D(Magnet):
-    """2D Magnet class.
+class Magnet2D(Magnet):
+    """2D Magnet Base Class"""
 
-    Args:
-        width [float]: magnet width
-        height [float]: magnet height
-        Jr [float]: Remnant magnetisation
-        **kwargs: Arbitrary keyword arguments.
-
-    kwargs:
-        center [Tuple(float, float), or numpy array]: center of magnet, defaults to
-        numpy.array([0.0, 0.0])
-    """
-
-    mag_type = "Magnet_2D"
+    mag_type = "Magnet2D"
 
     def __init__(self, Jr, **kwargs) -> None:
+        """Init Method
+
+        Args:
+            Jr (float): signed magnetised of remnant magnetisationnega
+
+        Kwargs:
+            alpha (float): Magnetisation orientation angle (in degrees)
+            center (tuple or ndarrray): magnet center (x, y)
+        """
         super().__init__()
         self.Jr = Jr
 
@@ -62,23 +59,22 @@ class Magnet_2D(Magnet):
         return self.alpha
 
 
-class Rectangle(Magnet_2D):
-    """Rectangle Magnet Class
-
-    Args:
-        width [float]: magnet width [m] (defaults to 20)
-        height [float]: magnet height [m] (defaults to 40)
-        Jr [float]: Remnant magnetisation [T] (defaults to 1.0)
-
-    Optional Arguments:
-         centre: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
-         phi: Angle between magnetisation and x-axis [default 90.0 degrees]
-
-    """
+class Rectangle(Magnet2D):
+    """Rectangular 2D Magnet Class"""
 
     mag_type = "Rectangle"
 
-    def __init__(self, width=20, height=40, Jr=1.0, **kwargs):
+    def __init__(self, width=20.0, height=40.0, Jr=1.0, **kwargs):
+        """Init Method
+
+        Args:
+            width (float, optional): Magnet Width. Defaults to 20.0.
+            height (float, optional): Magnet Height. Defaults to 40.0.
+            Jr (float, optional): Remnant Magnetisation. Defaults to 1.0.
+
+        Kwargs:
+            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis.
+        """
         super().__init__(Jr, **kwargs)
         self.width = width
         self.height = height
@@ -97,7 +93,7 @@ class Rectangle(Magnet_2D):
         """Returns magnet dimesions
 
         Returns:
-            size[ndarray]: numpy array [width, height]
+            ndarray: numpy array [width, height]
         """
         return _np.array([self.width, self.height])
 
@@ -122,10 +118,10 @@ class Rectangle(Magnet_2D):
         return str
 
     def get_Jr(self):
-        """Returns Magnetisation components [Jx, Jy]
+        """Returns Magnetisation vector
 
         Returns:
-            J[ndarray]: [Jx, Jy]
+            ndarray: [Jx, Jy]
         """
         return _np.array([self.Jx, self.Jy])
 
@@ -133,25 +129,25 @@ class Rectangle(Magnet_2D):
         """Calculates the magnetic field at point(s) x,y due to a rectangular magnet
 
         Args:
-            x (float/array): x co-ordinates
-            y (float/array): y co-ordinates
+            x (ndarray): x co-ordinates
+            y (ndarray): y co-ordinates
 
         Returns:
-            Vector2: magnetic field vector
+            tuple: magnetic field vector Bx (ndarray), By (ndarray)
         """
         from ..utils._routines2D import rotate_points_2D, _get_field_array_shape2
 
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
 
-        if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
+        if _np.fabs(self.alpha_radians) > Magnet2D.tol:
             xi, yi = rotate_points_2D(
                 x - self.center[0], y - self.center[1], self.alpha_radians
             )
 
         # Calculate field due to x-component of magnetisation
-        if _np.fabs(self.Jx / self.Jr) > Magnet_2D.tol:
-            if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
+        if _np.fabs(self.Jx / self.Jr) > Magnet2D.tol:
+            if _np.fabs(self.alpha_radians) > Magnet2D.tol:
 
                 # Calculate fields in local frame
                 Btx = self._calcBx_mag_x(xi, yi)
@@ -165,8 +161,8 @@ class Rectangle(Magnet_2D):
                 By = self._calcBy_mag_x(x - self.center[0], y - self.center[1])
 
         # Calculate field due to y-component of magnetisation
-        if _np.fabs(self.Jy / self.Jr) > Magnet_2D.tol:
-            if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
+        if _np.fabs(self.Jy / self.Jr) > Magnet2D.tol:
+            if _np.fabs(self.alpha_radians) > Magnet2D.tol:
 
                 Btx = self._calcBx_mag_y(xi, yi)
                 Bty = self._calcBy_mag_y(xi, yi)
@@ -184,12 +180,11 @@ class Rectangle(Magnet_2D):
         """Bx using 2D Model for rectangular sheets magnetised in x-plane
 
         Args:
-            magnet ([type]): [magnet object]
-            x ([type]): [x array]
-            y ([type]): [y array]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
 
         Returns:
-            Bx[ndarray]
+            ndarray: Bx, x component of magnetic field
         """
         a = self.a
         b = self.b
@@ -206,12 +201,11 @@ class Rectangle(Magnet_2D):
         """By using 2D Model for rectangular sheets magnetised in x-plane
 
         Args:
-            magnet ([type]): [magnet object]
-            x ([type]): [x array]
-            y ([type]): [y array]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
 
         Returns:
-            [array]: [By]
+            ndarray: By, x component of magnetic field
         """
         a = self.a
         b = self.b
@@ -228,12 +222,11 @@ class Rectangle(Magnet_2D):
         """Bx using 2D Model for rectangular sheets magnetised in y-plane
 
         Args:
-            magnet ([type]): [magnet object]
-            x ([type]): [x array]
-            y ([type]): [y array]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
 
         Returns:
-            [array]: [Bx]
+            ndarray: Bx, x component of magnetic field
         """
         a = self.a
         b = self.b
@@ -247,15 +240,14 @@ class Rectangle(Magnet_2D):
             )
 
     def _calcBy_mag_y(self, x: float, y: float) -> float:
-        """By using 2D Model for rectangular sheets magnetised in y-plane
+        """Bx using 2D Model for rectangular sheets magnetised in y-plane
 
         Args:
-            magnet ([type]): [magnet object]
-            x ([type]): [x array]
-            y ([type]): [y array]
+            x (ndarray): x-coordinates
+            y (ndarray): y-coordinates
 
         Returns:
-            [array]: [By]
+            ndarray: By, x component of magnetic field
         """
         a = self.a
         b = self.b
@@ -267,35 +259,24 @@ class Rectangle(Magnet_2D):
 
 
 class Square(Rectangle):
-    """Square Magnet Class
-
-    Args:
-        width [float]: magnet side length [m] (defaults to 20)
-        Jr [float]: Remnant magnetisation [T] (defaults to 1.0)
-
-    Optional Arguments:
-         centre: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
-         phi: Angle between magnetisation and x-axis [default 90.0 degrees]
-
-    """
+    """Square 2D Magnet Class"""
 
     mag_type = "Square"
 
     def __init__(self, width=20, Jr=1.0, **kwargs):
+        """Init Method
+
+        Args:
+            width (float, optional): Sqaure side length. Defaults to 20.0.
+            Jr (float, optional): Remnant Magnetisation. Defaults to 1.0.
+        Kwargs:
+            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis.
+        """
         super().__init__(width=width, height=width, Jr=Jr, **kwargs)
 
 
-class Circle(Magnet_2D):
-    """Circle Magnet Class
-
-    Args:
-        radius [float]: magnet radius [m] (defaults to 10)
-        Jr [float]: Remnant magnetisation [T] (defaults to 1.0)
-
-    Optional Arguments:
-         center: magnet centre (Point2 object) [default Point2(0.0, 0.0)]
-
-    """
+class Circle(Magnet2D):
+    """Circle 2D Magnet Class"""
 
     mag_type = "Circle"
 
@@ -305,6 +286,15 @@ class Circle(Magnet_2D):
         Jr=1.0,  # local magnetisation
         **kwargs,
     ):
+        """Init Method
+
+        Args:
+            radius (float, optional): Radius. Defaults to 10.0.
+            Jr (float, optional): Remnant magnetisation. Defaults to 1.0.
+
+        Kwargs:
+            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis.
+        """
         super().__init__(Jr, **kwargs)
         self.radius = radius
 
@@ -332,13 +322,18 @@ class Circle(Magnet_2D):
         return str
 
     def get_size(self):
+        """Returns radius
+
+        Returns:
+            ndarray: radius
+        """
         return _np.array([self.radius])
 
     def get_Jr(self):
-        """Returns Magnetisation components [Jr]
+        """Returns signed remnant magnetisation
 
         Returns:
-            ndarray: [Jr]
+            ndarray: remnant magnetisation
         """
         return _np.array([self.Jr])
 
@@ -346,8 +341,8 @@ class Circle(Magnet_2D):
         """Calculates the magnetic field due to long bipolar cylinder
 
         Args:
-            x (float/array): x coordinates
-            y (float/array): y coordinates
+            x (ndarray): x coordinates
+            y (narray): y coordinates
 
         Returns:
             tuple: Bx, By magnetic field in cartesian coordinates
@@ -355,7 +350,7 @@ class Circle(Magnet_2D):
         from ..utils._conversions import cart2pol, vector_pol2cart
         from ..utils._routines2D import rotate_points_2D
 
-        if _np.fabs(self.alpha_radians) > Magnet_2D.tol:
+        if _np.fabs(self.alpha_radians) > Magnet2D.tol:
             xi, yi = rotate_points_2D(
                 x - self.center[0], y - self.center[1], self.alpha_radians
             )
@@ -385,8 +380,8 @@ class Circle(Magnet_2D):
         coordinates
 
         Args:
-            rho (float/array): radial values
-            phi (float/array): azimuthal values
+            rho (ndarray): radial values
+            phi (ndarray): azimuthal values
 
         Returns:
             tuple: Br, Bphi magnetic field in polar coordinates

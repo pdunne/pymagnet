@@ -58,10 +58,16 @@ class Registry:
 
     @classmethod
     def get_instances(cls):
+        """Gets lists of instances
+
+        Returns:
+            set: all class instances
+        """
         return cls.instances
 
     @classmethod
     def get_num_instances(cls, Print_Val=False):
+
         """Return number of instances of class
 
         Args:
@@ -76,10 +82,10 @@ class Registry:
 
     @classmethod
     def _register_instance(cls, instance):
-        """[summary]
+        """Adds class instance to registry
 
         Args:
-            instance ([type]): [description]
+            instance (instance): class instance
         """
         cls.instances.add(instance)
         for b in cls.__bases__:
@@ -117,20 +123,20 @@ class Magnet(Registry):
 
 def reset_magnets():
     """Returns a list of all instantiated magnets."""
-    from ._magnet2D import Magnet_2D, Rectangle, Square, Circle
+    from ._magnet2D import Magnet2D, Rectangle, Square, Circle
     from ._polygon2D import PolyMagnet
-    from ._magnet3D import Magnet_3D, Prism, Cube, Cylinder, Sphere
+    from ._magnet3D import Magnet3D, Prism, Cube, Cylinder, Sphere
     from ._polygon3D import Mesh
 
     magnet_classes = [
         # Registry,
         Magnet,
-        Magnet_2D,
+        Magnet2D,
         Rectangle,
         Square,
         Circle,
         PolyMagnet,
-        Magnet_3D,
+        Magnet3D,
         Prism,
         Cube,
         Cylinder,

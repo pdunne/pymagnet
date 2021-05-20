@@ -8,6 +8,9 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources, and 
 
 """
+
+__all__ = ["plot_2D_line", "plot_2D_contour", "plot_3D_contour", "plot_sub_contour_3D"]
+
 from .. import magnets as _mag
 from ..utils._conversions import get_unit_value_meter, get_unit_value_tesla
 from ..utils._vector_structs import Field2, Point_Array2
@@ -22,15 +25,7 @@ from matplotlib.transforms import Affine2D
 
 
 class patch(object):
-    """Encodes magnet dimensions for drawing on plots
-
-    Args:
-            x (float): centre, x
-            y (float): center, y
-            width (float): width
-            height (float): width
-            transform (matplotlib Affine2D): transform object, `rotate_deg_around`
-    """
+    """Encodes magnet dimensions for drawing on plots"""
 
     def __init__(self, x, y, width, height, transform, type):
         """Initialse a patch
@@ -91,11 +86,7 @@ class arrow(object):
 
 
 class magnet_patch(object):
-    """Magnet drawing class
-
-    Args:
-        object ([type]): [description]
-    """
+    """Magnet drawing class"""
 
     def __init__(self, patch, arrow) -> None:
         super().__init__()
@@ -110,8 +101,15 @@ def plot_2D_line(point_array, field, **kwargs):
     """Line Plot of field from 2D magnet
 
     Args:
-        x ([array]): [assumes in m]
-        field ([field vector_2D]): [field vector object]
+        point_array (Point_Array2): coordinates
+        field (Field2): Magnetic Field
+
+    Kwargs:
+        xlab (str): xlabel
+        ylab (str): ylabel
+        axis_scale (str): unused
+        save_fig (bool): Save to png file. Defaults to False
+
     """
 
     xlab = kwargs.pop("xlab", f"x ({point_array.unit})")
@@ -136,12 +134,30 @@ def plot_2D_line(point_array, field, **kwargs):
 
 
 def plot_2D_contour(point_array, field, **kwargs):
-    """Contour Plot of field
+    """Contour plot of field
 
     Args:
-        x ([array]): [assumes in µm]
-        y ([array]): [assumes in nm]
-        field ([field vector_2D]): [field vector object]
+        point_array (Point_Array2): coordinates
+        field (Field2): Magnetic Field
+
+    Kwargs:
+        save_fig (bool): Save to png file. Defaults to False
+        xlab (str): x axis label
+        ylab (str): y axis label
+        clab (str): label for colorbar
+        axis_scale (str): axis aspect ratio Defaults to 'equal'.
+        show_magnets (bool): Draw magnets. Defaults to True
+        field_component (str): Defaults to 'n'.
+        plot_type (str): Draw `contour` or `streamplot`. Defaults to 'contour'
+        cmap (str): Colormap. Defaults to `magma`
+        vector_plot (bool): Draw vectors as arrows. Defaults to False.
+        vector_color (str): Arrow color. Defaults to 'w'
+        cmin (float): Color scale minimum. Defaults to 0.0
+        cmax (float): Color scale minimum. Defaults to twice the mean field
+        num_levels (int): Number of contour levels. Defaults to 11.
+
+    Raises:
+        Exception: plot_type must be 'contour' or 'streamplot'
     """
     import matplotlib.cm as _cm
     from ..magnets._polygon2D import PolyMagnet
@@ -286,12 +302,12 @@ def _num_patch_2D():
     """Generates patches and arrows for drawing
 
     Returns:
-        [tuple(list, list)]: lists of patch and arrow objects
+        tuple: (list, list) lists of patch and arrow objects
     """
-    from ..magnets._magnet2D import Magnet_2D, Rectangle, Circle
+    from ..magnets._magnet2D import Magnet2D, Rectangle, Circle
 
     patch_array = []
-    for magnet in Magnet_2D.instances:
+    for magnet in Magnet2D.instances:
         if issubclass(magnet.__class__, Rectangle):
             magnet_patch_tmp = _gen_rect_patch(magnet)
             patch_array.append(magnet_patch_tmp)
@@ -306,9 +322,9 @@ def _gen_rect_patch(magnet):
     """Generates rectangular patches and arrows to represent magnets for 2D plots
 
     Args:
-        magnet (Magnet object): instance of a magnet class
+        magnet (Magnet2D): instance of a magnet class
     Returns:
-        struct: magnet_patch data structure
+        magnet_patch: magnet_patch data structure
     """
     # from matplotlib.transforms import Affine2D
 
@@ -344,10 +360,10 @@ def _gen_circle_patch(magnet):
     """Generates circcmaxar patches and arrows to represent magnets for 2D plots
 
     Args:
-        magnet (Magnet object): instance of a magnet class
+        magnet (Magnet2D): instance of a magnet class
 
     Returns:
-        struct: magnet_patch data structure
+        magnet_patch: magnet_patch data structure
     """
     # from matplotlib.transforms import Affine2D
 
@@ -381,7 +397,7 @@ def _draw_magnets2(ax):
     """Draws Magnets and magnetisation arrows on 2D plots
 
     Args:
-        ax (axis?): axis reference
+        ax (axis): axis reference
     """
     patch_array = _num_patch_2D()
 
@@ -430,23 +446,22 @@ def _draw_magnets2(ax):
         ax.add_patch(ar)
 
 
-def _vector_plot2(point_array, field, NQ, vector_color):
+def _vector_plot2(points, field, NQ, vector_color):
     """Draws quiver plot of field vectors
 
     Args:
-        x (float/array): x coordinates
-        y (float/array): y coordinates
-        field (Vector2): field structure
-        NQ (int): Plot every NQth vector
-        vector_color (string): quiver color
+        points (Point_Array2): coordinates
+        field (Field2): Magnetic field
+        NQ (int): Plot every NQth arrow in quiver/vector plot
+        vector_color (str): Color of arrows
     """
-    NPx, NPy = point_array.x.shape
+    NPx, NPy = points.x.shape
     if NQ != 0:
         NSx, NSy = NPx // NQ, NPy // NQ
         with _np.errstate(divide="ignore", invalid="ignore"):
             _plt.quiver(
-                point_array.x[::NSx, ::NSy],
-                point_array.y[::NSx, ::NSy],
+                points.x[::NSx, ::NSy],
+                points.y[::NSx, ::NSy],
                 field.x[::NSx, ::NSy] / field.n[::NSx, ::NSy],
                 field.y[::NSx, ::NSy] / field.n[::NSx, ::NSy],
                 color=vector_color,
@@ -455,15 +470,16 @@ def _vector_plot2(point_array, field, NQ, vector_color):
 
 
 def plot_3D_contour(points, field, plane, **kwargs):
-    """Contour Plot of field
+    """Contour plot of field
 
     Args:
-        x ([array]): [assumes in µm]
-        y ([array]): [assumes in nm]
-        field ([field vector]): [field vector object]
-    """
-    # import matplotlib.cm as _cm
+        points (Point_Array2): coordinates
+        field (Field2): Magnetic field
+        plane (str): Plane to draw contour on. Can be 'xy', 'xz', or 'yz'
 
+    Raises:
+        Exception: plot_type must be 'contour' or 'streamplot
+    """
     axis_scale = kwargs.pop("axis_scale", "equal")
 
     plot_type = kwargs.pop("plot_type", "contour")
@@ -606,14 +622,13 @@ def plot_3D_contour(points, field, plane, **kwargs):
 
 
 def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
-    """Contour plot of 3D simulation
+    """Contour plot of a single magnetic field component of a 3D simulation
 
     Args:
-        plot_x ([type]): [description]
-        plot_y ([type]): [description]
-        plot_B ([type]): [description]
+        plot_x (ndarray): coordinates for x-axis of plot
+        plot_y (ndarray): coordinates for y-axis of plot
+        plot_B (ndarray): Magnetic field component to plot
     """
-
     cmap = kwargs.pop("cmap", "seismic")
     xlab = kwargs.pop("xlab", f"x (m)")
     ylab = kwargs.pop("ylab", f"y (m)")
@@ -664,7 +679,7 @@ def line_plot_cylinder(magnet, **kwargs):
     This is an example helper function.
 
     Args:
-        magnet ([magnet object]):
+        magnet (Cylinder): instance of magnetic cylinder
     """
     rho = _np.linspace(-2 * magnet.radius, 2 * magnet.radius, 51)
     z = _np.array([magnet.length * 1.1 / 2])
@@ -685,7 +700,7 @@ def contour_plot_cylinder(magnet, **kwargs):
 
 
     Args:
-        magnet ([type]): [description]
+        magnet (Cylinder): instance of magnetic cylinder
     """
     NP = 101
     NPJ = NP * 1j
@@ -713,23 +728,3 @@ def contour_plot_cylinder(magnet, **kwargs):
         cmin=0,
         cmax=1.0,
     )
-
-
-def param_test_2D(width, height):
-    """Example plots while varying the size of a permanent magnet
-
-    This is an example helper function.
-
-    Args:
-        width ([type]): [description]
-        height ([type]): [description]
-    """
-    x = _np.linspace(-2 * width, 2 * width, 100)
-    y = 1 + height
-
-    B = _mag._routines2.B_calc_2D(x, y)
-    plot_2D_line(x, B)
-    x, y = _mag._routines2.grid2D(1.5 * width, height)
-    B = _mag._routines2.B_calc_2D(x, y)
-    cmap = "viridis"
-    plot_2D_contour(x, y, B, cmax=1, num_levels=11, cmap=cmap)
