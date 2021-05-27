@@ -12,13 +12,19 @@ TODO:
 """
 from ..magnets._magnet_base import Registry
 from ..magnets import *
-from ..utils import grid2D, grid3D, slice3D, B_calc_3D
+from ..utils import grid3D, slice3D, B_calc_3D
 from ..utils.global_const import PI, MAG_TOL
 import numpy as _np
 import plotly.graph_objects as _go
 
 
-__all__ = ["surface_slice3", "volume_plot", "volume_calculate_plot"]
+__all__ = [
+    "plot_magnet",
+    "slice_plot",
+    "slice_quickplot",
+    "volume_plot",
+    "volume_quickplot",
+]
 
 
 class Polyhedron(Registry):
@@ -547,7 +553,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
     data_objects = []
     for magnet in Magnet3D.instances:
         if issubclass(magnet.__class__, Mesh):
-            mesh_data = Graphic_Mesh(magnet.mesh_vectors, magnet.start, magnet.stop)
+            mesh_data = Graphic_Mesh(magnet.mesh_vectors)
             data_objects.append(mesh_data.generate_vertices())
 
         else:
@@ -644,7 +650,107 @@ def _generate_volume_data(points, field, **kwargs):
     )
 
 
-def surface_slice3(**kwargs):
+def plot_magnet(unit="mm", **kwargs):
+    """Renders magnets
+
+    Args:
+        unit (str, optional): unit scale. Defaults to 'mm'.
+
+    Returns:
+        fig: reference to figure
+    """
+
+    reset_polyhedra()
+
+    magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
+    data_objects = []
+
+    data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
+
+    fig = _go.Figure(data=data_objects)
+
+    fig.update_layout(
+        scene=dict(
+            xaxis_title="x (" + unit + ")",
+            yaxis_title="y (" + unit + ")",
+            zaxis_title="z (" + unit + ")",
+        ),
+        width=700,
+        margin=dict(r=20, b=10, l=10, t=10),
+    )
+    fig.show()
+    return fig
+
+
+def slice_plot(data_dict, **kwargs):
+    """Plots magnetic field slices.
+    A convenience function.
+
+    Returns:
+        tuple: fig (reference to figure), data_objects (plotly dict)
+    """
+
+    reset_polyhedra()
+
+    opacity = kwargs.pop("opacity", 0.1)
+    magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
+    cone_opacity = kwargs.pop("cone_opacity", 1.0)
+    # planes = kwargs.pop("planes", ["xy", "xz", "yz"])
+
+    cmin = kwargs.pop("cmin", 0)
+    cmax = kwargs.pop("cmax", 0.5)
+    colorscale = kwargs.pop("colorscale", "viridis")
+    num_arrows = kwargs.pop("num_arrows", 20)
+
+    data_objects = []
+
+    show_magnets = kwargs.pop("show_magnets", True)
+
+    if show_magnets:
+        data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
+
+    for plane in data_dict.keys():
+        points = data_dict[plane]["points"]
+        field = data_dict[plane]["field"]
+
+        data_objects.append(
+            _draw_surface_slice(
+                points,
+                field,
+                colorscale,
+                opacity=opacity,
+                cmin=cmin,
+                cmax=cmax,
+                showscale=True,
+            )
+        )
+
+        num_points = field.x.shape[0]
+
+        NA = num_points // num_arrows
+
+        if NA < 1:
+            NA = 1
+        data_objects.append(
+            _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
+        )
+
+    fig = _go.Figure(data=data_objects)
+
+    fig.update_layout(
+        scene=dict(
+            xaxis_title="x (" + points.unit + ")",
+            yaxis_title="y (" + points.unit + ")",
+            zaxis_title="z (" + points.unit + ")",
+        ),
+        width=700,
+        margin=dict(r=20, b=10, l=10, t=10),
+    )
+    fig.show()
+    return fig, data_objects
+
+
+def slice_quickplot(**kwargs):
     """Calculates and plots magnetic field slices.
     A convenience function.
 
@@ -655,7 +761,10 @@ def surface_slice3(**kwargs):
     reset_polyhedra()
 
     max1 = kwargs.pop("max1", 30)
-    max2 = kwargs.pop("max", 30)
+    max2 = kwargs.pop("max2", 30)
+    min1 = kwargs.pop("min1", -1 * max1)
+    min2 = kwargs.pop("min2", -1 * max2)
+
     slice_value = kwargs.pop("slice_value", 0.0)
     unit = kwargs.pop("unit", "mm")
 
@@ -687,7 +796,9 @@ def surface_slice3(**kwargs):
         points = slice3D(
             plane=plane,
             max1=max1,
+            min1=min1,
             max2=max2,
+            min2=min2,
             slice_value=slice_value,
             unit=unit,
             num_points=num_points,
@@ -802,7 +913,7 @@ def volume_plot(points, field, **kwargs):
     return fig, data_objects
 
 
-def volume_calculate_plot(**kwargs):
+def volume_quickplot(**kwargs):
     """Calculates and plots magnetic field slices.
     A convenience function.
 

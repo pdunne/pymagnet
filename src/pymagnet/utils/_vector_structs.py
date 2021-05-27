@@ -19,12 +19,12 @@ class Point_Array1(object):
     ('mm', 'cm', etc)
     """
 
-    def __init__(self, z, unit="m"):
+    def __init__(self, z, unit="mm"):
         """Init method
 
         Args:
             z (ndarray): z coordinates
-            unit (str, optional): Unit of length. Defaults to "m".
+            unit (str, optional): Unit of length. Defaults to "mm".
 
         Raises:
             ValueError: Unit must an SI prefix, e.g. km, m, cm, mm
@@ -85,13 +85,13 @@ class Point_Array2(object):
     ('mm', 'cm', etc)
     """
 
-    def __init__(self, x, y, unit="m"):
+    def __init__(self, x, y, unit="mm"):
         """Init Method
 
         Args:
             x (ndarray): x coordinates
             y (ndarray): y coordinates
-            unit (str, optional): Unit of length. Defaults to "m".
+            unit (str, optional): Unit of length. Defaults to "mm".
 
         Raises:
             ValueError: Unit must an SI prefix, e.g. km, m, cm, mm
@@ -109,8 +109,8 @@ class Point_Array2(object):
     def __str__(self) -> str:
         return f"[Unit: {self.unit}\nx: {self.x}\ny: {self.y}]"
 
-    # def get_unit(self):
-    #     return self.unit
+    def get_unit(self):
+        return self.unit
 
     def change_unit(self, new_unit, get_unit_value=get_unit_value_meter):
         """Converts point array to a different unit. e.g from 'cm' to 'mm'
@@ -152,14 +152,14 @@ class Point_Array3(Point_Array2):
     ('mm', 'cm', etc)
     """
 
-    def __init__(self, x, y, z, unit="m"):
+    def __init__(self, x, y, z, unit="mm"):
         """Init Method
 
         Args:
             x (ndarray): x coordinates
             y (ndarray): y coordinates
             z (ndarray): z coordinates
-            unit (str, optional): Unit of length. Defaults to "m".
+            unit (str, optional): Unit of length. Defaults to "mm".
 
         Raises:
             ValueError: Unit must an SI prefix, e.g. km, m, cm, mm

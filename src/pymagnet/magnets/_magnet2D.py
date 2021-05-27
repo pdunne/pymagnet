@@ -28,8 +28,8 @@ class Magnet2D(Magnet):
             Jr (float): signed magnetised of remnant magnetisationnega
 
         Kwargs:
-            alpha (float): Magnetisation orientation angle (in degrees)
-            center (tuple or ndarrray): magnet center (x, y)
+            alpha (float): Magnetisation orientation angle (in degrees). Defaults to 0.
+            center (tuple or ndarrray): magnet center (x, y). Defaults to (0,0).
         """
         super().__init__()
         self.Jr = Jr
@@ -73,7 +73,9 @@ class Rectangle(Magnet2D):
             Jr (float, optional): Remnant Magnetisation. Defaults to 1.0.
 
         Kwargs:
-            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis.
+            alpha (float): Magnetisation orientation angle (in degrees). Defaults to 0.
+            center (tuple or ndarrray): magnet center (x, y). Defaults to (0,0).
+            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis. Defaults to 90.
         """
         super().__init__(Jr, **kwargs)
         self.width = width
@@ -269,8 +271,11 @@ class Square(Rectangle):
         Args:
             width (float, optional): Sqaure side length. Defaults to 20.0.
             Jr (float, optional): Remnant Magnetisation. Defaults to 1.0.
+
         Kwargs:
-            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis.
+             alpha (float): Magnetisation orientation angle (in degrees). Defaults to 0.
+            center (tuple or ndarrray): magnet center (x, y). Defaults to (0,0).
+            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis. Defaults to 90.
         """
         super().__init__(width=width, height=width, Jr=Jr, **kwargs)
 
@@ -293,7 +298,9 @@ class Circle(Magnet2D):
             Jr (float, optional): Remnant magnetisation. Defaults to 1.0.
 
         Kwargs:
-            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis.
+            alpha (float): Unused. For rotations use phi instead
+            center (tuple or ndarrray): magnet center (x, y). Defaults to (0,0)
+            phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis. Defaults to 90.
         """
         super().__init__(Jr, **kwargs)
         self.radius = radius

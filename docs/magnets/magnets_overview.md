@@ -2,8 +2,6 @@
 
 ## 2D Magnets
 
-
-
 ### Rectangle
 
 Rectangle 2D magnet class

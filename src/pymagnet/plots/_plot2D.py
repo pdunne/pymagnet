@@ -560,7 +560,7 @@ def plot_3D_contour(points, field, plane, **kwargs):
 
         if vector_plot:
             B_2D = Field2(stream_x, stream_y, unit=field.unit)
-            B_2D.calc_norm()
+            B_2D.n = field.n
             points_2D = Point_Array2(plot_x, plot_y, unit=points.unit)
             _vector_plot2(points_2D, B_2D, NQ, vector_color)
 

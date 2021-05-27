@@ -22,6 +22,7 @@ def grid3D(xmax, ymax, zmax, **kwargs):
         num_points (int): Number of points in each direction. Defaults to 100
         xmin (float): minimum x value. Defaults to -xmax
         ymin (float): minimum y value. Defaults to -ymax
+        zmin (float): minimum y value. Defaults to -zmax
         unit (string): unit length. Defaults to 'mm'
 
     Returns:
@@ -44,9 +45,6 @@ def grid3D(xmax, ymax, zmax, **kwargs):
         num_points_y = num_points
         num_points_z = num_points
 
-    xmin = kwargs.pop("lx", -1 * xmax)
-    ymin = kwargs.pop("ly", -1 * ymax)
-    zmin = kwargs.pop("lz", -1 * zmax)
     x, y, z = _np.mgrid[
         xmin : xmax : num_points_x * 1j,
         ymin : ymax : num_points_y * 1j,
@@ -78,8 +76,8 @@ def slice3D(plane="xy", max1=1.0, max2=1.0, slice_value=0.0, unit="mm", **kwargs
         Point_Array3: array of x, y, and z values of shape (num_points, num_points) and associated unit
     """
     num_points = kwargs.pop("num_points", 100)
-    min1 = kwargs.pop("xmin", -1 * max1)
-    min2 = kwargs.pop("ymin", -1 * max2)
+    min1 = kwargs.pop("min1", -1 * max1)
+    min2 = kwargs.pop("min2", -1 * max2)
     NPj = num_points * 1j
 
     if plane.lower() == "xy":

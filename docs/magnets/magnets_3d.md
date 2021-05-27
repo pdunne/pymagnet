@@ -119,7 +119,7 @@ For the general case, including off-axis points the field in cylindrical coordin
 becomes
 
 $$
-B_\rho = B_0 \left[ \alpha_+ C(k_+, 1, 1, -1) 
+B_\rho = B_0 \left[ \alpha_+ C(k_+, 1, 1, -1)
 - \alpha_- C(k_-, 1, 1, -1)
 \right]
 $$
