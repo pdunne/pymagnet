@@ -7,7 +7,7 @@ PI, PI/2, PI/4, µ0, and three internally used constants:
 FP_CUTOFF = 1e-8, ALIGN_CUTOFF = 1e-5, MAG_TOL = 1e-4
 """
 
-__all__ = ["PI", "PI_2", "PI_4", "u0", "FP_CUTOFF", "ALIGN_CUTOFF", "MAG_TOL"]
+__all__ = ["PI", "PI_2", "PI_4", "MU0", "FP_CUTOFF", "ALIGN_CUTOFF", "MAG_TOL"]
 
 # float: Module level PI.
 from math import pi as PI
@@ -18,8 +18,8 @@ PI_2 = PI / 2.0
 # float: Module level PI/4.
 PI_4 = PI / 4.0
 
-# float: Module level u0, permittivity of free space.
-u0 = 4e-7 * PI
+# float: Module level MU0, permittivity of free space.
+MU0 = 4e-7 * PI
 
 # float: Floating point cut off used for vector norm, and logs in mesh calculations
 FP_CUTOFF = 1e-8

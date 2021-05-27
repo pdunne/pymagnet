@@ -1,6 +1,6 @@
 __all__ = ["calc_force_prism"]
 import numpy as _np
-from .global_const import FP_CUTOFF, u0
+from .global_const import FP_CUTOFF, MU0
 from ._conversions import get_unit_value_meter
 from ._vector_structs import Point_Array3
 from ._routines3D import _allocate_field_array3
@@ -9,7 +9,7 @@ from ..magnets import Magnet3D
 # from numba import njit, guvectorize
 
 
-def get_ranges_prism(active_magnet):
+def _get_ranges_prism(active_magnet):
     size_x, size_y, size_z = active_magnet.get_size()
     xc, yc, zc = active_magnet.get_center()
     xlim = (-size_x / 2 + xc, size_x / 2 + xc)
@@ -20,7 +20,7 @@ def get_ranges_prism(active_magnet):
     return xlim, ylim, zlim, areas
 
 
-def gen_grid(xlim=(0, 10), ylim=(0, 10), num_rectangles=10):
+def _gen_grid(xlim=(0, 10), ylim=(0, 10), num_rectangles=10):
     xmin = xlim[0]
     xmax = xlim[1]
     ymin = ylim[0]
@@ -40,7 +40,7 @@ def gen_grid(xlim=(0, 10), ylim=(0, 10), num_rectangles=10):
     return x, y
 
 
-def gen_planar_grid(xlim, ylim, zlim, face="x", num_rectangles=10, unit="mm"):
+def _gen_planar_grid(xlim, ylim, zlim, face="x", num_rectangles=10, unit="mm"):
     if face.lower() == "x":
         range_1 = ylim
         range_2 = zlim
@@ -56,7 +56,7 @@ def gen_planar_grid(xlim, ylim, zlim, face="x", num_rectangles=10, unit="mm"):
         planes = zlim
 
     # Gets centroids of num_rectangles
-    points_1, points_2 = gen_grid(
+    points_1, points_2 = _gen_grid(
         xlim=range_1, ylim=range_2, num_rectangles=num_rectangles
     )
     points_3_lower = _np.tile(planes[0], points_1.shape)
@@ -76,7 +76,7 @@ def gen_planar_grid(xlim, ylim, zlim, face="x", num_rectangles=10, unit="mm"):
     return points_lower, points_upper
 
 
-def calc_field_face(active_magnet, points):
+def _calc_field_face(active_magnet, points):
     field = _allocate_field_array3(points.x, points.y, points.z)
     for magnet in Magnet3D.instances:
         if magnet is not active_magnet:
@@ -106,50 +106,50 @@ def calc_force_prism(active_magnet, num_rectangles=20, unit="mm"):
     Jvec = active_magnet.get_Jr()
     Jnorm = active_magnet.Jr
 
-    xlim, ylim, zlim, areas = get_ranges_prism(active_magnet)
+    xlim, ylim, zlim, areas = _get_ranges_prism(active_magnet)
     force = _np.zeros(3)
     torque = _np.zeros(3)
     if Jvec[0] / Jnorm > FP_CUTOFF:
-        points_lower, points_upper = gen_planar_grid(
+        points_lower, points_upper = _gen_planar_grid(
             xlim, ylim, zlim, face="x", num_rectangles=num_rectangles, unit=unit
         )
 
-        total_field, total_torque = calc_field_face(active_magnet, points_lower)
+        total_field, total_torque = _calc_field_face(active_magnet, points_lower)
         force += total_field * -Jvec[0] * areas[0] / num_points_sq
         torque += total_torque * -Jvec[0] * areas[0] / num_points_sq
 
-        total_field, total_torque = calc_field_face(active_magnet, points_upper)
+        total_field, total_torque = _calc_field_face(active_magnet, points_upper)
         force += total_field * Jvec[0] * areas[0] / num_points_sq
         torque += total_torque * Jvec[0] * areas[0] / num_points_sq
 
     if Jvec[1] / Jnorm > FP_CUTOFF:
-        points_lower, points_upper = gen_planar_grid(
+        points_lower, points_upper = _gen_planar_grid(
             xlim, ylim, zlim, face="y", num_rectangles=num_rectangles, unit=unit
         )
 
-        total_field, total_torque = calc_field_face(active_magnet, points_lower)
+        total_field, total_torque = _calc_field_face(active_magnet, points_lower)
         force += total_field * -Jvec[1] * areas[1] / num_points_sq
         torque += total_torque * -Jvec[1] * areas[1] / num_points_sq
 
-        total_field, total_torque = calc_field_face(active_magnet, points_upper)
+        total_field, total_torque = _calc_field_face(active_magnet, points_upper)
         force += total_field * Jvec[1] * areas[1] / num_points_sq
         torque += total_torque * Jvec[1] * areas[1] / num_points_sq
 
     if Jvec[2] / Jnorm > FP_CUTOFF:
-        points_lower, points_upper = gen_planar_grid(
+        points_lower, points_upper = _gen_planar_grid(
             xlim, ylim, zlim, face="z", num_rectangles=num_rectangles, unit=unit
         )
 
-        total_field, total_torque = calc_field_face(active_magnet, points_lower)
+        total_field, total_torque = _calc_field_face(active_magnet, points_lower)
         force += total_field * -Jvec[2] * areas[2] / num_points_sq
         torque += total_torque * -Jvec[2] * areas[2] / num_points_sq
 
-        total_field, total_torque = calc_field_face(active_magnet, points_upper)
+        total_field, total_torque = _calc_field_face(active_magnet, points_upper)
         force += total_field * Jvec[2] * areas[2] / num_points_sq
         torque += total_torque * Jvec[2] * areas[2] / num_points_sq
 
     scaling_factor = get_unit_value_meter(points_lower.get_unit())
-    force /= u0 / scaling_factor / scaling_factor
-    torque /= u0 / scaling_factor / scaling_factor
+    force /= MU0 / scaling_factor / scaling_factor
+    torque /= MU0 / scaling_factor / scaling_factor
 
     return force, torque

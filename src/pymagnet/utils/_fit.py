@@ -20,6 +20,6 @@ pass
 #     R = 14/2000
 #     HH = 10/2000
 #     n = 1
-#     I = Jr/(u0*n)
+#     I = Jr/(MU0*n)
 #     # return(mag.Byy2d(xDim, yDim, Jr, 0, yDim + y-dy))
 #     return(mag.solBz(R, HH, HH+y-dy, n, I))

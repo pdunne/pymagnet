@@ -6,7 +6,7 @@
 """
 import numpy as _np
 from ._vector_structs import Point_Array2, Field2
-from .global_const import u0
+from .global_const import MU0
 
 __all__ = ["grid2D", "B_calc_2D", "rotate_points_2D"]
 
@@ -125,9 +125,9 @@ def FgradB_2D(B, x, y, chi_m, c):
     BgB.n = dB.n * B.n
     BgB.x = dB.x * B.n
     BgB.y = dB.y * B.n
-    FB.n = (1 / u0) * chi_m * c * BgB.n
-    FB.x = (1 / u0) * chi_m * c * BgB.x
-    FB.y = (1 / u0) * chi_m * c * BgB.y
+    FB.n = (1 / MU0) * chi_m * c * BgB.n
+    FB.x = (1 / MU0) * chi_m * c * BgB.x
+    FB.y = (1 / MU0) * chi_m * c * BgB.y
     return FB
 
 
