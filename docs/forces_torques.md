@@ -25,4 +25,3 @@ $$
 $$
 
 where $\mathbf{r}$ is the vector from the point about which the torque is computed.
-

@@ -9,51 +9,27 @@ from ..utils._quaternion import Quaternion
 from ..magnets import Magnet3D
 
 
-# def _gen_sphere_grid_cartesian(active_magnet, num_samples=200, unit="mm", thresh=1e-4):
-#
-#     radius = active_magnet.get_size()
-#     xc, yc, zc = active_magnet.get_center()
-#     Jr = active_magnet.Jr
-#
-#     NP = num_samples * 1j
-#     x, y, z = _np.mgrid[
-#         -radius + xc : radius + xc : NP,
-#         -radius + yc : radius + yc : NP,
-#         -radius + zc : radius + zc : NP,
-#     ]
-#
-#     index = _np.abs((x ** 2 + y ** 2 + z ** 2) - radius ** 2) / radius ** 2 <= thresh
-#
-#     x = x[index]
-#     y = y[index]
-#     z = z[index]
-#
-#     Jnorm = Jr * z / radius
-#     points = Point_Array3(x.ravel(), y.ravel(), z.ravel(), unit=unit)
-#
-#     return points, Jnorm.ravel()
-#
-
-
-def _gen_sphere_grid(active_magnet, num_samples=10, unit="mm"):
+def _gen_sphere_grid(active_magnet, Jvec, num_samples=10, unit="mm"):
 
     NS = num_samples * 1j
     radius = active_magnet.get_size()
-    Jr = active_magnet.Jr
+    # Jr = active_magnet.Jr
 
     u, v = _np.mgrid[0 : 2 * PI * (num_samples - 1) / num_samples : NS, 0:PI:NS]
 
     x = radius * _np.cos(u) * _np.sin(v)
     y = radius * _np.sin(u) * _np.sin(v)
     z = radius * _np.cos(v)
-    Jnorm = Jr * _np.cos(v)
+    # Jnorm = Jr * _np.cos(v)
 
     # Delete origin duplicates
-    Jnorm = _np.delete(Jnorm, _np.arange(num_samples, Jnorm.size, num_samples)).ravel()
+    # Jnorm = _np.delete(Jnorm, _np.arange(num_samples, Jnorm.size, num_samples)).ravel()
 
     y = _np.delete(y, _np.arange(num_samples, x.size, num_samples))
     z = _np.delete(z, _np.arange(num_samples, x.size, num_samples))
     x = _np.delete(x, _np.arange(num_samples, x.size, num_samples))
+    Jnorm = _np.dot(Jvec, _np.array([x.ravel(), y.ravel(), z.ravel()]) / radius)
+
     points = Point_Array3(x.ravel(), y.ravel(), z.ravel(), unit=unit)
 
     return points, Jnorm
@@ -104,15 +80,17 @@ def calc_force_sphere(active_magnet, num_samples=200, unit="mm"):
         reverse_rotation = None
         Jrot = Jvec
 
-    center = active_magnet.get_center()
+    xc, yc, zc = active_magnet.get_center()
 
     points, Jn = _gen_sphere_grid(
         active_magnet,
+        Jvec=Jrot,
         num_samples=num_samples,
         unit=unit,
-        Jvec=Jrot,
-        reverse_rotation=reverse_rotation,
     )
+    points.x += xc
+    points.y += yc
+    points.z += zc
 
     area = 4 * PI * active_magnet.radius ** 2
 

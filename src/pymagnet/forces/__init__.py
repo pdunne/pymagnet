@@ -12,3 +12,4 @@ This module imports the classes and functions in the private modules to create a
 from ._cylinder_force import *
 from ._mesh_force import *
 from ._prism_force import *
+from ._sphere_force import *
