@@ -18,8 +18,6 @@ from ._point_structs import *
 from ._routines2D import *
 from ._routines3D import *
 from ._trigonometry3D import *
-from ._mesh_force import *
-from ._prism_force import *
 
 # Not implemented yet:
 # from ._assemblies2D import *

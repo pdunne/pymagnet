@@ -202,6 +202,13 @@ class Magnet3D(Magnet):
 
             return B.x, B.y, B.z
 
+    def get_force_torque(self):
+        """Calculates the force and torque on a magnet due to all other magnets.
+
+        This is a template that needs to be implemented for each magnet.
+        """
+        pass
+
     def _calcB_local(x, y, z):
         """Internal magnetic field calculation method. This should be defined
         for each magnet type.
@@ -326,6 +333,21 @@ class Prism(Magnet3D):
         ndarray: [width, depth, height]
         """
         return _np.array([self.width, self.depth, self.height])
+
+    def get_force_torque(self, num_samples=20, unit="mm"):
+        """Calculates the force and torque on a prism magnet due to all other magnets.
+
+        Args:
+            num_samples (int, optional): Number of samples per axis per face. Defaults to 20.
+            unit (str, optional): Length scale. Defaults to 'mm'.
+
+        Returns:
+            tuple: force (ndarray (3,) ) and torque (ndarray (3,) )
+        """
+        from ..forces._prism_force import calc_force_prism
+
+        force, torque = calc_force_prism(self, num_samples, unit)
+        return force, torque
 
     @staticmethod
     def _F1(a, b, c, x, y, z):
@@ -716,6 +738,21 @@ class Cylinder(Magnet3D):
     def get_Jr(self):
         return _np.array([0.0, 0.0, self.Jr])
 
+    def get_force_torque(self, num_samples=20, unit="mm"):
+        """Calculates the force and torque on a cylinder magnet due to all other magnets.
+
+        Args:
+            num_samples (int, optional): Number of samples per axis per face. Defaults to 20.
+            unit (str, optional): Length scale. Defaults to 'mm'.
+
+        Returns:
+            tuple: force (ndarray (3,) ) and torque (ndarray (3,) )
+        """
+        from ..forces._cylinder_force import calc_force_cylinder
+
+        force, torque = calc_force_cylinder(self, num_samples, unit)
+        return force, torque
+
     @staticmethod
     @vectorize([float64(float64, float64, float64, float64)], target="parallel")
     def _cel(kc, p, c, s):
@@ -910,18 +947,18 @@ class Sphere(Magnet3D):
         super().__init__(Jr, **kwargs)
         self.radius = radius
 
-        # self.phi = kwargs.pop("phi", 90)
-        # self.phi_rad = _np.deg2rad(self.phi)
-        # self.theta = kwargs.pop("theta", 0)
-        # self.theta_rad = _np.deg2rad(self.theta)
+        self.phi = kwargs.pop("phi", 90)
+        self.phi_rad = _np.deg2rad(self.phi)
+        self.theta = kwargs.pop("theta", 0)
+        self.theta_rad = _np.deg2rad(self.theta)
 
-        # self.Jx = _np.around(
-        #     Jr * _np.cos(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
-        # )
-        # self.Jy = _np.around(
-        #     Jr * _np.sin(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
-        # )
-        # self.Jz = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
+        self.Jx = _np.around(
+            Jr * _np.cos(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
+        )
+        self.Jy = _np.around(
+            Jr * _np.sin(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
+        )
+        self.Jz = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
 
         self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
         self.center = _np.asarray(self.center)
@@ -955,7 +992,7 @@ class Sphere(Magnet3D):
         return _np.array([self.radius])
 
     def get_Jr(self):
-        return _np.array([0.0, 0.0, self.Jr])
+        return _np.array([self.Jx, self.Jy, self.Jz])
 
     def _calcB_local(self, x, y, z):
         """Internal magnetic field calculation methods.
@@ -977,6 +1014,8 @@ class Sphere(Magnet3D):
 
         # Convert to spherical coordinates
         r, theta, phi = cart2sph(x, y, z)
+        theta += self.theta_rad
+        # phi += self.phi_rad
 
         # Calculates field for sphere magnetised along z
         Br, Btheta = self._calcB_spherical(r, theta)

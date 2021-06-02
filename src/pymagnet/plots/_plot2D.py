@@ -375,7 +375,7 @@ def _gen_circle_patch(magnet):
         transform=Affine2D().rotate_deg_around(
             (magnet.center[0]),
             (magnet.center[1]),
-            -magnet.alpha,
+            -magnet.alpha + magnet.phi,
         ),
         type="circle",
     )

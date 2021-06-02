@@ -16,6 +16,7 @@ nav:
       - Overview: plots/plots_overview.md
       - 2D Plots: plots/plots_2d.md
       - 3D Plots: plots/plots_3d.md
+  - Forces & Torques: forces_torques.md
   - Methods:
       - Class Methods: methods/methods.md
       - Transforms: methods/transforms.md

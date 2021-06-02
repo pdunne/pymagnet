@@ -58,6 +58,20 @@ class Magnet2D(Magnet):
 
         return self.alpha
 
+    def calcB(self):
+        """Calculates the magnetic field.
+
+        This is a template that needs to be implemented for each magnet
+        """
+        pass
+
+    def calcFT(self):
+        """Calculates the force and torque on a magnet due to all other magnets.
+
+        This is a template that needs to be implemented for each magnet.
+        """
+        pass
+
 
 class Rectangle(Magnet2D):
     """Rectangular 2D Magnet Class"""
@@ -304,6 +318,12 @@ class Circle(Magnet2D):
         """
         super().__init__(Jr, **kwargs)
         self.radius = radius
+        self.phi = kwargs.pop("phi", 0)
+        self.phi_rad = _np.deg2rad(self.phi)
+
+        self.Jx = _np.around(Jr * _np.cos(self.phi_rad), decimals=6)
+        self.Jy = _np.around(Jr * _np.sin(self.phi_rad), decimals=6)
+        self.tol = MAG_TOL  # sufficient for 0.01 degree accuracy
 
         self.center = kwargs.pop("center", _np.array([0.0, 0.0]))
         self.center = _np.asarray(self.center)
@@ -342,7 +362,7 @@ class Circle(Magnet2D):
         Returns:
             ndarray: remnant magnetisation
         """
-        return _np.array([self.Jr])
+        return _np.array([self.Jx, self.Jy])
 
     def calcB(self, x, y):
         """Calculates the magnetic field due to long bipolar cylinder
@@ -361,12 +381,10 @@ class Circle(Magnet2D):
             xi, yi = rotate_points_2D(
                 x - self.center[0], y - self.center[1], self.alpha_radians
             )
-            # xci, yci = rotate_points_2D(
-            #     _np.array([self.xc]), _np.array([self.yc]), self.alpha_radians
-            # )
+
             rho, phi = cart2pol(xi, yi)
 
-            Brho, Bphi = self._calcB_polar(rho, phi)
+            Brho, Bphi = self._calcB_polar(rho, phi - self.phi_rad)
 
             # Convert magnetic fields from cylindrical to cartesian
             Bx, By = vector_pol2cart(Brho, Bphi, phi)
@@ -375,7 +393,7 @@ class Circle(Magnet2D):
 
         rho, phi = cart2pol(x - self.center[0], y - self.center[1])
 
-        Brho, Bphi = self._calcB_polar(rho, phi)
+        Brho, Bphi = self._calcB_polar(rho, phi - self.phi_rad)
 
         # Convert magnetic fields from cylindrical to cartesian
         Bx, By = vector_pol2cart(Brho, Bphi, phi)
