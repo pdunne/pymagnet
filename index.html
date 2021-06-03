@@ -218,11 +218,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
-    Documentation
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
   </a>
   
-    <nav class="md-nav" aria-label="Documentation">
+    <nav class="md-nav" aria-label="Prerequisites">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -230,51 +230,10 @@
     Examples
   </a>
   
-    <nav class="md-nav" aria-label="Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#2d-examples" class="md-nav__link">
-    2D Examples
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3d-examples" class="md-nav__link">
-    3D Examples
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#forces-and-torques" class="md-nav__link">
-    Forces and Torques
-  </a>
-  
 </li>
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#binder" class="md-nav__link">
-    Binder
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    Prerequisites
-  </a>
   
 </li>
       
@@ -671,11 +630,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
-    Documentation
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
   </a>
   
-    <nav class="md-nav" aria-label="Documentation">
+    <nav class="md-nav" aria-label="Prerequisites">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -683,51 +642,10 @@
     Examples
   </a>
   
-    <nav class="md-nav" aria-label="Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#2d-examples" class="md-nav__link">
-    2D Examples
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3d-examples" class="md-nav__link">
-    3D Examples
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#forces-and-torques" class="md-nav__link">
-    Forces and Torques
-  </a>
-  
 </li>
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#binder" class="md-nav__link">
-    Binder
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    Prerequisites
-  </a>
   
 </li>
       
@@ -787,8 +705,9 @@
 conda install -c pdunne pymagnet
 ``` -->
 
-<p>objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
-files.</p>
+<p>Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D
+and 3D objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
+files. The library can also calculate the magnetic forces and torques on one magnet due to all other magnets in the system.</p>
 <p>The approach assumes the magnets are uniformly magnetised, and fully transparent to magnetic fields.
 There are some drawbacks to this compared to Finite Element Methods (FEM), but with the advantage of
 significantly faster calculations.</p>
@@ -823,29 +742,6 @@ simple magnets:</p>
 </ul>
 <p>There are helper functions to plot the data as line, contour, slice, and volume plots,
 but the underlying data is also accessible.</p>
-<h2 id="documentation">Documentation</h2>
-<p>Full documentation can be found here: <a href="https://pdunne.github.io/pymagnet/">https://pdunne.github.io/pymagnet/</a></p>
-<h3 id="examples">Examples</h3>
-<p>Examples can be found <a href="https://github.com/pdunne/pymagnet/tree/main/examples">in the repository</a>.</p>
-<p><strong>Or run on Colab:</strong></p>
-<h4 id="2d-examples">2D Examples</h4>
-<p>Getting Started <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/First%20Steps.ipynb"><img alt="First Steps" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>1D Simple Plots <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/1D%20Examples.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>2D Standard Shapes <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/2D%20Examples.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>2D Arbitrary Polygons <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/2D%20PolyMagnet.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>Misc. Examples <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/Misc%20Examples.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<h4 id="3d-examples">3D Examples</h4>
-<p>Analytical Shapes <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/3D%20Examples%20-%20Assemblies.ipynb"><img alt="3D Examples" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>Spheres <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/3D_Examples%20Spheres.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>3D STL Meshes <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/STL%20Magnets/STL%20Examples.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>3D Stanford Bunny <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/STL%20Magnets/Stanford%20Bunny.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<h4 id="forces-and-torques">Forces and Torques</h4>
-<p>Cubes <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Cubes.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>Cylinders <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Cylinders.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>Spheres <a href="https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Spheres.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<h3 id="binder">Binder</h3>
-<p>You can test out the libraries on Binder, but performance is not as good:</p>
-<p><a href="https://mybinder.org/v2/gh/pdunne/pymagnet/main?filepath=examples"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a></p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>Ensure you have <a href="https://www.anaconda.com/">Python</a> version &gt;= 3.6
  (to use f-strings), and the following packages:</p>
@@ -856,6 +752,15 @@ but the underlying data is also accessible.</p>
 <li>matplotlib</li>
 <li>plotly</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul>
+<li>Rotate spheres using <span class="arithmatex">\(\alpha\)</span>, <span class="arithmatex">\(\beta\)</span>, <span class="arithmatex">\(\gamma\)</span>, as the magnetisation is always
+along <span class="arithmatex">\(z\)</span>, the magnetisation angles <span class="arithmatex">\(\theta\)</span> and <span class="arithmatex">\(\phi\)</span>, do not exist.</li>
+</ul>
+</div>
+<h3 id="examples">Examples</h3>
+<p>Examples can be found <a href="https://github.com/pdunne/pymagnet/tree/main/examples">in the repository</a>.</p>
 <h2 id="usage">Usage</h2>
 <p>Forms of this library have been used in a number of projects including <a href="https://www.nature.com/articles/s41586-020-2254-4">Liquid flow and control without solid walls, Nature 2020</a>.</p>
 <h2 id="licensing">Licensing</h2>
