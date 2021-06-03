@@ -306,8 +306,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#prismcube" class="md-nav__link">
-    Prism/Cube
+  <a href="#prism" class="md-nav__link">
+    Prism/
   </a>
   
 </li>
@@ -480,18 +480,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../forces_torques/" class="md-nav__link">
+        Forces & Torques
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
       
-      <label class="md-nav__link" for="__nav_5">
+      <label class="md-nav__link" for="__nav_6">
         Methods
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Methods" data-md-level="1">
-        <label class="md-nav__title" for="__nav_5">
+        <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
           Methods
         </label>
@@ -538,14 +553,14 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
       
-      <label class="md-nav__link" for="__nav_6">
+      <label class="md-nav__link" for="__nav_7">
         Code Reference
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Code Reference" data-md-level="1">
-        <label class="md-nav__title" for="__nav_6">
+        <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Code Reference
         </label>
@@ -680,8 +695,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#prismcube" class="md-nav__link">
-    Prism/Cube
+  <a href="#prism" class="md-nav__link">
+    Prism/
   </a>
   
 </li>
@@ -734,20 +749,53 @@
                 
                 <h1 id="magnets-overview">Magnets Overview</h1>
 <h2 id="2d-magnets">2D Magnets</h2>
+<p>Additional keyword arguments for all <code>Magnet2D</code> magnets:</p>
+<ul>
+<li>phi: angle in degrees between magnetisation vector and x-axis. Defaults to 90.</li>
+<li>alpha: rotation angle in degrees. Defaults to 0.</li>
+<li>center: 2 element tuple (x,y) corresponding to centre of magnet. Defaults to (0,0).</li>
+</ul>
 <h3 id="rectangle">Rectangle</h3>
 <p>Rectangle 2D magnet class</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pymagnet</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="n">magnet</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">Jr</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">magnet</span><span class="p">)</span>
+</code></pre></div>
+<p>Jr: remnant magnetisation in T. Defaults to 1.0.</p>
 <h3 id="square">Square</h3>
-<p>Square 2D magnet class</p>
+<p>Square 2D magnet class, a subclass of Rectangle</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pymagnet</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="n">magnet</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Square</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">Jr</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">magnet</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="circle">Circle</h3>
 <p>Circle 2D magnet class</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pymagnet</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="n">magnet</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span><span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">Jr</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">magnet</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="polymagnet">PolyMagnet</h3>
 <p>PolyMagnet 2D magnet class</p>
 <h2 id="3d-magnets">3D Magnets</h2>
-<p>3D magnet class</p>
-<h3 id="prismcube">Prism/Cube</h3>
-<p>Prism 3D magnet class</p>
+<p>Additional keyword arguments for all <code>Magnet2D</code> magnets:</p>
+<ul>
+<li>theta: angle in degrees between magnetisation vector and z-axis. Defaults to 0.</li>
+<li>phi: angle in degrees between magnetisation vector and x-axis. Defaults to .</li>
+<li>alpha: rotation angle in degrees about z-axis. Defaults to 0.</li>
+<li>beta: rotation angle in degrees about y-axis. Defaults to 0.</li>
+<li>gamma: rotation angle in degrees about x-axis. Defaults to 0.</li>
+<li>center: 3 element tuple (x,y, z) corresponding to centre of magnet. Defaults to (0,0,0).</li>
+</ul>
+<h3 id="prism">Prism/</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pymagnet</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="n">magnet</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Prism</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">Jr</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">magnet</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="cube">Cube</h3>
-<p>Cube 3D magnet class</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pymagnet</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="n">magnet</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Cube</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">Jr</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">magnet</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="cylinder">Cylinder</h3>
 <p>Cylinder 3D magnet class</p>
 <h3 id="sphere">Sphere</h3>

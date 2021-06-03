@@ -356,18 +356,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../forces_torques/" class="md-nav__link">
+        Forces & Torques
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
       
-      <label class="md-nav__link" for="__nav_5">
+      <label class="md-nav__link" for="__nav_6">
         Methods
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Methods" data-md-level="1">
-        <label class="md-nav__title" for="__nav_5">
+        <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
           Methods
         </label>
@@ -416,14 +431,14 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
       
-      <label class="md-nav__link" for="__nav_6">
+      <label class="md-nav__link" for="__nav_7">
         Code Reference
         <span class="md-nav__icon md-icon"></span>
       </label>
       <nav class="md-nav" aria-label="Code Reference" data-md-level="1">
-        <label class="md-nav__title" for="__nav_6">
+        <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Code Reference
         </label>
@@ -731,15 +746,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pymagnet.utils._routines2D.B_calc_2D" class="md-nav__link">
-    B_calc_2D()
+  <a href="#pymagnet.utils._routines2D.FgradB_2D" class="md-nav__link">
+    FgradB_2D()
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pymagnet.utils._routines2D.FgradB_2D" class="md-nav__link">
-    FgradB_2D()
+  <a href="#pymagnet.utils._routines2D.get_field_2D" class="md-nav__link">
+    get_field_2D()
   </a>
   
 </li>
@@ -773,8 +788,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pymagnet.utils._routines3D.B_calc_3D" class="md-nav__link">
-    B_calc_3D()
+  <a href="#pymagnet.utils._routines3D.get_field_3D" class="md-nav__link">
+    get_field_3D()
   </a>
   
 </li>
@@ -1328,15 +1343,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pymagnet.utils._routines2D.B_calc_2D" class="md-nav__link">
-    B_calc_2D()
+  <a href="#pymagnet.utils._routines2D.FgradB_2D" class="md-nav__link">
+    FgradB_2D()
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pymagnet.utils._routines2D.FgradB_2D" class="md-nav__link">
-    FgradB_2D()
+  <a href="#pymagnet.utils._routines2D.get_field_2D" class="md-nav__link">
+    get_field_2D()
   </a>
   
 </li>
@@ -1370,8 +1385,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pymagnet.utils._routines3D.B_calc_3D" class="md-nav__link">
-    B_calc_3D()
+  <a href="#pymagnet.utils._routines3D.get_field_3D" class="md-nav__link">
+    get_field_3D()
   </a>
   
 </li>
@@ -3677,49 +3692,6 @@ This is a normailsed, i.e. unit quaternion.</p>
 
 
 
-<h2 id="pymagnet.utils._routines2D.B_calc_2D" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">B_calc_2D</span><span class="p">(</span><span class="n">Point_Array2</span><span class="p">)</span></code>
-
-
-</h2>
-
-    <div class="doc doc-contents ">
-
-      <p>Function to calculate magnetic field due to any array of points
-It sums the magnetic field B over each component of the magnetisation
-J = mu_0 M</p>
-
-        <details class="quote">
-          <summary>Source code in <code>pymagnet/utils/_routines2D.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">B_calc_2D</span><span class="p">(</span><span class="n">Point_Array2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Function to calculate magnetic field due to any array of points</span>
-<span class="sd">    It sums the magnetic field B over each component of the magnetisation</span>
-<span class="sd">    J = mu_0 M</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">..magnets</span> <span class="kn">import</span> <span class="n">Magnet2D</span>
-
-    <span class="c1"># Empty data structure</span>
-    <span class="n">B</span> <span class="o">=</span> <span class="n">_allocate_field_array2</span><span class="p">(</span><span class="n">Point_Array2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">Point_Array2</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">magnet</span> <span class="ow">in</span> <span class="n">Magnet2D</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
-        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">calcB</span><span class="p">(</span><span class="n">Point_Array2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">Point_Array2</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">B</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">Bx</span>
-        <span class="n">B</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">By</span>
-
-    <span class="n">B</span><span class="o">.</span><span class="n">calc_norm</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">B</span>
-</code></pre></div>
-        </details>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-function">
-
-
-
 <h2 id="pymagnet.utils._routines2D.FgradB_2D" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">FgradB_2D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">chi_m</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span></code>
 
@@ -3797,10 +3769,91 @@ J = mu_0 M</p>
     <span class="n">BgB</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">dB</span><span class="o">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">B</span><span class="o">.</span><span class="n">n</span>
     <span class="n">BgB</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">dB</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">B</span><span class="o">.</span><span class="n">n</span>
     <span class="n">BgB</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">dB</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">B</span><span class="o">.</span><span class="n">n</span>
-    <span class="n">FB</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">u0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">n</span>
-    <span class="n">FB</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">u0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">x</span>
-    <span class="n">FB</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">u0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">FB</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">MU0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">FB</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">MU0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">FB</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">MU0</span><span class="p">)</span> <span class="o">*</span> <span class="n">chi_m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">BgB</span><span class="o">.</span><span class="n">y</span>
     <span class="k">return</span> <span class="n">FB</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="pymagnet.utils._routines2D.get_field_2D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_field_2D</span><span class="p">(</span><span class="n">Point_Array2</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates magnetic field at an array of points due to every instantated
+<code>Magnet2D</code> magnet.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>Point_Array2</code></td>
+        <td><code>Point_Array2</code></td>
+        <td><p>array of x,y points and associated unit, defaults to 'mm'</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Field2</code></td>
+      <td><p>array of Bx,By,|B| values and associated unit (defaults to 'T')</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/utils/_routines2D.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_field_2D</span><span class="p">(</span><span class="n">Point_Array2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates magnetic field at an array of points due to every instantated</span>
+<span class="sd">    `Magnet2D` magnet.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Point_Array2 (Point_Array2): array of x,y points and associated unit, defaults to &#39;mm&#39;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Field2: array of Bx,By,|B| values and associated unit (defaults to &#39;T&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">..magnets</span> <span class="kn">import</span> <span class="n">Magnet2D</span>
+
+    <span class="c1"># Empty data structure</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">_allocate_field_array2</span><span class="p">(</span><span class="n">Point_Array2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">Point_Array2</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">magnet</span> <span class="ow">in</span> <span class="n">Magnet2D</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">Point_Array2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">Point_Array2</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">B</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">Bx</span>
+        <span class="n">B</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">By</span>
+
+    <span class="n">B</span><span class="o">.</span><span class="n">calc_norm</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">B</span>
 </code></pre></div>
         </details>
     </div>
@@ -4125,16 +4178,16 @@ unit (str): unit length. Defaults to 'mm'</p>
 
 
 
-<h2 id="pymagnet.utils._routines3D.B_calc_3D" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">B_calc_3D</span><span class="p">(</span><span class="n">points</span><span class="p">)</span></code>
+<h2 id="pymagnet.utils._routines3D.get_field_3D" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_field_3D</span><span class="p">(</span><span class="n">points</span><span class="p">)</span></code>
 
 
 </h2>
 
     <div class="doc doc-contents ">
 
-      <p>Calculates the magnetic field at a series of points due to all <code>Magnet3D</code>
-instances.</p>
+      <p>Calculates magnetic field at an array of points due to every instantated
+<code>Magnet3D</code> magnet.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -4148,9 +4201,9 @@ instances.</p>
   </thead>
   <tbody>
       <tr>
-        <td><code>points</code></td>
         <td><code>Point_Array3</code></td>
-        <td><p>array of x,y,z points and associated unit</p></td>
+        <td><code>Point_Array3</code></td>
+        <td><p>array of x,y,z points and associated unit, defaults to 'mm'</p></td>
         <td><em>required</em></td>
       </tr>
   </tbody>
@@ -4172,12 +4225,12 @@ instances.</p>
 </table>
         <details class="quote">
           <summary>Source code in <code>pymagnet/utils/_routines3D.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">B_calc_3D</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculates the magnetic field at a series of points due to all `Magnet3D`</span>
-<span class="sd">    instances.</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_field_3D</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates magnetic field at an array of points due to every instantated</span>
+<span class="sd">    `Magnet3D` magnet.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        points (Point_Array3): array of x,y,z points and associated unit</span>
+<span class="sd">        Point_Array3 (Point_Array3): array of x,y,z points and associated unit, defaults to &#39;mm&#39;</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Field3: array of Bx,By,Bz,|B| values and associated unit (defaults to &#39;T&#39;)</span>
@@ -4187,7 +4240,7 @@ instances.</p>
     <span class="n">B</span> <span class="o">=</span> <span class="n">_allocate_field_array3</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">magnet</span> <span class="ow">in</span> <span class="n">Magnet3D</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
-        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="n">Bz</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">calcB</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="n">Bz</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
         <span class="n">B</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">Bx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">B</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">By</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">B</span><span class="o">.</span><span class="n">z</span> <span class="o">+=</span> <span class="n">Bz</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -4251,6 +4304,7 @@ instances.</p>
 <p>num_points (int): Number of points in each direction. Defaults to 100
 xmin (float): minimum x value. Defaults to -xmax
 ymin (float): minimum y value. Defaults to -ymax
+zmin (float): minimum y value. Defaults to -zmax
 unit (string): unit length. Defaults to 'mm'</p>
 </div>
 
@@ -4283,6 +4337,7 @@ unit (string): unit length. Defaults to 'mm'</p>
 <span class="sd">        num_points (int): Number of points in each direction. Defaults to 100</span>
 <span class="sd">        xmin (float): minimum x value. Defaults to -xmax</span>
 <span class="sd">        ymin (float): minimum y value. Defaults to -ymax</span>
+<span class="sd">        zmin (float): minimum y value. Defaults to -zmax</span>
 <span class="sd">        unit (string): unit length. Defaults to &#39;mm&#39;</span>
 
 <span class="sd">    Returns:</span>
@@ -4305,9 +4360,6 @@ unit (string): unit length. Defaults to 'mm'</p>
         <span class="n">num_points_y</span> <span class="o">=</span> <span class="n">num_points</span>
         <span class="n">num_points_z</span> <span class="o">=</span> <span class="n">num_points</span>
 
-    <span class="n">xmin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;lx&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">xmax</span><span class="p">)</span>
-    <span class="n">ymin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ly&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ymax</span><span class="p">)</span>
-    <span class="n">zmin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;lz&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">zmax</span><span class="p">)</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span>
         <span class="n">xmin</span> <span class="p">:</span> <span class="n">xmax</span> <span class="p">:</span> <span class="n">num_points_x</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
         <span class="n">ymin</span> <span class="p">:</span> <span class="n">ymax</span> <span class="p">:</span> <span class="n">num_points_y</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
@@ -4440,8 +4492,8 @@ min2 (float): minimum along axis 2. Defaults to -min2</p>
 <span class="sd">        Point_Array3: array of x, y, and z values of shape (num_points, num_points) and associated unit</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">num_points</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;num_points&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">min1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;xmin&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">max1</span><span class="p">)</span>
-    <span class="n">min2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ymin&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">max2</span><span class="p">)</span>
+    <span class="n">min1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;min1&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">max1</span><span class="p">)</span>
+    <span class="n">min2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;min2&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">max2</span><span class="p">)</span>
     <span class="n">NPj</span> <span class="o">=</span> <span class="n">num_points</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span>
 
     <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;xy&quot;</span><span class="p">:</span>
@@ -5454,7 +5506,7 @@ This is used to contain one component (Bz as z), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Field1.change_unit" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_tesla</span> <span class="n">at</span> <span class="mh">0x7fa989e3f670</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_tesla</span> <span class="n">at</span> <span class="mh">0x7f9029d2df70</span><span class="o">&gt;</span><span class="p">)</span></code>
 
 
 </h3>
@@ -5484,7 +5536,7 @@ This is used to contain one component (Bz as z), and the units
         <td><code>get_unit_value</code></td>
         <td><code>function</code></td>
         <td><p>Function for checking unit type. Defaults to get_unit_value_tesla.</p></td>
-        <td><code>&lt;function get_unit_value_tesla at 0x7fa989e3f670&gt;</code></td>
+        <td><code>&lt;function get_unit_value_tesla at 0x7f9029d2df70&gt;</code></td>
       </tr>
   </tbody>
 </table>
@@ -5670,7 +5722,7 @@ This is used to contain two components (x, y), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Field2.change_unit" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_tesla</span> <span class="n">at</span> <span class="mh">0x7fa989e3f670</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_tesla</span> <span class="n">at</span> <span class="mh">0x7f9029d2df70</span><span class="o">&gt;</span><span class="p">)</span></code>
 
 
 </h3>
@@ -5700,7 +5752,7 @@ This is used to contain two components (x, y), and the units
         <td><code>get_unit_value</code></td>
         <td><code>function</code></td>
         <td><p>Function for checking unit type. Defaults to get_unit_value_tesla.</p></td>
-        <td><code>&lt;function get_unit_value_tesla at 0x7fa989e3f670&gt;</code></td>
+        <td><code>&lt;function get_unit_value_tesla at 0x7f9029d2df70&gt;</code></td>
       </tr>
   </tbody>
 </table>
@@ -5890,7 +5942,7 @@ This is used to contain three components (x, y), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Field3.change_unit" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_tesla</span> <span class="n">at</span> <span class="mh">0x7fa989e3f670</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_tesla</span> <span class="n">at</span> <span class="mh">0x7f9029d2df70</span><span class="o">&gt;</span><span class="p">)</span></code>
 
 
 </h3>
@@ -5920,7 +5972,7 @@ This is used to contain three components (x, y), and the units
         <td><code>get_unit_value</code></td>
         <td><code>function</code></td>
         <td><p>Function for checking unit type. Defaults to get_unit_value_tesla.</p></td>
-        <td><code>&lt;function get_unit_value_tesla at 0x7fa989e3f670&gt;</code></td>
+        <td><code>&lt;function get_unit_value_tesla at 0x7f9029d2df70&gt;</code></td>
       </tr>
   </tbody>
 </table>
@@ -5987,7 +6039,7 @@ This is used to contain one position array (z), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Point_Array1.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -6019,8 +6071,8 @@ This is used to contain one position array (z), and the units
       <tr>
         <td><code>unit</code></td>
         <td><code>str</code></td>
-        <td><p>Unit of length. Defaults to "m".</p></td>
-        <td><code>&#39;m&#39;</code></td>
+        <td><p>Unit of length. Defaults to "mm".</p></td>
+        <td><code>&#39;mm&#39;</code></td>
       </tr>
   </tbody>
 </table>
@@ -6041,12 +6093,12 @@ This is used to contain one position array (z), and the units
 </table>
         <details class="quote">
           <summary>Source code in <code>pymagnet/utils/_vector_structs.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Init method</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        z (ndarray): z coordinates</span>
-<span class="sd">        unit (str, optional): Unit of length. Defaults to &quot;m&quot;.</span>
+<span class="sd">        unit (str, optional): Unit of length. Defaults to &quot;mm&quot;.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: Unit must an SI prefix, e.g. km, m, cm, mm</span>
@@ -6071,7 +6123,7 @@ This is used to contain one position array (z), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Point_Array1.change_unit" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_meter</span> <span class="n">at</span> <span class="mh">0x7fa989e3f5e0</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_meter</span> <span class="n">at</span> <span class="mh">0x7f9029d2dee0</span><span class="o">&gt;</span><span class="p">)</span></code>
 
 
 </h3>
@@ -6101,7 +6153,7 @@ This is used to contain one position array (z), and the units
         <td><code>get_unit_value</code></td>
         <td><code>function</code></td>
         <td><p>Function for checking unit type. Defaults to get_unit_value_meter.</p></td>
-        <td><code>&lt;function get_unit_value_meter at 0x7fa989e3f5e0&gt;</code></td>
+        <td><code>&lt;function get_unit_value_meter at 0x7f9029d2dee0&gt;</code></td>
       </tr>
   </tbody>
 </table>
@@ -6234,7 +6286,7 @@ This is used to contain two position arrays (x, y), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Point_Array2.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -6272,8 +6324,8 @@ This is used to contain two position arrays (x, y), and the units
       <tr>
         <td><code>unit</code></td>
         <td><code>str</code></td>
-        <td><p>Unit of length. Defaults to "m".</p></td>
-        <td><code>&#39;m&#39;</code></td>
+        <td><p>Unit of length. Defaults to "mm".</p></td>
+        <td><code>&#39;mm&#39;</code></td>
       </tr>
   </tbody>
 </table>
@@ -6294,13 +6346,13 @@ This is used to contain two position arrays (x, y), and the units
 </table>
         <details class="quote">
           <summary>Source code in <code>pymagnet/utils/_vector_structs.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Init Method</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x (ndarray): x coordinates</span>
 <span class="sd">        y (ndarray): y coordinates</span>
-<span class="sd">        unit (str, optional): Unit of length. Defaults to &quot;m&quot;.</span>
+<span class="sd">        unit (str, optional): Unit of length. Defaults to &quot;mm&quot;.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: Unit must an SI prefix, e.g. km, m, cm, mm</span>
@@ -6326,7 +6378,7 @@ This is used to contain two position arrays (x, y), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Point_Array2.change_unit" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_meter</span> <span class="n">at</span> <span class="mh">0x7fa989e3f5e0</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_meter</span> <span class="n">at</span> <span class="mh">0x7f9029d2dee0</span><span class="o">&gt;</span><span class="p">)</span></code>
 
 
 </h3>
@@ -6356,7 +6408,7 @@ This is used to contain two position arrays (x, y), and the units
         <td><code>get_unit_value</code></td>
         <td><code>function</code></td>
         <td><p>Function for checking unit type. Defaults to get_unit_value_meter.</p></td>
-        <td><code>&lt;function get_unit_value_meter at 0x7fa989e3f5e0&gt;</code></td>
+        <td><code>&lt;function get_unit_value_meter at 0x7f9029d2dee0&gt;</code></td>
       </tr>
   </tbody>
 </table>
@@ -6399,6 +6451,7 @@ This is used to contain two position arrays (x, y), and the units
     </div>
 
   </div>
+
 
 
 
@@ -6447,7 +6500,7 @@ This is used to contain three position arrays (x, y, z), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Point_Array3.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -6491,8 +6544,8 @@ This is used to contain three position arrays (x, y, z), and the units
       <tr>
         <td><code>unit</code></td>
         <td><code>str</code></td>
-        <td><p>Unit of length. Defaults to "m".</p></td>
-        <td><code>&#39;m&#39;</code></td>
+        <td><p>Unit of length. Defaults to "mm".</p></td>
+        <td><code>&#39;mm&#39;</code></td>
       </tr>
   </tbody>
 </table>
@@ -6513,14 +6566,14 @@ This is used to contain three position arrays (x, y, z), and the units
 </table>
         <details class="quote">
           <summary>Source code in <code>pymagnet/utils/_vector_structs.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Init Method</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x (ndarray): x coordinates</span>
 <span class="sd">        y (ndarray): y coordinates</span>
 <span class="sd">        z (ndarray): z coordinates</span>
-<span class="sd">        unit (str, optional): Unit of length. Defaults to &quot;m&quot;.</span>
+<span class="sd">        unit (str, optional): Unit of length. Defaults to &quot;mm&quot;.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: Unit must an SI prefix, e.g. km, m, cm, mm</span>
@@ -6542,7 +6595,7 @@ This is used to contain three position arrays (x, y, z), and the units
 
 
 <h3 id="pymagnet.utils._vector_structs.Point_Array3.change_unit" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_meter</span> <span class="n">at</span> <span class="mh">0x7fa989e3f5e0</span><span class="o">&gt;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">change_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">,</span> <span class="n">get_unit_value</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">get_unit_value_meter</span> <span class="n">at</span> <span class="mh">0x7f9029d2dee0</span><span class="o">&gt;</span><span class="p">)</span></code>
 
 
 </h3>
@@ -6572,7 +6625,7 @@ This is used to contain three position arrays (x, y, z), and the units
         <td><code>get_unit_value</code></td>
         <td><code>function</code></td>
         <td><p>Function for checking unit type. Defaults to get_unit_value_meter.</p></td>
-        <td><code>&lt;function get_unit_value_meter at 0x7fa989e3f5e0&gt;</code></td>
+        <td><code>&lt;function get_unit_value_meter at 0x7f9029d2dee0&gt;</code></td>
       </tr>
   </tbody>
 </table>
