@@ -49,7 +49,7 @@ def triangle_area(triangle):
     )
 
 
-@guvectorize(["void(f8[:,:, :], f8[:])"], "(x, y, y)->(x)")
+# @guvectorize(["void(f8[:,:, :], f8[:])"], "(x, y, y)->(x)")
 def get_area_triangles(triangles, area):
     """Computes the area for an array of triangles
 
