@@ -7,8 +7,6 @@ User friendly magnetic field calculations in Python
 [![DOI](https://zenodo.org/badge/339667292.svg)](https://zenodo.org/badge/latestdoi/339667292)
 [![Anaconda-Server Badge](https://anaconda.org/pdunne/pymagnet/badges/version.svg)](https://anaconda.org/pdunne/pymagnet)
 
-
-
 ## Getting Started
 
 Installing `pymagnet` can be done using
@@ -23,12 +21,14 @@ python -m pip install pymagnet
 conda install -c pdunne pymagnet
 ``` -->
 
- objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
-files.
+Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D
+and 3D objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
+files. The library can also calculate the magnetic forces and torques on one magnet due to all other magnets in the system.
 
 The approach assumes the magnets are uniformly magnetised, and fully transparent to magnetic fields.
 There are some drawbacks to this compared to Finite Element Methods (FEM), but with the advantage of
 significantly faster calculations.
+
 
 The current version is written in Python with some speed up using [Numpy](https://numpy.org/) and
 [Numba](https://numba.pydata.org/), but the backend is being ported to
@@ -63,52 +63,6 @@ and complex compound objects:
 There are helper functions to plot the data as line, contour, slice, and volume plots,
 but the underlying data is also accessible.
 
-## Documentation
-
-Full documentation can be found here: [https://pdunne.github.io/pymagnet/](https://pdunne.github.io/pymagnet/)
-
-### Examples
-
-Examples can be found [in the repository](https://github.com/pdunne/pymagnet/tree/main/examples).
-
-**Or run on Colab:**
-
-#### 2D Examples
-
-Getting Started [![First Steps](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/First%20Steps.ipynb)
-
-1D Simple Plots [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/1D%20Examples.ipynb)
-
-2D Standard Shapes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/2D%20Examples.ipynb)
-
-2D Arbitrary Polygons [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/2D%20PolyMagnet.ipynb)
-
-Misc. Examples [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/Misc%20Examples.ipynb)
-
-#### 3D Examples
-
-Analytical Shapes [![3D Examples](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/3D%20Examples%20-%20Assemblies.ipynb)
-
-Spheres [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Fields/3D_Examples%20Spheres.ipynb)
-
-3D STL Meshes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/STL%20Magnets/STL%20Examples.ipynb)
-
-3D Stanford Bunny [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/STL%20Magnets/Stanford%20Bunny.ipynb)
-
-#### Forces and Torques
-
-Cubes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Cubes.ipynb)
-
-Cylinders [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Cylinders.ipynb)
-
-Spheres [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Spheres.ipynb)
-
-### Binder
-
-You can test out the libraries on Binder, but performance is not as good:
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pdunne/pymagnet/main?filepath=examples)
-
 ## Prerequisites
 
 Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
@@ -119,6 +73,14 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 * numba
 * matplotlib
 * plotly
+
+!!! Warning
+    - Rotate spheres using $\alpha$, $\beta$, $\gamma$, as the magnetisation is always
+    along $z$, the magnetisation angles $\theta$ and $\phi$, do not exist.
+
+### Examples
+
+Examples can be found [in the repository](https://github.com/pdunne/pymagnet/tree/main/examples).
 
 ## Usage
 

@@ -23,8 +23,9 @@ python -m pip install pymagnet
 conda install -c pdunne pymagnet
 ``` -->
 
- objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
-files.
+Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D
+and 3D objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
+files. The library can also calculate the magnetic forces and torques on one magnet due to all other magnets in the system.
 
 The approach assumes the magnets are uniformly magnetised, and fully transparent to magnetic fields.
 There are some drawbacks to this compared to Finite Element Methods (FEM), but with the advantage of
