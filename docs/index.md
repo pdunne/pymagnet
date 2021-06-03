@@ -74,9 +74,8 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 * plotly
 
 !!! Warning
-    - For spheres, rotate them using alpha, beta, gamma,
-    rather than the magnetisation angles theta and phi, as phi rotations are not implemented.
-    - Similarly, for circles, rotate them using alpha, not phi.
+    - Rotate spheres using $\alpha$, $\beta$, $\gamma$, as the magnetisation is always
+    along $z$, the magnetisation angles $\theta$ and $\phi$, do not exist.
 
 ### Examples
 
