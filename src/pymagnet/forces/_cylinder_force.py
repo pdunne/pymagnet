@@ -104,7 +104,7 @@ def _gen_cylinder_face_grid(
 #     for magnet in Magnet3D.instances:
 #         if magnet is not active_magnet:
 #             #             print(magnet, active_magnet)
-#             Bx, By, Bz = magnet.calcB(points.x, points.y, points.z)
+#             Bx, By, Bz = magnet.get_field(points.x, points.y, points.z)
 #             field.x += Bx.reshape(field.x.shape)
 #             field.y += By.reshape(field.y.shape)
 #             field.z += Bz.reshape(field.z.shape)

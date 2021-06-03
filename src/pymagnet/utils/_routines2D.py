@@ -8,7 +8,7 @@ import numpy as _np
 from ._vector_structs import Point_Array2, Field2
 from .global_const import MU0
 
-__all__ = ["grid2D", "B_calc_2D", "rotate_points_2D"]
+__all__ = ["grid2D", "get_field_2D", "rotate_points_2D"]
 
 
 def grid2D(xmax, ymax, **kwargs):
@@ -36,10 +36,15 @@ def grid2D(xmax, ymax, **kwargs):
     return Point_Array2(x, y, unit=unit)
 
 
-def B_calc_2D(Point_Array2):
-    """Function to calculate magnetic field due to any array of points
-    It sums the magnetic field B over each component of the magnetisation
-    J = mu_0 M
+def get_field_2D(Point_Array2):
+    """Calculates magnetic field at an array of points due to every instantated
+    `Magnet2D` magnet.
+
+    Args:
+        Point_Array2 (Point_Array2): array of x,y points and associated unit, defaults to 'mm'
+
+    Returns:
+        Field2: array of Bx,By,|B| values and associated unit (defaults to 'T')
     """
     from ..magnets import Magnet2D
 
@@ -47,7 +52,7 @@ def B_calc_2D(Point_Array2):
     B = _allocate_field_array2(Point_Array2.x, Point_Array2.y)
 
     for magnet in Magnet2D.instances:
-        Bx, By = magnet.calcB(Point_Array2.x, Point_Array2.y)
+        Bx, By = magnet.get_field(Point_Array2.x, Point_Array2.y)
         B.x += Bx
         B.y += By
 

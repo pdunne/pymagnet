@@ -33,7 +33,7 @@
 #     )
 #
 #     x, y = pm.grid2D(2 * width, 2 * height)
-#     B = pm.B_calc_2D(x, y)
+#     B = pm.get_field_2D(x, y)
 #
 #     pm.plot.plot_2D_contour(x, y, B, UL=0.6, NL=7, vector_plot=True, cmap=cmap)
 #

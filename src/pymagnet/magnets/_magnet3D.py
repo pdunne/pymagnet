@@ -133,7 +133,7 @@ class Magnet3D(Magnet):
 
         return forward_rotation, reverse_rotation
 
-    def calcB(self, x, y, z):
+    def get_field(self, x, y, z):
         """Calculates the magnetic field at point(s) x,y,z due to a 3D magnet
         The calculations are always performed in local coordinates with the centre of the magnet at origin and z magnetisation pointing along the local z' axis.
 
@@ -174,7 +174,7 @@ class Magnet3D(Magnet):
             x_rot, y_rot, z_rot = forward_rotation * pos_vec
 
             # Calls internal child method to calculate the field
-            B_local = self._calcB_local(x_rot, y_rot, z_rot)
+            B_local = self._get_field_internal(x_rot, y_rot, z_rot)
             mask = self._generate_mask(x_rot, y_rot, z_rot)
 
             B_local = _apply_mask(self, B_local, mask)
@@ -190,7 +190,7 @@ class Magnet3D(Magnet):
 
         else:
             # Otherwise directly calculate the magnetic fields
-            B = self._calcB_local(
+            B = self._get_field_internal(
                 x - self.center[0], y - self.center[1], z - self.center[2]
             )
 
@@ -209,7 +209,7 @@ class Magnet3D(Magnet):
         """
         pass
 
-    def _calcB_local(x, y, z):
+    def _get_field_internal(x, y, z):
         """Internal magnetic field calculation method. This should be defined
         for each magnet type.
 
@@ -413,7 +413,7 @@ class Prism(Magnet3D):
             data = _np.NaN
         return data
 
-    def _calcB_local(self, x, y, z):
+    def _get_field_internal(self, x, y, z):
         """Internal magnetic field calculation methods.
         Iterates over each component of the prism magnetised in x, y, and z
         (in local coordinates).
@@ -815,7 +815,7 @@ class Cylinder(Magnet3D):
             data = (PI / 2.0) * (ss + cc * em) / (em * (em + pp))
             return data
 
-    def _calcB_local(self, x, y, z):
+    def _get_field_internal(self, x, y, z):
         """Internal magnetic field calculation methods.
         Calculates the field due to a cylindrical magnet/solenoid magnetised along z
         (in local coordinates).
@@ -1004,7 +1004,7 @@ class Sphere(Magnet3D):
         force, torque = calc_force_sphere(self, num_samples, unit)
         return force, torque
 
-    def _calcB_local(self, x, y, z):
+    def _get_field_internal(self, x, y, z):
         """Internal magnetic field calculation methods.
         Calculates the field due to a spherical magnet magnetised along z
         (in local coordinates). Returns a dipolar field outside the magnet

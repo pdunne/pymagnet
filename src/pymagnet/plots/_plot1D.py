@@ -69,7 +69,7 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
         print("Error")
         return None
 
-    _, _ = _plt.subplots()
+    fig, ax = _plt.subplots(figsize=(8, 8))
     unit_length = "(" + points.unit + ")"
     field_unit = "(" + field.unit + ")"
     _plt.xlabel(r"$z$ " + unit_length)

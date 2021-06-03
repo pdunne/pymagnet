@@ -40,10 +40,13 @@ Full documentation can be found here: [https://pdunne.github.io/pymagnet/](https
 ### Examples
 
 Examples can be found [in the repository](https://github.com/pdunne/pymagnet/tree/main/examples).
+
 ## Features
 
-This code uses analytical expressions to calculate the magnetic field due to
-simple magnets:
+This code uses analytical expressions to calculate the magnetic field due to various magnets,
+and forces and torques on a magnet due to all other magnets.
+
+These include simple objects such as:
 
 * 3D: cubes, prisms (cuboids), cylinders, spheres
 
@@ -69,7 +72,6 @@ and complex compound objects:
 There are helper functions to plot the data as line, contour, slice, and volume plots,
 but the underlying data is also accessible.
 
-
 ## Prerequisites
 
 Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
@@ -81,10 +83,10 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 * matplotlib
 * plotly
 
-
 ## Usage
 
 Forms of this library have been used in a number of projects including [Liquid flow and control without solid walls, Nature 2020](https://www.nature.com/articles/s41586-020-2254-4).
+
 ## Licensing
 
 Source code licensed under the [Mozilla Public License Version 2.0](https://www.mozilla.org/en-US/MPL/2.0/)

@@ -58,14 +58,14 @@ class Magnet2D(Magnet):
 
         return self.alpha
 
-    def calcB(self):
+    def get_field(self):
         """Calculates the magnetic field.
 
         This is a template that needs to be implemented for each magnet
         """
         pass
 
-    def calcFT(self):
+    def get_force_torque(self):
         """Calculates the force and torque on a magnet due to all other magnets.
 
         This is a template that needs to be implemented for each magnet.
@@ -141,7 +141,7 @@ class Rectangle(Magnet2D):
         """
         return _np.array([self.Jx, self.Jy])
 
-    def calcB(self, x, y):
+    def get_field(self, x, y):
         """Calculates the magnetic field at point(s) x,y due to a rectangular magnet
 
         Args:
@@ -364,7 +364,7 @@ class Circle(Magnet2D):
         """
         return _np.array([self.Jx, self.Jy])
 
-    def calcB(self, x, y):
+    def get_field(self, x, y):
         """Calculates the magnetic field due to long bipolar cylinder
 
         Args:

@@ -275,7 +275,7 @@ class Line(object):
 
         return self.center
 
-    def calcB(self, x, y):
+    def get_field(self, x, y):
         """Calculates the magnetic field due to a sheet magnet
         First a transformation into the local coordinates is made, the field calculated
         and then the magnetic field it rotated out to the global coordinates
@@ -324,6 +324,7 @@ class PolyMagnet(Magnet2D):
             center (ndarray): magnet center (x, y). Defaults to (0.0, 0.0)
             length (float): side length if creating a regular polygon
             apothem (float): apothem (incircle radius) if creating a regular polygon
+            radius (float): radius (circumcircle radius) if  creating a regular polygon
             num_sides (int): number of sides of a regular polygon. Defaults to 6.
             custom_polygon (bool): Flag to define a custom polygon. Defaults to False.
             vertices (ndarray, list): List of custom vertices. Defaults to None.
@@ -350,20 +351,8 @@ class PolyMagnet(Magnet2D):
         self.tol = MAG_TOL
         self.area = None
 
-        # self.length = kwargs.pop("length", 10)
-        self.length = kwargs.pop("length", None)
-        self.apothem = kwargs.pop("apothem", None)
-        self.radius = kwargs.pop("radius", None)
-        self.num_sides = kwargs.pop("num_sides", 6)
-
-        self.radius = Polygon.check_radius(
-            self.num_sides,
-            self.apothem,
-            self.length,
-            self.radius,
-        )
-
         self.custom_polygon = kwargs.pop("custom_polygon", False)
+
         self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
         self.center = _np.asarray(self.center)
 
@@ -382,6 +371,17 @@ class PolyMagnet(Magnet2D):
             vertices = _np.stack([x_rot, y_rot]).T + self.center
             self.polygon = Polygon(vertices=vertices.tolist())
         else:
+            self.length = kwargs.pop("length", None)
+            self.apothem = kwargs.pop("apothem", None)
+            self.radius = kwargs.pop("radius", None)
+            self.num_sides = kwargs.pop("num_sides", 6)
+
+            self.radius = Polygon.check_radius(
+                self.num_sides,
+                self.apothem,
+                self.length,
+                self.radius,
+            )
             # Generate Polygon
             self.polygon = Polygon(
                 vertices=Polygon.gen_polygon(
@@ -424,7 +424,7 @@ class PolyMagnet(Magnet2D):
         self.area = area
         return beta, length, center, K
 
-    def calcB(self, x, y):
+    def get_field(self, x, y):
         """Calculates the magnetic field of a polygon due to each face
 
         Args:
@@ -442,6 +442,8 @@ class PolyMagnet(Magnet2D):
 
         if _np.fabs(self.alpha_radians) > self.tol:
             pass
+            print("Arbitrary rotation with alpha not yet implemented!!")
+
             # FIXME: rotate centres
             # xt, yt = rotate_points_2D(x - self.xc, y - self.yc, self.alpha_radians)
             # beta += self.alpha
@@ -456,14 +458,14 @@ class PolyMagnet(Magnet2D):
             #
             # for i in range(len(K)):
             #     sheet = Line(length[i], center[i], beta[i], K[i])
-            #     Btx, Bty = sheet.calcB(xt, yt)
+            #     Btx, Bty = sheet.get_field(xt, yt)
             #     Btx, Bty = rotate_points_2D(Btx, Bty, 2 * PI - self.alpha_radians)
             #     Bx += Btx
             #     By += Bty
 
         for i in range(len(K)):
             sheet = Line(length[i], center[i], beta[i], K[i])
-            Btx, Bty = sheet.calcB(x, y)
+            Btx, Bty = sheet.get_field(x, y)
             Bx += Btx
             By += Bty
         return Bx, By

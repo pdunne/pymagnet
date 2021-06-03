@@ -12,7 +12,7 @@ TODO:
 """
 from ..magnets._magnet_base import Registry
 from ..magnets import *
-from ..utils import grid3D, slice3D, B_calc_3D
+from ..utils import grid3D, slice3D, get_field_3D
 from ..utils.global_const import PI, MAG_TOL
 import numpy as _np
 import plotly.graph_objects as _go
@@ -678,6 +678,7 @@ def plot_magnet(unit="mm", **kwargs):
         width=700,
         margin=dict(r=20, b=10, l=10, t=10),
     )
+    fig.update_layout(scene_aspectmode="data")
     fig.show()
     return fig
 
@@ -746,6 +747,7 @@ def slice_plot(data_dict, **kwargs):
         width=700,
         margin=dict(r=20, b=10, l=10, t=10),
     )
+    fig.update_layout(scene_aspectmode="data")
     fig.show()
     return fig, data_objects
 
@@ -803,7 +805,7 @@ def slice_quickplot(**kwargs):
             unit=unit,
             num_points=num_points,
         )
-        field = B_calc_3D(points)
+        field = get_field_3D(points)
 
         cache[plane] = {"points": points, "field": field}
 
@@ -833,6 +835,7 @@ def slice_quickplot(**kwargs):
         width=700,
         margin=dict(r=20, b=10, l=10, t=10),
     )
+    fig.update_layout(scene_aspectmode="data")
     fig.show()
     return fig, cache, data_objects
 
@@ -908,6 +911,7 @@ def volume_plot(points, field, **kwargs):
         width=700,
         margin=dict(r=20, b=10, l=10, t=10),
     )
+    fig.update_layout(scene_aspectmode="data")
     fig.show()
 
     return fig, data_objects
@@ -953,7 +957,7 @@ def volume_quickplot(**kwargs):
         zmin=zmin,
         unit=unit,
     )
-    field = B_calc_3D(points)
+    field = get_field_3D(points)
 
     fig, data_objects = volume_plot(points, field, num_points=num_points, **kwargs)
     cache = {"points": points, "field": field}

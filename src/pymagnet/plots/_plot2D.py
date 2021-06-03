@@ -110,6 +110,8 @@ def plot_2D_line(point_array, field, **kwargs):
         axis_scale (str): unused
         save_fig (bool): Save to png file. Defaults to False
 
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
     """
 
     xlab = kwargs.pop("xlab", f"x ({point_array.unit})")
@@ -118,7 +120,7 @@ def plot_2D_line(point_array, field, **kwargs):
 
     SAVE = kwargs.pop("save_fig", False)
 
-    _, ax = _plt.subplots()
+    fig, ax = _plt.subplots(figsize=(8, 8))
     _plt.plot(point_array.x, field.n, label=r"$|\mathbf{B}|$")
     _plt.plot(point_array.x, field.x, label=r"$B_x$")
     _plt.plot(point_array.x, field.y, label=r"$B_y$")
@@ -131,6 +133,7 @@ def plot_2D_line(point_array, field, **kwargs):
     if SAVE:
         _plt.savefig("line_plot.png", dpi=300)
         # _plt.savefig('contour_plot.pdf', dpi=300)
+    return fig, ax
 
 
 def plot_2D_contour(point_array, field, **kwargs):
@@ -149,7 +152,7 @@ def plot_2D_contour(point_array, field, **kwargs):
         show_magnets (bool): Draw magnets. Defaults to True
         field_component (str): Defaults to 'n'.
         plot_type (str): Draw `contour` or `streamplot`. Defaults to 'contour'
-        cmap (str): Colormap. Defaults to `magma`
+        cmap (str): Colormap. Defaults to `viridis`
         vector_plot (bool): Draw vectors as arrows. Defaults to False.
         vector_color (str): Arrow color. Defaults to 'w'
         cmin (float): Color scale minimum. Defaults to 0.0
@@ -158,6 +161,9 @@ def plot_2D_contour(point_array, field, **kwargs):
 
     Raises:
         Exception: plot_type must be 'contour' or 'streamplot'
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
     """
     import matplotlib.cm as _cm
     from ..magnets._polygon2D import PolyMagnet
@@ -174,10 +180,10 @@ def plot_2D_contour(point_array, field, **kwargs):
     field_component = kwargs.pop("field_component", "n")
 
     plot_type = kwargs.pop("plot_type", "contour")
-    _, ax = _plt.subplots()
+    fig, ax = _plt.subplots(figsize=(8, 8))
 
     if plot_type.lower() == "contour":
-        cmap = kwargs.pop("cmap", "magma")
+        cmap = kwargs.pop("cmap", "viridis")
         vector_plot = kwargs.pop("vector_plot", False)
         vector_color = kwargs.pop("vector_color", "w")
         NQ = kwargs.pop("vector_arrows", 11)
@@ -293,9 +299,12 @@ def plot_2D_contour(point_array, field, **kwargs):
     _plt.xlabel(xlab)
     _plt.ylabel(ylab)
     _plt.show()
-
+    fig.tight_layout()
+    ax.axis("scaled")
     if SAVE:
         _plt.savefig("contour_plot.png", dpi=300)
+
+    return fig, ax
 
 
 def _num_patch_2D():
@@ -479,6 +488,9 @@ def plot_3D_contour(points, field, plane, **kwargs):
 
     Raises:
         Exception: plot_type must be 'contour' or 'streamplot
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
     """
     axis_scale = kwargs.pop("axis_scale", "equal")
 
@@ -520,7 +532,7 @@ def plot_3D_contour(points, field, plane, **kwargs):
         plot_xlab = ylab
         plot_ylab = zlab
 
-    _, ax = _plt.subplots()
+    fig, ax = _plt.subplots(figsize=(8, 8))
 
     # Generate Contour Plot
     if plot_type.lower() == "contour":
@@ -528,7 +540,7 @@ def plot_3D_contour(points, field, plane, **kwargs):
         vector_color = kwargs.pop("vector_color", "w")
         NQ = kwargs.pop("vector_arrows", 11)
 
-        cmap = kwargs.pop("cmap", "magma")
+        cmap = kwargs.pop("cmap", "viridis")
         cmin = kwargs.pop("cmin", 0)
         lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
         CS = _plt.contourf(
@@ -620,6 +632,8 @@ def plot_3D_contour(points, field, plane, **kwargs):
     if SAVE:
         _plt.savefig("contour_plot.png", dpi=300)
 
+    return fig, ax
+
 
 def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
     """Contour plot of a single magnetic field component of a 3D simulation
@@ -628,6 +642,9 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
         plot_x (ndarray): coordinates for x-axis of plot
         plot_y (ndarray): coordinates for y-axis of plot
         plot_B (ndarray): Magnetic field component to plot
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
     """
     cmap = kwargs.pop("cmap", "seismic")
     xlab = kwargs.pop("xlab", f"x (m)")
@@ -643,7 +660,7 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
     num_levels = kwargs.pop("num_levels", 11)
 
     lev2 = _np.linspace(cmin, cmax, 256, endpoint=True)
-    _, _ = _plt.subplots()
+    fig, ax = _plt.subplots(figsize=(8, 8))
     CS = _plt.contourf(
         plot_x, plot_y, plot_B, levels=lev2, cmap=_plt.get_cmap(cmap), extend="both"
     )
@@ -671,6 +688,8 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
     _plt.axis("equal")
     _plt.show()
 
+    return fig, ax
+
 
 def line_plot_cylinder(magnet, **kwargs):
     """Calculates and plots the magnetic field along the central axis
@@ -680,16 +699,20 @@ def line_plot_cylinder(magnet, **kwargs):
 
     Args:
         magnet (Cylinder): instance of magnetic cylinder
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
     """
     rho = _np.linspace(-2 * magnet.radius, 2 * magnet.radius, 51)
     z = _np.array([magnet.length * 1.1 / 2])
 
     Br, Bz = magnet._calcB_cyl(rho, z)
-    _, _ = _plt.subplots()
+    fig, ax = _plt.subplots(figsize=(8, 8))
     _plt.plot(rho * 1, Bz, label=r"$B_z$")
     _plt.plot(rho * 1, Br, label=r"$B_r$")
     _plt.legend(loc="best")
     _plt.show()
+    return fig, ax
 
 
 def contour_plot_cylinder(magnet, **kwargs):
@@ -701,6 +724,9 @@ def contour_plot_cylinder(magnet, **kwargs):
 
     Args:
         magnet (Cylinder): instance of magnetic cylinder
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
     """
     NP = 101
     NPJ = NP * 1j
@@ -717,7 +743,7 @@ def contour_plot_cylinder(magnet, **kwargs):
     # plot_B = Bn
     clab = r"$|B|$ (T)"
     cmap = "viridis"
-    plot_sub_contour_3D(
+    fig, ax = plot_sub_contour_3D(
         rho * 1,
         z * 1,
         Bn,
@@ -728,3 +754,4 @@ def contour_plot_cylinder(magnet, **kwargs):
         cmin=0,
         cmax=1.0,
     )
+    return fig, ax

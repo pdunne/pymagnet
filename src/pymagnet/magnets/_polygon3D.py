@@ -104,7 +104,7 @@ class Mesh(Magnet3D):
         """
         return self.center
 
-    def calcB(self, x, y, z):
+    def get_field(self, x, y, z):
         """Calculates the magnetic field at point(s) x,y,z due to a 3D magnet
         The calculations are always performed in local coordinates with the centre of the magnet at origin and z magnetisation pointing along the local z' axis.
 
@@ -118,11 +118,11 @@ class Mesh(Magnet3D):
         Returns:
             tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector
         """
-        B = self._calcB_local(x, y, z)
+        B = self._get_field_internal(x, y, z)
 
         return B.x, B.y, B.z
 
-    def _calcB_local(self, x, y, z):
+    def _get_field_internal(self, x, y, z):
         """Internal magnetic field calculation methods.
         Iterates over each triangle that makes up the mesh magnet and calculates the magnetic field
 

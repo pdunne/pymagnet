@@ -4,7 +4,7 @@
 # Copyright 2021 Peter Dunne
 """Routines for Three Dimensional Magnet Classes
 """
-__all__ = ["B_calc_3D", "grid3D", "slice3D"]
+__all__ = ["get_field_3D", "grid3D", "slice3D"]
 
 import numpy as _np
 from ._vector_structs import Field3, Point_Array3
@@ -106,12 +106,12 @@ def slice3D(plane="xy", max1=1.0, max2=1.0, slice_value=0.0, unit="mm", **kwargs
     return Point_Array3(x, y, z, unit=unit)
 
 
-def B_calc_3D(points):
-    """Calculates the magnetic field at a series of points due to all `Magnet3D`
-    instances.
+def get_field_3D(points):
+    """Calculates magnetic field at an array of points due to every instantated
+    `Magnet3D` magnet.
 
     Args:
-        points (Point_Array3): array of x,y,z points and associated unit
+        Point_Array3 (Point_Array3): array of x,y,z points and associated unit, defaults to 'mm'
 
     Returns:
         Field3: array of Bx,By,Bz,|B| values and associated unit (defaults to 'T')
@@ -121,7 +121,7 @@ def B_calc_3D(points):
     B = _allocate_field_array3(points.x, points.y, points.z)
 
     for magnet in Magnet3D.instances:
-        Bx, By, Bz = magnet.calcB(points.x, points.y, points.z)
+        Bx, By, Bz = magnet.get_field(points.x, points.y, points.z)
         B.x += Bx.reshape(B.x.shape)
         B.y += By.reshape(B.y.shape)
         B.z += Bz.reshape(B.z.shape)

@@ -288,7 +288,7 @@ def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
 
 
 def calc_magnetic_field(mag_prop, grid_prop):
-    from ..utils._routines2D import B_calc_2D
+    from ..utils._routines2D import get_field_2D
 
     """Run magnetic calculation and mask data to central bore
 
@@ -304,7 +304,7 @@ def calc_magnetic_field(mag_prop, grid_prop):
 
     x = grid_prop["x"]
     y = grid_prop["y"]
-    B = B_calc_2D(x, y)
+    B = get_field_2D(x, y)
     if mag_prop["assem_type"].lower() == "halbach":
         mask_radius = mag_prop["radius"]
     else:

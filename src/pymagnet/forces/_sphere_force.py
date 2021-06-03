@@ -39,7 +39,7 @@ def _calc_field_face_sphere(active_magnet, points):
     field = _allocate_field_array3(points.x, points.y, points.z)
     for magnet in Magnet3D.instances:
         if magnet is not active_magnet:
-            Bx, By, Bz = magnet.calcB(points.x, points.y, points.z)
+            Bx, By, Bz = magnet.get_field(points.x, points.y, points.z)
             field.x += Bx
             field.y += By
             field.z += Bz
