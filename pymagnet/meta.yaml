@@ -1,5 +1,5 @@
 {% set name = "pymagnet" %}
-{% set version = "0.2.0" %}
+{% set version = "0.3.0" %}
 
 package:
   name: "{{ name|lower }}"
@@ -7,7 +7,7 @@ package:
 
 source:
   url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: af2da40591bbe276a277ca7bb5a4d4b1ff07d449277c4d73fe6735ea2b1a7bcf
+  sha256: a23a5bbd484966c2156551483f96a273216b68dde3cfb6ec364e205359f4d2e0
 
 build:
   number: 0
@@ -18,33 +18,35 @@ requirements:
     - matplotlib
     - numba
     - numpy
+    - numpy-stl
     - pip
     - plotly
     - python
-    - numpy-stl
   run:
     - matplotlib
     - numba
     - numpy
+    - numpy-stl
     - plotly
     - python
-    - numpy-stl
 
-# test:
-#   imports:
-#     - pymagnet
-#     - pymagnet.magnets
-#     - pymagnet.plots
+test:
+  imports:
+    - pymagnet
+    - pymagnet.forces
+    - pymagnet.magnets
+    - pymagnet.plots
+    - pymagnet.utils
 
 about:
   home: "https://github.com/pdunne/pymagnet"
   license: "Mozilla Public 2.0 (MPL 2.0)"
   license_family: MOZILLA
-  license_file: "../LICENSE"
+  license_file: 
   summary: "User Friendly Magnetic Field Calculations"
-  doc_url: "https://pdunne.github.io/pymagnet/"
+  doc_url: 
   dev_url: 
 
 extra:
   recipe-maintainers:
-    - pdunne
+    - your-github-id-here

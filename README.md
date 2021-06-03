@@ -15,11 +15,11 @@ Installing `pymagnet` can be done using
 python -m pip install pymagnet 
 ```
 
-or
+<!-- or
 
 ```bash
 conda install -c pdunne pymagnet
-```
+``` -->
 
 Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D
 and 3D objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
@@ -40,6 +40,10 @@ Full documentation can be found here: [https://pdunne.github.io/pymagnet/](https
 ### Examples
 
 Examples can be found [in the repository](https://github.com/pdunne/pymagnet/tree/main/examples).
+
+You can test out the libraries on Binder, but performance is poor on the free service:4
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pdunne/pymagnet/main?filepath=examples)
 
 ## Features
 
