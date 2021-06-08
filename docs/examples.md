@@ -34,6 +34,10 @@ Cylinders [![Open In Colab](https://colab.research.google.com/assets/colab-badge
 
 Spheres [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Spheres.ipynb)
 
+STL Cubes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/STL%20Magnets/STL%20Examples.ipynb)
+
+STL Pentagonal Prisms [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/STL%20Magnets/STL%20Forces%20Pentagon.ipynb)
+
 ## Binder
 
 You can test out the libraries on Binder, but performance is not as good:

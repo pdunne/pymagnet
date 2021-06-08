@@ -7,8 +7,6 @@ User friendly magnetic field calculations in Python
 [![DOI](https://zenodo.org/badge/339667292.svg)](https://zenodo.org/badge/latestdoi/339667292)
 [![Anaconda-Server Badge](https://anaconda.org/pdunne/pymagnet/badges/version.svg)](https://anaconda.org/pdunne/pymagnet)
 
-
-
 ## Getting Started
 
 Installing `pymagnet` can be done using
@@ -90,6 +88,10 @@ Cubes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg
 Cylinders [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Cylinders.ipynb)
 
 Spheres [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/Forces%20Torques/Spheres.ipynb)
+
+STL Cubes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/STL%20Magnets/STL%20Examples.ipynb)
+
+STL Pentagonal Prisms [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/STL%20Magnets/STL%20Forces%20Pentagon.ipynb)
 
 ### Binder
 
