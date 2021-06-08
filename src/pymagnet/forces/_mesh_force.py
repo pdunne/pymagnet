@@ -1,3 +1,8 @@
+from ..magnets import Magnet3D
+from ..utils.global_const import FP_CUTOFF, MU0, ALIGN_CUTOFF
+from ..utils._conversions import get_unit_value_meter
+from ..utils._routines3D import _allocate_field_array3
+from ..utils._vector_structs import Point_Array3
 import numpy as _np
 from numba import njit, guvectorize
 
@@ -50,6 +55,7 @@ def triangle_area(triangle):
 
 
 # @guvectorize(["void(f8[:,:, :], f8[:])"], "(x, y, y)->(x)")
+@njit
 def get_area_triangles(triangles, area):
     """Computes the area for an array of triangles
 
@@ -192,3 +198,67 @@ def divide_triangle_regular(triangle, depth=1):
     mesh = _divide_triangle_regular(triangle, depth=depth)
     mesh = mesh.reshape((mesh.shape[0] // 9, 3, 3))
     return mesh
+
+
+def _calc_field_simplex(active_magnet, points):
+    """Calculates the total force and torque acting on one simplex of a magnet due
+    to all other instantiated magnets
+
+    Args:
+        active_magnet (Magnet3D): Target magnet
+        points (Point_Array3): Grid of points (x,y,z)
+
+    Returns:
+        tuple: total_field (float), total_torque (float)
+    """
+    field = _allocate_field_array3(points.x, points.y, points.z)
+    xc, yc, zc = active_magnet.centroid
+
+    for magnet in Magnet3D.instances:
+        if magnet is not active_magnet:
+            Bx, By, Bz = magnet.get_field(points.x, points.y, points.z)
+            field.x += Bx.reshape(field.x.shape)
+            field.y += By.reshape(field.y.shape)
+            field.z += Bz.reshape(field.z.shape)
+
+    field.x[~_np.isfinite(field.x)] = 0.0
+    field.y[~_np.isfinite(field.y)] = 0.0
+    field.z[~_np.isfinite(field.z)] = 0.0
+
+    total_field = _np.array((_np.sum(field.x), _np.sum(field.y), _np.sum(field.z)))
+
+    torques = _np.cross(
+        _np.array(
+            [points.x.ravel() - xc, points.y.ravel() - yc, points.z.ravel() - zc]
+        ).T,
+        _np.array([field.x.ravel(), field.y.ravel(), field.z.ravel()]).T,
+    )
+    total_torque = _np.sum(torques, axis=0)
+
+    return total_field, total_torque
+
+
+def calc_force_mesh(active_magnet, depth=3, unit="mm"):
+    force = _np.zeros(3)
+    torque = _np.zeros(3)
+
+    for i in range(len(active_magnet.mesh_vectors)):
+        if _np.fabs(active_magnet.Jnorm[i] / active_magnet.Jr) > ALIGN_CUTOFF:
+            triangle = active_magnet.mesh_vectors[i]
+            mesh = divide_triangle_regular(triangle, depth=depth)
+            centroids = _np.mean(mesh, axis=1)
+            num_sub_triangles = len(centroids)
+
+            points = Point_Array3(
+                centroids[:, 0], centroids[:, 1], centroids[:, 2], unit=unit
+            )
+            local_field, local_torque = _calc_field_simplex(active_magnet, points)
+            area = triangle_area(triangle)
+            force += local_field * -active_magnet.Jnorm[i] * area / num_sub_triangles
+            torque += local_torque * -active_magnet.Jnorm[i] * area / num_sub_triangles
+
+    scaling_factor = get_unit_value_meter(points.get_unit())
+    force /= MU0 / scaling_factor / scaling_factor
+    torque /= MU0 / scaling_factor / scaling_factor / scaling_factor
+
+    return force, torque

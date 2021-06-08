@@ -41,7 +41,12 @@ class Mesh(Magnet3D):
         self.mesh_scale = kwargs.pop("mesh_scale", 1.0)
         self._filename = filename
 
-        self.mesh_vectors, self.mesh_normals = self._import_mesh()
+        (
+            self.mesh_vectors,
+            self.mesh_normals,
+            self.volume,
+            self.centroid,
+        ) = self._import_mesh()
 
         self.Jx = _np.around(
             Jr * _np.cos(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
@@ -51,16 +56,22 @@ class Mesh(Magnet3D):
         )
         self.Jz = _np.around(Jr * _np.cos(self.theta_rad), decimals=6)
         self.tol = MAG_TOL  # sufficient for 0.01 degree accuracy
-
         self.J = _np.array([self.Jx, self.Jy, self.Jz])
 
-        self.Jnorm = _np.dot(self.J, self.mesh_normals.T)
+        # FIXME: Sort out rotation of magnetisation with rotation of mesh
+        # if _np.any(
+        #     _np.fabs([self.alpha_rad, self.beta_rad, self.gamma_rad]) > ALIGN_CUTOFF
+        # ):
+        #     mag_rotation = Quaternion.gen_rotation_quaternion(
+        #         self.alpha_rad, self.beta_rad, self.gamma_rad
+        #     )
+        #     Jrot = mag_rotation * self.J
+        #     self.Jx = Jrot[0]
+        #     self.Jy = Jrot[1]
+        #     self.Jz = Jrot[2]
+        #     self.J = _np.array([self.Jx, self.Jy, self.Jz])
 
-        # Debug parameters for
-        # self.start = kwargs.pop("start", 0)
-        # self.start = _np.min([self.start, len(self.mesh_vectors) - 1])
-        # self.stop = kwargs.pop("stop", len(self.mesh_vectors))
-        # self.stop = _np.min([self.stop, len(self.mesh_vectors)])
+        self.Jnorm = _np.dot(self.J, self.mesh_normals.T)
 
     def __str__(self):
         str = (
@@ -122,6 +133,21 @@ class Mesh(Magnet3D):
 
         return B.x, B.y, B.z
 
+    def get_force_torque(self, depth=4, unit="mm"):
+        """Calculates the force and torque on a prism magnet due to all other magnets.
+
+        Args:
+            depth (int, optional): Number of recursions of division by 4 per simplex
+            unit (str, optional): Length scale. Defaults to 'mm'.
+
+        Returns:
+            tuple: force (ndarray (3,) ) and torque (ndarray (3,) )
+        """
+        from ..forces._mesh_force import calc_force_mesh
+
+        force, torque = calc_force_mesh(self, depth, unit)
+        return force, torque
+
     def _get_field_internal(self, x, y, z):
         """Internal magnetic field calculation methods.
         Iterates over each triangle that makes up the mesh magnet and calculates the magnetic field
@@ -174,10 +200,6 @@ class Mesh(Magnet3D):
         """
         stl_mesh = mesh.Mesh.from_file(self._filename)
 
-        offset = self.get_center()
-
-        stl_mesh.translate(offset / self.mesh_scale)
-
         if _np.any(
             _np.fabs([self.alpha_rad, self.beta_rad, self.gamma_rad]) > ALIGN_CUTOFF
         ):
@@ -188,16 +210,29 @@ class Mesh(Magnet3D):
             angle, axis = mesh_rotation.get_axisangle()
             stl_mesh.rotate(axis, angle)
 
+        # to ensure that the initial center is set to the centroid
+        _, centroid, _ = stl_mesh.get_mass_properties()
+        stl_mesh.translate(-centroid)
+
+        offset = self.get_center()
+        stl_mesh.translate(offset / self.mesh_scale)
+
+        # get values after translation
+        volume, centroid, _ = stl_mesh.get_mass_properties()
+
         mesh_vectors = stl_mesh.vectors.astype(_np.float64)
         mesh_normals = stl_mesh.normals.astype(_np.float64)
 
+        # scale values
+        volume *= self.mesh_scale ** 3
+        centroid *= self.mesh_scale
         mesh_vectors *= self.mesh_scale
 
         mesh_normals = mesh_normals / _np.linalg.norm(
             mesh_normals, axis=1, keepdims=True
         )
 
-        return mesh_vectors, mesh_normals
+        return mesh_vectors, mesh_normals, volume, centroid
 
     def _generate_mask(self, x, y, z):
         """Generates mask of points inside a magnet
@@ -298,7 +333,7 @@ class Mesh(Magnet3D):
 
     @staticmethod
     def _charge_sheet(a, b, Jr, x, y, z):
-        sigma = Jr / (4 * PI)
+        sigma = Jr
         with _np.errstate(all="ignore"):
             Bx = _charge_sheet_x(a, b, sigma, x, y, z)
             By = _charge_sheet_y(a, b, sigma, x, y, z)
@@ -359,7 +394,7 @@ def _charge_sheet_x(a, b, sigma, x, y, z):
         if fabs(r2_over_r3) > FP_CUTOFF:
             Bx += log(r2_plus_bz / r3_minus_z)
 
-    Bx *= sigma
+    Bx *= sigma / PI / 4
 
     return Bx
 
@@ -416,7 +451,7 @@ def _charge_sheet_z(a, b, sigma, x, y, z):
         r1_over_r3 = r1_minus_x / r3_plus_ax
         if fabs(r1_over_r3) > FP_CUTOFF:
             Bz += log(r1_over_r3)
-    Bz *= sigma
+    Bz *= sigma / PI / 4
 
     return Bz
 
@@ -504,7 +539,7 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
         else:
             By = By + atan2(atan_y, atan_x)
 
-        By = sigma * By
+        By = sigma * By / PI / 2
 
     else:
         By = 0.0
