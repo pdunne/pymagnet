@@ -54,9 +54,8 @@ $$
 
 $$
 \begin{align}
-H_x &= \frac{\sigma_m}{2\pi\mu_0} \left[
-  \ln \left( \frac{ b + \sqrt{ (a - x)^2 + y^2 + (b - z)^2 } - z }{ \sqrt{(a-x)^2 + y^2 + z^2} - z}\right)\right.\\
-    & + \left. \frac{b}{c}  \ln \left(   \frac{r - s }{ \sqrt{(a-x)^2 + y^2 + (b-z)^2} + t } \right) \right]
+H_x &= \frac{\sigma_m}{4\pi\mu_0} \left[
+  \ln \left( \frac{ r_2 + b - z }{ r_3  - z}\right) +  \frac{b}{c}  \ln \left(   \frac{r - s }{ r_2 + t } \right) \right]
 \end{align}
 $$
 
@@ -64,15 +63,20 @@ and similarly
 
 $$
 \begin{align}
-H_z &= \frac{\sigma_m}{2\pi\mu_0} \left[
-  \ln \left( \frac{ r - x }{\sqrt{(a-x)^2 + y^2 + z^2} + a}\right)\right.\\
-    & + \left. \frac{a}{c}  \ln \left(  \frac{ \sqrt{(a-x)^2 + y^2 + (b-z)^2} + t}{r - s } \right) \right]
+H_z &= \frac{\sigma_m}{4\pi\mu_0} \left[
+  \ln \left( \frac{ r - x }{r_3 + a}\right) + \frac{a}{c}  \ln \left(  \frac{ r_2 + t}{r - s } \right) \right]
 \end{align}
 $$
 
 where
 
-$r = \sqrt{x^2 + y^2 + z^2},\, c = \sqrt{a^2 + b^2}$
+$c = \sqrt{a^2 + b^2}$
+
+$r = \sqrt{x^2 + y^2 + z^2}$
+
+$r_2 = \sqrt{ (a - x)^2 + y^2 + (b - z)^2 }$
+
+$r_3 = \sqrt{(a-x)^2 + y^2 + z^2}$
 
 $s = \frac{ax + bz}{c },\, t = \frac{a (a-x) + b(b-z)}{c}$
 
@@ -81,18 +85,21 @@ $s = \frac{ax + bz}{c },\, t = \frac{a (a-x) + b(b-z)}{c}$
 $$
 \begin{align}
 H_y = \frac{\sigma_m}{2\pi\mu_0} &\left[
-  \tan^{-1}\left(\frac{(x-a) + z + \sqrt{(x-a)^2 + y^2 + z^2}}{y}\right)\right.\\
-  & - \tan^{-1} \left(\frac{x+z+r}{y} \right) \\
-  & + \frac{y}{\alpha\sqrt{B^2 - A^2 - C^2}} \left\{ \tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \frac{(\alpha+\beta)^2}{\gamma^2}} + \frac{\alpha + \beta}{\gamma} \right)}{\sqrt{B^2 - A^2 - C^2}} \right) \right. \\
-  &\,\, \left.\left.  -\tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \frac{\beta^2}{\gamma^2}} + \frac{\beta}{\gamma} \right)}{\sqrt{B^2 - A^2 - C^2}} \right) \right\} \right]
+  \tan^{-1}\left(\frac{x-a + z + r_3}{y}\right)\right. - \tan^{-1} \left(\frac{x+z+r}{y} \right) \\
+  & + \frac{y}{\alpha D} \left\{ \tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \delta^2} + \delta \right)}{D} \right) \right. \\
+  &\,\, \left.\left.  -\tan^{-1} \left( \frac{C + (A+B)\left(  \sqrt{1 + \eta^2} + \eta \right)}{D} \right) \right\} \right]
 \end{align}
 $$
 
 where
 
-$\alpha = \sqrt{1 + \frac{b^2}{a^2}}, \, \beta = - \frac{x + \frac{bz}{a}}{1 + \frac{b^2}{a^2}}, \, \gamma = \sqrt{\frac{r^2}{1 + \frac{b^2}{a^2}} - \beta^2}$
+$\alpha = \sqrt{1 + \frac{b^2}{a^2}}, \, \beta = - \frac{x + \frac{bz}{a}}{\alpha^2}, \, \gamma = \sqrt{\frac{r^2}{\alpha^2} - \beta^2}$
 
-$A = -\gamma \frac{b}{a},\, B = \gamma\sqrt{1 + \frac{b^2}{a^2}},\, C = z + \beta\frac{b}{a}$
+$\delta = \frac{\alpha + \beta}{\gamma}, \, \eta = \frac{\beta}{\gamma}$
+
+
+$A = -\gamma \frac{b}{a},\, B = \gamma\alpha,\, C = z + \beta\frac{b}{a}, \, D = \sqrt{B^2 - A^2 - C^2}$
+
 
 [^1]: J. M. D. Coey, Magnetism and Magnetic Materials (Cambridge University Press, 2010).
 [^2]: E. P. Furlani, Permanent Magnet and Electromechanical Devices (Academic Press, San Diego, 2001).
