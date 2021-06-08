@@ -681,35 +681,36 @@ is the remnant magnetisation vector of the composite polygonal magnet.</p>
 \]</div>
 <div class="arithmatex">\[
 \begin{align}
-H_x &amp;= \frac{\sigma_m}{2\pi\mu_0} \left[
-  \ln \left( \frac{ b + \sqrt{ (a - x)^2 + y^2 + (b - z)^2 } - z }{ \sqrt{(a-x)^2 + y^2 + z^2} - z}\right)\right.\\
-    &amp; + \left. \frac{b}{c}  \ln \left(   \frac{r - s }{ \sqrt{(a-x)^2 + y^2 + (b-z)^2} + t } \right) \right]
+H_x &amp;= \frac{\sigma_m}{4\pi\mu_0} \left[
+  \ln \left( \frac{ r_2 + b - z }{ r_3  - z}\right) +  \frac{b}{c}  \ln \left(   \frac{r - s }{ r_2 + t } \right) \right]
 \end{align}
 \]</div>
 <p>and similarly</p>
 <div class="arithmatex">\[
 \begin{align}
-H_z &amp;= \frac{\sigma_m}{2\pi\mu_0} \left[
-  \ln \left( \frac{ r - x }{\sqrt{(a-x)^2 + y^2 + z^2} + a}\right)\right.\\
-    &amp; + \left. \frac{a}{c}  \ln \left(  \frac{ \sqrt{(a-x)^2 + y^2 + (b-z)^2} + t}{r - s } \right) \right]
+H_z &amp;= \frac{\sigma_m}{4\pi\mu_0} \left[
+  \ln \left( \frac{ r - x }{r_3 + a}\right) + \frac{a}{c}  \ln \left(  \frac{ r_2 + t}{r - s } \right) \right]
 \end{align}
 \]</div>
 <p>where</p>
-<p><span class="arithmatex">\(r = \sqrt{x^2 + y^2 + z^2},\, c = \sqrt{a^2 + b^2}\)</span></p>
+<p><span class="arithmatex">\(c = \sqrt{a^2 + b^2}\)</span></p>
+<p><span class="arithmatex">\(r = \sqrt{x^2 + y^2 + z^2}\)</span></p>
+<p><span class="arithmatex">\(r_2 = \sqrt{ (a - x)^2 + y^2 + (b - z)^2 }\)</span></p>
+<p><span class="arithmatex">\(r_3 = \sqrt{(a-x)^2 + y^2 + z^2}\)</span></p>
 <p><span class="arithmatex">\(s = \frac{ax + bz}{c },\, t = \frac{a (a-x) + b(b-z)}{c}\)</span></p>
 <p><br /></p>
 <div class="arithmatex">\[
 \begin{align}
 H_y = \frac{\sigma_m}{2\pi\mu_0} &amp;\left[
-  \tan^{-1}\left(\frac{(x-a) + z + \sqrt{(x-a)^2 + y^2 + z^2}}{y}\right)\right.\\
-  &amp; - \tan^{-1} \left(\frac{x+z+r}{y} \right) \\
-  &amp; + \frac{y}{\alpha\sqrt{B^2 - A^2 - C^2}} \left\{ \tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \frac{(\alpha+\beta)^2}{\gamma^2}} + \frac{\alpha + \beta}{\gamma} \right)}{\sqrt{B^2 - A^2 - C^2}} \right) \right. \\
-  &amp;\,\, \left.\left.  -\tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \frac{\beta^2}{\gamma^2}} + \frac{\beta}{\gamma} \right)}{\sqrt{B^2 - A^2 - C^2}} \right) \right\} \right]
+  \tan^{-1}\left(\frac{x-a + z + r_3}{y}\right)\right. - \tan^{-1} \left(\frac{x+z+r}{y} \right) \\
+  &amp; + \frac{y}{\alpha D} \left\{ \tan^{-1} \left(\frac{C + (A+B)\left(  \sqrt{1 + \delta^2} + \delta \right)}{D} \right) \right. \\
+  &amp;\,\, \left.\left.  -\tan^{-1} \left( \frac{C + (A+B)\left(  \sqrt{1 + \eta^2} + \eta \right)}{D} \right) \right\} \right]
 \end{align}
 \]</div>
 <p>where</p>
-<p><span class="arithmatex">\(\alpha = \sqrt{1 + \frac{b^2}{a^2}}, \, \beta = - \frac{x + \frac{bz}{a}}{1 + \frac{b^2}{a^2}}, \, \gamma = \sqrt{\frac{r^2}{1 + \frac{b^2}{a^2}} - \beta^2}\)</span></p>
-<p><span class="arithmatex">\(A = -\gamma \frac{b}{a},\, B = \gamma\sqrt{1 + \frac{b^2}{a^2}},\, C = z + \beta\frac{b}{a}\)</span></p>
+<p><span class="arithmatex">\(\alpha = \sqrt{1 + \frac{b^2}{a^2}}, \, \beta = - \frac{x + \frac{bz}{a}}{\alpha^2}, \, \gamma = \sqrt{\frac{r^2}{\alpha^2} - \beta^2}\)</span></p>
+<p><span class="arithmatex">\(\delta = \frac{\alpha + \beta}{\gamma}, \, \eta = \frac{\beta}{\gamma}\)</span></p>
+<p><span class="arithmatex">\(A = -\gamma \frac{b}{a},\, B = \gamma\alpha,\, C = z + \beta\frac{b}{a}, \, D = \sqrt{B^2 - A^2 - C^2}\)</span></p>
 <div class="footnote">
 <hr />
 <ol>

@@ -969,6 +969,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pymagnet.magnets._polygon3D.Mesh.get_force_torque" class="md-nav__link">
+    get_force_torque()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pymagnet.magnets._polygon3D.Mesh.get_Jr" class="md-nav__link">
     get_Jr()
   </a>
@@ -1521,6 +1528,13 @@
           <li class="md-nav__item">
   <a href="#pymagnet.magnets._polygon3D.Mesh.get_field" class="md-nav__link">
     get_field()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pymagnet.magnets._polygon3D.Mesh.get_force_torque" class="md-nav__link">
+    get_force_torque()
   </a>
   
 </li>
@@ -4908,7 +4922,12 @@ mesh_scale (float): scaling factor if mesh needs to be resized. Defaults to 1.0<
     <span class="bp">self</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;mesh_scale&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span> <span class="o">=</span> <span class="n">filename</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">mesh_vectors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_normals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_import_mesh</span><span class="p">()</span>
+    <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_vectors</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_normals</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">volume</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroid</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_import_mesh</span><span class="p">()</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">Jx</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span>
         <span class="n">Jr</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_rad</span><span class="p">),</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">6</span>
@@ -4918,16 +4937,22 @@ mesh_scale (float): scaling factor if mesh needs to be resized. Defaults to 1.0<
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">Jz</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">Jr</span> <span class="o">*</span> <span class="n">_np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_rad</span><span class="p">),</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">MAG_TOL</span>  <span class="c1"># sufficient for 0.01 degree accuracy</span>
-
     <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Jx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Jy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Jz</span><span class="p">])</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">Jnorm</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_normals</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="c1"># FIXME: Sort out rotation of magnetisation with rotation of mesh</span>
+    <span class="c1"># if _np.any(</span>
+    <span class="c1">#     _np.fabs([self.alpha_rad, self.beta_rad, self.gamma_rad]) &gt; ALIGN_CUTOFF</span>
+    <span class="c1"># ):</span>
+    <span class="c1">#     mag_rotation = Quaternion.gen_rotation_quaternion(</span>
+    <span class="c1">#         self.alpha_rad, self.beta_rad, self.gamma_rad</span>
+    <span class="c1">#     )</span>
+    <span class="c1">#     Jrot = mag_rotation * self.J</span>
+    <span class="c1">#     self.Jx = Jrot[0]</span>
+    <span class="c1">#     self.Jy = Jrot[1]</span>
+    <span class="c1">#     self.Jz = Jrot[2]</span>
+    <span class="c1">#     self.J = _np.array([self.Jx, self.Jy, self.Jz])</span>
 
-    <span class="c1"># Debug parameters for</span>
-    <span class="c1"># self.start = kwargs.pop(&quot;start&quot;, 0)</span>
-    <span class="c1"># self.start = _np.min([self.start, len(self.mesh_vectors) - 1])</span>
-    <span class="c1"># self.stop = kwargs.pop(&quot;stop&quot;, len(self.mesh_vectors))</span>
-    <span class="c1"># self.stop = _np.min([self.stop, len(self.mesh_vectors)])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Jnorm</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_normals</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -5193,6 +5218,84 @@ The calculations are always performed in local coordinates with the centre of th
     <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_field_internal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">B</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">z</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="pymagnet.magnets._polygon3D.Mesh.get_force_torque" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_force_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">)</span></code>
+
+
+</h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Calculates the force and torque on a prism magnet due to all other magnets.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>depth</code></td>
+        <td><code>int</code></td>
+        <td><p>Number of recursions of division by 4 per simplex</p></td>
+        <td><code>4</code></td>
+      </tr>
+      <tr>
+        <td><code>unit</code></td>
+        <td><code>str</code></td>
+        <td><p>Length scale. Defaults to 'mm'.</p></td>
+        <td><code>&#39;mm&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tuple</code></td>
+      <td><p>force (ndarray (3,) ) and torque (ndarray (3,) )</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>pymagnet/magnets/_polygon3D.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_force_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the force and torque on a prism magnet due to all other magnets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        depth (int, optional): Number of recursions of division by 4 per simplex</span>
+<span class="sd">        unit (str, optional): Length scale. Defaults to &#39;mm&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: force (ndarray (3,) ) and torque (ndarray (3,) )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">..forces._mesh_force</span> <span class="kn">import</span> <span class="n">calc_force_mesh</span>
+
+    <span class="n">force</span><span class="p">,</span> <span class="n">torque</span> <span class="o">=</span> <span class="n">calc_force_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">force</span><span class="p">,</span> <span class="n">torque</span>
 </code></pre></div>
         </details>
     </div>
