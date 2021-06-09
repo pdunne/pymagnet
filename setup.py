@@ -1,5 +1,4 @@
 """A setuptools based setup module for pymagnet
-
 """
 
 from setuptools import setup, find_packages
@@ -13,7 +12,7 @@ long_description = (here / "pypi_README.md").read_text(encoding="utf-8")
 
 setup(
     name="pymagnet",
-    version="0.3.3",
+    version="0.3.4",
     description="User Friendly Magnetic Field Calculations",
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -1,5 +1,5 @@
 {% set name = "pymagnet" %}
-{% set version = "0.3.0" %}
+{% set version = "0.3.4" %}
 
 package:
   name: "{{ name|lower }}"
@@ -42,7 +42,7 @@ about:
   home: "https://github.com/pdunne/pymagnet"
   license: "Mozilla Public 2.0 (MPL 2.0)"
   license_family: MOZILLA
-  license_file: 
+  license_file: LICENSE
   summary: "User Friendly Magnetic Field Calculations"
   doc_url: 
   dev_url: 

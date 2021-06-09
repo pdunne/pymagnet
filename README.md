@@ -110,7 +110,7 @@ STL Pentagonal Prisms [![Open In Colab](https://colab.research.google.com/assets
 
 You can test out the libraries on Binder, but performance is not as good:
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pdunne/pymagnet/main?filepath=examples)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pdunne/pymagnet/main?filepath=examples%2Fnotebooks)
 
 ## Prerequisites
 
