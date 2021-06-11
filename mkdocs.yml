@@ -28,6 +28,7 @@ nav:
 
 plugins:
   - search
+  - mermaid2
   - autorefs
   - mkdocstrings:
       handlers:
@@ -40,7 +41,11 @@ markdown_extensions:
   - admonition
   - attr_list
   - footnotes
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid
   - pymdownx.arithmatex:
       generic: true
 
@@ -48,3 +53,4 @@ extra_javascript:
   - javascripts/config.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://unpkg.com/mermaid/dist/mermaid.min.js
