@@ -540,7 +540,7 @@ def _draw_cones(points, field, NA=10, cone_opacity=1.0):
     return data_object
 
 
-def _generate_all_meshes(magnet_opacity=1.0):
+def _generate_all_meshes(magnet_opacity=1.0, **kwargs):
     """Generates polyhedra of all magnets for rendering in 3D
 
     Args:
@@ -549,11 +549,11 @@ def _generate_all_meshes(magnet_opacity=1.0):
     Returns:
         dict: plotly data structure for rendering magnets
     """
-
+    color = kwargs.pop("color", "white")
     data_objects = []
     for magnet in Magnet3D.instances:
         if issubclass(magnet.__class__, Mesh):
-            mesh_data = Graphic_Mesh(magnet.mesh_vectors)
+            mesh_data = Graphic_Mesh(magnet.mesh_vectors, color=color)
             data_objects.append(mesh_data.generate_vertices())
 
         else:
@@ -564,6 +564,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
                     alpha=magnet.alpha,
                     beta=magnet.beta,
                     gamma=magnet.gamma,
+                    color=color,
                 )
             elif issubclass(magnet.__class__, Cylinder):
                 polyhed = Graphic_Cylinder(
@@ -573,6 +574,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
                     alpha=magnet.alpha,
                     beta=magnet.beta,
                     gamma=magnet.gamma,
+                    color=color,
                 )
 
             elif issubclass(magnet.__class__, Sphere):
@@ -582,6 +584,7 @@ def _generate_all_meshes(magnet_opacity=1.0):
                     alpha=magnet.alpha,
                     beta=magnet.beta,
                     gamma=magnet.gamma,
+                    color=color,
                 )
 
             data_objects.append(

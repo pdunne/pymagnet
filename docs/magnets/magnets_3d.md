@@ -20,6 +20,10 @@ replaced by $J$ or $J_r$.
 
 ## Prisms/Cuboids
 
+<figure>
+    <img src="../../img/3d_prism.png" width="300" />
+</figure>
+
 For a uniformly magnetised cuboid, used in our experiments, with dimensions $2a
 \times  2b \times 2c$ magnetised in the $x$-direction
 is[^3]
@@ -100,6 +104,10 @@ Similar equations can be attained for a magnet magnetised in $y$ by a 90˚ rotat
 of the first set of equations about the $z$-axis.
 
 ## Cylinders/Solenoids
+
+<figure>
+    <img src="../../img/3d_cylinder.png" width="300" />
+</figure>
 
 Recalling that the magnetic field due to a cylinder of length $2b$ and radius $a$,
 with a current $I$ running through $n$ turns of wire along the symmetry axis is:
@@ -185,12 +193,16 @@ $C\left(1, 1, 1, 1 \right)  = \pi/2$
 import pymagnet as pm
 import numpy as np
 cel_value = pm.magnets.Cylinder._cel(1, 1, 1, 1)
-np.allclose(cel_value, np.pi/2.0)
+print(np.allclose(cel_value, np.pi/2.0))
 ```
 
 ## Spheres
 
-Outside a uniformly magnetised sphere of radius $a$, the stray field is identical to a magnetic
+<figure>
+    <img src="../../img/3d_sphere.png" width="300" />
+</figure>
+
+Outside a uniformly magnetised sphere[^8] of radius $a$, the stray field is identical to a magnetic
 dipole, and has a convenient representation in spherical coordinates:
 
 $$
@@ -216,3 +228,4 @@ $$
 [^5]: R. Bulirsch, Numerical Calculation of Elliptic Integrals and Elliptic Functions. III, Numer. Math. 13, 305 (1969).
 [^6]: See [http://dlmf.nist.gov/19.2](http://dlmf.nist.gov/19.2)
 [^7]: N. Derby and S. Olbert, Cylindrical Magnets and Ideal Solenoids, American Journal of Physics 78, 229 (2010).
+[^8]: Adapted from [here](https://commons.wikimedia.org/wiki/File:Kugelkoord-lokale-Basis-s.svg)

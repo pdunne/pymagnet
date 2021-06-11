@@ -8,8 +8,12 @@ Additional keyword arguments for all `Magnet2D` magnets:
 - alpha: rotation angle in degrees. Defaults to 0.
 - center: 2 element tuple (x,y) corresponding to centre of magnet. Defaults to (0,0).
 
-
 ### Rectangle
+
+<figure>
+    <img src="../../img/2d_rectangle.png" width="300" />
+    <figcaption>2D Magnet Rectangle</figcaption>
+</figure>
 
 Rectangle 2D magnet class
 
@@ -31,7 +35,11 @@ magnet = pm.magnets.Square(width = 10, Jr = 1.0)
 print(magnet)
 ```
 
-### Circle
+## Biaxial Rods (Circle)
+
+<figure>
+    <img src="../../img/2d_circle.png" width="300" />
+</figure>
 
 Circle 2D magnet class
 
@@ -43,11 +51,15 @@ print(magnet)
 
 ### PolyMagnet
 
+<figure>
+    <img src="../../img/2d_sheet.png" width="300" />
+</figure>
+
 PolyMagnet 2D magnet class
 
 ## 3D Magnets
 
-Additional keyword arguments for all `Magnet2D` magnets:
+Additional keyword arguments for all `Magnet3D` magnets:
 
 - theta: angle in degrees between magnetisation vector and z-axis. Defaults to 0.
 - phi: angle in degrees between magnetisation vector and x-axis. Defaults to .
@@ -56,7 +68,11 @@ Additional keyword arguments for all `Magnet2D` magnets:
 - gamma: rotation angle in degrees about x-axis. Defaults to 0.
 - center: 3 element tuple (x,y, z) corresponding to centre of magnet. Defaults to (0,0,0).
 
-### Prism/
+### Prism
+
+<figure>
+    <img src="../../img/3d_prism.png" width="300" />
+</figure>
 
 ```python
 import pymagnet as pm
@@ -74,12 +90,39 @@ print(magnet)
 
 ### Cylinder
 
-Cylinder 3D magnet class
+<figure>
+    <img src="../../img/3d_cylinder.png" width="300" />
+</figure>
+
+```python
+import pymagnet as pm
+magnet = pm.magnets.Cylinder(radius = 10, length = 10, Jr = 1.0)
+print(magnet)
+```
 
 ### Sphere
 
-Sphere 3D magnet class
+<figure>
+    <img src="../../img/3d_sphere.png" width="300" />
+</figure>
+
+```python
+import pymagnet as pm
+magnet = pm.magnets.Sphere(radius = 10, Jr = 1.0)
+print(magnet)
+```
+
+!!! note
+    `phi`, `theta` do not apply to spheres, to rotate the magnetisation of a sphere, use the rotation angles
+    `alpha`, `beta`, `gamma`
 
 ### Mesh
 
-Mesh 3D magnet class
+```python
+import pymagnet as pm
+magnet = pm.magnets.Mesh(filename, Jr = 1.0)
+print(magnet)
+```
+
+!!! note
+    The rotation angles `alpha`, `beta`, `gamma` only rotate the mesh vertices, but not the magnetisation.

@@ -14,6 +14,10 @@
 
 ### Line Elements
 
+<figure>
+    <img src="../../img/2d_sheet.png" width="300" />
+</figure>
+
 The magnetic field due to an infinitely long, thin magnetic sheet of height $2h$
 with a surface current density $\mathbf{K} = K_0 \mathbf{\hat{z}}$ is[^1]
 

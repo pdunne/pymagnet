@@ -19,7 +19,7 @@ $$
 ## Rectangles
 
 <figure>
-    <img src="../../img/rectangle.png" width="300" />
+    <img src="../../img/2d_rectangle.png" width="300" />
     <figcaption>2D Magnet Rectangle</figcaption>
 </figure>
 
@@ -58,8 +58,7 @@ $$
 ## Biaxial Rods (Circle)
 
 <figure>
-    <img src="../../img/biaxial_rod.png"/>
-    <figcaption>2D Magnet Circle</figcaption>
+    <img src="../../img/2d_circle.png" width="300" />
 </figure>
 
 A long bipolar rod of radius $a$ can be approximated as circular source. The magnetic
