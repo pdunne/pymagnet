@@ -16,7 +16,7 @@ Getting Started [![First Steps](https://colab.research.google.com/assets/colab-b
 
 Misc. Examples [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/Fields/Misc%20Examples.ipynb)
 
-#### 3D Examples
+## 3D Examples
 
 Analytical Shapes [![3D Examples](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/Fields/3D%20Examples%20-%20Assemblies.ipynb)
 
@@ -26,7 +26,7 @@ Spheres [![Open In Colab](https://colab.research.google.com/assets/colab-badge.s
 
 3D Stanford Bunny [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/STL%20Magnets/Stanford%20Bunny.ipynb)
 
-#### Forces and Torques
+## Forces and Torques
 
 Cubes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/Forces%20Torques/Cubes.ipynb)
 
