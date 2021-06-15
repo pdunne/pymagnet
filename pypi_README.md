@@ -15,12 +15,6 @@ Installing `pymagnet` can be done using
 python -m pip install pymagnet 
 ```
 
-<!-- or
-
-```bash
-conda install -c pdunne pymagnet
-``` -->
-
 Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D
 and 3D objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
 files. The library can also calculate the magnetic forces and torques on one magnet due to all other magnets in the system.
@@ -95,7 +89,7 @@ STL Pentagonal Prisms [![Open In Colab](https://colab.research.google.com/assets
 
 ### Binder
 
-You can test out the libraries on Binder, but performance is not as good:
+The example notebooks can be run as an instance using Binder:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pdunne/pymagnet/main?filepath=examples%2Fnotebooks)
 

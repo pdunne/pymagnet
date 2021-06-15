@@ -66,40 +66,6 @@ class Polyhedron(Registry):
     def __str__(self) -> str:
         return f"(center: {self.center}, size: {self.size} )"
 
-    #     # FIXME: Move below function into quaternion class, do the same for Magnet3D class
-    #     def _generate_rotation_quaternions(self):
-    #         """Generates single rotation quaternion for all non-zero rotation angles,
-    #         which are:
-    #
-    #             alpha (float): angle in degrees around z-axis
-    #             beta (float): angle in degrees around y-axis
-    #             gamma (float): angle in degrees around x-axis
-    #
-    #         Returns:
-    #             Quaternion: total rotation quaternion
-    #         """
-    #         from ..utils._quaternion import Quaternion
-    #
-    #         rotate_about_x = Quaternion()
-    #         rotate_about_y = Quaternion()
-    #         rotate_about_z = Quaternion()
-    #
-    #         forward_rotation, reverse_rotation = Quaternion(), Quaternion()
-    #
-    #         if _np.fabs(self.alpha_rad) > MAG_TOL:
-    #             rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
-    #
-    #         if _np.fabs(self.beta_rad) > MAG_TOL:
-    #             rotate_about_y = Quaternion.q_angle_from_axis(self.beta_rad, (0, 1, 0))
-    #
-    #         if _np.fabs(self.gamma_rad) > MAG_TOL:
-    #             rotate_about_x = Quaternion.q_angle_from_axis(self.gamma_rad, (1, 0, 0))
-    #
-    #         forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
-    #         reverse_rotation = forward_rotation.get_conjugate()
-    #
-    #         return forward_rotation, reverse_rotation
-
     def generate_vertices(self):
         """Generates vertices of a polyhedron
 
@@ -696,7 +662,7 @@ def slice_plot(data_dict, **kwargs):
 
     reset_polyhedra()
 
-    opacity = kwargs.pop("opacity", 0.1)
+    opacity = kwargs.pop("opacity", 0.8)
     magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
     cone_opacity = kwargs.pop("cone_opacity", 1.0)
     # planes = kwargs.pop("planes", ["xy", "xz", "yz"])
@@ -704,7 +670,8 @@ def slice_plot(data_dict, **kwargs):
     cmin = kwargs.pop("cmin", 0)
     cmax = kwargs.pop("cmax", 0.5)
     colorscale = kwargs.pop("colorscale", "viridis")
-    num_arrows = kwargs.pop("num_arrows", 20)
+    num_arrows = kwargs.pop("num_arrows", None)
+    # vector_plot = kwargs.pop("vector_plot", True)
 
     data_objects = []
 
@@ -728,16 +695,16 @@ def slice_plot(data_dict, **kwargs):
                 showscale=True,
             )
         )
+        if num_arrows is not None:
+            num_points = field.x.shape[0]
 
-        num_points = field.x.shape[0]
+            NA = num_points // num_arrows
 
-        NA = num_points // num_arrows
-
-        if NA < 1:
-            NA = 1
-        data_objects.append(
-            _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
-        )
+            if NA < 1:
+                NA = 1
+            data_objects.append(
+                _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
+            )
 
     fig = _go.Figure(data=data_objects)
 
@@ -773,18 +740,19 @@ def slice_quickplot(**kwargs):
     slice_value = kwargs.pop("slice_value", 0.0)
     unit = kwargs.pop("unit", "mm")
 
-    opacity = kwargs.pop("opacity", 0.1)
+    opacity = kwargs.pop("opacity", 0.8)
     magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
     cone_opacity = kwargs.pop("cone_opacity", 1.0)
     planes = kwargs.pop("planes", ["xy", "xz", "yz"])
 
-    num_arrows = kwargs.pop("num_arrows", 20)
-    num_points = kwargs.pop("num_arrows", 100)
+    num_arrows = kwargs.pop("num_arrows", None)
+    num_points = kwargs.pop("num_points", 100)
 
-    NA = num_points // num_arrows
+    if num_arrows is not None:
+        NA = num_points // num_arrows
+        if NA < 1:
+            NA = 1
 
-    if NA < 1:
-        NA = 1
     cmin = kwargs.pop("cmin", 0)
     cmax = kwargs.pop("cmax", 0.5)
     colorscale = kwargs.pop("colorscale", "viridis")
@@ -823,9 +791,10 @@ def slice_quickplot(**kwargs):
                 showscale=True,
             )
         )
-        data_objects.append(
-            _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
-        )
+        if num_arrows is not None:
+            data_objects.append(
+                _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
+            )
 
     fig = _go.Figure(data=data_objects)
 
@@ -861,8 +830,6 @@ def volume_plot(points, field, **kwargs):
     magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
     cone_opacity = kwargs.pop("cone_opacity", 1.0)
 
-    num_points = kwargs.pop("num_points", None)
-
     num_arrows = kwargs.pop("num_arrows", None)
 
     cmin = kwargs.pop("cmin", 0)
@@ -870,6 +837,8 @@ def volume_plot(points, field, **kwargs):
     num_levels = kwargs.pop("num_levels", 5)
 
     show_magnets = kwargs.pop("show_magnets", True)
+
+    num_points = len(points.x)
 
     data_objects = []
 
