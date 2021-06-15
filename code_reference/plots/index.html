@@ -2697,7 +2697,7 @@ A convenience function.</p>
 
     <span class="n">reset_polyhedra</span><span class="p">()</span>
 
-    <span class="n">opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"opacity"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"opacity"</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
     <span class="n">magnet_opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"magnet_opacity"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="n">cone_opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"cone_opacity"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="c1"># planes = kwargs.pop("planes", ["xy", "xz", "yz"])</span>
@@ -2705,7 +2705,8 @@ A convenience function.</p>
     <span class="n">cmin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"cmin"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">cmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"cmax"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
     <span class="n">colorscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"colorscale"</span><span class="p">,</span> <span class="s2">"viridis"</span><span class="p">)</span>
-    <span class="n">num_arrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_arrows"</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">num_arrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_arrows"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># vector_plot = kwargs.pop("vector_plot", True)</span>
 
     <span class="n">data_objects</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -2729,16 +2730,16 @@ A convenience function.</p>
                 <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_arrows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_points</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="n">num_points</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">NA</span> <span class="o">=</span> <span class="n">num_points</span> <span class="o">//</span> <span class="n">num_arrows</span>
 
-        <span class="n">NA</span> <span class="o">=</span> <span class="n">num_points</span> <span class="o">//</span> <span class="n">num_arrows</span>
-
-        <span class="k">if</span> <span class="n">NA</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">NA</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">data_objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">_draw_cones</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">NA</span><span class="o">=</span><span class="n">NA</span><span class="p">,</span> <span class="n">cone_opacity</span><span class="o">=</span><span class="n">cone_opacity</span><span class="p">)</span>
-        <span class="p">)</span>
+            <span class="k">if</span> <span class="n">NA</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">NA</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">data_objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">_draw_cones</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">NA</span><span class="o">=</span><span class="n">NA</span><span class="p">,</span> <span class="n">cone_opacity</span><span class="o">=</span><span class="n">cone_opacity</span><span class="p">)</span>
+            <span class="p">)</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">_go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_objects</span><span class="p">)</span>
 
@@ -2800,18 +2801,19 @@ A convenience function.</p>
     <span class="n">slice_value</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"slice_value"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="n">unit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"unit"</span><span class="p">,</span> <span class="s2">"mm"</span><span class="p">)</span>
 
-    <span class="n">opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"opacity"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"opacity"</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
     <span class="n">magnet_opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"magnet_opacity"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="n">cone_opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"cone_opacity"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="n">planes</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"planes"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"xy"</span><span class="p">,</span> <span class="s2">"xz"</span><span class="p">,</span> <span class="s2">"yz"</span><span class="p">])</span>
 
-    <span class="n">num_arrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_arrows"</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-    <span class="n">num_points</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_arrows"</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">num_arrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_arrows"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">num_points</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_points"</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 
-    <span class="n">NA</span> <span class="o">=</span> <span class="n">num_points</span> <span class="o">//</span> <span class="n">num_arrows</span>
+    <span class="k">if</span> <span class="n">num_arrows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">NA</span> <span class="o">=</span> <span class="n">num_points</span> <span class="o">//</span> <span class="n">num_arrows</span>
+        <span class="k">if</span> <span class="n">NA</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">NA</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">if</span> <span class="n">NA</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">NA</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">cmin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"cmin"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">cmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"cmax"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
     <span class="n">colorscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"colorscale"</span><span class="p">,</span> <span class="s2">"viridis"</span><span class="p">)</span>
@@ -2850,9 +2852,10 @@ A convenience function.</p>
                 <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="n">data_objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">_draw_cones</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">NA</span><span class="o">=</span><span class="n">NA</span><span class="p">,</span> <span class="n">cone_opacity</span><span class="o">=</span><span class="n">cone_opacity</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_arrows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data_objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">_draw_cones</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">NA</span><span class="o">=</span><span class="n">NA</span><span class="p">,</span> <span class="n">cone_opacity</span><span class="o">=</span><span class="n">cone_opacity</span><span class="p">)</span>
+            <span class="p">)</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">_go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_objects</span><span class="p">)</span>
 
@@ -2938,8 +2941,6 @@ A convenience function.</p>
     <span class="n">magnet_opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"magnet_opacity"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="n">cone_opacity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"cone_opacity"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
-    <span class="n">num_points</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_points"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
     <span class="n">num_arrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_arrows"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="n">cmin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"cmin"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -2947,6 +2948,8 @@ A convenience function.</p>
     <span class="n">num_levels</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"num_levels"</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
     <span class="n">show_magnets</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"show_magnets"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">num_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
 
     <span class="n">data_objects</span> <span class="o">=</span> <span class="p">[]</span>
 
