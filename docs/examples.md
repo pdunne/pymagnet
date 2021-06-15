@@ -26,6 +26,8 @@ Spheres [![Open In Colab](https://colab.research.google.com/assets/colab-badge.s
 
 3D Stanford Bunny [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/STL%20Magnets/Stanford%20Bunny.ipynb)
 
+Upload Your Own Custom Magnet [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/STL%20Magnets/Colab%20Custom%20Magnet.ipynb)
+
 ## Forces and Torques
 
 Cubes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/Forces%20Torques/Cubes.ipynb)
