@@ -153,7 +153,7 @@ def plot_2D_contour(point_array, field, **kwargs):
         field_component (str): Defaults to 'n'.
         plot_type (str): Draw `contour` or `streamplot`. Defaults to 'contour'
         cmap (str): Colormap. Defaults to `viridis`
-        vector_plot (bool): Draw vectors as arrows. Defaults to False.
+        num_arrows (int or None): Number of arrows per axis. Defaults to None.
         vector_color (str): Arrow color. Defaults to 'w'
         cmin (float): Color scale minimum. Defaults to 0.0
         cmax (float): Color scale minimum. Defaults to twice the mean field
@@ -184,9 +184,8 @@ def plot_2D_contour(point_array, field, **kwargs):
 
     if plot_type.lower() == "contour":
         cmap = kwargs.pop("cmap", "viridis")
-        vector_plot = kwargs.pop("vector_plot", False)
         vector_color = kwargs.pop("vector_color", "w")
-        NQ = kwargs.pop("vector_arrows", 11)
+        NQ = kwargs.pop("num_arrows", None)
 
         if field_component == "x":
             field_chosen = field.x
@@ -229,7 +228,7 @@ def plot_2D_contour(point_array, field, **kwargs):
             CB = _plt.colorbar(CS)
 
         # Draw field vectors
-        if vector_plot:
+        if NQ is not None:
             _vector_plot2(point_array, field, NQ, vector_color)
 
     elif plot_type.lower() == "streamplot":
@@ -536,9 +535,8 @@ def plot_3D_contour(points, field, plane, **kwargs):
 
     # Generate Contour Plot
     if plot_type.lower() == "contour":
-        vector_plot = kwargs.pop("vector_plot", False)
         vector_color = kwargs.pop("vector_color", "w")
-        NQ = kwargs.pop("vector_arrows", 11)
+        NQ = kwargs.pop("num_arrows", None)
 
         cmap = kwargs.pop("cmap", "viridis")
         cmin = kwargs.pop("cmin", 0)
@@ -570,7 +568,7 @@ def plot_3D_contour(points, field, plane, **kwargs):
         else:
             CB = _plt.colorbar(CS)
 
-        if vector_plot:
+        if NQ is not None:
             B_2D = Field2(stream_x, stream_y, unit=field.unit)
             B_2D.n = field.n
             points_2D = Point_Array2(plot_x, plot_y, unit=points.unit)

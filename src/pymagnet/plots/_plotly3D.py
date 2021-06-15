@@ -665,13 +665,11 @@ def slice_plot(data_dict, **kwargs):
     opacity = kwargs.pop("opacity", 0.8)
     magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
     cone_opacity = kwargs.pop("cone_opacity", 1.0)
-    # planes = kwargs.pop("planes", ["xy", "xz", "yz"])
 
     cmin = kwargs.pop("cmin", 0)
     cmax = kwargs.pop("cmax", 0.5)
     colorscale = kwargs.pop("colorscale", "viridis")
     num_arrows = kwargs.pop("num_arrows", None)
-    # vector_plot = kwargs.pop("vector_plot", True)
 
     data_objects = []
 
@@ -700,11 +698,10 @@ def slice_plot(data_dict, **kwargs):
 
             NA = num_points // num_arrows
 
-            if NA < 1:
-                NA = 1
-            data_objects.append(
-                _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
-            )
+            if NA > 1:
+                data_objects.append(
+                    _draw_cones(points, field, NA=NA, cone_opacity=cone_opacity)
+                )
 
     fig = _go.Figure(data=data_objects)
 
@@ -825,7 +822,7 @@ def volume_plot(points, field, **kwargs):
 
     reset_polyhedra()
 
-    opacity = kwargs.pop("opacity", 1)
+    opacity = kwargs.pop("opacity", 0.3)
     opacityscale = kwargs.pop("opacityscale", None)
     magnet_opacity = kwargs.pop("magnet_opacity", 1.0)
     cone_opacity = kwargs.pop("cone_opacity", 1.0)
