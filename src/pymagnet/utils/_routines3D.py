@@ -4,14 +4,38 @@
 # Copyright 2021 Peter Dunne
 """Routines for Three Dimensional Magnet Classes
 """
-__all__ = ["get_field_3D", "grid3D", "slice3D"]
+__all__ = ["get_field_3D", "grid3D", "slice3D", "line3D"]
 
 import numpy as _np
 from ._vector_structs import Field3, Point_Array3
 
 
+def plane3D(origin, point_a, point_b, num_points=100):
+    """Generates a plane of points defined by
+
+    Args:
+        origin (tuple): Origin of plane
+        point_a (tuple): Point defining end of vector in x-direction
+        point_b (tuple): Point defining end of vector in y-direction
+        num_points (int, optional): Number of points in each direction, for a total of num_points^2. Defaults to 100.
+
+    Returns:
+        Point_Array3: Struct containing the x,y,z coordinates
+    """
+
+    vector_a = point_a - origin
+    vector_b = point_b - origin
+    num_points_j = num_points * 1j
+    x_elements, y_elements = _np.mgrid[0:1:num_points_j, 0:1:num_points_j]
+    x = origin[0] + x_elements * vector_a[0] + y_elements * vector_b[0]
+    y = origin[1] + x_elements * vector_a[1] + y_elements * vector_b[1]
+    z = origin[2] + x_elements * vector_a[2] + y_elements * vector_b[2]
+
+    return Point_Array3(x=x, y=y, z=z)
+
+
 def grid3D(xmax, ymax, zmax, **kwargs):
-    """Generates grid of x and y points
+    """Generates grid of x, y, z points
 
     Args:
         xmax (float): maximum x value
@@ -52,6 +76,50 @@ def grid3D(xmax, ymax, zmax, **kwargs):
     ]
 
     return Point_Array3(x, y, z, unit=unit)
+
+
+def point3D(point, **kwargs):
+    """Returns a single point
+
+    Args:
+        point (tuple):
+        unit (str, optional): length scale units. Defaults to "mm".
+
+    Returns:
+        Point_Array3: struct of x, y, and z values of shape (1) and associated unit
+    """
+
+    unit = kwargs.pop("unit", "mm")
+
+    return Point_Array3(
+        x=point[0],
+        y=point[1],
+        z=point[2],
+        unit=unit,
+    )
+
+
+def line3D(start, end, num_points=100, **kwargs):
+    """Generates a line of points
+
+    Args:
+        start (tuple): Starting point (x1,y1,z1)
+        end (tuple): End point (x2,y2,z2)
+        num_points (int): number of points to generate. Defaults to 100
+        unit (str, optional): length scale units. Defaults to "mm".
+
+    Returns:
+        Point_Array3: array of x, y, and z values of shape (num_points) and associated unit
+    """
+
+    unit = kwargs.pop("unit", "mm")
+
+    return Point_Array3(
+        x=_np.linspace(start[0], end[0], num_points),
+        y=_np.linspace(start[1], end[1], num_points),
+        z=_np.linspace(start[2], end[2], num_points),
+        unit=unit,
+    )
 
 
 def slice3D(plane="xy", max1=1.0, max2=1.0, slice_value=0.0, unit="mm", **kwargs):

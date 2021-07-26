@@ -12,7 +12,7 @@ long_description = (here / "pypi_README.md").read_text(encoding="utf-8")
 
 setup(
     name="pymagnet",
-    version="0.3.6",
+    version="0.3.7-alpha.1",
     description="User Friendly Magnetic Field Calculations",
     long_description=long_description,
     long_description_content_type="text/markdown",

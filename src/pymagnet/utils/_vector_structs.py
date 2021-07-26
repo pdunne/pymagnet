@@ -8,7 +8,10 @@ Private module consiting of vector and point array classes and their methods.
 """
 
 import numpy as _np
+
+from pymagnet.utils.global_const import PI_2, PI_4
 from ._conversions import get_unit_value_meter, get_unit_value_tesla
+from ._quaternion import Quaternion
 
 __all__ = ["Field1", "Field2", "Field3", "Point_Array2", "Point_Array3"]
 
@@ -173,6 +176,29 @@ class Point_Array3(Point_Array2):
     def __str__(self) -> str:
         return f"[Unit: {self.unit}\nx: {self.x}\ny: {self.y}\nz: {self.z}]"
 
+    def rotate(self, alpha, beta, gamma):
+        """Rotates set of Point_Array3 points by angles alpha, beta, gamma
+
+        Args:
+            alpha (float): Angle to rotate about z in degrees
+            beta (float): Angle to rotate about y in degrees
+            gamma (float): Angle to rotate about x in degrees
+
+        Returns:
+            Point_Array3: rotated set of points
+        """
+        q_fwd = Quaternion.gen_rotation_quaternion(
+            _np.deg2rad(alpha), _np.deg2rad(beta), _np.deg2rad(gamma)
+        )
+
+        pos_vec = Quaternion._prepare_vector(self.x, self.y, self.z)
+        x_rot, y_rot, z_rot = q_fwd * pos_vec
+        return Point_Array3(
+            x=x_rot.reshape(self.x.shape),
+            y=y_rot.reshape(self.x.shape),
+            z=z_rot.reshape(self.x.shape),
+        )
+
     def change_unit(self, new_unit, get_unit_value=get_unit_value_meter):
         """Converts point array to a different unit. e.g from 'cm' to 'mm'
 
@@ -294,7 +320,7 @@ class Field2(Point_Array2):
 
 
 class Field3(Point_Array3):
-    """2D Field vector
+    """3D Field vector
     This is used to contain three components (x, y), and the units
     ('T', 'mT', etc)
     """

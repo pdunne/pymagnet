@@ -101,7 +101,6 @@ $\alpha = \sqrt{1 + \frac{b^2}{a^2}}, \, \beta = - \frac{x + \frac{bz}{a}}{\alph
 
 $\delta = \frac{\alpha + \beta}{\gamma}, \, \eta = \frac{\beta}{\gamma}$
 
-
 $A = -\gamma \frac{b}{a},\, B = \gamma\alpha,\, C = z + \beta\frac{b}{a}, \, D = \sqrt{B^2 - A^2 - C^2}$
 
 
