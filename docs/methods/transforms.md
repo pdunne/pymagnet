@@ -56,10 +56,28 @@ B_z &= B_r \cos\theta - B_\theta \sin\theta
 \end{align}
 $$
 
-
 ## Misc
 
-Signed area of a polygon:
+The centroid of a non-self-intersecting closed polygon defined by $n$ vertices, 
+is the point ($(C_x, C_y)$ where
+
+$$
+C_x = \frac{1}{6A}\sum_{i=0}^{n-1}(x_i+x_{i+1})(x_i\ y_{i+1} - x_{i+1}\ y_i)
+$$
+
+and
+
+$$
+C_y = \frac{1}{6A}\sum_{i=0}^{n-1}(y_i+y_{i+1})(x_i\ y_{i+1} - x_{i+1}\ y_i)
+$$
+
+where $A$ is the polygon's signed area:
+
+$$
+A = \frac{1}{2}\sum_{i=0}^{n-1} (x_i\ y_{i+1} - x_{i+1}\ y_i)
+$$
+
+Also written as:
 
 $$
 A = \frac{1}{2} \left(
