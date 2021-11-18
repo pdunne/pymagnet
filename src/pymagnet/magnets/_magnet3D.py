@@ -12,14 +12,14 @@ to each principal axis.
 TODO:
     * Update __str__ and __repr__ methods to show orientation and magnetisation
 """
+from math import fabs, sqrt
+
 import numpy as _np
-from ._magnet_base import Magnet
+from numba import float64, vectorize
+
 from ..utils._quaternion import Quaternion
 from ..utils.global_const import MAG_TOL, PI
-
-from numba import vectorize, float64
-from math import sqrt, fabs
-
+from ._magnet_base import Magnet
 
 __all__ = ["Magnet3D", "Prism", "Cube", "Cylinder", "Sphere"]
 
@@ -147,7 +147,7 @@ class Magnet3D(Magnet):
         Returns:
             tuple: Bx(ndarray), By(ndarray), Bz(ndarray) field vector
         """
-        from ..utils._routines3D import _tile_arrays, _apply_mask
+        from ..utils._routines3D import _apply_mask, _tile_arrays
 
         # If any rotation angle is set, transform the data
         if _np.any(
@@ -289,6 +289,7 @@ class Prism(Magnet3D):
         self.theta = kwargs.pop("phi", 0.0)
         self.theta_rad = _np.deg2rad(self.theta)
 
+        # Generate components of magnetisation
         self.Jx = _np.around(
             Jr * _np.cos(self.phi_rad) * _np.sin(self.theta_rad), decimals=6
         )
@@ -543,7 +544,7 @@ class Prism(Magnet3D):
         return data
 
     def _calcB_prism_x(self, x, y, z):
-        """Calculates agnetic field vector due to magnet magnetised in x
+        """Calculates magnetic field vector due to magnet magnetised in x
 
         Args:
             x (ndarray): x-coordinates
@@ -557,7 +558,7 @@ class Prism(Magnet3D):
         a = self.a
         b = self.b
         c = self.c
-        Jr = self.Jr
+        Jr = self.Jx
 
         Bx = self._calcBx_prism_x(a, b, c, Jr, x, y, z)
         By = self._calcBy_prism_x(a, b, c, Jr, x, y, z)
@@ -578,7 +579,7 @@ class Prism(Magnet3D):
         a = self.a
         b = self.b
         c = self.c
-        Jr = self.Jr
+        Jr = self.Jr 
 
         Bx = self._calcBz_prism_x(-c, b, a, Jr, -z, y, x)
         By = self._calcBy_prism_x(-c, b, a, Jr, -z, y, x)
@@ -599,7 +600,7 @@ class Prism(Magnet3D):
         a = self.a
         b = self.b
         c = self.c
-        Jr = self.Jr
+        Jr = self.Jy
 
         Bx = self._calcBy_prism_x(-b, a, c, Jr, -y, x, z)
         By = -1 * self._calcBx_prism_x(-b, a, c, Jr, -y, x, z)

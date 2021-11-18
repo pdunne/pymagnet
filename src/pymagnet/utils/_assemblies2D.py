@@ -6,8 +6,9 @@
 
 """
 import numpy as _np
-from ..utils.global_const import PI, PI_2
 from matplotlib.path import Path as _Path
+
+from ..utils.global_const import PI, PI_2
 
 
 def mask_poly(num_sides, apothem, xc, yc, x, y):

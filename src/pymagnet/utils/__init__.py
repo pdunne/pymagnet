@@ -12,13 +12,13 @@ This module imports the classes and functions in the private modules to create a
 
 """
 
-from ._quaternion import *
-from .global_const import *
 from ._point_structs import *
+from ._quaternion import *
 from ._routines2D import *
 from ._routines3D import *
 from ._trigonometry3D import *
 from ._vector_structs import *
+from .global_const import *
 
 # Not implemented yet:
 # from ._assemblies2D import *

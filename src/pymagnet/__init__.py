@@ -7,12 +7,9 @@ User friendly magnetic field calculations
 
 Top level module for exposing the public API of usable modules
 """
-from . import plots
-from . import magnets
-from . import utils
-from . import forces
-from .magnets._magnet_base import reset_magnets, list_magnets
-from .utils._routines2D import grid2D, get_field_2D
+from . import forces, magnets, plots, utils
+from .magnets._magnet_base import list_magnets, reset_magnets
+from .utils._routines2D import get_field_2D, grid2D
 from .utils._routines3D import *
 
 __all__ = ["magnets", "plots", "utils"]

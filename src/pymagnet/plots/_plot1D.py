@@ -7,14 +7,14 @@
 """
 import matplotlib.pyplot as _plt
 import numpy as _np
-from ..utils._vector_structs import Point_Array1
 
 from ..magnets import (
     Cylinder,
     Prism,
-    magnetic_field_prism_1D,
     magnetic_field_cylinder_1D,
+    magnetic_field_prism_1D,
 )
+from ..utils._vector_structs import Point_Array1
 
 __all__ = ["plot_1D_field"]
 

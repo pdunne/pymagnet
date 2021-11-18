@@ -5,7 +5,8 @@
 """Routines for Two Dimensional Magnet Classes
 """
 import numpy as _np
-from ._vector_structs import Point_Array2, Field2
+
+from ._vector_structs import Field2, Point_Array2
 from .global_const import MU0
 
 __all__ = ["grid2D", "get_field_2D", "rotate_points_2D"]

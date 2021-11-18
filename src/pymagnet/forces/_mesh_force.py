@@ -1,10 +1,11 @@
+import numpy as _np
+from numba import guvectorize, njit
+
 from ..magnets import Magnet3D
-from ..utils.global_const import FP_CUTOFF, MU0, ALIGN_CUTOFF
 from ..utils._conversions import get_unit_value_meter
 from ..utils._routines3D import _allocate_field_array3
 from ..utils._vector_structs import Point_Array3
-import numpy as _np
-from numba import njit, guvectorize
+from ..utils.global_const import ALIGN_CUTOFF, FP_CUTOFF, MU0
 
 __all__ = [
     "get_centroid",

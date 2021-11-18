@@ -10,6 +10,7 @@ Private module consiting of vector and point array classes and their methods.
 import numpy as _np
 
 from pymagnet.utils.global_const import PI_2, PI_4
+
 from ._conversions import get_unit_value_meter, get_unit_value_tesla
 from ._quaternion import Quaternion
 
@@ -59,7 +60,7 @@ class Point_Array1(object):
             new_unit (str): unit to be converted to
             get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_meter.
         """
-        from ..magnets import Magnet, Prism, Cylinder
+        from ..magnets import Cylinder, Magnet, Prism
 
         current_unit_val = get_unit_value(self.get_unit())
         new_unit_val = get_unit_value(new_unit)
@@ -122,7 +123,7 @@ class Point_Array2(object):
             new_unit (str): unit to be converted to
             get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_meter.
         """
-        from ..magnets import Magnet, Rectangle, Square, Circle, PolyMagnet
+        from ..magnets import Circle, Magnet, PolyMagnet, Rectangle, Square
 
         current_unit_val = get_unit_value(self.get_unit())
         new_unit_val = get_unit_value(new_unit)
@@ -206,7 +207,7 @@ class Point_Array3(Point_Array2):
             new_unit (str): unit to be converted to
             get_unit_value (function, optional): Function for checking unit type. Defaults to get_unit_value_meter.
         """
-        from ..magnets import Magnet, Prism, Cube, Cylinder, Sphere, Mesh
+        from ..magnets import Cube, Cylinder, Magnet, Mesh, Prism, Sphere
 
         current_unit_val = get_unit_value(self.get_unit())
         new_unit_val = get_unit_value(new_unit)

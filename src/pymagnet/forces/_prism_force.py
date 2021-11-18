@@ -1,12 +1,13 @@
 __all__ = ["calc_force_prism"]
 
 import numpy as _np
-from ..utils.global_const import FP_CUTOFF, MU0
-from ..utils._conversions import get_unit_value_meter
-from ..utils._vector_structs import Point_Array3
-from ..utils._routines3D import _allocate_field_array3
-from ..utils._quaternion import Quaternion
+
 from ..magnets import Magnet3D
+from ..utils._conversions import get_unit_value_meter
+from ..utils._quaternion import Quaternion
+from ..utils._routines3D import _allocate_field_array3
+from ..utils._vector_structs import Point_Array3
+from ..utils.global_const import FP_CUTOFF, MU0
 
 
 def _get_ranges_prism(active_magnet):

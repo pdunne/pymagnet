@@ -1,11 +1,10 @@
 __all__ = ["calc_force_cylinder"]
 import numpy as _np
-from ..utils.global_const import MU0, PI
+
 from ..utils._conversions import get_unit_value_meter
-from ..utils._vector_structs import Point_Array3
 from ..utils._quaternion import Quaternion
-
-
+from ..utils._vector_structs import Point_Array3
+from ..utils.global_const import MU0, PI
 from ._prism_force import _calc_field_face
 
 

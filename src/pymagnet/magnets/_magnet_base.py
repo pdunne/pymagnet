@@ -9,8 +9,10 @@ This private module implements the registry and base magnet classes
 __all__ = ["Magnet"]
 
 from weakref import WeakSet
-from ..utils.global_const import MAG_TOL
+
 import numpy as _np
+
+from ..utils.global_const import MAG_TOL
 
 
 class Registry:
@@ -123,9 +125,9 @@ class Magnet(Registry):
 
 def reset_magnets():
     """Returns a list of all instantiated magnets."""
-    from ._magnet2D import Magnet2D, Rectangle, Square, Circle
+    from ._magnet2D import Circle, Magnet2D, Rectangle, Square
+    from ._magnet3D import Cube, Cylinder, Magnet3D, Prism, Sphere
     from ._polygon2D import PolyMagnet
-    from ._magnet3D import Magnet3D, Prism, Cube, Cylinder, Sphere
     from ._polygon3D import Mesh
 
     magnet_classes = [

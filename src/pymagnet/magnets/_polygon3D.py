@@ -1,12 +1,13 @@
-from ._magnet3D import Magnet3D
-from ..utils._quaternion import Quaternion
-from ..utils.global_const import MAG_TOL, PI, FP_CUTOFF, ALIGN_CUTOFF
-from ..utils._trigonometry3D import norm_plane, _rotate_triangle
+from math import atan2, fabs, log, sqrt
 
-from stl import mesh
 import numpy as _np
-from numba import jit, vectorize, float64
-from math import sqrt, log, fabs, atan2
+from numba import float64, jit, vectorize
+from stl import mesh
+
+from ..utils._quaternion import Quaternion
+from ..utils._trigonometry3D import _rotate_triangle, norm_plane
+from ..utils.global_const import ALIGN_CUTOFF, FP_CUTOFF, MAG_TOL, PI
+from ._magnet3D import Magnet3D
 
 
 class Mesh(Magnet3D):

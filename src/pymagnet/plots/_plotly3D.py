@@ -10,13 +10,13 @@ Unlike the plot2D module, here plotly is used as the backend.
 TODO:
     * Update __str__ and __repr__ for polyhedra
 """
-from ..magnets._magnet_base import Registry
-from ..magnets import *
-from ..utils import grid3D, slice3D, get_field_3D
-from ..utils.global_const import PI, MAG_TOL
 import numpy as _np
 import plotly.graph_objects as _go
 
+from ..magnets import *
+from ..magnets._magnet_base import Registry
+from ..utils import get_field_3D, grid3D, slice3D
+from ..utils.global_const import MAG_TOL, PI
 
 __all__ = [
     "plot_magnet",
@@ -110,8 +110,7 @@ class Graphic_Cuboid(Polyhedron):
                         self.gamma_rad,
                     ]
                 )
-            )
-            > Polyhedron.tol
+            ) > Polyhedron.tol
         ):
 
             # _, reverse_rotation = self._generate_rotation_quaternions()
@@ -932,3 +931,4 @@ def volume_quickplot(**kwargs):
     cache = {"points": points, "field": field}
 
     return fig, cache, data_objects
+

@@ -19,6 +19,7 @@ Example:
 __all__ = ["Quaternion"]
 
 import numpy as _np
+
 from ..utils.global_const import FP_CUTOFF, MAG_TOL
 
 

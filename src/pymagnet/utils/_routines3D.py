@@ -7,6 +7,7 @@
 __all__ = ["get_field_3D", "grid3D", "slice3D", "line3D"]
 
 import numpy as _np
+
 from ._vector_structs import Field3, Point_Array3
 
 
@@ -294,7 +295,7 @@ def _apply_mask(magnet, field, mask):
     Returns:
         Field3: masked magnetic field vector
     """
-    from ..magnets import Prism, Cylinder, Sphere
+    from ..magnets import Cylinder, Prism, Sphere
 
     J = magnet.get_Jr()
     mask_magnet = magnet._mask_magnet

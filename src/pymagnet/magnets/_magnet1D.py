@@ -9,8 +9,9 @@ symmetry centre of a cylindrical or cuboidal magnet.
 
 """
 import numpy as _np
-from ..utils.global_const import PI
+
 from ..utils._vector_structs import Field1
+from ..utils.global_const import PI
 
 __all__ = ["magnetic_field_prism_1D", "magnetic_field_cylinder_1D"]
 

@@ -5,11 +5,11 @@
 """Contains functions needed to rotate and translate a triangle to lie in the xz plane
 and to divide it into two right angled triangles
 """
-from ._quaternion import Quaternion
-from .global_const import PI, ALIGN_CUTOFF
-
 import numpy as _np
 from numba import jit
+
+from ._quaternion import Quaternion
+from .global_const import ALIGN_CUTOFF, PI
 
 __all__ = ["signed_area", "norm_plane", "rotate_points", "altitude"]
 

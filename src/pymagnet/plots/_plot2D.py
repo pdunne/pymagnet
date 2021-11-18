@@ -11,17 +11,17 @@ magnetic sources, and
 
 __all__ = ["plot_2D_line", "plot_2D_contour", "plot_3D_contour", "plot_sub_contour_3D"]
 
+import matplotlib.cm as _cm
+import matplotlib.pyplot as _plt
+import numpy as _np
+from matplotlib.patches import Arrow as _Arrow
+from matplotlib.patches import Circle as _Circ
+from matplotlib.patches import Rectangle as _Rect
+from matplotlib.transforms import Affine2D
+
 from .. import magnets as _mag
 from ..utils._conversions import get_unit_value_meter, get_unit_value_tesla
 from ..utils._vector_structs import Field2, Point_Array2
-
-import numpy as _np
-import matplotlib.pyplot as _plt
-import matplotlib.cm as _cm
-from matplotlib.patches import Rectangle as _Rect
-from matplotlib.patches import Circle as _Circ
-from matplotlib.patches import Arrow as _Arrow
-from matplotlib.transforms import Affine2D
 
 
 class patch(object):
@@ -166,6 +166,7 @@ def plot_2D_contour(point_array, field, **kwargs):
         tuple: fig, ax reference to matplotlib figure and axis objects
     """
     import matplotlib.cm as _cm
+
     from ..magnets._polygon2D import PolyMagnet
 
     show_magnets = kwargs.pop("show_magnets", True)
@@ -312,7 +313,7 @@ def _num_patch_2D():
     Returns:
         tuple: (list, list) lists of patch and arrow objects
     """
-    from ..magnets._magnet2D import Magnet2D, Rectangle, Circle
+    from ..magnets._magnet2D import Circle, Magnet2D, Rectangle
 
     patch_array = []
     for magnet in Magnet2D.instances:

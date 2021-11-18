@@ -10,8 +10,9 @@ to each principal axis.
 
 """
 import numpy as _np
-from ._magnet_base import Magnet
+
 from ..utils.global_const import MAG_TOL, PI
+from ._magnet_base import Magnet
 
 __all__ = ["Magnet2D", "Rectangle", "Square", "Circle"]
 
@@ -151,7 +152,7 @@ class Rectangle(Magnet2D):
         Returns:
             tuple: magnetic field vector Bx (ndarray), By (ndarray)
         """
-        from ..utils._routines2D import rotate_points_2D, _get_field_array_shape2
+        from ..utils._routines2D import _get_field_array_shape2, rotate_points_2D
 
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)
@@ -382,8 +383,7 @@ class Circle(Magnet2D):
                 x - self.center[0], y - self.center[1], self.alpha_radians
             )
 
-            rho, phi = cart2pol(xi, yi)
-
+            rho, phi = cart2pol(xi, yi)            
             Brho, Bphi = self._calcB_polar(rho, phi - self.phi_rad)
 
             # Convert magnetic fields from cylindrical to cartesian
