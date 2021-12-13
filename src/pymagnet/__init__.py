@@ -13,3 +13,5 @@ from .utils._routines2D import get_field_2D, grid2D
 from .utils._routines3D import *
 
 __all__ = ["magnets", "plots", "utils"]
+
+__version__ = "0.3.7"
