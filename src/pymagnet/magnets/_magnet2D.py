@@ -14,8 +14,6 @@ import numpy as _np
 from ..utils.global_const import MAG_TOL, PI
 from ._magnet_base import Magnet
 
-__all__ = ["Magnet2D", "Rectangle", "Square", "Circle"]
-
 
 class Magnet2D(Magnet):
     """2D Magnet Base Class"""
@@ -26,11 +24,11 @@ class Magnet2D(Magnet):
         """Init Method
 
         Args:
-            Jr (float): signed magnetised of remnant magnetisationnega
+            Jr (float): signed magnetised of remnant magnetisation
 
         Kwargs:
             alpha (float): Magnetisation orientation angle (in degrees). Defaults to 0.
-            center (tuple or ndarrray): magnet center (x, y). Defaults to (0,0).
+            center (tuple or ndarray): magnet center (x, y). Defaults to (0,0).
         """
         super().__init__()
         self.Jr = Jr
@@ -89,7 +87,7 @@ class Rectangle(Magnet2D):
 
         Kwargs:
             alpha (float): Magnetisation orientation angle (in degrees). Defaults to 0.
-            center (tuple or ndarrray): magnet center (x, y). Defaults to (0,0).
+            center (tuple or ndarray): magnet center (x, y). Defaults to (0,0).
             phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis. Defaults to 90.
         """
         super().__init__(Jr, **kwargs)
@@ -284,12 +282,12 @@ class Square(Rectangle):
         """Init Method
 
         Args:
-            width (float, optional): Sqaure side length. Defaults to 20.0.
+            width (float, optional): Square side length. Defaults to 20.0.
             Jr (float, optional): Remnant Magnetisation. Defaults to 1.0.
 
         Kwargs:
              alpha (float): Magnetisation orientation angle (in degrees). Defaults to 0.
-            center (tuple or ndarrray): magnet center (x, y). Defaults to (0,0).
+            center (tuple or ndarray): magnet center (x, y). Defaults to (0,0).
             phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis. Defaults to 90.
         """
         super().__init__(width=width, height=width, Jr=Jr, **kwargs)
@@ -314,7 +312,7 @@ class Circle(Magnet2D):
 
         Kwargs:
             alpha (float): Unused. For rotations use phi instead
-            center (tuple or ndarrray): magnet center (x, y). Defaults to (0,0)
+            center (tuple or ndarray): magnet center (x, y). Defaults to (0,0)
             phi (float): Rotation Angle (in degrees) of magnet w.r.t x-axis. Defaults to 90.
         """
         super().__init__(Jr, **kwargs)
@@ -370,7 +368,7 @@ class Circle(Magnet2D):
 
         Args:
             x (ndarray): x coordinates
-            y (narray): y coordinates
+            y (ndarray): y coordinates
 
         Returns:
             tuple: Bx, By magnetic field in cartesian coordinates
@@ -383,7 +381,7 @@ class Circle(Magnet2D):
                 x - self.center[0], y - self.center[1], self.alpha_radians
             )
 
-            rho, phi = cart2pol(xi, yi)            
+            rho, phi = cart2pol(xi, yi)
             Brho, Bphi = self._calcB_polar(rho, phi - self.phi_rad)
 
             # Convert magnetic fields from cylindrical to cartesian

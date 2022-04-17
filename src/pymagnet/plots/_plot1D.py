@@ -16,8 +16,6 @@ from ..magnets import (
 )
 from ..utils._vector_structs import Point_Array1
 
-__all__ = ["plot_1D_field"]
-
 
 def plot_1D_field(magnet, unit="mm", **kwargs):
     """Calculates and plots the magnetic field along the central symmetry axis

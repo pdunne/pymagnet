@@ -9,8 +9,7 @@ magnet classes. The parent class `Magnet3D` implements the location and
 orientation methods, i.e. magnet center and quaternion methods for rotating the
 magnet with respect to each principal axis.
 
-TODO:
-    * Update __str__ and __repr__ methods to show orientation and magnetisation
+TODO: Update __str__ and __repr__ methods to show orientation and magnetisation
 """
 from math import fabs, sqrt
 
@@ -20,8 +19,6 @@ from numba import float64, vectorize
 from ..utils._quaternion import Quaternion
 from ..utils.global_const import MAG_TOL, PI
 from ._magnet_base import Magnet
-
-__all__ = ["Magnet3D", "Prism", "Cube", "Cylinder", "Sphere"]
 
 
 class Magnet3D(Magnet):
@@ -585,7 +582,7 @@ class Prism(Magnet3D):
         a = self.a
         b = self.b
         c = self.c
-        Jr = self.Jr
+        Jr = self.Jz
 
         Bx = self._calcBz_prism_x(-c, b, a, Jr, -z, y, x)
         By = self._calcBy_prism_x(-c, b, a, Jr, -z, y, x)

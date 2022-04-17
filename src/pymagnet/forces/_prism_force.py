@@ -1,4 +1,3 @@
-__all__ = ["calc_force_prism"]
 
 import numpy as _np
 

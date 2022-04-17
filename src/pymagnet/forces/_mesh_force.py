@@ -1,20 +1,11 @@
 import numpy as _np
-from numba import guvectorize, njit
+from numba import njit
 
 from ..magnets import Magnet3D
 from ..utils._conversions import get_unit_value_meter
 from ..utils._routines3D import _allocate_field_array3
 from ..utils._vector_structs import Point_Array3
-from ..utils.global_const import ALIGN_CUTOFF, FP_CUTOFF, MU0
-
-__all__ = [
-    "get_centroid",
-    "triangle_area",
-    "get_area_triangles",
-    "get_midpoints",
-    "divide_triangle_centroid",
-    "divide_triangle_regular",
-]
+from ..utils.global_const import ALIGN_CUTOFF, MU0
 
 
 @njit

@@ -13,18 +13,10 @@ TODO:
 import numpy as _np
 import plotly.graph_objects as _go
 
-from ..magnets import *
+from ..magnets import Cylinder, Magnet3D, Mesh, Prism, Sphere
 from ..magnets._magnet_base import Registry
-from ..utils import get_field_3D, grid3D, slice3D
+from ..utils import Quaternion, get_field_3D, grid3D, slice3D
 from ..utils.global_const import MAG_TOL, PI
-
-__all__ = [
-    "plot_magnet",
-    "slice_plot",
-    "slice_quickplot",
-    "volume_plot",
-    "volume_quickplot",
-]
 
 
 class Polyhedron(Registry):
@@ -375,11 +367,11 @@ class Graphic_Mesh(Polyhedron):
         vertices, ixr = _np.unique(
             self.mesh_vectors.reshape(p * q, r), return_inverse=True, axis=0
         )
-        I = _np.take(ixr, [3 * k for k in range(p)])
-        J = _np.take(ixr, [3 * k + 1 for k in range(p)])
-        K = _np.take(ixr, [3 * k + 2 for k in range(p)])
+        _I = _np.take(ixr, [3 * k for k in range(p)])
+        _J = _np.take(ixr, [3 * k + 1 for k in range(p)])
+        _K = _np.take(ixr, [3 * k + 2 for k in range(p)])
         x, y, z = vertices.T
-        trace = _go.Mesh3d(x=x, y=y, z=z, i=I, j=J, k=K, color=self.color)
+        trace = _go.Mesh3d(x=x, y=y, z=z, i=_I, j=_J, k=_K, color=self.color)
 
         # optional parameters to make it look nicer
         trace.update(
@@ -931,4 +923,3 @@ def volume_quickplot(**kwargs):
     cache = {"points": points, "field": field}
 
     return fig, cache, data_objects
-

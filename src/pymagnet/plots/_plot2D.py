@@ -5,11 +5,9 @@
 """Plotting routines
 
 This module contains all functions needed to plot lines and contours for 2D
-magnetic sources, and 
+magnetic sources, and
 
 """
-
-__all__ = ["plot_2D_line", "plot_2D_contour", "plot_3D_contour", "plot_sub_contour_3D"]
 
 import matplotlib.cm as _cm
 import matplotlib.pyplot as _plt
@@ -19,9 +17,10 @@ from matplotlib.patches import Circle as _Circ
 from matplotlib.patches import Rectangle as _Rect
 from matplotlib.transforms import Affine2D
 
-from .. import magnets as _mag
-from ..utils._conversions import get_unit_value_meter, get_unit_value_tesla
-from ..utils._vector_structs import Field2, Point_Array2
+from ..utils import Field2, Point_Array2
+
+# from ..utils._conversions import get_unit_value_meter, get_unit_value_tesla
+# from .. import magnets as _mag
 
 
 class patch(object):
@@ -116,7 +115,7 @@ def plot_2D_line(point_array, field, **kwargs):
 
     xlab = kwargs.pop("xlab", f"x ({point_array.unit})")
     ylab = kwargs.pop("ylab", f"B ({field.unit})")
-    axis_scale = kwargs.pop("axis_scale", "equal")
+    # axis_scale = kwargs.pop("axis_scale", "equal")
 
     SAVE = kwargs.pop("save_fig", False)
 
@@ -646,13 +645,13 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
         tuple: fig, ax reference to matplotlib figure and axis objects
     """
     cmap = kwargs.pop("cmap", "seismic")
-    xlab = kwargs.pop("xlab", f"x (m)")
-    ylab = kwargs.pop("ylab", f"y (m)")
-    clab = kwargs.pop("clab", f"B (T)")
+    xlab = kwargs.pop("xlab", "x (m)")
+    ylab = kwargs.pop("ylab", "y (m)")
+    clab = kwargs.pop("clab", "B (T)")
 
-    axis_scale = kwargs.pop("axis_scale", "equal")
+    # axis_scale = kwargs.pop("axis_scale", "equal")
 
-    SAVE = kwargs.pop("save_fig", False)
+    # SAVE = kwargs.pop("save_fig", False)
 
     cmin = kwargs.pop("cmin", -0.5)
     cmax = kwargs.pop("cmax", 0.5)
@@ -736,7 +735,7 @@ def contour_plot_cylinder(magnet, **kwargs):
     Br, Bz = magnet._calcB_cyl(rho, z)
     Bn = _np.sqrt(Bz ** 2 + Br ** 2)
 
-    xlab = f"r (m)"
+    xlab = "r (m)"
     ylab = "z (m)"
 
     # plot_B = Bn

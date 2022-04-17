@@ -7,8 +7,6 @@
 Private module consiting of point classes and their methods.
 """
 
-__all__ = ["Point2", "Point3"]
-
 import numpy as _np
 
 

@@ -9,8 +9,6 @@ import numpy as _np
 from ._vector_structs import Field2, Point_Array2
 from .global_const import MU0
 
-__all__ = ["grid2D", "get_field_2D", "rotate_points_2D"]
-
 
 def grid2D(xmax, ymax, **kwargs):
     """Generates grid of x and y points

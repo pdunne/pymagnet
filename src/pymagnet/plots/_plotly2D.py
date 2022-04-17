@@ -12,7 +12,7 @@ import numpy as _np
 import plotly.figure_factory as _ff
 import plotly.graph_objects as _go
 
-from ..utils._conversions import get_unit_value_meter
+# from ..utils._conversions import get_unit_value_meter
 
 
 def _plotly_vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color):
@@ -55,20 +55,20 @@ def plotly_2D_contour(x, y, Field, **kwargs):
         Field ([field vector_2D]): [field vector object]
     """
 
-    scale_x = kwargs.pop("scale_x", 1)
-    scale_y = kwargs.pop("scale_y", 1)
-    scale_cb = kwargs.pop("scale_cb", 1)
+    # scale_x = kwargs.pop("scale_x", 1)
+    # scale_y = kwargs.pop("scale_y", 1)
+    # scale_cb = kwargs.pop("scale_cb", 1)
 
     colorscale = kwargs.pop("colorscale", "viridis")
     cmin = kwargs.pop("cmin", 0.0)
     cmax = kwargs.pop("cmax", round(_np.nanmean(Field.n[:]) * 2, 1))
     cstep = kwargs.pop("cstep", 0.1)
 
-    show_magnets = kwargs.pop("show_magnets", True)
+    # show_magnets = kwargs.pop("show_magnets", True)
     title = kwargs.pop("title", None)
     xlab = kwargs.pop("xlab", "x (mm)")
     ylab = kwargs.pop("ylab", "y (mm)")
-    clab = kwargs.pop("clab", "B (T)")
+    # clab = kwargs.pop("clab", "B (T)")
 
     # field_component = kwargs.pop("field_component", "n")
 

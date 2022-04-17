@@ -1,7 +1,7 @@
 from math import atan2, fabs, log, sqrt
 
 import numpy as _np
-from numba import float64, jit, vectorize
+from numba import float64, vectorize
 from stl import mesh
 
 from ..utils._quaternion import Quaternion

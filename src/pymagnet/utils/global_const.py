@@ -7,8 +7,6 @@ PI, PI/2, PI/4, µ0, and three internally used constants:
 FP_CUTOFF = 1e-8, ALIGN_CUTOFF = 1e-5, MAG_TOL = 1e-4
 """
 
-__all__ = ["PI", "PI_2", "PI_4", "MU0", "FP_CUTOFF", "ALIGN_CUTOFF", "MAG_TOL"]
-
 # float: Module level PI.
 from math import pi as PI
 
