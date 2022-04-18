@@ -195,7 +195,7 @@ def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
     from ..magnets._magnet2D import Rectangle
     from ._routines2D import grid2D
 
-    """Initialise 
+    """Initialise
 
     Args:
         N (int, optional): [Number of magnets]. Defaults to 4.
@@ -250,7 +250,7 @@ def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
         yc = 0
         theta = 0.0
         alpha = 0.0
-        N = 2
+        # N = 2
 
         #  2 element
         _ = Rectangle(
@@ -296,7 +296,7 @@ def calc_magnetic_field(mag_prop, grid_prop):
     Args:
         mag_prop (dictionary): Magnet properties
         grid_prop (dictionary): Calculation grid (x,y)
-    
+
     Updates grid_prop with magnetic field object
     and masked magnetic field object
     """
@@ -310,7 +310,7 @@ def calc_magnetic_field(mag_prop, grid_prop):
         mask_radius = mag_prop["radius"]
     else:
         mask_radius = mag_prop["hGap"]
-        N = 4
+        # N = 4
 
     Bm = mask_data_2D(width, num_magnets, mask_radius, B, x, y)
     grid_prop.update({"B": B, "Bm": Bm})

@@ -6,7 +6,6 @@
 
 This private module implements the registry and base magnet classes
 """
-__all__ = ["Magnet"]
 
 from weakref import WeakSet
 
@@ -123,7 +122,7 @@ class Magnet(Registry):
         self.center = _np.array([0.0, 0.0])
 
 
-def reset_magnets():
+def reset():
     """Returns a list of all instantiated magnets."""
     from ._magnet2D import Circle, Magnet2D, Rectangle, Square
     from ._magnet3D import Cube, Cylinder, Magnet3D, Prism, Sphere
@@ -149,7 +148,7 @@ def reset_magnets():
         cls.reset()
 
 
-def list_magnets():
+def list():
     """Returns a list of all instantiated magnets.
 
     Assumes that the child class registries have not been modified outside of

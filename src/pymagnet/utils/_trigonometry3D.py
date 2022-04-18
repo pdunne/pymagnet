@@ -11,8 +11,6 @@ from numba import jit
 from ._quaternion import Quaternion
 from .global_const import ALIGN_CUTOFF, PI
 
-__all__ = ["signed_area", "norm_plane", "rotate_points", "altitude"]
-
 
 @jit
 def signed_area(triangle):

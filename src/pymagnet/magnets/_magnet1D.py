@@ -13,8 +13,6 @@ import numpy as _np
 from ..utils._vector_structs import Field1
 from ..utils.global_const import PI
 
-__all__ = ["magnetic_field_prism_1D", "magnetic_field_cylinder_1D"]
-
 
 def magnetic_field_prism_1D(magnet, z):
     """Calculates the magnetic field z-component due to a cuboid along its

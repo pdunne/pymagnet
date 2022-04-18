@@ -76,22 +76,30 @@ class Polygon(object):
         """Sets center of polygon to be centroid"""
         # FIXME: This is not the correct method!!! It should be the weighted mean
         self.center = _np.mean(_np.asarray(self.vertices), axis=0)
-    
+
     def get_centroid_area(vertex_array):
 
         sumCx = 0
         sumCy = 0
-        sumAc= 0
-        for i in range(len(vertex_array)-1):
-            cX = (vertex_array[i][0]+vertex_array[i+1][0])*(vertex_array[i][0]*vertex_array[i+1][1]-vertex_array[i+1][0]*vertex_array[i][1])
-            cY = (vertex_array[i][1]+vertex_array[i+1][1])*(vertex_array[i][0]*vertex_array[i+1][1]-vertex_array[i+1][0]*vertex_array[i][1])
-            pA = (vertex_array[i][0]*vertex_array[i+1][1])-(vertex_array[i+1][0]*vertex_array[i][1])
-            sumCx+=cX
-            sumCy+=cY
-            sumAc+=pA
-        area = sumAc/2.0
-        center = ((1.0/(6.0*area))*sumCx,(1.0/(6.0*area))*sumCy)
-        return center,area
+        sumAc = 0
+        for i in range(len(vertex_array) - 1):
+            cX = (vertex_array[i][0] + vertex_array[i + 1][0]) * (
+                vertex_array[i][0] * vertex_array[i + 1][1]
+                - vertex_array[i + 1][0] * vertex_array[i][1]
+            )
+            cY = (vertex_array[i][1] + vertex_array[i + 1][1]) * (
+                vertex_array[i][0] * vertex_array[i + 1][1]
+                - vertex_array[i + 1][0] * vertex_array[i][1]
+            )
+            pA = (vertex_array[i][0] * vertex_array[i + 1][1]) - (
+                vertex_array[i + 1][0] * vertex_array[i][1]
+            )
+            sumCx += cX
+            sumCy += cY
+            sumAc += pA
+        area = sumAc / 2.0
+        center = ((1.0 / (6.0 * area)) * sumCx, (1.0 / (6.0 * area)) * sumCy)
+        return center, area
 
     @staticmethod
     def gen_polygon(N=6, center=(0.0, 0.0), alpha=0.0, **kwargs):
@@ -207,7 +215,7 @@ class LineUtils(object):
         return _np.array([xc, yc])
 
     @staticmethod
-    def signed_area_centroid(polygon):
+    def signed_area2D(polygon):
         """Calculates signed area of a polygon
 
         Args:
@@ -437,7 +445,7 @@ class PolyMagnet(Magnet2D):
         Returns:
             tuple: beta (ndarray), length (ndarray), centre (ndarray), K (ndarray) - sheet current density in tesla.
         """
-        area, norms, beta, length, center = LineUtils.signed_area(self.polygon)
+        area, norms, beta, length, center = LineUtils.signed_area2D(self.polygon)
         K = self.Jx * norms[:, 1] - self.Jy * norms[:, 0]
         self.area = area
         return beta, length, center, K
@@ -452,7 +460,7 @@ class PolyMagnet(Magnet2D):
         Returns:
             tuple: Bx (ndarray), By (ndarray) magnetic field vector
         """
-        from ..utils._routines2D import _get_field_array_shape2, rotate_points_2D
+        from ..utils._routines2D import _get_field_array_shape2
 
         array_shape = _get_field_array_shape2(x, y)
         Bx, By = _np.zeros(array_shape), _np.zeros(array_shape)

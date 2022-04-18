@@ -4,13 +4,12 @@
 # Copyright 2021 Peter Dunne
 """3D Magnet classes
 
-This private module implements the `Prism`, `Cube`, `Cylinder`, and `Sphere`
-3D magnet classes. The parent class `Magnet3D` implements the location and orientation
-methods, i.e. magnet center and quaternion methods for rotating the magnet with respect
-to each principal axis.
+This private module implements the `Prism`, `Cube`, `Cylinder`, and `Sphere` 3D
+magnet classes. The parent class `Magnet3D` implements the location and
+orientation methods, i.e. magnet center and quaternion methods for rotating the
+magnet with respect to each principal axis.
 
-TODO:
-    * Update __str__ and __repr__ methods to show orientation and magnetisation
+TODO: Update __str__ and __repr__ methods to show orientation and magnetisation
 """
 from math import fabs, sqrt
 
@@ -20,8 +19,6 @@ from numba import float64, vectorize
 from ..utils._quaternion import Quaternion
 from ..utils.global_const import MAG_TOL, PI
 from ._magnet_base import Magnet
-
-__all__ = ["Magnet3D", "Prism", "Cube", "Cylinder", "Sphere"]
 
 
 class Magnet3D(Magnet):
@@ -45,9 +42,12 @@ class Magnet3D(Magnet):
         Kwargs:
             center (ndarray): Magnet center. Defaults to (0.0, 0.0, 0.0)
             mask_magnet (bool): Flag to mask magnet or not in plots
-            alpha (float): Magnet Orientation angle about z (degrees). Defaults to 0.0
-            beta (float): Magnet Orientation angle about y (degrees). Defaults to 0.0
-            gamma (float): Magnet Orientation angle about x (degrees). Defaults to 0.0
+            alpha (float): Magnet Orientation angle about z (degrees).
+            Defaults to 0.0
+            beta (float): Magnet Orientation angle about y (degrees).
+            Defaults to 0.0
+            gamma (float): Magnet Orientation angle about x (degrees).
+            Defaults to 0.0
         """
         super().__init__()
 
@@ -135,9 +135,12 @@ class Magnet3D(Magnet):
 
     def get_field(self, x, y, z):
         """Calculates the magnetic field at point(s) x,y,z due to a 3D magnet
-        The calculations are always performed in local coordinates with the centre of the magnet at origin and z magnetisation pointing along the local z' axis.
+        The calculations are always performed in local coordinates with the
+        centre of the magnet at origin and z magnetisation pointing along the
+        local z' axis.
 
-        The rotations and translations are performed first, and the internal field calculation functions are called.
+        The rotations and translations are performed first, and the internal
+        field calculation functions are called.
 
         Args:
             x (ndarray): x co-ordinates
@@ -209,7 +212,7 @@ class Magnet3D(Magnet):
         """
         pass
 
-    def _get_field_internal(x, y, z):
+    def _get_field_internal(self, x, y, z):
         """Internal magnetic field calculation method. This should be defined
         for each magnet type.
 
@@ -579,7 +582,7 @@ class Prism(Magnet3D):
         a = self.a
         b = self.b
         c = self.c
-        Jr = self.Jr 
+        Jr = self.Jz
 
         Bx = self._calcBz_prism_x(-c, b, a, Jr, -z, y, x)
         By = self._calcBy_prism_x(-c, b, a, Jr, -z, y, x)

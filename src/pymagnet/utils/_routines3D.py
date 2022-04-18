@@ -4,7 +4,6 @@
 # Copyright 2021 Peter Dunne
 """Routines for Three Dimensional Magnet Classes
 """
-__all__ = ["get_field_3D", "grid3D", "slice3D", "line3D"]
 
 import numpy as _np
 
@@ -59,7 +58,7 @@ def grid3D(xmax, ymax, zmax, **kwargs):
     ymin = kwargs.pop("ymin", -1 * ymax)
     zmin = kwargs.pop("zmin", -1 * zmax)
     unit = kwargs.pop("unit", "mm")
-    NPJ = num_points * 1j
+    # NPJ = num_points * 1j
 
     if num_points is None:
         num_points_x = kwargs.pop("num_points_x", 100)

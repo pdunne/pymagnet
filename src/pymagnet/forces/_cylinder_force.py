@@ -1,4 +1,3 @@
-__all__ = ["calc_force_cylinder"]
 import numpy as _np
 
 from ..utils._conversions import get_unit_value_meter
