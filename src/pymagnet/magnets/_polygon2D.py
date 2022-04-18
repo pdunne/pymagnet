@@ -215,7 +215,7 @@ class LineUtils(object):
         return _np.array([xc, yc])
 
     @staticmethod
-    def signed_area_centroid(polygon):
+    def signed_area2D(polygon):
         """Calculates signed area of a polygon
 
         Args:
@@ -445,7 +445,7 @@ class PolyMagnet(Magnet2D):
         Returns:
             tuple: beta (ndarray), length (ndarray), centre (ndarray), K (ndarray) - sheet current density in tesla.
         """
-        area, norms, beta, length, center = LineUtils.signed_area(self.polygon)
+        area, norms, beta, length, center = LineUtils.signed_area2D(self.polygon)
         K = self.Jx * norms[:, 1] - self.Jy * norms[:, 0]
         self.area = area
         return beta, length, center, K

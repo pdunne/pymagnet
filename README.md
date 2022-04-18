@@ -7,6 +7,11 @@ User friendly magnetic field calculations in Python
 [![DOI](https://zenodo.org/badge/339667292.svg)](https://zenodo.org/badge/latestdoi/339667292)
 <!-- [![Anaconda-Server Badge](https://anaconda.org/pdunne/pymagnet/badges/version.svg)](https://anaconda.org/pdunne/pymagnet) -->
 
+<!-- [![Python versions](https://img.shields.io/pypi/pymagnet/genbadge.svg)](https://pypi.python.org/pypi/pymagnet/)
+ [![Build Status](https://github.com/smarie/python-genbadge/actions/workflows/base.yml/badge.svg)](https://github.com/smarie/python-genbadge/actions/workflows/base.yml)
+ [![Tests Status](https://smarie.github.io/python-genbadge/reports/junit/junit-badge.svg?dummy=8484744)](https://smarie.github.io/python-genbadge/reports/junit/report.html)
+ [![Coverage Status](https://smarie.github.io/python-genbadge/reports/coverage/coverage-badge.svg?dummy=8484744)](https://smarie.github.io/python-genbadge/reports/coverage/index.html)
+ [![Flake8 Status](https://smarie.github.io/python-genbadge/reports/flake8/flake8-badge.svg?dummy=8484744)](https://smarie.github.io/python-genbadge/reports/flake8/index.html) -->
 ## Getting Started
 
 Installing `pymagnet` can be done using
@@ -34,19 +39,16 @@ simple magnets:
 
 * 3D: cubes, prisms (cuboids), cylinders, spheres
 
-<figure>
-  <img src="docs/img/3d_example_slice_1.png" width=400/>
-  <img src="docs/img/3d_example_volume_2.png" width=400/>
-  <figcaption>Cylinder Plots</figcaption>
-</figure>
+![](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_slice_1.png)
+
+![](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_volume_2.png)
 
 * 2D: rectangles, squares, circles
 
-<figure>
-  <img src="docs/img/2d_circle_contour.png" width=400/>
-  <img src="docs/img/2d_circle_stream.png" width=400/>
-  <figcaption>2D contour plot and streamplot of a long bipolar rod</figcaption>
-</figure>
+![](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_circle_contour.png)
+
+![](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_circle_stream.png)
+
 
 and complex compound objects:
 
@@ -108,7 +110,7 @@ The example notebooks can be run as an instance using Binder:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pdunne/pymagnet/main?filepath=examples%2Fnotebooks)
 
-## Prerequisites
+<!-- ## Prerequisites
 
 Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
  (to use f-strings), and the following packages:
@@ -117,7 +119,7 @@ Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
 * numpy-stl
 * numba
 * matplotlib
-* plotly
+* plotly -->
 
 ## Usage
 

@@ -31,7 +31,7 @@ def get_centroid(triangle):
 #         result[i] = (triangle[0,i] + triangle[1,i] + triangle[2,i])/3.0
 
 
-@njit
+# @njit
 def triangle_area(triangle):
     """Gets the area of a triangle. Computes the cross product area.
 

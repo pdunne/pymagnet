@@ -36,6 +36,11 @@ black = "^21.11b0"
 pytest = "^6.2.5"
 flake8 = "^4.0.1"
 pytest-cov = "^3.0.0"
+genbadge = "^1.0.6"
+defusedxml = "^0.7.1"
+flake8-html = "^0.4.2"
+ipykernel = "^6.13.0"
+nbformat = "^5.3.0"
 
 
 [build-system]
