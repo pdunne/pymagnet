@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pymagnet"
-version = "0.4.0-alpha.1"
+version = "0.4.0"
 description = "User Friendly Magnetic Field Calculations"
 authors = ["Peter Dunne <peter.dunne@applied-magnetism.com>"]
 license = "MPL-2.0"
