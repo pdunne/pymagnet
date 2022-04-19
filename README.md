@@ -7,11 +7,14 @@ User friendly magnetic field calculations in Python
 [![DOI](https://zenodo.org/badge/339667292.svg)](https://zenodo.org/badge/latestdoi/339667292)
 <!-- [![Anaconda-Server Badge](https://anaconda.org/pdunne/pymagnet/badges/version.svg)](https://anaconda.org/pdunne/pymagnet) -->
 
-<!-- [![Python versions](https://img.shields.io/pypi/pymagnet/genbadge.svg)](https://pypi.python.org/pypi/pymagnet/)
- [![Build Status](https://github.com/smarie/python-genbadge/actions/workflows/base.yml/badge.svg)](https://github.com/smarie/python-genbadge/actions/workflows/base.yml)
- [![Tests Status](https://smarie.github.io/python-genbadge/reports/junit/junit-badge.svg?dummy=8484744)](https://smarie.github.io/python-genbadge/reports/junit/report.html)
- [![Coverage Status](https://smarie.github.io/python-genbadge/reports/coverage/coverage-badge.svg?dummy=8484744)](https://smarie.github.io/python-genbadge/reports/coverage/index.html)
- [![Flake8 Status](https://smarie.github.io/python-genbadge/reports/flake8/flake8-badge.svg?dummy=8484744)](https://smarie.github.io/python-genbadge/reports/flake8/index.html) -->
+<!-- [![Python versions](https://img.shields.io/pypi/pymagnet/genbadge.svg)](https://pypi.python.org/pypi/pymagnet/) -->
+
+<!-- [![Build Status](https://github.com/smarie/python-genbadge/actions/workflows/base.yml/badge.svg)](https://github.com/smarie/python-genbadge/actions/workflows/base.yml) -->
+
+ [![Tests Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/tests-badge.svg?dummy=8484744)](https://github.com/pdunne/pymagnet/blob/main/reports/junit/junit.xml)
+ ![Coverage Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/coverage-badge.svg?dummy=8484744)
+ ![Flake8 Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/flake8-badge.svg?dummy=8484744)
+
 ## Getting Started
 
 Installing `pymagnet` can be done using
@@ -39,16 +42,15 @@ simple magnets:
 
 * 3D: cubes, prisms (cuboids), cylinders, spheres
 
-![](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_slice_1.png)
+![3D Example Slide](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_slice_1.png)
 
-![](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_volume_2.png)
+![3D Example Volume](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/3d_example_volume_2.png)
 
 * 2D: rectangles, squares, circles
 
-![](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_circle_contour.png)
+![2D circle contour](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_circle_contour.png)
 
-![](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_circle_stream.png)
-
+![2D circle stream](https://raw.githubusercontent.com/pdunne/pymagnet/main/docs/img/2d_circle_stream.png)
 
 and complex compound objects:
 
