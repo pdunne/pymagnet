@@ -12,8 +12,8 @@ User friendly magnetic field calculations in Python
 <!-- [![Build Status](https://github.com/smarie/python-genbadge/actions/workflows/base.yml/badge.svg)](https://github.com/smarie/python-genbadge/actions/workflows/base.yml) -->
 
  [![Tests Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/tests-badge.svg?dummy=8484744)](https://github.com/pdunne/pymagnet/blob/main/reports/junit/junit.xml)
- ![Coverage Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/coverage-badge.svg?dummy=8484744)
- ![Flake8 Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/flake8-badge.svg?dummy=8484744)
+ [![Coverage Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/coverage-badge.svg?dummy=8484744)](https://github.com/pdunne/pymagnet/blob/main/reports/coverage/coverage.xml)
+ [![Flake8 Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/flake8-badge.svg?dummy=8484744)](https://github.com/pdunne/pymagnet/blob/main/reports/flake8/index.html)
 
 ## Getting Started
 
