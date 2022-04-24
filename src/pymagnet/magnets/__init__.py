@@ -14,4 +14,22 @@ from ._magnet_base import Magnet
 from ._polygon2D import Line, LineUtils, Polygon, PolyMagnet
 from ._polygon3D import Mesh
 
-__all__ = [magnetic_field_prism_1D, magnetic_field_cylinder_1D, Magnet, Magnet2D, Rectangle, Square, Circle, Magnet3D, Prism, Cube, Cylinder, Sphere, Polygon, Line, LineUtils, PolyMagnet, Mesh]
+__all__ = [
+    "magnetic_field_prism_1D",
+    "magnetic_field_cylinder_1D",
+    "Magnet",
+    "Magnet2D",
+    "Rectangle",
+    "Square",
+    "Circle",
+    "Magnet3D",
+    "Prism",
+    "Cube",
+    "Cylinder",
+    "Sphere",
+    "Polygon",
+    "Line",
+    "LineUtils",
+    "PolyMagnet",
+    "Mesh",
+]

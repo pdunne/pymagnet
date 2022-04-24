@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pymagnet"
-version = "0.4.1"
+version = "0.5.0"
 description = "User Friendly Magnetic Field Calculations"
 authors = ["Peter Dunne <peter.dunne@applied-magnetism.com>"]
 license = "MPL-2.0"
@@ -16,6 +16,7 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -27,26 +28,38 @@ classifiers = [
 python = "^3.7, <3.10"
 numpy = "^1.21"
 numpy-stl = "^2.16.3"
-matplotlib = "^3.5.0"
-plotly = "^5.4.0"
 numba = "^0.55.1"
 
+# optional features for plots
+matplotlib = { version = "^3.5.0", optional = true }
+plotly = { version = "^5.4.0", optional = true }
+
+# optional features for using the package in a jupyter notebook
+ipykernel = { version = "^6.13.0", optional = true }
+nbformat = { version = "^5.3.0", optional = true }
+
+[tool.poetry.extras]
+plots = ["matplotlib", "plotly"]
+jupyter = ["ipykernel", "nbformat"]
+
+
 [tool.poetry.dev-dependencies]
-black = "^21.11b0"
+black = "^22.0"
 pytest = "^6.2.5"
 flake8 = "^4.0.1"
 pytest-cov = "^3.0.0"
 genbadge = "^1.0.6"
 defusedxml = "^0.7.1"
 flake8-html = "^0.4.2"
-ipykernel = "^6.13.0"
-nbformat = "^5.3.0"
-
+mypy = "^0.942"
+isort = "^5.10.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
-# make it compatible with black
 profile = "black"
+
+[tool.black]
+line-length = 88

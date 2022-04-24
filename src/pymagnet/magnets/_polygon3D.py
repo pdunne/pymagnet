@@ -1,4 +1,5 @@
 from math import atan2, fabs, log, sqrt
+from os import environ as _environ
 
 import numpy as _np
 from numba import float64, vectorize
@@ -8,6 +9,10 @@ from ..utils._quaternion import Quaternion
 from ..utils._trigonometry3D import _rotate_triangle, norm_plane
 from ..utils.global_const import ALIGN_CUTOFF, FP_CUTOFF, MAG_TOL, PI
 from ._magnet3D import Magnet3D
+
+# Used to hide deprecated warning that doesn't affect the code
+# Issue: https://github.com/numba/numba/issues/5520
+_environ["KMP_WARNINGS"] = "0"
 
 
 class Mesh(Magnet3D):
@@ -225,7 +230,7 @@ class Mesh(Magnet3D):
         mesh_normals = stl_mesh.normals.astype(_np.float64)
 
         # scale values
-        volume *= self.mesh_scale ** 3
+        volume *= self.mesh_scale**3
         centroid *= self.mesh_scale
         mesh_vectors *= self.mesh_scale
 
@@ -359,15 +364,15 @@ def _charge_sheet_x(a, b, sigma, x, y, z):
     Returns:
         ndarray: Bx magnetic field component
     """
-    S_ab = 1.0 / sqrt(a ** 2 + b ** 2)
+    S_ab = 1.0 / sqrt(a**2 + b**2)
 
-    r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
+    r1 = sqrt(x**2 + y**2 + z**2)
 
     ax = a - x
     bz = b - z
 
-    r2 = sqrt(ax ** 2 + y ** 2 + bz ** 2)
-    r3 = sqrt(ax ** 2 + y ** 2 + z ** 2)
+    r2 = sqrt(ax**2 + y**2 + bz**2)
+    r3 = sqrt(ax**2 + y**2 + z**2)
     t1_log = r1 - (a * x + b * z) * S_ab
 
     t2_log = r2 + (a * ax + b * bz) * S_ab
@@ -418,15 +423,15 @@ def _charge_sheet_z(a, b, sigma, x, y, z):
     ndarray: Bz magnetic field component
     """
 
-    S_ab = 1.0 / sqrt(a ** 2 + b ** 2)
+    S_ab = 1.0 / sqrt(a**2 + b**2)
 
-    r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
+    r1 = sqrt(x**2 + y**2 + z**2)
 
     ax = a - x
     bz = b - z
 
-    r2 = sqrt(ax ** 2 + y ** 2 + bz ** 2)
-    r3 = sqrt(ax ** 2 + y ** 2 + z ** 2)
+    r2 = sqrt(ax**2 + y**2 + bz**2)
+    r3 = sqrt(ax**2 + y**2 + z**2)
 
     t1_log = r1 - (a * x + b * z) * S_ab
     t2_log = r2 + (a * ax + b * bz) * S_ab
@@ -477,19 +482,19 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
 
     # if statements are used to avoid singularities such as divide by zero
     if fabs(y) > FP_CUTOFF:
-        a_ab = sqrt(1 + b ** 2 / a ** 2)
-        r1 = sqrt(x ** 2 + y ** 2 + z ** 2)
+        a_ab = sqrt(1 + b**2 / a**2)
+        r1 = sqrt(x**2 + y**2 + z**2)
 
         ax = a - x
 
-        r3 = sqrt(ax ** 2 + y ** 2 + z ** 2)
+        r3 = sqrt(ax**2 + y**2 + z**2)
 
         g = b / a
 
-        si_alpha = 1.0 / (a_ab ** 2)
+        si_alpha = 1.0 / (a_ab**2)
 
         beta = -(x + z * g) * si_alpha
-        gamma_sq = (r1 ** 2 * si_alpha) - (beta ** 2)
+        gamma_sq = (r1**2 * si_alpha) - (beta**2)
         if gamma_sq > 0.0:
             gamma = sqrt(gamma_sq)
         else:
@@ -498,7 +503,7 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
         A = -gamma * g
         B = gamma * a_ab
         C = z + beta * g
-        ABC_diff = B ** 2 - A ** 2 - C ** 2
+        ABC_diff = B**2 - A**2 - C**2
 
         if fabs(gamma) > 0.0:
             t3 = (a + beta) / gamma

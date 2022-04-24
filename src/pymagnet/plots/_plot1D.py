@@ -5,7 +5,18 @@
 """Plotting routines for calculating along symmetry lines of cubes, cuboids, and cylinders
 
 """
-import matplotlib.pyplot as _plt
+import warnings
+
+try:
+    import matplotlib.pyplot as _plt
+except ImportError:
+    _has_matplotlib = False
+    warnings.warn("Matplotlib is not installed", UserWarning)
+
+else:
+    _has_matplotlib = True
+
+
 import numpy as _np
 
 from ..magnets import (
@@ -30,6 +41,8 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
     Returns:
         tuple: Point_Array1, Field1: point array struct containing z and the unit (e/g. 'mm'), vector array containing Bz and the field unit (e.g. 'T').
     """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
 
     num_points = kwargs.pop("num_points", 101)
     return_data = kwargs.pop("return_data", False)

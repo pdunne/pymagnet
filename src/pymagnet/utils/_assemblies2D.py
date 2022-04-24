@@ -94,7 +94,7 @@ def mask_data_2D(magnet_half_width, num_sides, radius, B, x, y, **kwargs):
     Returns:
         Vector2: new vector of masked points
     """
-    from ..utils._point_structs import Vector2
+    from ..utils._point_structs import Point2
 
     apothem = radius - magnet_half_width
     center = kwargs.pop("center", (0.0, 0.0))
@@ -103,10 +103,10 @@ def mask_data_2D(magnet_half_width, num_sides, radius, B, x, y, **kwargs):
     yp = center[1]
 
     grid = mask_function(num_sides, apothem, xp, yp, x, y)
-    Bm = Vector2(B.x, B.y)
+    Bm = Point2(B.x, B.y)
     Bm.x[~grid] = _np.nan
     Bm.y[~grid] = _np.nan
-    Bm.calc_norm()
+    Bm._norm()
     return Bm
 
 
@@ -145,7 +145,7 @@ def radial_profile(data, center):
     r = _np.sqrt(_np.power(x - center[0], 2) + _np.power(y - center[1], 2))
 
     # Cast to integer
-    r = r.astype(_np.int)
+    r = r.astype(_np.int64)
 
     # Bin the data
     tbin = _np.bincount(r.ravel(), data.ravel())
@@ -191,7 +191,7 @@ def radial_extraction_2D(magnet_half_width, radius, x, y, B):
 
 
 def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
-    from .. import reset_magnets
+    from .. import reset
     from ..magnets._magnet2D import Rectangle
     from ._routines2D import grid2D
 
@@ -205,7 +205,7 @@ def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
         mag_prop (dictionary): Magnet properties
         grid_prop (dictionary): Calculation grid (x,y)
     """
-    reset_magnets()
+    reset()
     NP = 201
     width = 2
     height = width * b_scale
@@ -267,7 +267,7 @@ def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
         UPx = hGap
         UPy = width / 2
 
-    x, y = grid2D(-UPx, UPx, -UPy, UPy, NP)
+    x, y = grid2D(UPx, UPy, num_points=NP)
 
     mag_prop = {
         "width": width,

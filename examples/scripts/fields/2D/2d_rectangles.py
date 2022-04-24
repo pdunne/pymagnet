@@ -2,8 +2,9 @@
 """
 
 import pymagnet as pm
+import pymagnet.plots as mplt
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 
 width = 20
@@ -32,7 +33,7 @@ points = pm.grid2D(2 * width, 2 * height, unit=unit)
 field = pm.get_field_2D(points)
 
 # Plot the result, vector_plot = True toggles on the vector field plot
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -40,7 +41,7 @@ _, _ = pm.plots.plot_2D_contour(
     vector_plot=True,  # plot the vector field
 )
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -49,6 +50,4 @@ _, _ = pm.plots.plot_2D_contour(
     plot_type="streamplot",
     show_magnets=True,
 )
-_, _ = pm.plots.plot_2D_contour(
-    points, field, plot_type="streamplot", show_magnets=True
-)
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot", show_magnets=True)

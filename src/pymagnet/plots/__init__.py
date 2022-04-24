@@ -22,4 +22,15 @@ from ._plotly3D import (
 
 # from ._plotly2D import *
 
-__all__ = [plot_1D_field, plot_2D_line, plot_2D_contour, plot_3D_contour, plot_sub_contour_3D, plot_magnet, slice_plot, slice_quickplot, volume_plot, volume_quickplot]
+__all__ = [
+    "plot_1D_field",
+    "plot_2D_line",
+    "plot_2D_contour",
+    "plot_3D_contour",
+    "plot_sub_contour_3D",
+    "plot_magnet",
+    "slice_plot",
+    "slice_quickplot",
+    "volume_plot",
+    "volume_quickplot",
+]

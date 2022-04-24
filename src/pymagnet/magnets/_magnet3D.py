@@ -11,7 +11,9 @@ magnet with respect to each principal axis.
 
 TODO: Update __str__ and __repr__ methods to show orientation and magnetisation
 """
+
 from math import fabs, sqrt
+from os import environ as _environ
 
 import numpy as _np
 from numba import float64, vectorize
@@ -19,6 +21,10 @@ from numba import float64, vectorize
 from ..utils._quaternion import Quaternion
 from ..utils.global_const import MAG_TOL, PI
 from ._magnet_base import Magnet
+
+# Used to hide deprecated warning that doesn't affect the code
+# Issue: https://github.com/numba/numba/issues/5520
+_environ["KMP_WARNINGS"] = "0"
 
 
 class Magnet3D(Magnet):
@@ -891,8 +897,8 @@ class Cylinder(Magnet3D):
         )
 
         Bz = (B0 * a / (a + rho)) * (
-            betap * self._cel(kp, gamma ** 2, 1, gamma)
-            - betan * self._cel(kn, gamma ** 2, 1, gamma)
+            betap * self._cel(kp, gamma**2, 1, gamma)
+            - betan * self._cel(kn, gamma**2, 1, gamma)
         )
         return Brho, Bz
 
@@ -906,11 +912,11 @@ class Cylinder(Magnet3D):
         """
 
         radius, length = self.get_size()
-        data_norm = x ** 2 + y ** 2
+        data_norm = x**2 + y**2
         zn = -length / 2
         zp = length / 2
 
-        mask_rho = data_norm < radius ** 2
+        mask_rho = data_norm < radius**2
         mask_z = _np.logical_and(z > zn, z < zp)
         mask = _np.logical_and(mask_rho, mask_z)
 
@@ -1051,7 +1057,7 @@ class Sphere(Magnet3D):
         # Hide the warning for situtations where there is a divide by zero.
         # This returns a NaN in the array, which is ignored for plotting.
         with _np.errstate(divide="ignore", invalid="ignore"):
-            preFac = self.Jr * (self.radius ** 3 / r ** 3) / 3.0
+            preFac = self.Jr * (self.radius**3 / r**3) / 3.0
 
         Br = preFac * 2.0 * _np.cos(theta)
         Btheta = preFac * _np.sin(theta)
@@ -1067,7 +1073,7 @@ class Sphere(Magnet3D):
             z (ndarray/float): z-coordinates
         """
 
-        data_norm = x ** 2 + y ** 2 + z ** 2
-        mask = data_norm < self.radius ** 2
+        data_norm = x**2 + y**2 + z**2
+        mask = data_norm < self.radius**2
 
         return mask

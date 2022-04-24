@@ -8,9 +8,20 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources.
 
 """
+import warnings
+
+try:
+    import plotly.graph_objects as _go
+
+except ImportError:
+    _has_plotly = False
+    warnings.warn("plotly is not installed", UserWarning)
+
+else:
+    _has_plotly = True
+    import plotly.figure_factory as _ff
+
 import numpy as _np
-import plotly.figure_factory as _ff
-import plotly.graph_objects as _go
 
 # from ..utils._conversions import get_unit_value_meter
 
@@ -27,6 +38,8 @@ def _plotly_vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color):
         scale_y (float): unit scaling
         vector_color (string): quiver color
     """
+    if not _has_plotly:
+        raise ImportError("matplotlib is required to use this plot function.")
     plot_object = []
     NPx, NPy = x.shape
     if NQ != 0:
@@ -58,6 +71,8 @@ def plotly_2D_contour(x, y, Field, **kwargs):
     # scale_x = kwargs.pop("scale_x", 1)
     # scale_y = kwargs.pop("scale_y", 1)
     # scale_cb = kwargs.pop("scale_cb", 1)
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
 
     colorscale = kwargs.pop("colorscale", "viridis")
     cmin = kwargs.pop("cmin", 0.0)
@@ -119,6 +134,8 @@ def plotly_2D_contour(x, y, Field, **kwargs):
 
 
 def _plotly_contour2(x, y, z, **kwargs):
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
     colorscale = kwargs.pop("colorscale", "viridis")
     cmin = kwargs.pop("cmin", 0.0)
     cmax = kwargs.pop("cmax", round(z.mean() * 2, 1))

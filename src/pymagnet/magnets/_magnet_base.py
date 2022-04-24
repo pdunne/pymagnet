@@ -6,6 +6,7 @@
 
 This private module implements the registry and base magnet classes
 """
+__all__ = ["Registry", "Magnet", "reset", "list"]
 
 from weakref import WeakSet
 

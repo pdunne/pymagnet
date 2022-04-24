@@ -5,8 +5,10 @@
 #
 # A first example is to compare the field from a 2D rectangle to a 4-sided PolyMagnet.
 
-import pymagnet as pm
 import numpy as np
+
+import pymagnet as pm
+import pymagnet.plots as mplt
 
 # There are two main ways to define a PolyMagnet, first as a regular N-sided polygon
 #
@@ -23,7 +25,7 @@ import numpy as np
 # ### Square Magnet
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 unit = "mm"
 length = 20
@@ -41,7 +43,7 @@ points = pm.grid2D(2 * length, 2 * length, unit=unit)
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -51,7 +53,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -60,10 +62,10 @@ _, _ = pm.plots.plot_2D_contour(
     plot_type="streamplot",
     show_magnets=True,
 )
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 unit = "mm"
 length = 20
@@ -80,7 +82,7 @@ points = pm.grid2D(2 * length, 2 * length, unit=unit)
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -90,7 +92,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -106,11 +108,11 @@ _, _ = pm.plots.plot_2D_contour(
 
 points = pm.grid2D(2 * length, 3 * length, num_points=200, ymin=length * 1.1, unit=unit)
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 _ = pm.magnets.PolyMagnet(length=length, num_sides=4, center=center, Jr=1.0, phi=90)
 field_poly = pm.get_field_2D(points)
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 _ = pm.magnets.Square(width=length, center=center, Jr=1.0, phi=90)
 field_square = pm.get_field_2D(points)
 
@@ -123,7 +125,7 @@ print(f"Relative difference in |B| is: {relative_difference:1.1e}")
 # N-sided polygons can be generated uing the `num_sides` keyword, but also notice in the plot below that the magnetisation is at 60˚ to the x-axis (`phi = 60`):
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 unit = "mm"
 length = 20
@@ -143,7 +145,7 @@ points = pm.grid2D(2 * length, 2 * length, unit=unit)
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -153,7 +155,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -163,7 +165,7 @@ _, _ = pm.plots.plot_2D_contour(
     show_magnets=True,
 )
 
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")
 
 
 # ## Custom Polygons
@@ -184,7 +186,7 @@ wedge.append((-2 * h, -h))
 # After generating the polygon, we then pass the polygon vertices to the PolyMagnet class:
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 cmap = "viridis"  # set the colormap
 
@@ -209,7 +211,7 @@ points = pm.grid2D(30, 30, unit="mm")
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -220,7 +222,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -230,7 +232,7 @@ _, _ = pm.plots.plot_2D_contour(
     show_magnets=True,
 )
 
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")
 
 
 # We can then define other polygons such as `sharp_wedge` and `vertical_pacman`:
@@ -243,7 +245,7 @@ sharp_wedge.append((2 * h, -h))
 sharp_wedge.append((-2 * h, -h))
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 cmap = "viridis"  # set the colormap
 
@@ -268,7 +270,7 @@ points = pm.grid2D(30, 30, unit="mm")
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -279,7 +281,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -290,7 +292,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")
 
 
 vertical_pacman = pm.magnets.Polygon()
@@ -303,7 +305,7 @@ vertical_pacman.append((-h / 1, -2 * h))
 vertical_pacman.append((-2 * h, 0))
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 cmap = "viridis"  # set the colormap
 
@@ -328,7 +330,7 @@ points = pm.grid2D(30, 30, unit="mm")
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -337,7 +339,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -346,7 +348,7 @@ _, _ = pm.plots.plot_2D_contour(
     plot_type="streamplot",
     show_magnets=True,
 )
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")
 
 
 # #### Letters
@@ -404,7 +406,7 @@ magnet_m.append((-2 * h, -4 * h))
 magnet_m.append((-4 * h, -4 * h))
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 cmap = "viridis"  # set the colormap
 
@@ -429,7 +431,7 @@ points = pm.grid2D(30, 30, unit="mm")
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -438,7 +440,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -447,10 +449,10 @@ _, _ = pm.plots.plot_2D_contour(
     plot_type="streamplot",
     show_magnets=True,
 )
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 cmap = "viridis"  # set the colormap
 
@@ -475,7 +477,7 @@ points = pm.grid2D(30, 30, unit="mm")
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -484,7 +486,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -493,10 +495,10 @@ _, _ = pm.plots.plot_2D_contour(
     plot_type="streamplot",
     show_magnets=True,
 )
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 cmap = "viridis"  # set the colormap
 
@@ -521,7 +523,7 @@ points = pm.grid2D(30, 30, unit="mm")
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -530,7 +532,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -539,13 +541,13 @@ _, _ = pm.plots.plot_2D_contour(
     plot_type="streamplot",
     show_magnets=True,
 )
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")
 
 
 # Not forgetting that the orientation of the magnetisation can be rotated:
 
 
-pm.reset_magnets()  # clear magnet registry
+pm.reset()  # clear magnet registry
 
 cmap = "viridis"  # set the colormap
 
@@ -570,7 +572,7 @@ points = pm.grid2D(30, 30, unit="mm")
 field = pm.get_field_2D(points)
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=0.0,  # minimum field value
@@ -579,7 +581,7 @@ _, _ = pm.plots.plot_2D_contour(
 )
 
 
-_, _ = pm.plots.plot_2D_contour(
+_, _ = mplt.plot_2D_contour(
     points,
     field,
     cmin=-0.1,  # minimum field value
@@ -588,4 +590,4 @@ _, _ = pm.plots.plot_2D_contour(
     plot_type="streamplot",
     show_magnets=True,
 )
-_, _ = pm.plots.plot_2D_contour(points, field, plot_type="streamplot")
+_, _ = mplt.plot_2D_contour(points, field, plot_type="streamplot")

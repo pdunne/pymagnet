@@ -57,14 +57,14 @@ class Magnet2D(Magnet):
 
         return self.alpha
 
-    def get_field(self):
+    def get_field(self) -> None:
         """Calculates the magnetic field.
 
         This is a template that needs to be implemented for each magnet
         """
         pass
 
-    def get_force_torque(self):
+    def get_force_torque(self) -> None:
         """Calculates the force and torque on a magnet due to all other magnets.
 
         This is a template that needs to be implemented for each magnet.
@@ -208,8 +208,8 @@ class Rectangle(Magnet2D):
         # This returns a NaN in the array, which is ignored for plotting.
         with _np.errstate(divide="ignore", invalid="ignore"):
             return (J / (2 * PI)) * (
-                _np.arctan2((2 * a * (b + y)), (x ** 2 - a ** 2 + (y + b) ** 2))
-                + _np.arctan2((2 * a * (b - y)), (x ** 2 - a ** 2 + (y - b) ** 2))
+                _np.arctan2((2 * a * (b + y)), (x**2 - a**2 + (y + b) ** 2))
+                + _np.arctan2((2 * a * (b - y)), (x**2 - a**2 + (y - b) ** 2))
             )
 
     def _calcBy_mag_x(self, x, y):
@@ -268,8 +268,8 @@ class Rectangle(Magnet2D):
         b = self.b
         J = self.Jy
         return (J / (2 * PI)) * (
-            _np.arctan2((2 * b * (x + a)), ((x + a) ** 2 + y ** 2 - b ** 2))
-            - _np.arctan2((2 * b * (x - a)), ((x - a) ** 2 + y ** 2 - b ** 2))
+            _np.arctan2((2 * b * (x + a)), ((x + a) ** 2 + y**2 - b**2))
+            - _np.arctan2((2 * b * (x - a)), ((x - a) ** 2 + y**2 - b**2))
         )
 
 
@@ -409,7 +409,7 @@ class Circle(Magnet2D):
         Returns:
             tuple: Br, Bphi magnetic field in polar coordinates
         """
-        prefac = self.Jr * (self.radius ** 2 / rho ** 2) / 2
+        prefac = self.Jr * (self.radius**2 / rho**2) / 2
 
         Brho = prefac * _np.cos(phi)
         Bphi = prefac * _np.sin(phi)

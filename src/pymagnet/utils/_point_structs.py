@@ -48,23 +48,23 @@ class Point2(object):
         return Point2(x, y)
 
     def __lt__(self, other):
-        self_mag = (self.x ** 2) + (self.y ** 2)
-        other_mag = (other.x ** 2) + (other.y ** 2)
+        self_mag = (self.x**2) + (self.y**2)
+        other_mag = (other.x**2) + (other.y**2)
         return self_mag < other_mag
 
     def __le__(self, other):
-        self_mag = (self.x ** 2) + (self.y ** 2)
-        other_mag = (other.x ** 2) + (other.y ** 2)
+        self_mag = (self.x**2) + (self.y**2)
+        other_mag = (other.x**2) + (other.y**2)
         return self_mag <= other_mag
 
     def __gt__(self, other):
-        self_mag = (self.x ** 2) + (self.y ** 2)
-        other_mag = (other.x ** 2) + (other.y ** 2)
+        self_mag = (self.x**2) + (self.y**2)
+        other_mag = (other.x**2) + (other.y**2)
         return self_mag > other_mag
 
     def __ge__(self, other):
-        self_mag = (self.x ** 2) + (self.y ** 2)
-        other_mag = (other.x ** 2) + (other.y ** 2)
+        self_mag = (self.x**2) + (self.y**2)
+        other_mag = (other.x**2) + (other.y**2)
         return self_mag >= other_mag
 
     def __eq__(self, other):
@@ -151,23 +151,23 @@ class Point3(Point2):
         return Point3(x, y, z)
 
     def __lt__(self, other):
-        self_mag = (self.x ** 2) + (self.y ** 2)
-        other_mag = (other.x ** 2) + (other.y ** 2)
+        self_mag = (self.x**2) + (self.y**2)
+        other_mag = (other.x**2) + (other.y**2)
         return self_mag < other_mag
 
     def __le__(self, other):
-        self_mag = (self.x ** 2) + (self.y ** 2)
-        other_mag = (other.x ** 2) + (other.y ** 2)
+        self_mag = (self.x**2) + (self.y**2)
+        other_mag = (other.x**2) + (other.y**2)
         return self_mag <= other_mag
 
     def __gt__(self, other):
-        self_mag = (self.x ** 2) + (self.y ** 2)
-        other_mag = (other.x ** 2) + (other.y ** 2)
+        self_mag = (self.x**2) + (self.y**2)
+        other_mag = (other.x**2) + (other.y**2)
         return self_mag > other_mag
 
     def __ge__(self, other):
-        self_mag = (self.x ** 2) + (self.y ** 2)
-        other_mag = (other.x ** 2) + (other.y ** 2)
+        self_mag = (self.x**2) + (self.y**2)
+        other_mag = (other.x**2) + (other.y**2)
         return self_mag >= other_mag
 
     def __eq__(self, other):

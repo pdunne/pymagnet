@@ -8,14 +8,24 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources, and
 
 """
+import warnings
 
-import matplotlib.cm as _cm
-import matplotlib.pyplot as _plt
+try:
+    import matplotlib.pyplot as _plt
+
+except ImportError:
+    _has_matplotlib = False
+    warnings.warn("matplotlib is not installed", UserWarning)
+
+else:
+    _has_matplotlib = True
+    import matplotlib.cm as _cm
+    from matplotlib.patches import Arrow as _Arrow
+    from matplotlib.patches import Circle as _Circ
+    from matplotlib.patches import Rectangle as _Rect
+    from matplotlib.transforms import Affine2D
+
 import numpy as _np
-from matplotlib.patches import Arrow as _Arrow
-from matplotlib.patches import Circle as _Circ
-from matplotlib.patches import Rectangle as _Rect
-from matplotlib.transforms import Affine2D
 
 from ..utils import Field2, Point_Array2
 
@@ -65,6 +75,9 @@ class arrow(object):
             transform (matplotlib Affine2D): transformation object, `translate`
             width (int, optional): Arrow width. Defaults to 3.
         """
+        if not _has_matplotlib:
+            raise ImportError("matplotlib is required to use this plot function.")
+
         super().__init__()
         self.x = x
         self.y = y
@@ -112,6 +125,8 @@ def plot_2D_line(point_array, field, **kwargs):
     Returns:
         tuple: fig, ax reference to matplotlib figure and axis objects
     """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
 
     xlab = kwargs.pop("xlab", f"x ({point_array.unit})")
     ylab = kwargs.pop("ylab", f"B ({field.unit})")
@@ -164,7 +179,8 @@ def plot_2D_contour(point_array, field, **kwargs):
     Returns:
         tuple: fig, ax reference to matplotlib figure and axis objects
     """
-    import matplotlib.cm as _cm
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
 
     from ..magnets._polygon2D import PolyMagnet
 
@@ -312,6 +328,9 @@ def _num_patch_2D():
     Returns:
         tuple: (list, list) lists of patch and arrow objects
     """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
+
     from ..magnets._magnet2D import Circle, Magnet2D, Rectangle
 
     patch_array = []
@@ -335,6 +354,8 @@ def _gen_rect_patch(magnet):
         magnet_patch: magnet_patch data structure
     """
     # from matplotlib.transforms import Affine2D
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
 
     patch_tmp = patch(
         x=(magnet.center[0] - magnet.a),
@@ -374,6 +395,8 @@ def _gen_circle_patch(magnet):
         magnet_patch: magnet_patch data structure
     """
     # from matplotlib.transforms import Affine2D
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
 
     patch_tmp = patch(
         x=(magnet.center[0]),
@@ -407,6 +430,9 @@ def _draw_magnets2(ax):
     Args:
         ax (axis): axis reference
     """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
+
     patch_array = _num_patch_2D()
 
     # Need original axis transform data before making additional transformations
@@ -491,6 +517,9 @@ def plot_3D_contour(points, field, plane, **kwargs):
     Returns:
         tuple: fig, ax reference to matplotlib figure and axis objects
     """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
+
     axis_scale = kwargs.pop("axis_scale", "equal")
 
     plot_type = kwargs.pop("plot_type", "contour")
@@ -644,6 +673,9 @@ def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
     Returns:
         tuple: fig, ax reference to matplotlib figure and axis objects
     """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
+
     cmap = kwargs.pop("cmap", "seismic")
     xlab = kwargs.pop("xlab", "x (m)")
     ylab = kwargs.pop("ylab", "y (m)")
@@ -701,6 +733,9 @@ def line_plot_cylinder(magnet, **kwargs):
     Returns:
         tuple: fig, ax reference to matplotlib figure and axis objects
     """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
+
     rho = _np.linspace(-2 * magnet.radius, 2 * magnet.radius, 51)
     z = _np.array([magnet.length * 1.1 / 2])
 
@@ -726,6 +761,9 @@ def contour_plot_cylinder(magnet, **kwargs):
     Returns:
         tuple: fig, ax reference to matplotlib figure and axis objects
     """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
+
     NP = 101
     NPJ = NP * 1j
     rho, z = _np.mgrid[

@@ -6,10 +6,14 @@
 as well as 3D cartesian, cylindrical, and spherical.
 
 """
+from typing import Optional
+
 import numpy as _np
 
+from .typeconf import Numeric64, Tuple2_64, Tuple3_64
 
-def cart2pol(x, y):
+
+def cart2pol(x: Numeric64, y: Numeric64) -> Tuple2_64:
     """Converts from cartesian to polar coordinates
 
     Args:
@@ -19,12 +23,12 @@ def cart2pol(x, y):
     Returns:
         tuple: rho, phi
     """
-    rho = _np.sqrt(x ** 2 + y ** 2)
-    phi = _np.arctan2(y, x)
-    return (rho, phi)
+    rho: Numeric64 = _np.sqrt(x**2 + y**2)
+    phi: Numeric64 = _np.arctan2(y, x)
+    return rho, phi
 
 
-def pol2cart(rho, phi):
+def pol2cart(rho: Numeric64, phi: Numeric64) -> Tuple2_64:
     """Converts from polar to cartesian coordinates
 
     Args:
@@ -34,12 +38,12 @@ def pol2cart(rho, phi):
     Returns:
         tuple: x,y
     """
-    x = rho * _np.cos(phi)
-    y = rho * _np.sin(phi)
-    return (x, y)
+    x: Numeric64 = rho * _np.cos(phi)
+    y: Numeric64 = rho * _np.sin(phi)
+    return x, y
 
 
-def vector_pol2cart(Brho, Bphi, phi):
+def vector_pol2cart(Brho: Numeric64, Bphi: Numeric64, phi: Numeric64) -> Tuple2_64:
     """Converts Vectors from polar to cartesian coordinates
 
     Args:
@@ -50,12 +54,12 @@ def vector_pol2cart(Brho, Bphi, phi):
     Returns:
         tuple: Bx, By
     """
-    Bx = Brho * _np.cos(phi) - Bphi * _np.sin(phi)
-    By = Brho * _np.sin(phi) + Bphi * _np.cos(phi)
+    Bx: Numeric64 = Brho * _np.cos(phi) - Bphi * _np.sin(phi)
+    By: Numeric64 = Brho * _np.sin(phi) + Bphi * _np.cos(phi)
     return Bx, By
 
 
-def cart2sph(x, y, z):
+def cart2sph(x: Numeric64, y: Numeric64, z: Numeric64) -> Tuple3_64:
     """Converts from cartesian to spherical coordinates
 
     Args:
@@ -66,17 +70,17 @@ def cart2sph(x, y, z):
     Returns:
         tuple: r, theta, phi
     """
-    r = _np.sqrt(x ** 2 + y ** 2 + z ** 2)
-    phi = _np.arctan2(y, x)
+    r: Numeric64 = _np.sqrt(x**2 + y**2 + z**2)
+    phi: Numeric64 = _np.arctan2(y, x)
 
     # Hide the warning for situtations where there is a divide by zero.
     # This returns a NaN in the array, which is ignored for plotting.
     with _np.errstate(divide="ignore", invalid="ignore"):
-        theta = _np.arccos(z / r)
+        theta: Numeric64 = _np.arccos(z / r)
     return (r, theta, phi)
 
 
-def sph2cart(r, theta, phi):
+def sph2cart(r: Numeric64, theta: Numeric64, phi: Numeric64) -> Tuple3_64:
     """Converts from spherical to cartesian coordinates
 
     Args:
@@ -87,13 +91,15 @@ def sph2cart(r, theta, phi):
     Returns:
         tuple: x,y,z
     """
-    x = r * _np.sin(theta) * _np.cos(phi)
-    y = r * _np.sin(theta) * _np.sin(phi)
-    z = r * _np.cos(theta)
+    x: Numeric64 = r * _np.sin(theta) * _np.cos(phi)
+    y: Numeric64 = r * _np.sin(theta) * _np.sin(phi)
+    z: Numeric64 = r * _np.cos(theta)
     return x, y, z
 
 
-def vector_sph2cart(Br, Btheta, Bphi, theta, phi):
+def vector_sph2cart(
+    Br: Numeric64, Btheta: Numeric64, Bphi: Numeric64, theta: Numeric64, phi: Numeric64
+) -> Tuple3_64:
     """Converts Vectors from spherical to cartesian coordinates
 
     Args:
@@ -106,23 +112,25 @@ def vector_sph2cart(Br, Btheta, Bphi, theta, phi):
     Returns:
         tuple: Bx,By,Bz
     """
-    Bx = (
+    Bx: Numeric64 = (
         Br * _np.sin(theta) * _np.cos(phi)
         + Btheta * _np.cos(theta) * _np.cos(phi)
         - Bphi * _np.sin(phi)
     )
 
-    By = (
+    By: Numeric64 = (
         Br * _np.sin(theta) * _np.sin(phi)
         + Btheta * _np.cos(theta) * _np.sin(phi)
         + Bphi * _np.cos(phi)
     )
 
-    Bz = Br * _np.cos(theta) - Btheta * _np.sin(theta)
+    Bz: Numeric64 = Br * _np.cos(theta) - Btheta * _np.sin(theta)
     return Bx, By, Bz
 
 
-def sphere_sph2cart(Br, Btheta, theta, phi):
+def sphere_sph2cart(
+    Br: Numeric64, Btheta: Numeric64, theta: Numeric64, phi: Numeric64
+) -> Tuple3_64:
     """Converts magnetic field of a sphere from spherical to cartesian coordinates
 
     Args:
@@ -134,15 +142,19 @@ def sphere_sph2cart(Br, Btheta, theta, phi):
     Returns:
         tuple: Bx,By,Bz
     """
-    Bx = Br * _np.sin(theta) * _np.cos(phi) + Btheta * _np.cos(theta) * _np.cos(phi)
+    Bx: Numeric64 = Br * _np.sin(theta) * _np.cos(phi) + Btheta * _np.cos(
+        theta
+    ) * _np.cos(phi)
 
-    By = Br * _np.sin(theta) * _np.sin(phi) + Btheta * _np.cos(theta) * _np.sin(phi)
+    By: Numeric64 = Br * _np.sin(theta) * _np.sin(phi) + Btheta * _np.cos(
+        theta
+    ) * _np.sin(phi)
 
-    Bz = Br * _np.cos(theta) - Btheta * _np.sin(theta)
+    Bz: Numeric64 = Br * _np.cos(theta) - Btheta * _np.sin(theta)
     return Bx, By, Bz
 
 
-def get_unit_value_meter(unit):
+def get_unit_value_meter(unit: str) -> Optional[float]:
     """Returns a queried metre unit as a number
     Example:
         factor = get_unit_value_meter('cm')
@@ -165,7 +177,7 @@ def get_unit_value_meter(unit):
         "km": 1e3,
         "hm": 1e2,
         "dam": 1e1,
-        "m": 1,
+        "m": 1.0,
         "dm": 1e-1,
         "cm": 1e-2,
         "mm": 1e-3,
@@ -183,7 +195,7 @@ def get_unit_value_meter(unit):
     return si_prefixes.get(unit, None)
 
 
-def get_unit_value_tesla(unit):
+def get_unit_value_tesla(unit: str) -> Optional[float]:
     """Returns a queried magnetic flux density unit as a number
     Example:
         factor = get_unit_value_meter('mT')

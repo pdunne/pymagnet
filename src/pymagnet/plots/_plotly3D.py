@@ -10,8 +10,19 @@ Unlike the plot2D module, here plotly is used as the backend.
 TODO:
     * Update __str__ and __repr__ for polyhedra
 """
+import warnings
+
+try:
+    import plotly.graph_objects as _go
+
+except ImportError:
+    _has_plotly = False
+    warnings.warn("plotly is not installed", UserWarning)
+
+else:
+    _has_plotly = True
+
 import numpy as _np
-import plotly.graph_objects as _go
 
 from ..magnets import Cylinder, Magnet3D, Mesh, Prism, Sphere
 from ..magnets._magnet_base import Registry
@@ -425,6 +436,9 @@ def _draw_surface_slice(
     Returns:
         dict: plotly surface data structure for plotting
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
+
     return _go.Surface(
         x=points.x,
         y=points.y,
@@ -449,6 +463,9 @@ def _draw_mesh(vertices, magnet_opacity, magnet_color):
     Returns:
         Mesh3d object: plotly graphics object (Mesh3d)
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
+
     return _go.Mesh3d(
         x=vertices[0],
         y=vertices[1],
@@ -477,6 +494,9 @@ def _draw_cones(points, field, NA=10, cone_opacity=1.0):
     Returns:
         dict: cone data structure for plotting
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
+
     x = points.x.reshape(field.x.shape)
     y = points.y.reshape(field.y.shape)
     z = points.z.reshape(field.z.shape)
@@ -506,6 +526,9 @@ def _generate_all_meshes(magnet_opacity=1.0, **kwargs):
     Returns:
         dict: plotly data structure for rendering magnets
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
+
     color = kwargs.pop("color", "white")
     data_objects = []
     for magnet in Magnet3D.instances:
@@ -561,6 +584,8 @@ def _generate_volume_data(points, field, **kwargs):
     Returns:
         dict: plotly volume data structure
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
 
     cmin = kwargs.pop("cmin", 0.0)
     cmax = kwargs.pop("cmax", 0.5)
@@ -619,6 +644,8 @@ def plot_magnet(unit="mm", **kwargs):
     Returns:
         fig: reference to figure
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
 
     reset_polyhedra()
 
@@ -650,6 +677,8 @@ def slice_plot(data_dict, **kwargs):
     Returns:
         tuple: fig (reference to figure), data_objects (plotly dict)
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
 
     reset_polyhedra()
 
@@ -717,6 +746,8 @@ def slice_quickplot(**kwargs):
     Returns:
         tuple: fig (reference to figure), cache (cached data for each plane with potential keys: 'xy', 'xz', 'yz'), data_objects (plotly dict)
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
 
     reset_polyhedra()
 
@@ -810,6 +841,8 @@ def volume_plot(points, field, **kwargs):
     Returns:
         tuple: fig (reference to figure), data_objects (plotly dict)
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
 
     reset_polyhedra()
 
@@ -894,6 +927,8 @@ def volume_quickplot(**kwargs):
     Returns:
         tuple: fig (reference to figure), cache (cached data dict), data_objects (plotly dict)
     """
+    if not _has_plotly:
+        raise ImportError("plotly is required to use this plot function.")
 
     num_points = kwargs.pop("num_points", 30)
 
