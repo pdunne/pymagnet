@@ -2,11 +2,15 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-""" INCOMPLETE Routines for creation of known magnet assemblies consisting of Halbachs, quadrupoles, and others. This does not yet work.
+"""INCOMPLETE Routines for creation of known magnet assemblies consisting of Halbachs,
+quadrupoles, and others. This does not yet work.
 
 """
+
 import numpy as _np
 from matplotlib.path import Path as _Path
+
+from pymagnet.utils._vector_structs import Point_Array2
 
 from ..utils.global_const import PI, PI_2
 
@@ -267,7 +271,9 @@ def init_magnets(num_magnets=4, b_scale=1, assem_type="halbach"):
         UPx = hGap
         UPy = width / 2
 
-    x, y = grid2D(UPx, UPy, num_points=NP)
+    grid_data = grid2D(UPx, UPy, num_points=NP)
+    x = grid_data.x
+    y = grid_data.y
 
     mag_prop = {
         "width": width,
@@ -305,7 +311,7 @@ def calc_magnetic_field(mag_prop, grid_prop):
 
     x = grid_prop["x"]
     y = grid_prop["y"]
-    B = get_field_2D(x, y)
+    B = get_field_2D(Point_Array2(x, y))
     if mag_prop["assem_type"].lower() == "halbach":
         mask_radius = mag_prop["radius"]
     else:
@@ -377,7 +383,7 @@ def calc_magnetic_field(mag_prop, grid_prop):
 #         m_approx = np.gradient(B_ravg,xpl).mean()
 #         B_fit2 = np.polyval( [m_approx, fit_res[-1]], xpl)
 #         if fit_res.shape[0] > 3:
-#             BgB_fit = B_fit *( 3*xpl**2 * fit_res[0] + 2*xpl * fit_res[1] + fit_res[2])
+#             BgB_fit = B_fit *( 3*xpl**2 * fit_res[0] + 2*xpl * fit_res[1] + fit_res[2])  # noqa: E501
 #         else:
 #             BgB_fit = B_fit *( 2*xpl* fit_res[0] + fit_res[1])
 #         m_approx = np.gradient(BgB_fit,xpl).mean()

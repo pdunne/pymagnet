@@ -7,9 +7,10 @@ User friendly magnetic field calculations
 
 Top level module for exposing the public API of usable modules
 """
+
 __version__ = "0.4.0"
 
-from . import forces, magnets, utils
+from . import forces, magnets, plots, utils
 from .magnets._magnet_base import list, reset
 from .utils._routines2D import get_field_2D, grid2D
 from .utils._routines3D import get_field_3D
@@ -23,4 +24,5 @@ __all__ = [
     "get_field_2D",
     "grid2D",
     "get_field_3D",
+    "plots",
 ]

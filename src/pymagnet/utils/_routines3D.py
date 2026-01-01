@@ -2,8 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-"""Routines for Three Dimensional Magnet Classes
-"""
+"""Routines for Three Dimensional Magnet Classes"""
 
 import numpy as _np
 
@@ -300,9 +299,9 @@ def _apply_mask(magnet, field, mask):
     mask_magnet = magnet._mask_magnet
 
     if mask_magnet:
-        field.x[mask] = _np.NaN
-        field.y[mask] = _np.NaN
-        field.z[mask] = _np.NaN
+        field.x[mask] = _np.nan
+        field.y[mask] = _np.nan
+        field.z[mask] = _np.nan
 
     else:
         if issubclass(magnet.__class__, Prism):

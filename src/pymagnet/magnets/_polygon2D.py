@@ -1,7 +1,5 @@
-"""2D Polygon Magnet class
+"""2D Polygon Magnet class"""
 
-
-"""
 import numpy as _np
 
 from ..utils.global_const import MAG_TOL, PI
@@ -23,8 +21,8 @@ def _sheet_field(x, y, h, Kr=1):
     x = _np.asarray(x)
     y = _np.asarray(y)
     prefac = Kr / 4 / PI
-    Bx = prefac * _np.log((x ** 2 + (y - h) ** 2) / (x ** 2 + (y + h) ** 2))
-    By = 2 * prefac * _np.arctan2(2 * h * x, x ** 2 + y ** 2 - h ** 2)
+    Bx = prefac * _np.log((x**2 + (y - h) ** 2) / (x**2 + (y + h) ** 2))
+    By = 2 * prefac * _np.arctan2(2 * h * x, x**2 + y**2 - h**2)
     return Bx, By
 
 
@@ -48,7 +46,7 @@ class Polygon(object):
                 self.set_center()
         else:
             self.vertices = []
-            self.center = _np.NaN
+            self.center = _np.nan
 
     def append(self, vertex):
         """Appends vertex to list of vertices
@@ -58,7 +56,7 @@ class Polygon(object):
         """
         if len(vertex) != 2:
             print("Error")
-        if type(vertex) == tuple:
+        if type(vertex) is tuple:
             self.vertices.append(vertex)
         elif len(vertex) == 2:
             self.vertices.append(tuple(vertex))
@@ -77,8 +75,8 @@ class Polygon(object):
         # FIXME: This is not the correct method!!! It should be the weighted mean
         self.center = _np.mean(_np.asarray(self.vertices), axis=0)
 
+    @staticmethod
     def get_centroid_area(vertex_array):
-
         sumCx = 0
         sumCy = 0
         sumAc = 0
@@ -103,12 +101,14 @@ class Polygon(object):
 
     @staticmethod
     def gen_polygon(N=6, center=(0.0, 0.0), alpha=0.0, **kwargs):
-        """Generates regular polygon. One of apothem, side length or radius must be defined.
+        """Generates regular polygon. One of apothem, side length or radius must
+        be defined.
 
         Args:
             N (int, optional): Number of sides. Defaults to 6.
             center (tuple, optional): Polygon center. Defaults to (0.0, 0.0).
-            alpha (float, optional): Orientration with respect to x-axis. Defaults to 0.0.
+            alpha (float, optional): Orientration with respect to x-axis.
+            Defaults to 0.0.
 
         Raises:
             Exception: N must be > 2
@@ -180,10 +180,12 @@ class LineUtils(object):
         Args:
             vertex_1 (ndarray): vertex 1
             vertex_2 (ndarray): vertex 2
-            clockwise (bool, optional): Clockwise orientation of points. Defaults to True.
+            clockwise (bool, optional): Clockwise orientation of points.
+            Defaults to True.
 
         Returns:
-            tuple: normal vector (ndarray), length i.e. distance between vertices (float)
+            tuple: normal vector (ndarray), length i.e. distance between
+            vertices (float)
         """
 
         dx = vertex_1[0] - vertex_2[0]
@@ -336,9 +338,12 @@ class PolyMagnet(Magnet2D):
         """Init method
 
         NOTE:
-            * When creating a regular polygon, one of apothem, radius, or length must be defined as a kwarg or an exception will be raised.
-            * When creating a regular polygon, the number of sides `num_sides` must be at least 3 or an exception will be raised.
-            * When creating a custom polygon at least one vertex pair must be defined with `vertices` or an exception will be raised.
+            * When creating a regular polygon, one of apothem, radius, or length
+              must be defined as a kwarg or an exception will be raised.
+            * When creating a regular polygon, the number of sides `num_sides`
+            must be at least 3 or an exception will be raised.
+            * When creating a custom polygon at least one vertex pair must be
+            defined with `vertices` or an exception will be raised.
 
         Args:
             Jr (float): signed magnitude of remnant magnetisation
@@ -346,7 +351,8 @@ class PolyMagnet(Magnet2D):
         Kwargs:
             alpha (float): Not used
             theta (float): Orientation of magnet w.r.t x-axis of magnet
-            phi (float): Orientation of magnetisation w.r.t x-axis of magnet in degrees. Defaults to 90.0.
+            phi (float): Orientation of magnetisation w.r.t x-axis of magnet in degrees.
+            Defaults to 90.0.
             center (ndarray): magnet center (x, y). Defaults to (0.0, 0.0)
             length (float): side length if creating a regular polygon
             apothem (float): apothem (incircle radius) if creating a regular polygon
@@ -443,7 +449,8 @@ class PolyMagnet(Magnet2D):
         polygon
 
         Returns:
-            tuple: beta (ndarray), length (ndarray), centre (ndarray), K (ndarray) - sheet current density in tesla.
+            tuple: beta (ndarray), length (ndarray), centre (ndarray),
+            K (ndarray) - sheet current density in tesla.
         """
         area, norms, beta, length, center = LineUtils.signed_area2D(self.polygon)
         K = self.Jx * norms[:, 1] - self.Jy * norms[:, 0]

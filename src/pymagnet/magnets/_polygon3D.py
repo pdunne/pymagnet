@@ -5,7 +5,7 @@ import numpy as _np
 from numba import float64, vectorize
 from stl import mesh
 
-from ..utils._quaternion import Quaternion
+from ..utils._quaternion import Quaternion, q_angle_from_axis
 from ..utils._trigonometry3D import _rotate_triangle, norm_plane
 from ..utils.global_const import ALIGN_CUTOFF, FP_CUTOFF, MAG_TOL, PI
 from ._magnet3D import Magnet3D
@@ -317,7 +317,7 @@ class Mesh(Magnet3D):
         Btx, Bty, Btz = self._charge_sheet(triangle1[0], triangle1[1], Jr, x, y, z)
 
         # Rotate into local of RA2
-        rotate_about_z = Quaternion.q_angle_from_axis(PI, (0, 0, 1))
+        rotate_about_z = q_angle_from_axis(PI, (0, 0, 1))
         pos_vec_RA2 = Quaternion._prepare_vector(x - triangle1[0], y, z)
 
         x_local, y_local, z_local = rotate_about_z * pos_vec_RA2

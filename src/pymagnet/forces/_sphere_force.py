@@ -10,7 +10,6 @@ from ..utils.global_const import MU0, PI
 
 
 def _gen_sphere_grid(active_magnet, Jvec, num_samples=10, unit="mm"):
-
     NS = num_samples * 1j
     radius = active_magnet.get_size()
     # Jr = active_magnet.Jr
@@ -23,7 +22,7 @@ def _gen_sphere_grid(active_magnet, Jvec, num_samples=10, unit="mm"):
     # Jnorm = Jr * _np.cos(v)
 
     # Delete origin duplicates
-    # Jnorm = _np.delete(Jnorm, _np.arange(num_samples, Jnorm.size, num_samples)).ravel()
+    # Jnorm = _np.delete(Jnorm, _np.arange(num_samples, Jnorm.size, num_samples)).ravel()  # noqa: E501
 
     y = _np.delete(y, _np.arange(num_samples, x.size, num_samples))
     z = _np.delete(z, _np.arange(num_samples, x.size, num_samples))
@@ -57,7 +56,6 @@ def _calc_field_face_sphere(active_magnet, points):
 
 
 def calc_force_sphere(active_magnet, num_samples=200, unit="mm"):
-
     Jvec = active_magnet.get_Jr()
     # Jnorm = active_magnet.Jr
 
@@ -73,7 +71,6 @@ def calc_force_sphere(active_magnet, num_samples=200, unit="mm"):
         )
         > active_magnet.tol
     ):
-
         _, reverse_rotation = active_magnet._generate_rotation_quaternions()
         Jrot = reverse_rotation * Jvec
     else:
@@ -92,7 +89,7 @@ def calc_force_sphere(active_magnet, num_samples=200, unit="mm"):
     points.y += yc
     points.z += zc
 
-    area = 4 * PI * active_magnet.radius ** 2
+    area = 4 * PI * active_magnet.radius**2
 
     fields, torques = _calc_field_face_sphere(active_magnet, points)
     forces = Jn * fields
@@ -105,6 +102,7 @@ def calc_force_sphere(active_magnet, num_samples=200, unit="mm"):
     torque = _np.sum(torques, axis=1) * area / num_samples
 
     scaling_factor = get_unit_value_meter(points.get_unit())
+    assert scaling_factor is not None
     force /= MU0 / scaling_factor / scaling_factor
     torque /= MU0 / scaling_factor / scaling_factor / scaling_factor
     return force, torque

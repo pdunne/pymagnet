@@ -12,10 +12,13 @@ Example:
         import numpy as np
         import pymagnet as pm
         vector1 = np.array([1,0,0])
-        rotate_about_z = pm.magnets.Quaternion.q_angle_from_axis(np.pi/2, (0, 0, 1))
+        rotate_about_z = pm.magnets.q_angle_from_axis(np.pi/2, (0, 0, 1))
         vector2 = rotate_about_z * vector1
 
 """
+
+from typing import Self, Union
+
 import numpy as _np
 
 from ..utils.global_const import FP_CUTOFF, MAG_TOL
@@ -27,7 +30,13 @@ class Quaternion:
 
     """
 
-    def __init__(self, w=1.0, x=0.0, y=0.0, z=0.0):
+    def __init__(
+        self,
+        w: Union[_np.ndarray, float] = 1.0,
+        x: Union[_np.ndarray, float] = 0.0,
+        y: Union[_np.ndarray, float] = 0.0,
+        z: Union[_np.ndarray, float] = 0.0,
+    ):
         """Initialse a pure quaternion (1; 0, 0, 0)
 
         Args:
@@ -41,38 +50,13 @@ class Quaternion:
         self.y = _np.asarray(y)
         self.z = _np.asarray(z)
 
-    def q_angle_from_axis(theta, vec):
-        """Generates a rotation quaternion for an angle `theta` about an axis `vec`
-        This is a normailsed, i.e. unit quaternion.
-
-        Args:
-            theta (float): angle of rotation
-            vec (tuple/array): axis vector
-
-        Example:
-            90 degree rotation about the x axis:
-
-                rotation_quaternion = Quaternion.q_angle_from_axis(np.pi/2, (1, 0, 0) )
-
-        Returns:
-            Quaternion: rotation quaternion
-        """
-        vec = Quaternion._normalise_axis(vec)
-        w = _np.cos(theta / 2.0)
-        vec *= _np.sin(theta / 2.0)
-        x = vec[0]
-        y = vec[1]
-        z = vec[2]
-        rotation_quaternion = Quaternion(w, x, y, z)
-        return rotation_quaternion
-
-    def get_conjugate(self):
+    def get_conjugate(self) -> Self:
         """Returns quaternion conjugate
 
         Returns:
             quaternion: quaternion conjugate
         """
-        return Quaternion(self.w, -self.x, -self.y, -self.z)
+        return Quaternion(self.w, -self.x, -self.y, -self.z)  # type: ignore
 
     @staticmethod
     def gen_rotation_quaternion(alpha_rad=0.0, beta_rad=0.0, gamma_rad=0.0):
@@ -94,15 +78,15 @@ class Quaternion:
         forward_rotation = Quaternion()
 
         if _np.fabs(alpha_rad) > MAG_TOL:
-            rotate_about_z = Quaternion.q_angle_from_axis(alpha_rad, (0, 0, 1))
+            rotate_about_z = q_angle_from_axis(alpha_rad, (0, 0, 1))
 
         if _np.fabs(beta_rad) > MAG_TOL:
-            rotate_about_y = Quaternion.q_angle_from_axis(beta_rad, (0, 1, 0))
+            rotate_about_y = q_angle_from_axis(beta_rad, (0, 1, 0))
 
         if _np.fabs(gamma_rad) > MAG_TOL:
-            rotate_about_x = Quaternion.q_angle_from_axis(gamma_rad, (1, 0, 0))
+            rotate_about_x = q_angle_from_axis(gamma_rad, (1, 0, 0))
 
-        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
+        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y  # type: ignore
 
         return forward_rotation
 
@@ -244,6 +228,7 @@ class Quaternion:
             tuple: multiplied vector x', y', z'
         """
         q2 = Quaternion(_np.zeros_like(v[0]), v[0], v[1], v[2])
+        assert q2 is not None
         result = self * q2 * self.get_conjugate()
         return result.x, result.y, result.z
 
@@ -279,3 +264,29 @@ class Quaternion:
         ) * _np.sin(beta / 2) * _np.cos(gamma / 2)
 
         return Quaternion(qw, qx, qy, qz)
+
+
+def q_angle_from_axis(theta, vec) -> Quaternion:
+    """Generates a rotation quaternion for an angle `theta` about an axis `vec`
+    This is a normalised, i.e. unit quaternion.
+
+    Args:
+        theta (float): angle of rotation
+        vec (tuple/array): axis vector
+
+    Example:
+        90 degree rotation about the x axis:
+
+            rotation_quaternion = q_angle_from_axis(np.pi/2, (1, 0, 0) )
+
+    Returns:
+        Quaternion: rotation quaternion
+    """
+    vec = Quaternion._normalise_axis(vec)
+    w = _np.cos(theta / 2.0)
+    vec *= _np.sin(theta / 2.0)
+    x = vec[0]
+    y = vec[1]
+    z = vec[2]
+    rotation_quaternion = Quaternion(w, x, y, z)
+    return rotation_quaternion

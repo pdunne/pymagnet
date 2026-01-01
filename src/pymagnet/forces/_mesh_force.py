@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as _np
 from numba import njit
 
@@ -47,7 +49,7 @@ def triangle_area(triangle):
 
 
 # @guvectorize(["void(f8[:,:, :], f8[:])"], "(x, y, y)->(x)")
-@njit
+# @njit
 def get_area_triangles(triangles, area):
     """Computes the area for an array of triangles
 
@@ -64,19 +66,21 @@ def get_area_triangles(triangles, area):
         )
 
 
-@njit
-def _divide_triangle_centroid(triangle, depth=1, memo=_np.array(())):
+# @njit
+def _divide_triangle_centroid(triangle, depth=1, memo=None):
     """Recursively divides a triangle into 3 using the centroid
 
     Args:
         triangle (ndarray): (3,3) array of triangle vertices in 3D
         depth (int, optional): Number of recursions to do. Defaults to 1.
-        memo (ndarray, optional): Tracked array of generated vertices. Defaults to _np.array(()).
+        memo (ndarray, optional): Tracked array of generated vertices.
+        Defaults to None.
 
     Returns:
         ndarray: N*3*3 array of vertices. where N = 3**depth
     """
-
+    if memo is None:
+        memo = _np.array(())
     centroid = _np.array([0.0, 0.0, 0.0])
     trig_array = _np.zeros((3, 3, 3))
     centroid = get_centroid(triangle)
@@ -100,7 +104,7 @@ def _divide_triangle_centroid(triangle, depth=1, memo=_np.array(())):
     return memo
 
 
-@njit
+# @njit
 def get_midpoints(triangle):
     """Get midpoints of the faces of a triangle
 
@@ -116,18 +120,22 @@ def get_midpoints(triangle):
     return midpoints
 
 
-@njit
-def _divide_triangle_regular(triangle, depth=1, memo=_np.array(())):
+# @njit
+def _divide_triangle_regular(triangle, depth=1, memo: Optional[_np.ndarray] = None):
     """Recursively divides a triangle into 4 using the midpoint of each face.
 
     Args:
         triangle (ndarray): (3,3) array of triangle vertices in 3D
         depth (int, optional): Number of recursions to perform. Defaults to 1.
-        memo (ndarray, optional): Tracked array of generated vertices. Defaults to _np.array(()).
+        memo (ndarray, optional): Tracked array of generated vertices.
+        Defaults to None.
 
     Returns:
         ndarray: (N*3*3,) array of vertices, where N = 4**depth
     """
+    if memo is None:
+        memo = _np.array(())
+
     midpoints = get_midpoints(triangle)
     trig_array = _np.zeros((4, 3, 3))
     trig_array[0, 0, :] = triangle[0]
@@ -188,6 +196,7 @@ def divide_triangle_regular(triangle, depth=1):
         ndarray: (N,3,3) array of vertices, where N = 4**depth
     """
     mesh = _divide_triangle_regular(triangle, depth=depth)
+    assert mesh is not None
     mesh = mesh.reshape((mesh.shape[0] // 9, 3, 3))
     return mesh
 
@@ -250,6 +259,7 @@ def calc_force_mesh(active_magnet, depth=3, unit="mm"):
             torque += local_torque * -active_magnet.Jnorm[i] * area / num_sub_triangles
 
     scaling_factor = get_unit_value_meter(points.get_unit())
+    assert scaling_factor is not None
     force /= MU0 / scaling_factor / scaling_factor
     torque /= MU0 / scaling_factor / scaling_factor / scaling_factor
 

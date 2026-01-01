@@ -130,5 +130,5 @@ dmypy.json
 .pyre/
 
 conda_pkgs/
-
+notes/
 .vscode/

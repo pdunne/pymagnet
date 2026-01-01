@@ -3,7 +3,8 @@
 # Copyright 2021 Peter Dunne
 """pymagnets.utils
 
-This module imports the classes and functions in the private modules to create a public API, including:
+This module imports the classes and functions in the private modules to create
+a public API, including:
 
 - Quaternion()
 - Global Constants

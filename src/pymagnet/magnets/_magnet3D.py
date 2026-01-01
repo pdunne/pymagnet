@@ -18,7 +18,7 @@ from os import environ as _environ
 import numpy as _np
 from numba import float64, vectorize
 
-from ..utils._quaternion import Quaternion
+from ..utils._quaternion import Quaternion, q_angle_from_axis
 from ..utils.global_const import MAG_TOL, PI
 from ._magnet_base import Magnet
 
@@ -103,7 +103,6 @@ class Magnet3D(Magnet):
         return _np.array([self.alpha, self.beta, self.gamma])
 
     def _generate_rotation_quaternions(self):
-
         """Generates single rotation quaternion for all non-zero rotation angles,
         which are:
 
@@ -123,19 +122,19 @@ class Magnet3D(Magnet):
         forward_rotation, reverse_rotation = Quaternion(), Quaternion()
 
         if _np.fabs(self.alpha_rad) > 1e-4:
-            rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
+            rotate_about_z = q_angle_from_axis(self.alpha_rad, (0, 0, 1))
 
         if _np.fabs(self.beta_rad) > 1e-4:
-            rotate_about_y = Quaternion.q_angle_from_axis(self.beta_rad, (0, 1, 0))
+            rotate_about_y = q_angle_from_axis(self.beta_rad, (0, 1, 0))
 
         if _np.fabs(self.gamma_rad) > 1e-4:
-            rotate_about_x = Quaternion.q_angle_from_axis(self.gamma_rad, (1, 0, 0))
+            rotate_about_x = q_angle_from_axis(self.gamma_rad, (1, 0, 0))
 
         # Generate compound rotations
         # Order of rotation: beta  about y, alpha about z, gamma about x
-        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
+        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y  # type: ignore
 
-        reverse_rotation = forward_rotation.get_conjugate()
+        reverse_rotation = forward_rotation.get_conjugate()  # type: ignore
 
         return forward_rotation, reverse_rotation
 
@@ -171,16 +170,16 @@ class Magnet3D(Magnet):
             )
             > Magnet.tol
         ):
-
             forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
-
+            assert forward_rotation is not None
+            assert reverse_rotation is not None
             # Generate 3xN array for quaternion rotation
             pos_vec = Quaternion._prepare_vector(
                 x - self.center[0], y - self.center[1], z - self.center[2]
             )
-
+            assert pos_vec is not None
             # Rotate points
-            x_rot, y_rot, z_rot = forward_rotation * pos_vec
+            x_rot, y_rot, z_rot = forward_rotation * pos_vec  # type: ignore
 
             # Calls internal child method to calculate the field
             B_local = self._get_field_internal(x_rot, y_rot, z_rot)
@@ -390,7 +389,7 @@ class Prism(Magnet3D):
                     )
                 )
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     @staticmethod
@@ -420,7 +419,7 @@ class Prism(Magnet3D):
                     _np.sqrt(xa_sq + yb_sq + zc_sq) - c - z
                 )
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     def _get_field_internal(self, x, y, z):
@@ -491,7 +490,7 @@ class Prism(Magnet3D):
                 + self._F1(a, b, c, x, -y, -z)
             )
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     def _calcBy_prism_x(self, a, b, c, Jr, x, y, z):
@@ -519,7 +518,7 @@ class Prism(Magnet3D):
             )
             data *= Jr / (4 * PI)
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     def _calcBz_prism_x(self, a, b, c, Jr, x, y, z):
@@ -549,7 +548,7 @@ class Prism(Magnet3D):
                 )
             data *= Jr / (4 * PI)
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     def _calcB_prism_x(self, x, y, z):
@@ -781,7 +780,7 @@ class Cylinder(Magnet3D):
             float/ndarray: result of computing complete elliptic integral
         """
         if kc == 0:
-            data = _np.NaN
+            data = _np.nan
             return data
         else:
             errtol = 0.000001

@@ -5,10 +5,11 @@
 """Contains functions needed to rotate and translate a triangle to lie in the xz plane
 and to divide it into two right angled triangles
 """
+
 import numpy as _np
 from numba import jit
 
-from ._quaternion import Quaternion
+from ._quaternion import Quaternion, q_angle_from_axis
 from .global_const import ALIGN_CUTOFF, PI
 
 
@@ -108,8 +109,8 @@ def _largest_side_RA(triangle):
     left_side = sides[(longest_side + 1) % 3, 1]
     right_side = sides[(longest_side - 1) % 3, 1]
 
-    p = _np.sqrt(left_side ** 2 - alt_side ** 2)
-    q = _np.sqrt(right_side ** 2 - alt_side ** 2)
+    p = _np.sqrt(left_side**2 - alt_side**2)
+    q = _np.sqrt(right_side**2 - alt_side**2)
 
     RA_triangle1 = _np.array([p, alt_side])
     RA_triangle2 = _np.array([q, alt_side])
@@ -203,7 +204,6 @@ def align_triangle_to_y(triangle, rot_axis, norm_vec):
     y_axis = _np.array([0, 1, 0])
 
     if _np.linalg.norm(rot_axis) < ALIGN_CUTOFF:
-
         # Check if parallel or anti-parallel
         if check_sign(y_axis, norm_vec):
             # Parallel
@@ -212,12 +212,12 @@ def align_triangle_to_y(triangle, rot_axis, norm_vec):
 
         else:
             # Anti-parallel
-            first_rotation = Quaternion.q_angle_from_axis(PI, y_axis)
+            first_rotation = q_angle_from_axis(PI, y_axis)
             aligned_triangle = rotate_points(triangle, first_rotation)
 
     else:
         angle = -_np.arccos(_np.dot(y_axis, norm_vec))
-        first_rotation = Quaternion.q_angle_from_axis(angle, rot_axis)
+        first_rotation = q_angle_from_axis(angle, rot_axis)
         aligned_triangle = rotate_points(triangle, first_rotation)
     return aligned_triangle, first_rotation
 
@@ -245,7 +245,6 @@ def align_triangle_xz(triangle, longest_side):
 
     # Check aligment of base of triangle with x-axis
     if _np.linalg.norm(rot_axis) < ALIGN_CUTOFF:
-
         # Check if parallel or anti-parallel
         if check_sign(x_axis, vec_x):
             # Parallel
@@ -253,12 +252,12 @@ def align_triangle_xz(triangle, longest_side):
             tri_x = triangle
         else:
             # Anti-parallel
-            second_rotation = Quaternion.q_angle_from_axis(PI, y_axis)
+            second_rotation = q_angle_from_axis(PI, y_axis)
             tri_x = rotate_points(triangle, second_rotation)
 
     else:
         angle = -_np.arccos(_np.dot(x_axis, vec_x))
-        second_rotation = Quaternion.q_angle_from_axis(angle, rot_axis)
+        second_rotation = q_angle_from_axis(angle, rot_axis)
         tri_x = rotate_points(triangle, second_rotation)
 
     vec_z = return_z_vector(tri_x, longest_side)
@@ -266,18 +265,17 @@ def align_triangle_xz(triangle, longest_side):
 
     # Check aligment of triangle altitude with z-axis
     if _np.all(_np.fabs([rot_axis]) < ALIGN_CUTOFF):
-
         # Check if parallel anti-parallel
         if check_sign(z_axis, vec_z):
             # Parallel
             third_rotation = Quaternion()
         else:
             # Anti-parallel
-            third_rotation = Quaternion.q_angle_from_axis(PI, y_axis)
+            third_rotation = q_angle_from_axis(PI, y_axis)
 
     else:
         angle = -_np.arccos(_np.dot(z_axis, vec_z))
-        third_rotation = Quaternion.q_angle_from_axis(angle, rot_axis)
+        third_rotation = q_angle_from_axis(angle, rot_axis)
 
     return second_rotation, third_rotation
 

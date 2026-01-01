@@ -2,16 +2,16 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-"""Plotting routines for calculating along symmetry lines of cubes, cuboids, and cylinders
+"""Plotting routines for calculating along symmetry lines of cubes, cuboids,
+and cylinders"""
 
-"""
 import warnings
 
 try:
     import matplotlib.pyplot as _plt
 except ImportError:
     _has_matplotlib = False
-    warnings.warn("Matplotlib is not installed", UserWarning)
+    warnings.warn("Matplotlib is not installed", UserWarning, stacklevel=2)
 
 else:
     _has_matplotlib = True
@@ -33,13 +33,15 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
     of a cylinder or cuboid magnet, assuming the magnetic field is collinear
 
     Args:
-        magnet (Magnet3D): Must be a Magnet3D type of magnet, either Prism, Cube,or Cylinder.
+        magnet (Magnet3D): Must be a Magnet3D type of magnet, either Prism,
+        Cube, or Cylinder.
 
     Kwargs:
         num_points (int): Number of points to calculate. Defaults to 101.
 
     Returns:
-        tuple: Point_Array1, Field1: point array struct containing z and the unit (e/g. 'mm'), vector array containing Bz and the field unit (e.g. 'T').
+        tuple: Point_Array1, Field1: point array struct containing z and the
+        unit (e/g. 'mm'), vector array containing Bz and the field unit (e.g. 'T').
     """
     if not _has_matplotlib:
         raise ImportError("matplotlib is required to use this plot function.")
@@ -56,11 +58,11 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
             num_points,
         )
         field = magnetic_field_cylinder_1D(magnet, points.z)
-
+        assert field is not None
         # if true, apply NaNs to inside the magnet
         if magnet._mask_magnet:
             mask = _generate_mask_1D(mag_boundary, magnet.center[2], points.z)
-            field.z[mask] = _np.NaN
+            field.z[mask] = _np.nan
 
     elif issubclass(magnet.__class__, Prism):
         mag_boundary = magnet.height / 2
@@ -70,11 +72,11 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
             num_points,
         )
         field = magnetic_field_prism_1D(magnet, points.z)
-
+        assert field is not None
         # if true, apply NaNs to inside the magnet
         if magnet._mask_magnet:
             mask = _generate_mask_1D(mag_boundary, magnet.center[2], points.z)
-            field.z[mask] = _np.NaN
+            field.z[mask] = _np.nan
 
     else:
         print("Error")

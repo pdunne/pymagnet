@@ -2,8 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-"""Routines for Two Dimensional Magnet Classes
-"""
+"""Routines for Two Dimensional Magnet Classes"""
+
 import numpy as _np
 
 from ._vector_structs import Field2, Point_Array2
@@ -24,7 +24,8 @@ def grid2D(xmax, ymax, **kwargs):
         unit (str): unit length. Defaults to 'mm'
 
     Returns:
-        Point_Array2: array of x and y values of shape (num_points, num_points) and associated unit
+        Point_Array2: array of x and y values of shape (num_points, num_points)
+        and associated unit
     """
     num_points = kwargs.pop("num_points", 100)
     xmin = kwargs.pop("xmin", -1 * xmax)
@@ -40,7 +41,8 @@ def get_field_2D(Point_Array2):
     `Magnet2D` magnet.
 
     Args:
-        Point_Array2 (Point_Array2): array of x,y points and associated unit, defaults to 'mm'
+        Point_Array2 (Point_Array2): array of x,y points and associated unit,
+        defaults to 'mm'
 
     Returns:
         Field2: array of Bx,By,|B| values and associated unit (defaults to 'T')
