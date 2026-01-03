@@ -26,7 +26,7 @@ def _sheet_field(x, y, h, Kr=1):
     return Bx, By
 
 
-class Polygon(object):
+class Polygon:
     """Polygon class for generating list of vertices"""
 
     def __init__(self, **kwargs):
@@ -170,7 +170,7 @@ class Polygon(object):
             raise Exception("Error, one of apothem, length, or radius must be defined.")
 
 
-class LineUtils(object):
+class LineUtils:
     """Utility class consisting of rountines for 2D line elements"""
 
     @staticmethod
@@ -255,7 +255,7 @@ class LineUtils(object):
         return area / 2.0, norm, beta, length, center
 
 
-class Line(object):
+class Line:
     """Line Class for storing properties of a sheet manget"""
 
     def __init__(self, length, center, beta, K):

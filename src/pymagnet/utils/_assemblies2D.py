@@ -143,7 +143,7 @@ def radial_profile(data, center):
         [type]: [description]
     """
     # Generate a grid of index points depending on the shape of the data
-    y, x = _np.indices((data.shape))
+    y, x = _np.indices(data.shape)
 
     # Generate a radial function in units of index
     r = _np.sqrt(_np.power(x - center[0], 2) + _np.power(y - center[1], 2))

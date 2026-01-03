@@ -33,7 +33,7 @@ from ..utils import Field2, Point_Array2
 # from .. import magnets as _mag
 
 
-class patch(object):
+class patch:
     """Encodes magnet dimensions for drawing on plots"""
 
     def __init__(self, x, y, width, height, transform, type):
@@ -61,7 +61,7 @@ class patch(object):
         return f"(x: {self.x}, y: {self.y} w:{self.width}, h: {self.height})"
 
 
-class arrow(object):
+class arrow:
     """Encodes magnetisation vector for drawing on plots"""
 
     def __init__(self, x, y, dx, dy, transform, width=3):
@@ -97,7 +97,7 @@ class arrow(object):
         )
 
 
-class magnet_patch(object):
+class magnet_patch:
     """Magnet drawing class"""
 
     def __init__(self, patch, arrow) -> None:

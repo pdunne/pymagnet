@@ -215,10 +215,7 @@ def _allocate_field_array3(x, y, z):
     z = _np.atleast_1d(z)
 
     # Determine array shape:
-    if _np.ndim(x) == 3:  # Volume meshgrid
-        B = Field3(_np.zeros_like(x), _np.zeros_like(x), _np.zeros_like(x))
-
-    elif _np.ndim(x) == 2:  # planar slice
+    if _np.ndim(x) == 3 or _np.ndim(x) == 2:  # Volume meshgrid
         B = Field3(_np.zeros_like(x), _np.zeros_like(x), _np.zeros_like(x))
 
     elif _np.ndim(y) == 2:  # planar slice

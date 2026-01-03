@@ -82,8 +82,8 @@ target/
 profile_default/
 ipython_config.py
 
-# pyenv
-.python-version
+# pyenv (commented out - UV uses .python-version)
+# .python-version
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
@@ -128,6 +128,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# UV
+uv.lock
+
+# Ruff
+.ruff_cache/
 
 conda_pkgs/
 notes/

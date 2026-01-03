@@ -17,7 +17,7 @@ Example:
 
 """
 
-from typing import Self, Union
+from typing import Self
 
 import numpy as _np
 
@@ -32,10 +32,10 @@ class Quaternion:
 
     def __init__(
         self,
-        w: Union[_np.ndarray, float] = 1.0,
-        x: Union[_np.ndarray, float] = 0.0,
-        y: Union[_np.ndarray, float] = 0.0,
-        z: Union[_np.ndarray, float] = 0.0,
+        w: _np.ndarray | float = 1.0,
+        x: _np.ndarray | float = 0.0,
+        y: _np.ndarray | float = 0.0,
+        z: _np.ndarray | float = 0.0,
     ):
         """Initialse a pure quaternion (1; 0, 0, 0)
 

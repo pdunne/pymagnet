@@ -2,13 +2,4 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-"""Unit and Integration Tests
-
-TODO:
-    - All tests need to be updated and expanded to reflect the new API.
-"""
-from pymagnet import __version__
-
-
-def test_version():
-    assert __version__ == "0.5.0"
+"""Numerical stability and edge case tests for pymagnet package."""

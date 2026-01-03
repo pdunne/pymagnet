@@ -1,4 +1,3 @@
-from typing import Optional
 
 import numpy as _np
 from numba import njit
@@ -121,7 +120,7 @@ def get_midpoints(triangle):
 
 
 # @njit
-def _divide_triangle_regular(triangle, depth=1, memo: Optional[_np.ndarray] = None):
+def _divide_triangle_regular(triangle, depth=1, memo: _np.ndarray | None = None):
     """Recursively divides a triangle into 4 using the midpoint of each face.
 
     Args:

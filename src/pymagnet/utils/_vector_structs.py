@@ -14,7 +14,7 @@ from ._quaternion import Quaternion
 
 
 # from pymagnet.utils.global_const import PI_2, PI_4
-class Point_Array1(object):
+class Point_Array1:
     """1D point structure
     This is used to contain one position array (z), and the units
     ('mm', 'cm', etc)
@@ -80,7 +80,7 @@ class Point_Array1(object):
                 magnet.length = magnet.length * scale_val
 
 
-class Point_Array2(object):
+class Point_Array2:
     """2D point structure
     This is used to contain two position arrays (x, y), and the units
     ('mm', 'cm', etc)
