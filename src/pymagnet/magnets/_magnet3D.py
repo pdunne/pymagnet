@@ -713,9 +713,6 @@ class Cylinder(Magnet3D):
         self.radius = radius
         self.length = length
 
-        self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
-        self.center = _np.asarray(self.center)
-
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
@@ -963,9 +960,6 @@ class Sphere(Magnet3D):
             print("Warning, the magnetisation of a sphere is always in z.")
             print("Do not use phi or theta.")
             print("To rotate the magnetisation, use alpha, beta and gamma")
-
-        self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
-        self.center = _np.asarray(self.center)
 
     def __str__(self):
         str = (

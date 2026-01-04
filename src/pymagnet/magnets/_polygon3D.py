@@ -2,11 +2,23 @@ from math import atan2, fabs, log, sqrt
 from os import environ as _environ
 
 import numpy as _np
-from numba import float64, vectorize
+from numba import float64, njit, prange, vectorize
 from stl import mesh
 
 from ..utils._quaternion import Quaternion, q_angle_from_axis
-from ..utils._trigonometry3D import _rotate_triangle, norm_plane
+from ..utils._quaternion_numba import (
+    quat_conjugate,
+    quat_from_axis_angle,
+    quat_rotate_vector,
+)
+from ..utils._trigonometry3D import (
+    _rotate_triangle,
+    _rotate_triangle_njit,
+    norm_plane,
+    norm_plane_njit,
+    rotate_vector_by_quat_inverse_njit,
+    rotate_vector_by_quat_njit,
+)
 from ..utils.global_const import ALIGN_CUTOFF, FP_CUTOFF, MAG_TOL, PI
 from ._magnet3D import Magnet3D
 
@@ -121,7 +133,7 @@ class Mesh(Magnet3D):
         """
         return self.center
 
-    def get_field(self, x, y, z):
+    def get_field(self, x, y, z, parallel=False):
         """Calculates the magnetic field at point(s) x,y,z due to a 3D magnet
         The calculations are always performed in local coordinates with the centre of the magnet at origin and z magnetisation pointing along the local z' axis.
 
@@ -131,13 +143,103 @@ class Mesh(Magnet3D):
             x (float/array): x co-ordinates
             y (float/array): y co-ordinates
             z (float/array): z co-ordinates
+            parallel (bool): If True, use parallel numba implementation
 
         Returns:
             tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector
         """
-        B = self._get_field_internal(x, y, z)
+        if parallel:
+            B = self._get_field_parallel(x, y, z)
+        else:
+            B = self._get_field_internal(x, y, z)
 
         return B.x, B.y, B.z
+
+    def _get_field_parallel(self, x, y, z):
+        """Parallel magnetic field calculation using numba.
+
+        Uses numba's prange for parallel processing across triangles.
+
+        Args:
+            x (float/array): x co-ordinates
+            y (float/array): y co-ordinates
+            z (float/array): z co-ordinates
+
+        Returns:
+            Field3: Magnetic field array
+        """
+        from ..utils._routines3D import _allocate_field_array3
+
+        B = _allocate_field_array3(x, y, z)
+        vec_shape = B.x.shape
+
+        # Flatten arrays for numba processing
+        x_flat = _np.asarray(x).ravel().astype(_np.float64)
+        y_flat = _np.asarray(y).ravel().astype(_np.float64)
+        z_flat = _np.asarray(z).ravel().astype(_np.float64)
+
+        # Ensure mesh_vectors is contiguous float64
+        mesh_vectors = _np.ascontiguousarray(self.mesh_vectors, dtype=_np.float64)
+        Jnorm = _np.ascontiguousarray(self.Jnorm, dtype=_np.float64)
+
+        # Call parallel numba function
+        Bx, By, Bz = _get_field_parallel_njit(
+            mesh_vectors, Jnorm, self.Jr, x_flat, y_flat, z_flat
+        )
+
+        # Handle non-finite values
+        Bx[~_np.isfinite(Bx)] = 0.0
+        By[~_np.isfinite(By)] = 0.0
+        Bz[~_np.isfinite(Bz)] = 0.0
+
+        # Reshape and assign
+        B.x = Bx.reshape(vec_shape)
+        B.y = By.reshape(vec_shape)
+        B.z = Bz.reshape(vec_shape)
+        B.n = _np.linalg.norm([B.x, B.y, B.z], axis=0)
+
+        return B
+
+    def _get_field_serial_fast(self, x, y, z):
+        """Serial but numba-optimized magnetic field calculation.
+
+        Uses the numba-compiled functions but processes triangles serially.
+        Useful for comparison with parallel version.
+
+        Args:
+            x (float/array): x co-ordinates
+            y (float/array): y co-ordinates
+            z (float/array): z co-ordinates
+
+        Returns:
+            Field3: Magnetic field array
+        """
+        from ..utils._routines3D import _allocate_field_array3
+
+        B = _allocate_field_array3(x, y, z)
+        vec_shape = B.x.shape
+
+        x_flat = _np.asarray(x).ravel().astype(_np.float64)
+        y_flat = _np.asarray(y).ravel().astype(_np.float64)
+        z_flat = _np.asarray(z).ravel().astype(_np.float64)
+
+        mesh_vectors = _np.ascontiguousarray(self.mesh_vectors, dtype=_np.float64)
+        Jnorm = _np.ascontiguousarray(self.Jnorm, dtype=_np.float64)
+
+        Bx, By, Bz = _get_field_serial_njit(
+            mesh_vectors, Jnorm, self.Jr, x_flat, y_flat, z_flat
+        )
+
+        Bx[~_np.isfinite(Bx)] = 0.0
+        By[~_np.isfinite(By)] = 0.0
+        Bz[~_np.isfinite(Bz)] = 0.0
+
+        B.x = Bx.reshape(vec_shape)
+        B.y = By.reshape(vec_shape)
+        B.z = Bz.reshape(vec_shape)
+        B.n = _np.linalg.norm([B.x, B.y, B.z], axis=0)
+
+        return B
 
     def get_force_torque(self, depth=4, unit="mm"):
         """Calculates the force and torque on a prism magnet due to all other magnets.
@@ -551,3 +653,366 @@ def _charge_sheet_y(a, b, sigma, x, y, z):
         By = 0.0
 
     return By
+
+
+# =============================================================================
+# Numba-compatible charge sheet functions for parallel processing
+# =============================================================================
+
+
+@njit(cache=True)
+def _charge_sheet_x_scalar(a, b, sigma, x, y, z):
+    """Scalar version of charge sheet x-component (numba-compatible)."""
+    S_ab = 1.0 / _np.sqrt(a * a + b * b)
+
+    r1 = _np.sqrt(x * x + y * y + z * z)
+
+    ax = a - x
+    bz = b - z
+
+    r2 = _np.sqrt(ax * ax + y * y + bz * bz)
+    r3 = _np.sqrt(ax * ax + y * y + z * z)
+    t1_log = r1 - (a * x + b * z) * S_ab
+    t2_log = r2 + (a * ax + b * bz) * S_ab
+
+    if _np.fabs(t1_log) > FP_CUTOFF:
+        t1 = _np.log(t1_log)
+    else:
+        t1 = 0.0
+
+    if _np.fabs(t2_log) > FP_CUTOFF:
+        t2 = _np.log(t2_log)
+    else:
+        t2 = 0.0
+
+    dt = t1 - t2
+    Bx = b * S_ab * dt
+
+    r3_minus_z = r3 - z
+    r2_plus_bz = r2 + bz
+
+    if _np.fabs(r3_minus_z) > 0.0:
+        r2_over_r3 = r2_plus_bz / r3_minus_z
+        if _np.fabs(r2_over_r3) > FP_CUTOFF:
+            Bx += _np.log(r2_plus_bz / r3_minus_z)
+
+    Bx *= sigma / PI / 4.0
+
+    return Bx
+
+
+@njit(cache=True)
+def _charge_sheet_y_scalar(a, b, sigma, x, y, z):
+    """Scalar version of charge sheet y-component (numba-compatible)."""
+    if _np.fabs(y) > FP_CUTOFF:
+        a_ab = _np.sqrt(1.0 + b * b / (a * a))
+        r1 = _np.sqrt(x * x + y * y + z * z)
+
+        ax = a - x
+        r3 = _np.sqrt(ax * ax + y * y + z * z)
+
+        g = b / a
+        si_alpha = 1.0 / (a_ab * a_ab)
+
+        beta = -(x + z * g) * si_alpha
+        gamma_sq = (r1 * r1 * si_alpha) - (beta * beta)
+        if gamma_sq > 0.0:
+            gamma = _np.sqrt(gamma_sq)
+        else:
+            gamma = 0.0
+
+        A = -gamma * g
+        B = gamma * a_ab
+        C = z + beta * g
+        ABC_diff = B * B - A * A - C * C
+
+        if _np.fabs(gamma) > 0.0:
+            t3 = (a + beta) / gamma
+            t4 = beta / gamma
+        else:
+            t3 = 0.0
+            t4 = 0.0
+
+        if ABC_diff > 0.0:
+            t1 = _np.sqrt(ABC_diff)
+            t2 = 1.0 / t1
+        else:
+            t1 = 0.0
+            t2 = 0.0
+
+        atan_1 = t2 * (C + (A + B) * (_np.sqrt(1.0 + t3 * t3) + t3))
+        atan_2 = t2 * (C + (A + B) * (_np.sqrt(1.0 + t4 * t4) + t4))
+        atan_y = atan_1 - atan_2
+        atan_x = 1.0 + atan_1 * atan_2
+
+        a_ab_t1 = a_ab * t1
+
+        if _np.fabs(atan_y) < FP_CUTOFF and _np.fabs(atan_x) < FP_CUTOFF:
+            By = 0.0
+        elif a_ab_t1 > FP_CUTOFF:
+            By = (y / a_ab_t1) * _np.arctan2(atan_y, atan_x)
+        else:
+            By = 0.0
+
+        t2 = 1.0 / y
+        atan_1 = t2 * (r3 + z + (x - a))
+        atan_2 = t2 * (r1 + z + x)
+        atan_y = atan_1 - atan_2
+        atan_x = 1.0 + atan_1 * atan_2
+
+        if _np.fabs(atan_y) < FP_CUTOFF and _np.fabs(atan_x) < FP_CUTOFF:
+            By = 0.0
+        else:
+            By = By + _np.arctan2(atan_y, atan_x)
+
+        By = sigma * By / PI / 2.0
+    else:
+        By = 0.0
+
+    return By
+
+
+@njit(cache=True)
+def _charge_sheet_z_scalar(a, b, sigma, x, y, z):
+    """Scalar version of charge sheet z-component (numba-compatible)."""
+    S_ab = 1.0 / _np.sqrt(a * a + b * b)
+
+    r1 = _np.sqrt(x * x + y * y + z * z)
+
+    ax = a - x
+    bz = b - z
+
+    r2 = _np.sqrt(ax * ax + y * y + bz * bz)
+    r3 = _np.sqrt(ax * ax + y * y + z * z)
+
+    t1_log = r1 - (a * x + b * z) * S_ab
+    t2_log = r2 + (a * ax + b * bz) * S_ab
+
+    if _np.fabs(t1_log) > FP_CUTOFF:
+        t1 = _np.log(t1_log)
+    else:
+        t1 = 0.0
+
+    if _np.fabs(t2_log) > FP_CUTOFF:
+        t2 = _np.log(t2_log)
+    else:
+        t2 = 0.0
+
+    Bz = a * S_ab * (t2 - t1)
+
+    r3_plus_ax = r3 + ax
+    r1_minus_x = r1 - x
+
+    if _np.fabs(r3_plus_ax) > 0.0:
+        r1_over_r3 = r1_minus_x / r3_plus_ax
+        if _np.fabs(r1_over_r3) > FP_CUTOFF:
+            Bz += _np.log(r1_over_r3)
+
+    Bz *= sigma / PI / 4.0
+
+    return Bz
+
+
+@njit(cache=True)
+def _charge_sheet_njit(a, b, sigma, x, y, z):
+    """Compute all three components of charge sheet field for arrays.
+
+    Args:
+        a (float): triangle base
+        b (float): triangle altitude
+        sigma (float): charge density (Jr)
+        x, y, z (ndarray): coordinate arrays (1D)
+
+    Returns:
+        tuple: (Bx, By, Bz) arrays
+    """
+    n = x.size
+    Bx = _np.empty(n)
+    By = _np.empty(n)
+    Bz = _np.empty(n)
+
+    for i in range(n):
+        Bx[i] = _charge_sheet_x_scalar(a, b, sigma, x[i], y[i], z[i])
+        By[i] = _charge_sheet_y_scalar(a, b, sigma, x[i], y[i], z[i])
+        Bz[i] = _charge_sheet_z_scalar(a, b, sigma, x[i], y[i], z[i])
+
+    return Bx, By, Bz
+
+
+# Pre-computed rotation quaternion for 180° about z-axis
+_ROTATE_Z_PI = _np.array([0.0, 0.0, 0.0, 1.0])  # [cos(π/2), 0, 0, sin(π/2)]
+
+
+@njit(cache=True)
+def _calcB_2_triangles_njit(triangle1, triangle2, Jr, x, y, z):
+    """Calculate field from two right-angled triangles (numba-compatible).
+
+    Args:
+        triangle1 (ndarray): (2,) [base, altitude] of first RA triangle
+        triangle2 (ndarray): (2,) [base, altitude] of second RA triangle
+        Jr (float): normal magnetization component
+        x, y, z (ndarray): coordinate arrays
+
+    Returns:
+        tuple: (Bx, By, Bz) field arrays
+    """
+    n = x.size
+
+    # Calculate field from first right-angled triangle
+    Btx, Bty, Btz = _charge_sheet_njit(triangle1[0], triangle1[1], Jr, x, y, z)
+
+    # Rotate coordinates into local frame of second triangle (180° about z)
+    # For 180° rotation about z: x' = -x, y' = -y, z' = z
+    x_offset = x - triangle1[0]
+    x_local = -x_offset
+    y_local = -y
+    z_local = z.copy()
+
+    # Calculate field from second right-angled triangle
+    Btx2, Bty2, Btz2 = _charge_sheet_njit(
+        triangle2[0], triangle2[1], Jr, x_local + triangle2[0], y_local, z_local
+    )
+
+    # Inverse rotation of field (180° about z): Bx' = -Bx, By' = -By, Bz' = Bz
+    Btx2_rot = -Btx2
+    Bty2_rot = -Bty2
+    Btz2_rot = Btz2
+
+    # Sum contributions
+    Bx_out = Btx + Btx2_rot
+    By_out = Bty + Bty2_rot
+    Bz_out = Btz + Btz2_rot
+
+    return Bx_out, By_out, Bz_out
+
+
+@njit(cache=True)
+def _calcB_triangle_njit(triangle, Jr, x_flat, y_flat, z_flat):
+    """Calculate magnetic field from a single triangle (numba-compatible).
+
+    Args:
+        triangle (ndarray): (3, 3) triangle vertices
+        Jr (float): normal magnetization component
+        x_flat, y_flat, z_flat (ndarray): flattened coordinate arrays
+
+    Returns:
+        tuple: (Bx, By, Bz) field arrays
+    """
+    # Rotate triangle to standard orientation
+    total_rotation, rotated_triangle, offset, RA_triangle1, RA_triangle2 = (
+        _rotate_triangle_njit(triangle)
+    )
+
+    # Rotate coordinate points
+    x_rot, y_rot, z_rot = rotate_vector_by_quat_njit(
+        total_rotation, x_flat, y_flat, z_flat
+    )
+
+    # Get triangle normal
+    norm1 = norm_plane_njit(triangle)
+
+    # Check if we need to swap triangles (anti-parallel to -y with negative Jr)
+    if (
+        _np.fabs(norm1[0]) < ALIGN_CUTOFF
+        and norm1[1] < -0.99
+        and _np.fabs(norm1[2]) < ALIGN_CUTOFF
+        and Jr < 0
+    ):
+        RA_triangle1, RA_triangle2 = RA_triangle2, RA_triangle1
+
+    # Calculate field in rotated frame
+    Btx, Bty, Btz = _calcB_2_triangles_njit(
+        RA_triangle1,
+        RA_triangle2,
+        Jr,
+        x_rot - offset[0],
+        y_rot - offset[1],
+        z_rot - offset[2],
+    )
+
+    # Rotate field back to global frame (inverse rotation)
+    Bx, By, Bz = rotate_vector_by_quat_inverse_njit(total_rotation, Btx, Bty, Btz)
+
+    return Bx, By, Bz
+
+
+@njit(parallel=True, cache=True)
+def _get_field_parallel_njit(
+    mesh_vectors, Jnorm, Jr, x_flat, y_flat, z_flat, threshold=1e-4
+):
+    """Calculate magnetic field from all triangles in parallel.
+
+    Args:
+        mesh_vectors (ndarray): (N, 3, 3) array of triangle vertices
+        Jnorm (ndarray): (N,) normal magnetization for each triangle
+        Jr (float): remnant magnetization magnitude
+        x_flat, y_flat, z_flat (ndarray): flattened coordinate arrays
+        threshold (float): minimum |Jnorm/Jr| to include triangle
+
+    Returns:
+        tuple: (Bx, By, Bz) total field arrays
+    """
+    n_triangles = mesh_vectors.shape[0]
+    n_points = x_flat.size
+
+    # Allocate output arrays
+    Bx_total = _np.zeros(n_points)
+    By_total = _np.zeros(n_points)
+    Bz_total = _np.zeros(n_points)
+
+    # Allocate thread-local storage for parallel reduction
+    # Each thread accumulates to its own array, then we sum at the end
+    Bx_local = _np.zeros(n_points)
+    By_local = _np.zeros(n_points)
+    Bz_local = _np.zeros(n_points)
+
+    # Process triangles in parallel
+    for i in prange(n_triangles):
+        if _np.fabs(Jnorm[i] / Jr) > threshold:
+            Btx, Bty, Btz = _calcB_triangle_njit(
+                mesh_vectors[i], Jnorm[i], x_flat, y_flat, z_flat
+            )
+
+            # Accumulate (thread-safe for prange with reduction)
+            for j in range(n_points):
+                Bx_total[j] += Btx[j]
+                By_total[j] += Bty[j]
+                Bz_total[j] += Btz[j]
+
+    return Bx_total, By_total, Bz_total
+
+
+@njit(cache=True)
+def _get_field_serial_njit(
+    mesh_vectors, Jnorm, Jr, x_flat, y_flat, z_flat, threshold=1e-4
+):
+    """Calculate magnetic field from all triangles serially (for comparison).
+
+    Args:
+        mesh_vectors (ndarray): (N, 3, 3) array of triangle vertices
+        Jnorm (ndarray): (N,) normal magnetization for each triangle
+        Jr (float): remnant magnetization magnitude
+        x_flat, y_flat, z_flat (ndarray): flattened coordinate arrays
+        threshold (float): minimum |Jnorm/Jr| to include triangle
+
+    Returns:
+        tuple: (Bx, By, Bz) total field arrays
+    """
+    n_triangles = mesh_vectors.shape[0]
+    n_points = x_flat.size
+
+    Bx_total = _np.zeros(n_points)
+    By_total = _np.zeros(n_points)
+    Bz_total = _np.zeros(n_points)
+
+    for i in range(n_triangles):
+        if _np.fabs(Jnorm[i] / Jr) > threshold:
+            Btx, Bty, Btz = _calcB_triangle_njit(
+                mesh_vectors[i], Jnorm[i], x_flat, y_flat, z_flat
+            )
+
+            Bx_total += Btx
+            By_total += Bty
+            Bz_total += Btz
+
+    return Bx_total, By_total, Bz_total
