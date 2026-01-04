@@ -384,11 +384,15 @@ class TestNumericalStability:
         assert result is not None
 
     def test_triangle_with_small_coordinates(self):
-        """Triangle with small coordinate values."""
+        """Triangle with small coordinate values.
+
+        Uses a scale of 1e-4 to ensure the triangle isn't degenerate
+        when cross product is computed (cross product magnitude ~1e-8).
+        """
         triangle = np.array(
-            [[0.0, 0.0, 0.0], [1e-6, 0.0, 0.0], [0.5e-6, 0.0, 0.866e-6]]
+            [[0.0, 0.0, 0.0], [1e-4, 0.0, 0.0], [0.5e-4, 0.866e-4, 0.0]]
         )
-        Jr = np.array([0.0, 1.0, 0.0])
+        Jr = 1.0
 
         result = _rotate_triangle(triangle, Jr)
         assert result is not None

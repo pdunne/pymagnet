@@ -12,6 +12,29 @@ from numba import jit
 from ._quaternion import Quaternion, q_angle_from_axis
 from .global_const import ALIGN_CUTOFF, PI
 
+# Module-level constants to avoid repeated array creation
+_X_AXIS = _np.array([1.0, 0.0, 0.0])
+_Y_AXIS = _np.array([0.0, 1.0, 0.0])
+_Z_AXIS = _np.array([0.0, 0.0, 1.0])
+
+# Vertex pair indices for each edge: edge 0 = v0→v1, edge 1 = v1→v2, edge 2 = v0→v2
+_EDGE_VERTICES = ((0, 1), (1, 2), (0, 2))
+
+# Opposite vertex for each edge
+_OPPOSITE_VERTEX = {0: 2, 1: 0, 2: 1}
+
+
+def _safe_arccos(x):
+    """Compute arccos with domain clamping to prevent NaN from floating-point errors.
+
+    Args:
+        x (float or ndarray): Input value(s), should be in [-1, 1]
+
+    Returns:
+        float or ndarray: arccos(clip(x, -1, 1))
+    """
+    return _np.arccos(_np.clip(x, -1.0, 1.0))
+
 
 @jit
 def signed_area(triangle):
@@ -42,17 +65,24 @@ def signed_area(triangle):
 
 
 def norm_plane(vec):
-    """Calculates the normal to a triangular plane
+    """Calculates the normal to a triangular plane.
 
     Args:
-        vec (ndarray/list/tuple): (N,1) array
+        vec (ndarray): (3,3) array of triangle vertices
 
     Returns:
-        ndarray: normal vector (N,)
+        ndarray: unit normal vector (3,)
+
+    Raises:
+        ValueError: If triangle is degenerate (collinear vertices)
     """
     norm = _np.cross(vec[1] - vec[0], vec[2] - vec[0])
-    norm = norm / _np.linalg.norm(norm)
-    return norm
+    length = _np.linalg.norm(norm)
+
+    if length < 1e-10:
+        raise ValueError("Degenerate triangle: vertices are collinear")
+
+    return norm / length
 
 
 def rotate_points(points, rotation_quaternion):
@@ -72,45 +102,72 @@ def rotate_points(points, rotation_quaternion):
 
 
 def altitude(a, b, c):
-    """Gets altitude to side `a` of a triangle.
+    """Gets altitude to side `a` of a triangle using Heron's formula.
 
     Args:
-        a (float): longest side
-        b (float): triangle side
-        c (float): triangle side
+        a (float): base side (altitude is perpendicular to this)
+        b (float): second side
+        c (float): third side
 
     Returns:
         float: altitude to side `a`
+
+    Raises:
+        ValueError: If triangle is degenerate (sides violate triangle inequality)
     """
+    if a < 1e-10:
+        raise ValueError("Degenerate triangle: base side has zero length")
+
     s = (a + b + c) / 2
-    return 2 * _np.sqrt(s * (s - a) * (s - b) * (s - c)) / a
+    radicand = s * (s - a) * (s - b) * (s - c)
+
+    if radicand < 0:
+        raise ValueError(
+            f"Degenerate triangle: sides ({a:.6f}, {b:.6f}, {c:.6f}) "
+            "violate triangle inequality"
+        )
+
+    return 2 * _np.sqrt(radicand) / a
 
 
 def _largest_side_RA(triangle):
-    """Determines largest side of triangle
+    """Determines largest side of triangle and decomposes into right-angled triangles.
 
     Args:
-        triangle (ndarray): triangle vertices
+        triangle (ndarray): (3,3) array of triangle vertices
 
     Returns:
-        tuple: longest_side (int), length (float), right_angle (bool)
+        tuple: (longest_side, RA_triangle1, RA_triangle2)
+            - longest_side (int): index of longest edge (0, 1, or 2)
+            - RA_triangle1 (ndarray): [base, altitude] of first right triangle
+            - RA_triangle2 (ndarray): [base, altitude] of second right triangle
     """
-    A = _np.linalg.norm([triangle[1] - triangle[0]])
-    B = _np.linalg.norm([triangle[2] - triangle[1]])
-    C = _np.linalg.norm([triangle[2] - triangle[0]])
-    sides = _np.array([[0, 1, 2], [A, B, C]]).T
-    sorted_sides = sides[sides[:, 1].argsort()][::-1]
-    longest_side = int(sorted_sides[0, 0])
+    # Compute edge lengths efficiently
+    edge_lengths = _np.array([
+        _np.linalg.norm(triangle[1] - triangle[0]),  # Edge 0: v0 → v1
+        _np.linalg.norm(triangle[2] - triangle[1]),  # Edge 1: v1 → v2
+        _np.linalg.norm(triangle[2] - triangle[0]),  # Edge 2: v0 → v2
+    ])
 
-    # Get sizes of two right angled triangles
+    # Use argmax (O(n)) instead of argsort (O(n log n))
+    longest_side = int(_np.argmax(edge_lengths))
 
-    # Get Altitude to longest side
-    alt_side = altitude(sorted_sides[0, 1], sorted_sides[1, 1], sorted_sides[2, 1])
-    left_side = sides[(longest_side + 1) % 3, 1]
-    right_side = sides[(longest_side - 1) % 3, 1]
+    # Get lengths for altitude calculation
+    a = edge_lengths[longest_side]  # longest side
+    b = edge_lengths[(longest_side + 1) % 3]
+    c = edge_lengths[(longest_side + 2) % 3]
 
-    p = _np.sqrt(left_side**2 - alt_side**2)
-    q = _np.sqrt(right_side**2 - alt_side**2)
+    # Altitude from opposite vertex to longest side (Heron's formula)
+    alt_side = altitude(a, b, c)
+
+    # Decompose: drop altitude from apex to base
+    # Creates two right triangles with legs (p, h) and (q, h) where p + q = a
+    # Using Pythagorean theorem: p² + h² = b², q² + h² = c²
+    left_side = edge_lengths[(longest_side + 1) % 3]
+    right_side = edge_lengths[(longest_side - 1) % 3]
+
+    p = _np.sqrt(_np.maximum(left_side**2 - alt_side**2, 0))
+    q = _np.sqrt(_np.maximum(right_side**2 - alt_side**2, 0))
 
     RA_triangle1 = _np.array([p, alt_side])
     RA_triangle2 = _np.array([q, alt_side])
@@ -135,59 +192,58 @@ def check_sign(vector_1, vector_2):
 
 
 def return_axis_vector(triangle, longest_side):
-    """Returns vector collinear to the longest side of a triangle
+    """Returns unit vector along the longest side of a triangle.
 
     Args:
-        triangle (ndarray): triangle vertices
-        longest_side (int): longest side index
+        triangle (ndarray): (3,3) array of triangle vertices
+        longest_side (int): index of longest edge (0, 1, or 2)
 
     Returns:
-        ndarray: vector corresponding to longest side
+        ndarray: unit vector (3,) along longest edge
     """
-    vector_A = triangle[1] - triangle[0]
-    vector_A = vector_A / _np.linalg.norm(vector_A)
-
-    vector_B = triangle[2] - triangle[1]
-    vector_B = vector_B / _np.linalg.norm(vector_B)
-    vector_C = triangle[2] - triangle[0]
-    vector_C = vector_C / _np.linalg.norm(vector_C)
-
-    vec_dict = {
-        0: vector_A,
-        1: vector_B,
-        2: vector_C,
-    }
-
-    vec = vec_dict[longest_side]
-
-    return vec
+    i, j = _EDGE_VERTICES[longest_side]
+    vec = triangle[j] - triangle[i]
+    return vec / _np.linalg.norm(vec)
 
 
 def return_z_vector(triangle, longest_side):
-    """Returns altitude vector from longest side
+    """Returns unit altitude vector from longest side toward opposite vertex.
+
+    For a triangle aligned in the xz plane with longest side along x,
+    this returns the direction toward the apex (along z).
 
     Args:
-        triangle (ndarray): triangle vertices
-        longest_side (int): longest side index
+        triangle (ndarray): (3,3) array of triangle vertices
+        longest_side (int): index of longest edge (0, 1, or 2)
 
     Returns:
-        ndarray: altitude vector
-    """
-    new_vertex_dict = {
-        0: [triangle[2, 0], triangle[0, 1], triangle[0, 2]],
-        1: [triangle[0, 0], triangle[0, 1], triangle[1, 2]],
-        2: [triangle[1, 0], triangle[2, 1], triangle[2, 2]],
-    }
-    new_vertex = _np.array(new_vertex_dict[longest_side])
-    vec_z_dict = {
-        0: triangle[2] - new_vertex,
-        1: triangle[0] - new_vertex,
-        2: triangle[1] - new_vertex,
-    }
-    vec_z = vec_z_dict[longest_side]
-    vec_z = vec_z / _np.linalg.norm(vec_z)
+        ndarray: unit altitude vector (3,)
 
-    return vec_z
+    Raises:
+        ValueError: If altitude has zero length (degenerate triangle)
+    """
+    # Get the vertex opposite to the longest side
+    opposite_idx = _OPPOSITE_VERTEX[longest_side]
+
+    # Get endpoints of the longest side
+    start_idx, end_idx = _EDGE_VERTICES[longest_side]
+
+    # Project opposite vertex onto the line of longest side
+    edge_vec = triangle[end_idx] - triangle[start_idx]
+    edge_unit = edge_vec / _np.linalg.norm(edge_vec)
+
+    to_opposite = triangle[opposite_idx] - triangle[start_idx]
+    projection_length = _np.dot(to_opposite, edge_unit)
+    foot_of_altitude = triangle[start_idx] + projection_length * edge_unit
+
+    # Altitude vector: from foot to opposite vertex
+    altitude_vec = triangle[opposite_idx] - foot_of_altitude
+    length = _np.linalg.norm(altitude_vec)
+
+    if length < 1e-10:
+        raise ValueError("Degenerate triangle: altitude has zero length")
+
+    return altitude_vec / length
 
 
 def align_triangle_to_y(triangle, rot_axis, norm_vec):
@@ -216,7 +272,7 @@ def align_triangle_to_y(triangle, rot_axis, norm_vec):
             aligned_triangle = rotate_points(triangle, first_rotation)
 
     else:
-        angle = -_np.arccos(_np.dot(y_axis, norm_vec))
+        angle = -_safe_arccos(_np.dot(y_axis, norm_vec))
         first_rotation = q_angle_from_axis(angle, rot_axis)
         aligned_triangle = rotate_points(triangle, first_rotation)
     return aligned_triangle, first_rotation
@@ -256,7 +312,7 @@ def align_triangle_xz(triangle, longest_side):
             tri_x = rotate_points(triangle, second_rotation)
 
     else:
-        angle = -_np.arccos(_np.dot(x_axis, vec_x))
+        angle = -_safe_arccos(_np.dot(x_axis, vec_x))
         second_rotation = q_angle_from_axis(angle, rot_axis)
         tri_x = rotate_points(triangle, second_rotation)
 
@@ -274,7 +330,7 @@ def align_triangle_xz(triangle, longest_side):
             third_rotation = q_angle_from_axis(PI, y_axis)
 
     else:
-        angle = -_np.arccos(_np.dot(z_axis, vec_z))
+        angle = -_safe_arccos(_np.dot(z_axis, vec_z))
         third_rotation = q_angle_from_axis(angle, rot_axis)
 
     return second_rotation, third_rotation

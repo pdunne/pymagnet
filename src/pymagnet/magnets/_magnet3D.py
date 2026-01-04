@@ -292,9 +292,9 @@ class Prism(Magnet3D):
 
         super().__init__(Jr, **kwargs)
 
-        self.phi = kwargs.pop("theta", 90.0)
+        self.phi = kwargs.pop("phi", 90.0)
         self.phi_rad = _np.deg2rad(self.phi)
-        self.theta = kwargs.pop("phi", 0.0)
+        self.theta = kwargs.pop("theta", 0.0)
         self.theta_rad = _np.deg2rad(self.theta)
 
         # Generate components of magnetisation

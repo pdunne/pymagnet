@@ -107,7 +107,8 @@ def test_3D_four_cubes():
     width = 10e-3
     a = width / 2
     hGap = a
-    theta, phi = 0.0, 90.0
+    # theta=90° (in xy plane), phi=0° (along x-axis) → X-magnetization
+    theta, phi = 90.0, 0.0
 
     # Add top left magnet
     _ = magnets.Cube(
