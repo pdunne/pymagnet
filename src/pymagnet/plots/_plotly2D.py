@@ -39,7 +39,7 @@ def _plotly_vector_plot2(x, y, Field, NQ, scale_x, scale_y, vector_color):
         vector_color (string): quiver color
     """
     if not _has_plotly:
-        raise ImportError("matplotlib is required to use this plot function.")
+        raise ImportError("plotly is required to use this plot function.")
     plot_object = []
     NPx, NPy = x.shape
     if NQ != 0:

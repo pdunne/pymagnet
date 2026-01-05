@@ -5,7 +5,10 @@
 """Plotting routines for calculating along symmetry lines of cubes, cuboids,
 and cylinders"""
 
+from __future__ import annotations
+
 import warnings
+from typing import Any
 
 try:
     import matplotlib.pyplot as _plt
@@ -18,6 +21,7 @@ else:
 
 
 import numpy as _np
+from numpy.typing import NDArray
 
 from ..magnets import (
     Cylinder,
@@ -25,10 +29,12 @@ from ..magnets import (
     magnetic_field_cylinder_1D,
     magnetic_field_prism_1D,
 )
-from ..utils._vector_structs import Point_Array1
+from ..utils._vector_structs import Field1, Point_Array1
 
 
-def plot_1D_field(magnet, unit="mm", **kwargs):
+def plot_1D_field(
+    magnet: Cylinder | Prism, unit: str = "mm", **kwargs: Any
+) -> tuple[Point_Array1, Field1] | None:
     """Calculates and plots the magnetic field along the central symmetry axis
     of a cylinder or cuboid magnet, assuming the magnetic field is collinear
 
@@ -58,7 +64,8 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
             num_points,
         )
         field = magnetic_field_cylinder_1D(magnet, points.z)
-        assert field is not None
+        if field is None:
+            raise ValueError("Failed to compute magnetic field for Cylinder magnet.")
         # if true, apply NaNs to inside the magnet
         if magnet._mask_magnet:
             mask = _generate_mask_1D(mag_boundary, magnet.center[2], points.z)
@@ -72,15 +79,18 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
             num_points,
         )
         field = magnetic_field_prism_1D(magnet, points.z)
-        assert field is not None
+        if field is None:
+            raise ValueError("Failed to compute magnetic field for Prism magnet.")
         # if true, apply NaNs to inside the magnet
         if magnet._mask_magnet:
             mask = _generate_mask_1D(mag_boundary, magnet.center[2], points.z)
             field.z[mask] = _np.nan
 
     else:
-        print("Error")
-        return None
+        raise TypeError(
+            f"Unsupported magnet type: {type(magnet).__name__}. "
+            "Expected Cylinder or Prism."
+        )
 
     fig, ax = _plt.subplots(figsize=(8, 8))
     unit_length = "(" + points.unit + ")"
@@ -97,7 +107,9 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
         return points, field
 
 
-def _generate_mask_1D(mag_boundary, zc, z):
+def _generate_mask_1D(
+    mag_boundary: float, zc: float, z: NDArray[_np.floating]
+) -> NDArray[_np.bool_]:
     """Generates mask for points inside magnet
 
     Args:

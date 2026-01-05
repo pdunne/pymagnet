@@ -8,7 +8,10 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources, and
 
 """
+from __future__ import annotations
+
 import warnings
+from typing import TYPE_CHECKING, Any
 
 try:
     import matplotlib.pyplot as _plt
@@ -26,8 +29,13 @@ else:
     from matplotlib.transforms import Affine2D
 
 import numpy as _np
+from numpy.typing import NDArray
 
-from ..utils import Field2, Point_Array2
+from ..utils import Field2, Field3, Point_Array2, Point_Array3
+
+if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
 # from ..utils._conversions import get_unit_value_meter, get_unit_value_tesla
 # from .. import magnets as _mag
@@ -109,7 +117,9 @@ class magnet_patch:
         return self.patch.__str__() + self.arrow.__str__()
 
 
-def plot_2D_line(point_array, field, **kwargs):
+def plot_2D_line(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, Axes]:
     """Line Plot of field from 2D magnet
 
     Args:
@@ -150,7 +160,9 @@ def plot_2D_line(point_array, field, **kwargs):
     return fig, ax
 
 
-def plot_2D_contour(point_array, field, **kwargs):
+def plot_2D_contour(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, Axes]:
     """Contour plot of field
 
     Args:
@@ -503,7 +515,12 @@ def _vector_plot2(points, field, NQ, vector_color):
             )
 
 
-def plot_3D_contour(points, field, plane, **kwargs):
+def plot_3D_contour(
+    points: Point_Array2 | Point_Array3,
+    field: Field2 | Field3,
+    plane: str,
+    **kwargs: Any,
+) -> tuple[Figure, Axes]:
     """Contour plot of field
 
     Args:
@@ -662,7 +679,12 @@ def plot_3D_contour(points, field, plane, **kwargs):
     return fig, ax
 
 
-def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
+def plot_sub_contour_3D(
+    plot_x: NDArray[_np.floating],
+    plot_y: NDArray[_np.floating],
+    plot_B: NDArray[_np.floating],
+    **kwargs: Any,
+) -> tuple[Figure, Axes]:
     """Contour plot of a single magnetic field component of a 3D simulation
 
     Args:
