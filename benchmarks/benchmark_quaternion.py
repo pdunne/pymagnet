@@ -43,8 +43,12 @@ _ = quat_from_axis_angle(0.1, np.array([1.0, 0.0, 0.0]))
 _ = quat_multiply(quat_identity(), quat_identity())
 _ = quat_rotate_vector(quat_identity(), np.array([1.0, 0.0, 0.0]))
 _ = quat_rotate_points(quat_identity(), np.array([[1.0, 0.0, 0.0]]))
-_ = _rotate_triangle_njit(np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 0.866, 0.0]]))
-_ = rotate_vector_by_quat_njit(quat_identity(), np.array([1.0]), np.array([0.0]), np.array([0.0]))
+_ = _rotate_triangle_njit(
+    np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 0.866, 0.0]])
+)
+_ = rotate_vector_by_quat_njit(
+    quat_identity(), np.array([1.0]), np.array([0.0]), np.array([0.0])
+)
 
 print("Warm-up complete.\n")
 
@@ -92,8 +96,12 @@ def print_comparison(name, python_stats, numba_stats):
     print(f"\n{'=' * 60}")
     print(f"{name}")
     print(f"{'=' * 60}")
-    print(f"  Python:  {format_time(python_stats['mean']):>12} ± {format_time(python_stats['std']):>10}")
-    print(f"  Numba:   {format_time(numba_stats['mean']):>12} ± {format_time(numba_stats['std']):>10}")
+    print(
+        f"  Python:  {format_time(python_stats['mean']):>12} ± {format_time(python_stats['std']):>10}"
+    )
+    print(
+        f"  Numba:   {format_time(numba_stats['mean']):>12} ± {format_time(numba_stats['std']):>10}"
+    )
     print(f"  Speedup: {speedup:>12.1f}x")
 
 
@@ -222,16 +230,20 @@ def main():
 
     py_stats = benchmark(python_coord_rotate, n_runs=500)
     nb_stats = benchmark(numba_coord_rotate, n_runs=500)
-    print_comparison(f"Coordinate Array Rotation ({n_coords} coords)", py_stats, nb_stats)
+    print_comparison(
+        f"Coordinate Array Rotation ({n_coords} coords)", py_stats, nb_stats
+    )
 
     # =========================================================================
     # Benchmark 8: Triangle Rotation (single triangle)
     # =========================================================================
-    triangle = np.array([
-        [0.0, 0.0, 0.0],
-        [1.0, 0.0, 0.0],
-        [0.5, 0.866, 0.0],
-    ])
+    triangle = np.array(
+        [
+            [0.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0],
+            [0.5, 0.866, 0.0],
+        ]
+    )
 
     def python_triangle():
         return _rotate_triangle(triangle, 1.0)

@@ -310,6 +310,65 @@ def stl_cube_path(tmp_path):
     return stl_path
 
 
+# ==================== Force/Torque Test Fixtures ====================
+
+
+@pytest.fixture
+def prism_pair_aligned():
+    """Two prism magnets aligned along z-axis for force tests."""
+    m1 = magnets.Prism(width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 0))
+    m2 = magnets.Prism(width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 25))
+    return m1, m2
+
+
+@pytest.fixture
+def prism_pair_anti_aligned():
+    """Two prism magnets with opposite magnetization."""
+    m1 = magnets.Prism(width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 0))
+    m2 = magnets.Prism(width=10.0, depth=10.0, height=10.0, Jr=-1.0, center=(0, 0, 25))
+    return m1, m2
+
+
+@pytest.fixture
+def cylinder_pair_aligned():
+    """Two cylinder magnets aligned along z-axis for force tests."""
+    m1 = magnets.Cylinder(radius=5.0, length=10.0, Jr=1.0, center=(0, 0, 0))
+    m2 = magnets.Cylinder(radius=5.0, length=10.0, Jr=1.0, center=(0, 0, 20))
+    return m1, m2
+
+
+@pytest.fixture
+def sphere_pair_aligned():
+    """Two sphere magnets aligned along z-axis for force tests."""
+    m1 = magnets.Sphere(radius=5.0, Jr=1.0, center=(0, 0, 0))
+    m2 = magnets.Sphere(radius=5.0, Jr=1.0, center=(0, 0, 20))
+    return m1, m2
+
+
+@pytest.fixture
+def allag2009_magnets():
+    """Allag2009 reference configuration: two 10mm cubes."""
+    m1 = magnets.Prism(
+        width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 0)
+    )
+    m2 = magnets.Prism(
+        width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 20)
+    )
+    return m1, m2
+
+
+@pytest.fixture
+def oconnell2020_magnets():
+    """O'Connell2020 reference configuration."""
+    m1 = magnets.Prism(
+        width=20.0, depth=12.0, height=6.0, Jr=0.38, center=(0, 0, 0)
+    )
+    m2 = magnets.Prism(
+        width=12.0, depth=20.0, height=6.0, Jr=0.38, center=(-4, -4, 8)
+    )
+    return m1, m2
+
+
 # ==================== Numerical Tolerances ====================
 
 
@@ -323,6 +382,12 @@ def float_tolerance():
 def loose_tolerance():
     """Looser tolerance for numerical algorithms."""
     return {"rtol": 1e-3, "atol": 1e-6}
+
+
+@pytest.fixture
+def force_tolerance():
+    """Tolerance for force calculations (numerical integration)."""
+    return {"rtol": 5e-2, "atol": 1e-3}
 
 
 # ==================== Parametrized Values ====================

@@ -32,7 +32,7 @@ def get_centroid(triangle):
 #         result[i] = (triangle[0,i] + triangle[1,i] + triangle[2,i])/3.0
 
 
-# @njit
+@njit(cache=True)
 def triangle_area(triangle):
     """Gets the area of a triangle. Computes the cross product area.
 
@@ -42,9 +42,22 @@ def triangle_area(triangle):
     Returns:
         float: area
     """
-    return _np.linalg.norm(
-        _np.cross((triangle[1] - triangle[0]), (triangle[2] - triangle[0])) / 2
-    )
+    # Edge vectors
+    e1_x = triangle[1, 0] - triangle[0, 0]
+    e1_y = triangle[1, 1] - triangle[0, 1]
+    e1_z = triangle[1, 2] - triangle[0, 2]
+
+    e2_x = triangle[2, 0] - triangle[0, 0]
+    e2_y = triangle[2, 1] - triangle[0, 1]
+    e2_z = triangle[2, 2] - triangle[0, 2]
+
+    # Cross product
+    cx = e1_y * e2_z - e1_z * e2_y
+    cy = e1_z * e2_x - e1_x * e2_z
+    cz = e1_x * e2_y - e1_y * e2_x
+
+    # Area = |cross| / 2
+    return _np.sqrt(cx * cx + cy * cy + cz * cz) / 2.0
 
 
 # @guvectorize(["void(f8[:,:, :], f8[:])"], "(x, y, y)->(x)")

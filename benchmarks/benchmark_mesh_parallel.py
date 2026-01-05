@@ -6,7 +6,9 @@ Run with: python benchmarks/benchmark_mesh_parallel.py
 This script measures the performance difference between:
 1. Original Python implementation (serial)
 2. Numba-optimized serial implementation
-3. Numba parallel implementation (using prange)
+3. Numba parallel implementation (using prange) - DEFAULT
+
+Note: Since v0.5.0, parallel=True is the default for Mesh.get_field().
 
 The benchmarks test with different mesh sizes and evaluation point counts.
 """
@@ -32,7 +34,7 @@ if os.path.exists(cube_path):
     pymagnet.reset()
     warmup_mesh = pymagnet.magnets.Mesh(cube_path, Jr=1.0)
     _ = warmup_mesh.get_field(0.0, 0.0, 5.0, parallel=False)
-    _ = warmup_mesh.get_field(0.0, 0.0, 5.0, parallel=True)
+    _ = warmup_mesh.get_field(0.0, 0.0, 5.0)  # parallel=True is default
     pymagnet.reset()
 
 print("Warm-up complete.\n")
@@ -152,7 +154,9 @@ def main():
             "Numba serial": benchmark(serial_fast, n_runs=20),
             "Numba parallel": benchmark(parallel, n_runs=20),
         }
-        print_comparison(f"Cube mesh ({n_triangles} triangles, {n_points} points)", stats)
+        print_comparison(
+            f"Cube mesh ({n_triangles} triangles, {n_points} points)", stats
+        )
 
     # =========================================================================
     # Benchmark 2: Medium mesh (star or bunny_500)
@@ -188,7 +192,8 @@ def main():
             "Numba parallel": benchmark(parallel, n_runs=10),
         }
         print_comparison(
-            f"{mesh_name.capitalize()} mesh ({n_triangles} triangles, {n_points} points)", stats
+            f"{mesh_name.capitalize()} mesh ({n_triangles} triangles, {n_points} points)",
+            stats,
         )
 
     # =========================================================================
@@ -285,7 +290,10 @@ The speedup increases with:
 
 Usage:
     mesh = pymagnet.magnets.Mesh("file.stl", Jr=1.0)
-    Bx, By, Bz = mesh.get_field(x, y, z, parallel=True)
+    Bx, By, Bz = mesh.get_field(x, y, z)  # parallel=True by default
+
+    # To use serial method explicitly:
+    Bx, By, Bz = mesh.get_field(x, y, z, parallel=False)
 
 Note: First-time JIT compilation adds ~1-2s overhead on import.
 Subsequent runs use cached compiled code.

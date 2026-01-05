@@ -20,24 +20,13 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
 ]
 requires-python = ">=3.10"
-dependencies = [
-    "numpy>=2.0.1",
-    "numpy-stl>=3.1.2",
-    "numba>=0.60.0",
-]
+dependencies = ["numpy>=2.0.1", "numpy-stl>=3.1.2", "numba>=0.60.0"]
 
 [project.optional-dependencies]
 plots = ["matplotlib>=3.9.2", "plotly>=5.23.0"]
 jupyter = ["ipykernel>=6.29.5", "nbformat>=5.10.4"]
-dev = [
-    "ruff>=0.8.0",
-    "pytest>=8.0.0",
-    "pytest-cov>=4.1.0",
-    "pre-commit>=3.0.0",
-]
-all = [
-    "pymagnet[plots,jupyter,dev]",
-]
+dev = ["ruff>=0.8.0", "pytest>=8.0.0", "pytest-cov>=4.1.0"]
+all = ["pymagnet[plots,jupyter,dev]"]
 
 [project.urls]
 Homepage = "https://www.applied-magnetism.com"
@@ -71,20 +60,20 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = [
-    "E",      # pycodestyle errors
-    "F",      # pyflakes
-    "B",      # flake8-bugbear
-    "I",      # isort
-    "W",      # pycodestyle warnings
-    "UP",     # pyupgrade
-    "C4",     # flake8-comprehensions
-    "SIM",    # flake8-simplify
-    "NPY",    # numpy-specific rules
-    "PERF",   # performance anti-patterns
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "B",    # flake8-bugbear
+    "I",    # isort
+    "W",    # pycodestyle warnings
+    "UP",   # pyupgrade
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "NPY",  # numpy-specific rules
+    "PERF", # performance anti-patterns
 ]
 ignore = [
-    "E501",   # line too long (handled by formatter)
-    "B008",   # function call in default argument
+    "E501", # line too long (handled by formatter)
+    "B008", # function call in default argument
 ]
 
 [tool.ruff.lint.isort]

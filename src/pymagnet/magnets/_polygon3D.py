@@ -133,7 +133,7 @@ class Mesh(Magnet3D):
         """
         return self.center
 
-    def get_field(self, x, y, z, parallel=False):
+    def get_field(self, x, y, z, parallel=True):
         """Calculates the magnetic field at point(s) x,y,z due to a 3D magnet
         The calculations are always performed in local coordinates with the centre of the magnet at origin and z magnetisation pointing along the local z' axis.
 
