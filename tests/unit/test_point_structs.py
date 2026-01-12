@@ -6,7 +6,6 @@
 
 import numpy as np
 import numpy.testing as npt
-import pytest
 
 from pymagnet.utils import Point2, Point3
 

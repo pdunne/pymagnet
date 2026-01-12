@@ -8,6 +8,7 @@ This private module implements magnetic field calculations in z along the
 symmetry centre of a cylindrical or cuboidal magnet.
 
 """
+
 import numpy as _np
 
 from ..utils._vector_structs import Field1

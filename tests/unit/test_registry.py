@@ -4,8 +4,6 @@
 # Copyright 2021 Peter Dunne
 """Tests for Registry class and magnet instance tracking."""
 
-import pytest
-
 from pymagnet import magnets, reset
 from pymagnet.magnets._magnet_base import Magnet, Registry
 

@@ -6,14 +6,13 @@
 
 import numpy as np
 import numpy.testing as npt
-import pytest
 
 from pymagnet.forces._mesh_force import (
-    get_centroid,
-    triangle_area,
-    get_midpoints,
     divide_triangle_centroid,
     divide_triangle_regular,
+    get_centroid,
+    get_midpoints,
+    triangle_area,
 )
 
 
@@ -22,7 +21,9 @@ class TestGetCentroid:
 
     def test_equilateral_centroid(self):
         """Centroid of equilateral triangle."""
-        triangle = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, np.sqrt(3) / 2, 0.0]])
+        triangle = np.array(
+            [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, np.sqrt(3) / 2, 0.0]]
+        )
         centroid = get_centroid(triangle)
         expected = np.array([0.5, np.sqrt(3) / 6, 0.0])
         npt.assert_allclose(centroid, expected, rtol=1e-10)
@@ -59,7 +60,9 @@ class TestTriangleArea:
 
     def test_equilateral_triangle_area(self):
         """Area of equilateral triangle with side 1."""
-        triangle = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, np.sqrt(3) / 2, 0.0]])
+        triangle = np.array(
+            [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, np.sqrt(3) / 2, 0.0]]
+        )
         area = triangle_area(triangle)
         expected = np.sqrt(3) / 4
         npt.assert_allclose(area, expected, rtol=1e-10)
@@ -221,9 +224,7 @@ class TestNumericalStability:
 
     def test_small_triangle_centroid(self):
         """Centroid works for small triangles."""
-        triangle = np.array(
-            [[0.0, 0.0, 0.0], [1e-6, 0.0, 0.0], [0.5e-6, 1e-6, 0.0]]
-        )
+        triangle = np.array([[0.0, 0.0, 0.0], [1e-6, 0.0, 0.0], [0.5e-6, 1e-6, 0.0]])
         centroid = get_centroid(triangle)
         assert np.all(np.isfinite(centroid))
 
@@ -235,9 +236,7 @@ class TestNumericalStability:
 
     def test_small_triangle_area(self):
         """Area works for small triangles."""
-        triangle = np.array(
-            [[0.0, 0.0, 0.0], [1e-6, 0.0, 0.0], [0.5e-6, 1e-6, 0.0]]
-        )
+        triangle = np.array([[0.0, 0.0, 0.0], [1e-6, 0.0, 0.0], [0.5e-6, 1e-6, 0.0]])
         area = triangle_area(triangle)
         assert np.isfinite(area)
         assert area >= 0
@@ -252,8 +251,8 @@ class TestNumericalStability:
         areas = np.array([triangle_area(t) for t in divided])
 
         # Weighted average by area
-        weighted_centroid = np.sum(
-            centroids * areas[:, np.newaxis], axis=0
-        ) / np.sum(areas)
+        weighted_centroid = np.sum(centroids * areas[:, np.newaxis], axis=0) / np.sum(
+            areas
+        )
 
         npt.assert_allclose(weighted_centroid, original_centroid, rtol=1e-10)

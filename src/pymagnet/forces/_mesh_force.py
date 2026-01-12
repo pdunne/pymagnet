@@ -1,4 +1,3 @@
-
 import numpy as _np
 from numba import njit
 
@@ -90,9 +89,6 @@ def _divide_triangle_centroid_fast(triangle, depth=1):
     Returns:
         ndarray: (3**depth, 3, 3) array of sub-triangle vertices
     """
-    num_triangles = 3**depth
-    result = _np.zeros((num_triangles, 3, 3))
-
     # Use a working buffer: start with input triangle, expand each iteration
     current = _np.array([triangle])
 

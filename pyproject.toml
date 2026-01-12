@@ -1,11 +1,13 @@
+
 [project]
 name = "pymagnet"
-version = "0.5.0"
+version = "0.5.1"
 description = "User Friendly Magnetic Field Calculations"
 authors = [
     { name = "Peter Dunne", email = "peter.dunne@applied-magnetism.com" },
 ]
 readme = "README.md"
+license = { file = "LICENSE" }
 keywords = ["magnetism", "magnetic fields"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -18,20 +20,53 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: OS Independent",
 ]
 requires-python = ">=3.10"
-dependencies = ["numpy>=2.0.1", "numpy-stl>=3.1.2", "numba>=0.60.0"]
+dependencies = [
+    "numpy>=2.0.1",
+    "numpy-stl>=3.1.2",
+    # Numba 0.60+ supports NumPy 2.0; consider pinning an upper bound until validated in CI.
+    "numba>=0.60.0,<0.62",
+]
 
 [project.optional-dependencies]
 plots = ["matplotlib>=3.9.2", "plotly>=5.23.0"]
 jupyter = ["ipykernel>=6.29.5", "nbformat>=5.10.4"]
 dev = ["ruff>=0.8.0", "pytest>=8.0.0", "pytest-cov>=4.1.0"]
-all = ["pymagnet[plots,jupyter,dev]"]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.1",
+    "mkdocs-mermaid2-plugin>=1.2.3",
+    "mkdocs-autorefs>=1.4.3",
+    "mkdocstrings>=1.0.0",
+    "mkdocstrings-python>=2.0.1",
+    "pymdown-extensions>=10.0",
+]
+# A convenience meta-extra for local dev machines; mirrors the above lists.
+all = [
+    "matplotlib>=3.9.2",
+    "plotly>=5.23.0",
+    "ipykernel>=6.29.5",
+    "nbformat>=5.10.4",
+    "ruff>=0.8.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.1",
+    "mkdocs-mermaid2-plugin>=1.2.3",
+    "mkdocs-autorefs>=1.4.3",
+    "mkdocstrings>=1.0.0",
+    "mkdocstrings-python>=2.0.1",
+    "pymdown-extensions>=10.0",
+]
 
 [project.urls]
 Homepage = "https://www.applied-magnetism.com"
 Repository = "https://github.com/pdunne/pymagnet"
 Documentation = "https://pdunne.github.io/pymagnet/"
+Issues = "https://github.com/pdunne/pymagnet/issues"
+Changelog = "https://github.com/pdunne/pymagnet/releases"
 
 [build-system]
 requires = ["hatchling"]
@@ -39,42 +74,47 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pymagnet"]
+include = ["README.md", "LICENSE"]
 
-# UV configuration
+[tool.hatch.build.targets.sdist]
+include = ["src/pymagnet", "README.md", "LICENSE", "pyproject.toml", "tests"]
+
+# UV: keep minimal; use extras via `uv sync --extra dev --extra docs`
 [tool.uv]
-dev-dependencies = [
-    "ruff>=0.8.0",
-    "pytest>=8.0.0",
-    "pytest-cov>=4.1.0",
-    "ipykernel>=6.29.5",
-    "matplotlib>=3.9.2",
-    "plotly>=5.23.0",
-    "nbformat>=5.10.4",
-]
+# python-preference = "managed"  # uncomment if you want uv-managed Python
 
+# ----------------------------
 # Ruff configuration
+# ----------------------------
 [tool.ruff]
 target-version = "py310"
 line-length = 88
 src = ["src"]
 
+
 [tool.ruff.lint]
 select = [
     "E",    # pycodestyle errors
     "F",    # pyflakes
+    "W",    # pycodestyle warnings
     "B",    # flake8-bugbear
     "I",    # isort
-    "W",    # pycodestyle warnings
     "UP",   # pyupgrade
     "C4",   # flake8-comprehensions
     "SIM",  # flake8-simplify
     "NPY",  # numpy-specific rules
     "PERF", # performance anti-patterns
+    "RUF",  # Ruff-specific
 ]
 ignore = [
-    "E501", # line too long (handled by formatter)
-    "B008", # function call in default argument
+    "E501",   # line too long (handled by formatter)
+    "B008",   # function call in default argument
+    "SIM108", # ternary operator - reduces readability in numba/math code
+    "C408",   # dict() vs {} - dict() is clearer for plotly kwargs
+    "UP007",  # Union vs | - keep Union for compatibility
+    "RUF012", # ClassVar annotation - not needed for simple cases
 ]
+per-file-ignores = { "tests/**" = ["E402"] }
 
 [tool.ruff.lint.isort]
 known-first-party = ["pymagnet"]
@@ -83,11 +123,20 @@ known-first-party = ["pymagnet"]
 quote-style = "double"
 indent-style = "space"
 
-# Pytest configuration
+# ----------------------------
+# Pytest & Coverage
+# ----------------------------
 [tool.pytest.ini_options]
+minversion = "8.0"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --tb=short"
+addopts = """
+-v --tb=short
+--cov=src/pymagnet
+--cov-report=term-missing
+--cov-report=html:reports/coverage/html
+--cov-report=xml:reports/coverage/coverage.xml
+"""
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "numba: tests involving Numba JIT compilation",
@@ -95,14 +144,21 @@ markers = [
     "numerical: numerical accuracy and edge case tests",
 ]
 
-# Coverage configuration
 [tool.coverage.run]
 source = ["src/pymagnet"]
 branch = true
 
 [tool.coverage.report]
+show_missing = true
+skip_covered = true
 exclude_lines = [
     "pragma: no cover",
     "if TYPE_CHECKING:",
     "raise NotImplementedError",
 ]
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[dependency-groups]
+dev = ["pre-commit>=4.5.1"]

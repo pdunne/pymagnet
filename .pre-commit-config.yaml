@@ -1,16 +1,25 @@
+
+# .pre-commit-config.yaml
+exclude: |
+  (^\.venv/|^env/|^node_modules/|^build/|^dist/|^docs/_site/|^reports/|^src/pymagnet/_generated/|^tests/fixtures/)          # keep fixtures excluded globally
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
       - id: check-yaml
-      - id: check-added-large-files
-      - id: check-merge-conflict
+        args: [--unsafe]
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-toml
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.0
+    rev: v0.14.10
     hooks:
-      - id: ruff
+      - id: ruff-check
+        types_or: [python, pyi]
         args: [--fix]
+        exclude: ^(tests|benchmarks|examples)/
       - id: ruff-format
+        types_or: [python, pyi]
+        exclude: ^(tests|benchmarks|examples)/

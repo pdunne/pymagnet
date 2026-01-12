@@ -138,3 +138,7 @@ uv.lock
 conda_pkgs/
 notes/
 .vscode/
+
+*.md
+!README.md
+!docs/*/*.md

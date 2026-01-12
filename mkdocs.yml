@@ -1,7 +1,13 @@
+
 site_name: Pymagnet
 
 theme:
   name: material
+  features:
+    - content.code.copy
+    - navigation.top
+    - search.suggest
+    - search.highlight
 
 nav:
   - Home: index.md
@@ -28,14 +34,16 @@ nav:
 
 plugins:
   - search
-  - mermaid2
+  - mermaid2:
+      arguments:
+        theme: default
+      mermaid:
+        javascript: https://unpkg.com/mermaid/dist/mermaid.min.js
   - autorefs
   - mkdocstrings:
       handlers:
         python:
-          setup_commands:
-            - import sys
-            - sys.path.append("src")
+          paths: ["src"]
 
 markdown_extensions:
   - admonition
@@ -53,4 +61,3 @@ extra_javascript:
   - javascripts/config.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-  - https://unpkg.com/mermaid/dist/mermaid.min.js

@@ -9,12 +9,12 @@ import numpy.testing as npt
 import pytest
 
 from pymagnet.utils._vector_structs import (
-    Point_Array1,
-    Point_Array2,
-    Point_Array3,
     Field1,
     Field2,
     Field3,
+    Point_Array1,
+    Point_Array2,
+    Point_Array3,
 )
 
 

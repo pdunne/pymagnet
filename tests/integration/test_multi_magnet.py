@@ -6,11 +6,10 @@
 
 import numpy as np
 import numpy.testing as npt
-import pytest
 
 from pymagnet import magnets, reset
-from pymagnet.utils._routines2D import grid2D, get_field_2D
-from pymagnet.utils._routines3D import slice3D, get_field_3D
+from pymagnet.utils._routines2D import get_field_2D, grid2D
+from pymagnet.utils._routines3D import get_field_3D, slice3D
 
 
 class TestFieldSuperposition2D:
@@ -55,16 +54,24 @@ class TestFieldSuperposition3D:
     def test_two_prisms_field_adds(self):
         """Fields from two prisms superimpose."""
         # Create single prism
-        _ = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(0.0, 0.0, 0.0))
-        points = slice3D(plane="xz", max1=20.0, max2=20.0, slice_value=0.0, num_points=5)
+        _ = magnets.Prism(
+            width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(0.0, 0.0, 0.0)
+        )
+        points = slice3D(
+            plane="xz", max1=20.0, max2=20.0, slice_value=0.0, num_points=5
+        )
         field_single = get_field_3D(points)
         Bz_single = field_single.z.copy()
 
         reset()
 
         # Create two prisms
-        _ = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(-15.0, 0.0, 0.0))
-        _ = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(15.0, 0.0, 0.0))
+        _ = magnets.Prism(
+            width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(-15.0, 0.0, 0.0)
+        )
+        _ = magnets.Prism(
+            width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(15.0, 0.0, 0.0)
+        )
         field_double = get_field_3D(points)
 
         # Fields should be different (superposition)
@@ -79,10 +86,18 @@ class TestHalbachArray:
         # Create 4 magnets in quadrupole configuration
         # Top: points up, Bottom: points down
         # Left: points left, Right: points right
-        _ = magnets.Rectangle(width=10.0, height=10.0, Jr=1.0, center=(0.0, 20.0), phi=90)
-        _ = magnets.Rectangle(width=10.0, height=10.0, Jr=1.0, center=(0.0, -20.0), phi=-90)
-        _ = magnets.Rectangle(width=10.0, height=10.0, Jr=1.0, center=(-20.0, 0.0), phi=180)
-        _ = magnets.Rectangle(width=10.0, height=10.0, Jr=1.0, center=(20.0, 0.0), phi=0)
+        _ = magnets.Rectangle(
+            width=10.0, height=10.0, Jr=1.0, center=(0.0, 20.0), phi=90
+        )
+        _ = magnets.Rectangle(
+            width=10.0, height=10.0, Jr=1.0, center=(0.0, -20.0), phi=-90
+        )
+        _ = magnets.Rectangle(
+            width=10.0, height=10.0, Jr=1.0, center=(-20.0, 0.0), phi=180
+        )
+        _ = magnets.Rectangle(
+            width=10.0, height=10.0, Jr=1.0, center=(20.0, 0.0), phi=0
+        )
 
         # Check that field at center is computed
         points = grid2D(5.0, 5.0, num_points=3)
@@ -109,25 +124,37 @@ class TestDifferentMagnetTypes:
 
     def test_prism_and_cylinder_together(self):
         """Prism and Cylinder magnets can coexist."""
-        _ = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(-15.0, 0.0, 0.0))
+        _ = magnets.Prism(
+            width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(-15.0, 0.0, 0.0)
+        )
         _ = magnets.Cylinder(radius=5.0, length=10.0, Jr=1.0, center=(15.0, 0.0, 0.0))
 
-        points = slice3D(plane="xz", max1=30.0, max2=30.0, slice_value=0.0, num_points=5)
+        points = slice3D(
+            plane="xz", max1=30.0, max2=30.0, slice_value=0.0, num_points=5
+        )
         field = get_field_3D(points)
 
         # Both should contribute
-        assert np.any(field.x != 0.0) or np.any(field.y != 0.0) or np.any(field.z != 0.0)
+        assert (
+            np.any(field.x != 0.0) or np.any(field.y != 0.0) or np.any(field.z != 0.0)
+        )
 
     def test_prism_and_sphere_together(self):
         """Prism and Sphere magnets can coexist."""
-        _ = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(-15.0, 0.0, 0.0))
+        _ = magnets.Prism(
+            width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(-15.0, 0.0, 0.0)
+        )
         _ = magnets.Sphere(radius=5.0, Jr=1.0, center=(15.0, 0.0, 0.0))
 
-        points = slice3D(plane="xz", max1=30.0, max2=30.0, slice_value=0.0, num_points=5)
+        points = slice3D(
+            plane="xz", max1=30.0, max2=30.0, slice_value=0.0, num_points=5
+        )
         field = get_field_3D(points)
 
         # Both should contribute
-        assert np.any(field.x != 0.0) or np.any(field.y != 0.0) or np.any(field.z != 0.0)
+        assert (
+            np.any(field.x != 0.0) or np.any(field.y != 0.0) or np.any(field.z != 0.0)
+        )
 
 
 class TestFieldSymmetry:
@@ -149,7 +176,9 @@ class TestFieldSymmetry:
 
     def test_prism_xy_symmetry(self):
         """Symmetric prism has x-y symmetry."""
-        m = magnets.Prism(width=10.0, depth=10.0, height=20.0, Jr=1.0, center=(0.0, 0.0, 0.0))
+        m = magnets.Prism(
+            width=10.0, depth=10.0, height=20.0, Jr=1.0, center=(0.0, 0.0, 0.0)
+        )
 
         # Points at (x, 0, z) and (0, x, z) should have related fields
         Bx1, By1, Bz1 = m.get_field(5.0, 0.0, 30.0)
@@ -181,13 +210,17 @@ class TestMagnetTranslation:
     def test_translated_magnet_field(self):
         """Magnet at offset produces offset field."""
         # Magnet at origin
-        m1 = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(0.0, 0.0, 0.0))
+        m1 = magnets.Prism(
+            width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(0.0, 0.0, 0.0)
+        )
         Bx1, By1, Bz1 = m1.get_field(0.0, 0.0, 20.0)
 
         reset()
 
         # Magnet translated
-        m2 = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(10.0, 0.0, 0.0))
+        m2 = magnets.Prism(
+            width=5.0, depth=5.0, height=10.0, Jr=1.0, center=(10.0, 0.0, 0.0)
+        )
         Bx2, By2, Bz2 = m2.get_field(10.0, 0.0, 20.0)
 
         # Field at equivalent relative position should be same

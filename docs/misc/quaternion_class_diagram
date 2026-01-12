@@ -1,10 +1,41 @@
+# Quaternion Class Diagram
+
+The Quaternion class is a standalone utility class for performing rotations. It does NOT inherit from Registry.
+
+```mermaid
 classDiagram
-    Registry <|-- Quaternion
     class Quaternion{
-        +set instances
-        -list _class_instances
-        +print_instances()
-        +get_instances() set
-        +get_num_instances() int
-        +reset()
+        +float w
+        +float x
+        +float y
+        +float z
+        +gen_rotation_quaternion(alpha, beta, gamma) Quaternion
+        +get_conjugate() Quaternion
+        +__mul__(point) ndarray
+        +__repr__() str
     }
+```
+
+## Usage
+
+Quaternions are used internally by `Magnet3D` classes to perform rotations of coordinates and field vectors. They avoid gimbal lock issues that can occur with Euler angle rotations.
+
+```python
+from pymagnet.utils import Quaternion
+import numpy as np
+
+# Create rotation quaternion from Euler angles (in radians)
+q = Quaternion.gen_rotation_quaternion(
+    alpha=np.deg2rad(30),  # rotation about z
+    beta=np.deg2rad(45),   # rotation about y
+    gamma=np.deg2rad(0)    # rotation about x
+)
+
+# Rotate a point
+point = np.array([1, 0, 0])
+rotated_point = q * point
+
+# Get inverse rotation
+q_inv = q.get_conjugate()
+original = q_inv * rotated_point
+```

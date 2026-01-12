@@ -14,13 +14,11 @@ This module provides reusable fixtures for:
 import numpy as np
 import pytest
 
-import pymagnet
 from pymagnet import magnets, reset
 from pymagnet.utils import Point2, Point3
 from pymagnet.utils._quaternion import Quaternion, q_angle_from_axis
-from pymagnet.utils._vector_structs import Field2, Field3, Point_Array2, Point_Array3
+from pymagnet.utils._vector_structs import Point_Array2, Point_Array3
 from pymagnet.utils.global_const import PI
-
 
 # ==================== Session/Module Setup ====================
 
@@ -348,24 +346,16 @@ def sphere_pair_aligned():
 @pytest.fixture
 def allag2009_magnets():
     """Allag2009 reference configuration: two 10mm cubes."""
-    m1 = magnets.Prism(
-        width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 0)
-    )
-    m2 = magnets.Prism(
-        width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 20)
-    )
+    m1 = magnets.Prism(width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 0))
+    m2 = magnets.Prism(width=10.0, depth=10.0, height=10.0, Jr=1.0, center=(0, 0, 20))
     return m1, m2
 
 
 @pytest.fixture
 def oconnell2020_magnets():
     """O'Connell2020 reference configuration."""
-    m1 = magnets.Prism(
-        width=20.0, depth=12.0, height=6.0, Jr=0.38, center=(0, 0, 0)
-    )
-    m2 = magnets.Prism(
-        width=12.0, depth=20.0, height=6.0, Jr=0.38, center=(-4, -4, 8)
-    )
+    m1 = magnets.Prism(width=20.0, depth=12.0, height=6.0, Jr=0.38, center=(0, 0, 0))
+    m2 = magnets.Prism(width=12.0, depth=20.0, height=6.0, Jr=0.38, center=(-4, -4, 8))
     return m1, m2
 
 

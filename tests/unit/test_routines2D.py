@@ -9,11 +9,11 @@ import numpy.testing as npt
 import pytest
 
 from pymagnet.utils._routines2D import (
-    grid2D,
-    get_field_2D,
-    rotate_points_2D,
-    gradB_2D,
     _allocate_field_array2,
+    get_field_2D,
+    gradB_2D,
+    grid2D,
+    rotate_points_2D,
 )
 
 
@@ -208,7 +208,6 @@ class TestGradB2D:
 
     def test_linear_field_constant_gradient(self):
         """Linear field has constant gradient."""
-        from pymagnet.utils._vector_structs import Field2
 
         x, y = np.mgrid[0:10:11j, 0:10:11j]
         B = x  # Field increases linearly with x

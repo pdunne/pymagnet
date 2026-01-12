@@ -14,16 +14,12 @@ The benchmarks cover:
 """
 
 import time
-from functools import wraps
 
 import numpy as np
 
 # Warm up numba JIT compilation before timing
-print("Warming up numba JIT compilation...")
-
-from pymagnet.utils._quaternion import Quaternion, q_angle_from_axis
+from pymagnet.utils._quaternion import q_angle_from_axis
 from pymagnet.utils._quaternion_numba import (
-    quat_conjugate,
     quat_from_axis_angle,
     quat_identity,
     quat_multiply,
@@ -34,9 +30,10 @@ from pymagnet.utils._quaternion_numba import (
 from pymagnet.utils._trigonometry3D import (
     _rotate_triangle,
     _rotate_triangle_njit,
-    rotate_vector_by_quat_inverse_njit,
     rotate_vector_by_quat_njit,
 )
+
+print("Warming up numba JIT compilation...")
 
 # Warm-up calls to trigger JIT compilation
 _ = quat_from_axis_angle(0.1, np.array([1.0, 0.0, 0.0]))

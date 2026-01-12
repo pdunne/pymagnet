@@ -6,7 +6,7 @@ The overall approach is to
 
 1. Instantiate a set of magnets
 2. Generate an array of points to be calculated
-3. Loop over each magnet, calcuate the field at each point and sum this to the
+3. Loop over each magnet, calculate the field at each point and sum this to the
 total field.
 4. Draw the resulting data as a line, contour, slice, or volume plot.
 
@@ -54,13 +54,11 @@ flowchart
 ## Classes
 
 At the top of the hierarchy is the Registry class which records a set of `Weakref`
-references to instances of each class, which is used for the `Magnet` and `Polyhedron`
-child classes.
+references to instances of each class, which is used for the `Magnet` child classes.
 
 ```mermaid
 classDiagram
 Registry <|-- Magnet
-Registry <|-- Polyhedron
 class Registry{
     +set instances
     -list _class_instances
@@ -76,27 +74,28 @@ class Registry{
 ```mermaid
 classDiagram
     Registry <|-- Magnet
-    Magnet <|-- Magnet_2D
-    Magnet_2D <|-- Rectangle
+    Magnet <|-- Magnet2D
+    Magnet2D <|-- Rectangle
     Rectangle <|-- Square
-    Magnet_2D <|-- Circle
-    Magnet <|-- Magnet_3D
-    Magnet_3D <|-- Prism
+    Magnet2D <|-- Circle
+    Magnet2D <|-- PolyMagnet
+    Magnet <|-- Magnet3D
+    Magnet3D <|-- Prism
     Prism <|-- Cube
-    Magnet_3D <|-- Cylinder
-    Magnet_3D <|-- Sphere
-    Magnet_3D <|-- Mesh
+    Magnet3D <|-- Cylinder
+    Magnet3D <|-- Sphere
+    Magnet3D <|-- Mesh
     class Registry{
         +set instances
-        +get_instances() 
+        +get_instances()
         +reset()
     }
     class Magnet{
-        +rest_magnets()
-        +list_magnets()
     }
-    class Magnet_2D{
+    class Magnet2D{
         +get_field()
+        +get_center()
+        +get_orientation()
     }
 
     class Rectangle{
@@ -104,9 +103,13 @@ classDiagram
 
     class Circle{
     }
-    class Magnet_3D{
+    class PolyMagnet{
+    }
+    class Magnet3D{
         +get_field()
         +get_force_torque()
+        +get_center()
+        +get_Jr()
     }
     class Prism{
     }
@@ -120,12 +123,98 @@ classDiagram
 
 ### Mesh Class
 
-The Mesh magnet class performs
+The Mesh magnet class loads geometry from STL files and calculates magnetic fields using a surface charge approach. Each triangular face of the mesh contributes to the total field based on:
+
+- Face normal vector and magnetisation alignment
+- Surface charge density $\sigma_m = \mathbf{M} \cdot \mathbf{\hat{n}}$
+- Numerical integration over the mesh surface
+
+For force and torque calculations, the mesh is subdivided into smaller triangles for improved accuracy.
 
 ### Quaternion Class
 
-This is a convenience class for performing rotations of points/vectors about arbitrary axes.
+This is a convenience class for performing rotations of points/vectors about arbitrary axes. Quaternions avoid gimbal lock issues that can occur with Euler angles.
+
+**Key methods:**
+
+| Method | Description |
+|--------|-------------|
+| `gen_rotation_quaternion(alpha, beta, gamma)` | Create quaternion from Euler angles |
+| `get_conjugate()` | Return conjugate quaternion (for inverse rotation) |
+| `__mul__` | Rotate a point/vector using quaternion multiplication |
+
+**Example:**
+
+```python
+from pymagnet.utils import Quaternion
+import numpy as np
+
+# Create rotation quaternion (30° about z, 45° about y, 0° about x)
+q = Quaternion.gen_rotation_quaternion(
+    np.deg2rad(30), np.deg2rad(45), np.deg2rad(0)
+)
+
+# Rotate a point
+point = np.array([1, 0, 0])
+rotated = q * point
+```
+
+---
 
 ## Plot Methods
 
+### 2D Plotting (matplotlib)
+
+Functions for 2D visualisation using matplotlib:
+
+| Function | Description |
+|----------|-------------|
+| `plot_1D_field()` | Line plot of field along magnet axis |
+| `plot_2D_line()` | Line plot along arbitrary path |
+| `plot_2D_contour()` | Contour plot of field magnitude |
+| `plot_3D_contour()` | 3D surface plot using matplotlib |
+| `plot_sub_contour_3D()` | Multiple 3D contour subplots |
+
+### 3D Plotting (plotly)
+
+Functions for interactive 3D visualisation using plotly:
+
+| Function | Description |
+|----------|-------------|
+| `plot_magnet()` | Render 3D magnet geometry |
+| `slice_plot()` | Plot field on 2D slice planes |
+| `slice_quickplot()` | Quick slice plot with auto grid |
+| `volume_plot()` | 3D volume rendering of field |
+| `volume_quickplot()` | Quick volume plot with auto grid |
+
 ### Draw Magnets on Plot
+
+For 2D plots, magnets are drawn as patches (rectangles, circles, or polygons) overlaid on the field contours.
+
+For 3D plots, magnets are rendered as meshes using plotly's `Mesh3d` graphics object. The rendering classes (`Graphic_Cuboid`, `Graphic_Cylinder`, `Graphic_Sphere`, `Graphic_Mesh`) generate the appropriate vertex data for each magnet type.
+
+---
+
+## Utility Functions
+
+### Field Calculation
+
+| Function | Description |
+|----------|-------------|
+| `get_field_2D(points)` | Calculate 2D field at given points |
+| `get_field_3D(points)` | Calculate 3D field at given points |
+
+### Grid Generation
+
+| Function | Description |
+|----------|-------------|
+| `grid3D(xmax, ymax, zmax, ...)` | Generate 3D grid of points |
+| `slice3D(plane, ...)` | Generate 2D slice in 3D space |
+| `line3D(start, end, ...)` | Generate points along a line |
+
+### Magnet Management
+
+| Function | Description |
+|----------|-------------|
+| `reset_magnets()` | Clear all instantiated magnets |
+| `list_magnets()` | Print all current magnets |

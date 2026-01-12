@@ -92,7 +92,7 @@ def plot_1D_field(
             "Expected Cylinder or Prism."
         )
 
-    fig, ax = _plt.subplots(figsize=(8, 8))
+    _fig, _ax = _plt.subplots(figsize=(8, 8))
     unit_length = "(" + points.unit + ")"
     field_unit = "(" + field.unit + ")"
     _plt.xlabel(r"$z$ " + unit_length)

@@ -6,11 +6,6 @@ from numba import float64, njit, prange, vectorize
 from stl import mesh
 
 from ..utils._quaternion import Quaternion, q_angle_from_axis
-from ..utils._quaternion_numba import (
-    quat_conjugate,
-    quat_from_axis_angle,
-    quat_rotate_vector,
-)
 from ..utils._trigonometry3D import (
     _rotate_triangle,
     _rotate_triangle_njit,
@@ -856,8 +851,6 @@ def _calcB_2_triangles_njit(triangle1, triangle2, Jr, x, y, z):
     Returns:
         tuple: (Bx, By, Bz) field arrays
     """
-    n = x.size
-
     # Calculate field from first right-angled triangle
     Btx, Bty, Btz = _charge_sheet_njit(triangle1[0], triangle1[1], Jr, x, y, z)
 
@@ -899,7 +892,7 @@ def _calcB_triangle_njit(triangle, Jr, x_flat, y_flat, z_flat):
         tuple: (Bx, By, Bz) field arrays
     """
     # Rotate triangle to standard orientation
-    total_rotation, rotated_triangle, offset, RA_triangle1, RA_triangle2 = (
+    total_rotation, _rotated_triangle, offset, RA_triangle1, RA_triangle2 = (
         _rotate_triangle_njit(triangle)
     )
 
@@ -959,12 +952,6 @@ def _get_field_parallel_njit(
     Bx_total = _np.zeros(n_points)
     By_total = _np.zeros(n_points)
     Bz_total = _np.zeros(n_points)
-
-    # Allocate thread-local storage for parallel reduction
-    # Each thread accumulates to its own array, then we sum at the end
-    Bx_local = _np.zeros(n_points)
-    By_local = _np.zeros(n_points)
-    Bz_local = _np.zeros(n_points)
 
     # Process triangles in parallel
     for i in prange(n_triangles):

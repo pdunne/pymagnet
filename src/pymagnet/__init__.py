@@ -17,12 +17,12 @@ from .utils._routines3D import get_field_3D
 
 __all__ = [
     "forces",
-    "magnets",
-    "utils",
-    "list",
-    "reset",
     "get_field_2D",
-    "grid2D",
     "get_field_3D",
+    "grid2D",
+    "list",
+    "magnets",
     "plots",
+    "reset",
+    "utils",
 ]

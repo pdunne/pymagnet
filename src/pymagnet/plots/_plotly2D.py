@@ -8,6 +8,7 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources.
 
 """
+
 import warnings
 
 try:
@@ -15,7 +16,7 @@ try:
 
 except ImportError:
     _has_plotly = False
-    warnings.warn("plotly is not installed", UserWarning)
+    warnings.warn("plotly is not installed", UserWarning, stacklevel=2)
 
 else:
     _has_plotly = True
@@ -189,7 +190,6 @@ def _plotly_draw_circle(p1=(-0.5, -0.5), p2=(0.5, 0.5), **kwargs):
 
 
 def _plotly_draw_arrow(head=(-0.5, -0.5), tail=(0.5, 0.5), **kwargs):
-
     arrowcolor = kwargs.pop("arrowcolor", "black")
     return dict(
         x=head[0],  # arrows' head

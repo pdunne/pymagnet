@@ -9,6 +9,7 @@ methods, i.e. magnet center and quaternion methods for rotating the magnet with 
 to each principal axis.
 
 """
+
 import numpy as _np
 
 from ..utils.global_const import MAG_TOL, PI
@@ -163,7 +164,6 @@ class Rectangle(Magnet2D):
         # Calculate field due to x-component of magnetisation
         if _np.fabs(self.Jx / self.Jr) > Magnet2D.tol:
             if _np.fabs(self.alpha_radians) > Magnet2D.tol:
-
                 # Calculate fields in local frame
                 Btx = self._calcBx_mag_x(xi, yi)
                 Bty = self._calcBy_mag_x(xi, yi)
@@ -178,7 +178,6 @@ class Rectangle(Magnet2D):
         # Calculate field due to y-component of magnetisation
         if _np.fabs(self.Jy / self.Jr) > Magnet2D.tol:
             if _np.fabs(self.alpha_radians) > Magnet2D.tol:
-
                 Btx = self._calcBx_mag_y(xi, yi)
                 Bty = self._calcBy_mag_y(xi, yi)
 
@@ -186,7 +185,6 @@ class Rectangle(Magnet2D):
                 Bx += Bxt
                 By += Byt
             else:
-
                 Bx += self._calcBx_mag_y(x - self.center[0], y - self.center[1])
                 By += self._calcBy_mag_y(x - self.center[0], y - self.center[1])
         return Bx, By

@@ -15,6 +15,7 @@ import numpy as np
 import numpy.testing as npt
 import pytest
 
+from pymagnet.utils._quaternion import Quaternion
 from pymagnet.utils._trigonometry3D import (
     _largest_side_RA,
     _rotate_triangle,
@@ -28,8 +29,6 @@ from pymagnet.utils._trigonometry3D import (
     rotate_points,
     signed_area,
 )
-from pymagnet.utils._quaternion import Quaternion, q_angle_from_axis
-from pymagnet.utils.global_const import PI
 
 
 class TestSignedArea:
@@ -246,7 +245,9 @@ class TestAlignTriangleToY:
         y_axis = np.array([0, 1, 0])
         rot_axis = np.cross(y_axis, norm_vec)
 
-        aligned, rotation = align_triangle_to_y(right_angle_triangle, rot_axis, norm_vec)
+        aligned, rotation = align_triangle_to_y(
+            right_angle_triangle, rot_axis, norm_vec
+        )
 
         # Check that aligned triangle has normal along y
         new_normal = norm_plane(aligned)
@@ -364,9 +365,7 @@ class TestNumericalStability:
     def test_nearly_degenerate_triangle(self):
         """Nearly degenerate triangle (very thin)."""
         # Very thin triangle
-        triangle = np.array(
-            [[0.0, 0.0, 0.0], [10.0, 0.0, 0.0], [5.0, 0.0, 0.001]]
-        )
+        triangle = np.array([[0.0, 0.0, 0.0], [10.0, 0.0, 0.0], [5.0, 0.0, 0.001]])
         Jr = np.array([0.0, 1.0, 0.0])
 
         # Should not raise an error

@@ -7,6 +7,7 @@
 TODO:
     - All tests need to be updated and expanded to reflect the new API.
 """
+
 from pymagnet import __version__
 
 

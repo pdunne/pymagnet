@@ -142,16 +142,24 @@ def main():
 
         speedup = result["serial_mean"] / result["parallel_mean"]
 
-        print(f"  Serial:   {format_time(result['serial_mean']):>10} +/- {format_time(result['serial_std'])}")
-        print(f"  Parallel: {format_time(result['parallel_mean']):>10} +/- {format_time(result['parallel_std'])}")
+        print(
+            f"  Serial:   {format_time(result['serial_mean']):>10} +/- {format_time(result['serial_std'])}"
+        )
+        print(
+            f"  Parallel: {format_time(result['parallel_mean']):>10} +/- {format_time(result['parallel_std'])}"
+        )
         print(f"  Speedup:  {speedup:.1f}x")
-        print(f"  Mean rel diff: {result['mean_rel_diff']:.2e} (due to parallel accumulation order)")
+        print(
+            f"  Mean rel diff: {result['mean_rel_diff']:.2e} (due to parallel accumulation order)"
+        )
 
     # Summary
     print("\n" + "=" * 60)
     print("SUMMARY")
     print("=" * 60)
-    print(f"\n{'Mesh':<15} {'Triangles':>10} {'Serial':>12} {'Parallel':>12} {'Speedup':>10}")
+    print(
+        f"\n{'Mesh':<15} {'Triangles':>10} {'Serial':>12} {'Parallel':>12} {'Speedup':>10}"
+    )
     print("-" * 60)
 
     for name, result in results.items():

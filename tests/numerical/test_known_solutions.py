@@ -6,7 +6,6 @@
 
 import numpy as np
 import numpy.testing as npt
-import pytest
 
 from pymagnet import magnets
 
@@ -35,8 +34,7 @@ class TestCylinderKnownSolutions:
         z_plus = z_test + L / 2
         z_minus = z_test - L / 2
         Bz_analytical = (Jr / 2) * (
-            z_plus / np.sqrt(z_plus**2 + R**2)
-            - z_minus / np.sqrt(z_minus**2 + R**2)
+            z_plus / np.sqrt(z_plus**2 + R**2) - z_minus / np.sqrt(z_minus**2 + R**2)
         )
 
         npt.assert_allclose(Bz, Bz_analytical, rtol=0.01)

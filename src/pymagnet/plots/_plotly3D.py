@@ -10,6 +10,7 @@ Unlike the plot2D module, here plotly is used as the backend.
 TODO:
     * Update __str__ and __repr__ for polyhedra
 """
+
 from __future__ import annotations
 
 import warnings
@@ -20,7 +21,7 @@ try:
 
 except ImportError:
     _has_plotly = False
-    warnings.warn("plotly is not installed", UserWarning)
+    warnings.warn("plotly is not installed", UserWarning, stacklevel=2)
 
 else:
     _has_plotly = True
@@ -78,9 +79,7 @@ class Polyhedron(Registry):
     def _needs_rotation(self) -> bool:
         """Check if any rotation angles exceed the tolerance threshold."""
         return _np.any(
-            _np.fabs(
-                _np.array([self.alpha_rad, self.beta_rad, self.gamma_rad])
-            )
+            _np.fabs(_np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]))
             > Polyhedron.tol
         )
 

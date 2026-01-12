@@ -4,11 +4,12 @@
 # Copyright 2021 Peter Dunne
 """Tests for Mesh class (3D polygon magnets from STL files)."""
 
+import os
+import tempfile
+
 import numpy as np
 import numpy.testing as npt
 import pytest
-import tempfile
-import os
 
 # Try to import stl for creating test meshes
 try:

@@ -8,6 +8,7 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources, and
 
 """
+
 from __future__ import annotations
 
 import warnings
@@ -18,7 +19,7 @@ try:
 
 except ImportError:
     _has_matplotlib = False
-    warnings.warn("matplotlib is not installed", UserWarning)
+    warnings.warn("matplotlib is not installed", UserWarning, stacklevel=2)
 
 else:
     _has_matplotlib = True
@@ -260,7 +261,6 @@ def plot_2D_contour(
             _vector_plot2(point_array, field, NQ, vector_color)
 
     elif plot_type.lower() == "streamplot":
-
         xpl = point_array.x[:, 0]
         ypl = point_array.y[0, :]
         cmap = kwargs.pop("cmap", None)
@@ -793,7 +793,7 @@ def contour_plot_cylinder(magnet, **kwargs):
         -magnet.length : magnet.length : NPJ,
     ]
     Br, Bz = magnet._calcB_cyl(rho, z)
-    Bn = _np.sqrt(Bz ** 2 + Br ** 2)
+    Bn = _np.sqrt(Bz**2 + Br**2)
 
     xlab = "r (m)"
     ylab = "z (m)"

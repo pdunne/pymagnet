@@ -22,7 +22,7 @@ def _gen_sphere_grid(active_magnet, Jvec, num_samples=10, unit="mm"):
     # Jnorm = Jr * _np.cos(v)
 
     # Delete origin duplicates
-    # Jnorm = _np.delete(Jnorm, _np.arange(num_samples, Jnorm.size, num_samples)).ravel()  # noqa: E501
+    # Jnorm = _np.delete(Jnorm, _np.arange(num_samples, Jnorm.size, num_samples)).ravel()
 
     y = _np.delete(y, _np.arange(num_samples, x.size, num_samples))
     z = _np.delete(z, _np.arange(num_samples, x.size, num_samples))

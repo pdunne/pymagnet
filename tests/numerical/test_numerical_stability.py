@@ -6,7 +6,6 @@
 
 import numpy as np
 import numpy.testing as npt
-import pytest
 
 from pymagnet import magnets
 
@@ -168,7 +167,7 @@ class TestQuaternionStability:
 
     def test_double_rotation_returns_original(self):
         """Double 180-degree rotation returns original."""
-        from pymagnet.utils._quaternion import Quaternion, q_angle_from_axis
+        from pymagnet.utils._quaternion import q_angle_from_axis
 
         # 180-degree rotation about z
         q = q_angle_from_axis(np.pi, (0, 0, 1))
@@ -207,9 +206,7 @@ class TestTrigonometry3DStability:
         """Very small triangle is handled."""
         from pymagnet.utils._trigonometry3D import signed_area
 
-        triangle = np.array(
-            [[0.0, 0.0, 0.0], [1e-8, 0.0, 0.0], [0.5e-8, 1e-8, 0.0]]
-        )
+        triangle = np.array([[0.0, 0.0, 0.0], [1e-8, 0.0, 0.0], [0.5e-8, 1e-8, 0.0]])
         area = signed_area(triangle)
         assert np.isfinite(area)
         assert area >= 0

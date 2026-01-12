@@ -383,7 +383,7 @@ def calc_magnetic_field(mag_prop, grid_prop):
 #         m_approx = np.gradient(B_ravg,xpl).mean()
 #         B_fit2 = np.polyval( [m_approx, fit_res[-1]], xpl)
 #         if fit_res.shape[0] > 3:
-#             BgB_fit = B_fit *( 3*xpl**2 * fit_res[0] + 2*xpl * fit_res[1] + fit_res[2])  # noqa: E501
+#             BgB_fit = B_fit *( 3*xpl**2 * fit_res[0] + 2*xpl * fit_res[1] + fit_res[2])
 #         else:
 #             BgB_fit = B_fit *( 2*xpl* fit_res[0] + fit_res[1])
 #         m_approx = np.gradient(BgB_fit,xpl).mean()

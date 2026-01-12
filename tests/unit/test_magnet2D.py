@@ -9,7 +9,6 @@ import numpy.testing as npt
 import pytest
 
 from pymagnet import magnets
-from pymagnet.utils import Point2
 
 
 class TestRectangleInit:

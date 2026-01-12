@@ -71,12 +71,14 @@ def quat_multiply(q1, q2):
     w1, x1, y1, z1 = q1[0], q1[1], q1[2], q1[3]
     w2, x2, y2, z2 = q2[0], q2[1], q2[2], q2[3]
 
-    return np.array([
-        w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
-        w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
-        w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2,
-        w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2,
-    ])
+    return np.array(
+        [
+            w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
+            w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+            w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2,
+            w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2,
+        ]
+    )
 
 
 @njit(cache=True)
@@ -162,7 +164,7 @@ def quat_from_euler(alpha, beta, gamma):
 def quat_rotate_vector(q, v):
     """Rotate 3D vector by quaternion.
 
-    Uses optimized formula: v' = v + 2*w*(q_xyz × v) + 2*(q_xyz × (q_xyz × v))
+    Uses optimized formula: v' = v + 2*w*(q_xyz * v) + 2*(q_xyz * (q_xyz * v))
     which is equivalent to q * v * q' but faster.
 
     Args:
@@ -181,11 +183,13 @@ def quat_rotate_vector(q, v):
     tz = 2.0 * (x * vy - y * vx)
 
     # result = v + w*t + cross(q.xyz, t)
-    return np.array([
-        vx + w * tx + (y * tz - z * ty),
-        vy + w * ty + (z * tx - x * tz),
-        vz + w * tz + (x * ty - y * tx),
-    ])
+    return np.array(
+        [
+            vx + w * tx + (y * tz - z * ty),
+            vy + w * ty + (z * tx - x * tz),
+            vz + w * tz + (x * ty - y * tx),
+        ]
+    )
 
 
 @njit(cache=True)
@@ -209,11 +213,13 @@ def quat_rotate_vector_inverse(q, v):
     ty = 2.0 * (z * vx - x * vz)
     tz = 2.0 * (x * vy - y * vx)
 
-    return np.array([
-        vx + w * tx + (y * tz - z * ty),
-        vy + w * ty + (z * tx - x * tz),
-        vz + w * tz + (x * ty - y * tx),
-    ])
+    return np.array(
+        [
+            vx + w * tx + (y * tz - z * ty),
+            vy + w * ty + (z * tx - x * tz),
+            vz + w * tz + (x * ty - y * tx),
+        ]
+    )
 
 
 @njit(cache=True)
@@ -417,11 +423,13 @@ def vectors_parallel(v1, v2, tol=1e-6):
     Returns:
         bool: True if vectors are parallel
     """
-    cross = np.array([
-        v1[1] * v2[2] - v1[2] * v2[1],
-        v1[2] * v2[0] - v1[0] * v2[2],
-        v1[0] * v2[1] - v1[1] * v2[0],
-    ])
+    cross = np.array(
+        [
+            v1[1] * v2[2] - v1[2] * v2[1],
+            v1[2] * v2[0] - v1[0] * v2[2],
+            v1[0] * v2[1] - v1[1] * v2[0],
+        ]
+    )
     return np.sqrt(cross[0] ** 2 + cross[1] ** 2 + cross[2] ** 2) < tol
 
 
@@ -486,13 +494,15 @@ def vec3_cross(a, b):
         b (ndarray): (3,) second vector
 
     Returns:
-        ndarray: (3,) cross product a × b
+        ndarray: (3,) cross product a * b
     """
-    return np.array([
-        a[1] * b[2] - a[2] * b[1],
-        a[2] * b[0] - a[0] * b[2],
-        a[0] * b[1] - a[1] * b[0],
-    ])
+    return np.array(
+        [
+            a[1] * b[2] - a[2] * b[1],
+            a[2] * b[0] - a[0] * b[2],
+            a[0] * b[1] - a[1] * b[0],
+        ]
+    )
 
 
 @njit(cache=True)

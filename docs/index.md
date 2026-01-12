@@ -5,21 +5,20 @@ User friendly magnetic field calculations in Python
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-blue.svg)](https://opensource.org/licenses/MPL-2.0)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![DOI](https://zenodo.org/badge/339667292.svg)](https://zenodo.org/badge/latestdoi/339667292)
-<!-- [![Anaconda-Server Badge](https://anaconda.org/pdunne/pymagnet/badges/version.svg)](https://anaconda.org/pdunne/pymagnet) -->
 
 ## Getting Started
 
 Installing `pymagnet` can be done using
 
 ```bash
-python -m pip install pymagnet 
+python -m pip install pymagnet
 ```
 
-<!-- or
+For plotting support, install with the optional `plots` extra:
 
 ```bash
-conda install -c pdunne pymagnet
-``` -->
+python -m pip install pymagnet[plots]
+```
 
 Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D
 and 3D objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
@@ -65,14 +64,24 @@ but the underlying data is also accessible.
 
 ## Prerequisites
 
-Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
- (to use f-strings), and the following packages:
+Ensure you have [Python](https://www.python.org/) version >= 3.10.
 
-* numpy
-* numpy-stl
-* numba
-* matplotlib
-* plotly
+### Core Dependencies
+
+* numpy (>=2.0.1)
+* numpy-stl (>=3.1.2)
+* numba (>=0.60.0)
+
+### Optional Dependencies (for plotting)
+
+* matplotlib (>=3.9.2) - for 2D plots
+* plotly (>=5.23.0) - for 3D interactive plots
+
+Install with plotting support:
+
+```bash
+pip install pymagnet[plots]
+```
 
 !!! Warning
     - Rotate spheres using $\alpha$, $\beta$, $\gamma$, as the magnetisation is always

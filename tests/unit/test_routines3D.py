@@ -9,15 +9,15 @@ import numpy.testing as npt
 import pytest
 
 from pymagnet.utils._routines3D import (
-    grid3D,
-    line3D,
-    slice3D,
-    point3D,
-    plane3D,
-    get_field_3D,
     _allocate_field_array3,
     _get_max_array,
     _tile_arrays,
+    get_field_3D,
+    grid3D,
+    line3D,
+    plane3D,
+    point3D,
+    slice3D,
 )
 
 
@@ -43,7 +43,9 @@ class TestGrid3D:
 
     def test_asymmetric_num_points(self):
         """Different num_points per axis."""
-        result = grid3D(10.0, 10.0, 10.0, num_points_x=5, num_points_y=10, num_points_z=15)
+        result = grid3D(
+            10.0, 10.0, 10.0, num_points_x=5, num_points_y=10, num_points_z=15
+        )
         assert result.x.shape == (5, 10, 15)
 
     def test_symmetric_limits(self):
@@ -115,19 +117,25 @@ class TestSlice3D:
 
     def test_xy_plane(self):
         """XY plane slice has constant z."""
-        result = slice3D(plane="xy", max1=10.0, max2=10.0, slice_value=5.0, num_points=3)
+        result = slice3D(
+            plane="xy", max1=10.0, max2=10.0, slice_value=5.0, num_points=3
+        )
         npt.assert_allclose(result.z, 5.0)
         assert result.x.shape == (3, 3)
 
     def test_xz_plane(self):
         """XZ plane slice has constant y."""
-        result = slice3D(plane="xz", max1=10.0, max2=10.0, slice_value=5.0, num_points=3)
+        result = slice3D(
+            plane="xz", max1=10.0, max2=10.0, slice_value=5.0, num_points=3
+        )
         npt.assert_allclose(result.y, 5.0)
         assert result.x.shape == (3, 3)
 
     def test_yz_plane(self):
         """YZ plane slice has constant x."""
-        result = slice3D(plane="yz", max1=10.0, max2=10.0, slice_value=5.0, num_points=3)
+        result = slice3D(
+            plane="yz", max1=10.0, max2=10.0, slice_value=5.0, num_points=3
+        )
         npt.assert_allclose(result.x, 5.0)
         assert result.y.shape == (3, 3)
 
@@ -237,18 +245,26 @@ class TestGetField3D:
         from pymagnet import magnets
 
         _ = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0)
-        points = slice3D(plane="xz", max1=20.0, max2=20.0, slice_value=0.0, num_points=5)
+        points = slice3D(
+            plane="xz", max1=20.0, max2=20.0, slice_value=0.0, num_points=5
+        )
         result = get_field_3D(points)
 
         # Field should have non-zero values
-        assert np.any(result.x != 0.0) or np.any(result.y != 0.0) or np.any(result.z != 0.0)
+        assert (
+            np.any(result.x != 0.0)
+            or np.any(result.y != 0.0)
+            or np.any(result.z != 0.0)
+        )
 
     def test_norm_computed(self):
         """Field norm is computed."""
         from pymagnet import magnets
 
         _ = magnets.Prism(width=5.0, depth=5.0, height=10.0, Jr=1.0)
-        points = slice3D(plane="xz", max1=20.0, max2=20.0, slice_value=0.0, num_points=5)
+        points = slice3D(
+            plane="xz", max1=20.0, max2=20.0, slice_value=0.0, num_points=5
+        )
         result = get_field_3D(points)
 
         assert result.n.shape == result.x.shape

@@ -1,5 +1,5 @@
-"""Calculates and plots the magnetic field due to 4 biaxial rods
-"""
+"""Calculates and plots the magnetic field due to 4 biaxial rods"""
+
 import pymagnet as pm
 import pymagnet.plots as mplt
 

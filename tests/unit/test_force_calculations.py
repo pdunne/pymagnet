@@ -17,7 +17,6 @@ import pytest
 
 from pymagnet import magnets, reset
 from pymagnet.forces._cylinder_force import calc_force_cylinder
-from pymagnet.forces._mesh_force import calc_force_mesh
 from pymagnet.forces._prism_force import calc_force_prism
 from pymagnet.forces._sphere_force import calc_force_sphere
 

@@ -11,19 +11,15 @@ from numba import jit, njit
 
 from ._quaternion import Quaternion, q_angle_from_axis
 from ._quaternion_numba import (
-    quat_conjugate,
     quat_from_axis_angle,
     quat_identity,
-    quat_multiply,
     quat_multiply3,
     quat_rotate_points,
-    quat_rotate_vector,
     safe_arccos,
     vec3_cross,
     vec3_dot,
     vec3_norm,
     vec3_normalize,
-    vectors_parallel,
     vectors_same_direction,
 )
 from .global_const import ALIGN_CUTOFF, PI
@@ -159,11 +155,13 @@ def _largest_side_RA(triangle):
             - RA_triangle2 (ndarray): [base, altitude] of second right triangle
     """
     # Compute edge lengths efficiently
-    edge_lengths = _np.array([
-        _np.linalg.norm(triangle[1] - triangle[0]),  # Edge 0: v0 → v1
-        _np.linalg.norm(triangle[2] - triangle[1]),  # Edge 1: v1 → v2
-        _np.linalg.norm(triangle[2] - triangle[0]),  # Edge 2: v0 → v2
-    ])
+    edge_lengths = _np.array(
+        [
+            _np.linalg.norm(triangle[1] - triangle[0]),  # Edge 0: v0 → v1
+            _np.linalg.norm(triangle[2] - triangle[1]),  # Edge 1: v1 → v2
+            _np.linalg.norm(triangle[2] - triangle[0]),  # Edge 2: v0 → v2
+        ]
+    )
 
     # Use argmax (O(n)) instead of argsort (O(n log n))
     longest_side = int(_np.argmax(edge_lengths))

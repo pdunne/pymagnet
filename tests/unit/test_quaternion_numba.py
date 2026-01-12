@@ -5,13 +5,11 @@
 """Tests for numba-compatible quaternion operations."""
 
 import numpy as np
-import pytest
 
-from pymagnet.utils._quaternion import Quaternion, q_angle_from_axis
+from pymagnet.utils._quaternion import q_angle_from_axis
 from pymagnet.utils._quaternion_numba import (
     quat_conjugate,
     quat_from_axis_angle,
-    quat_from_euler,
     quat_identity,
     quat_is_identity,
     quat_multiply,
@@ -228,29 +226,35 @@ class TestVectorRotation:
     def test_rotate_points(self):
         """Test rotating multiple points."""
         q = quat_from_axis_angle(np.pi / 2, np.array([0.0, 0.0, 1.0]))
-        points = np.array([
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [1.0, 1.0, 0.0],
-        ])
+        points = np.array(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0],
+                [1.0, 1.0, 0.0],
+            ]
+        )
 
         result = quat_rotate_points(q, points)
 
-        expected = np.array([
-            [0.0, 1.0, 0.0],
-            [-1.0, 0.0, 0.0],
-            [-1.0, 1.0, 0.0],
-        ])
+        expected = np.array(
+            [
+                [0.0, 1.0, 0.0],
+                [-1.0, 0.0, 0.0],
+                [-1.0, 1.0, 0.0],
+            ]
+        )
         assert np.allclose(result, expected, atol=1e-10)
 
     def test_rotate_points_inverse(self):
         """Test inverse rotation of multiple points."""
         q = quat_from_axis_angle(np.pi / 4, np.array([1.0, 1.0, 1.0]))
-        points = np.array([
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ])
+        points = np.array(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.0, 1.0],
+            ]
+        )
 
         points_rot = quat_rotate_points(q, points)
         points_back = quat_rotate_points_inverse(q, points_rot)
@@ -367,11 +371,13 @@ class TestTrigonometryNumbaFunctions:
         from pymagnet.utils._trigonometry3D import _rotate_triangle_njit
 
         # Simple triangle in xy plane
-        triangle = np.array([
-            [0.0, 0.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [0.5, 0.866, 0.0],
-        ])
+        triangle = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [1.0, 0.0, 0.0],
+                [0.5, 0.866, 0.0],
+            ]
+        )
 
         q, rotated, offset, ra1, ra2 = _rotate_triangle_njit(triangle)
 
@@ -384,13 +390,16 @@ class TestTrigonometryNumbaFunctions:
 
     def test_rotate_triangle_njit_matches_original(self):
         """Test that numba version matches original."""
-        from pymagnet.utils._trigonometry3D import _rotate_triangle, _rotate_triangle_njit
+        from pymagnet.utils._trigonometry3D import (
+            _rotate_triangle,
+            _rotate_triangle_njit,
+        )
 
         # Test multiple triangles
         triangles = [
-            np.array([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]),
-            np.array([[1., 2., 3.], [4., 5., 6.], [7., 8., 10.]]),
-            np.array([[0., 0., 0.], [1., 0., 0.], [0.5, 0., 0.866]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]),
+            np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 10.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.5, 0.0, 0.866]]),
         ]
 
         for triangle in triangles:
@@ -416,11 +425,13 @@ class TestTrigonometryNumbaFunctions:
         """Test numba plane normal calculation."""
         from pymagnet.utils._trigonometry3D import norm_plane, norm_plane_njit
 
-        triangle = np.array([
-            [0.0, 0.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-        ])
+        triangle = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [1.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0],
+            ]
+        )
 
         norm_orig = norm_plane(triangle)
         norm_njit = norm_plane_njit(triangle)

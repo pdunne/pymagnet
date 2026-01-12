@@ -727,7 +727,7 @@ class Cylinder(Magnet3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.Jr} (T)\n"
-            + f"Size: {self.get_size() }\n"
+            + f"Size: {self.get_size()}\n"
             + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
@@ -975,7 +975,7 @@ class Sphere(Magnet3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.get_size() }\n"
+            + f"Size: {self.get_size()}\n"
             + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )

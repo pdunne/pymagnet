@@ -14,8 +14,8 @@ from pymagnet.utils._conversions import (
     get_unit_value_meter,
     get_unit_value_tesla,
     pol2cart,
-    sphere_sph2cart,
     sph2cart,
+    sphere_sph2cart,
     vector_pol2cart,
     vector_sph2cart,
 )
