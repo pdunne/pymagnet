@@ -109,7 +109,7 @@ def main():
 
     # Test data
     axis = np.array([1.0, 2.0, 3.0])
-    axis_normalized = axis / np.linalg.norm(axis)
+    # axis_normalized = axis / np.linalg.norm(axis)
     angle = np.pi / 4
     vector = np.array([1.0, 2.0, 3.0])
 
