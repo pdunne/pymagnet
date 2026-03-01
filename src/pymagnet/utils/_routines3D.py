@@ -187,11 +187,39 @@ def get_field_3D(points):
 
     B = _allocate_field_array3(points.x, points.y, points.z)
 
+    # Track which points are inside any magnet (for masking after summation)
+    mask_magnet = _np.zeros(B.x.shape, dtype=bool)
+    needs_masking = False
+
     for magnet in Magnet3D.instances:
         Bx, By, Bz = magnet.get_field(points.x, points.y, points.z)
-        B.x += Bx.reshape(B.x.shape)
-        B.y += By.reshape(B.y.shape)
-        B.z += Bz.reshape(B.z.shape)
+        Bx = Bx.reshape(B.x.shape)
+        By = By.reshape(B.y.shape)
+        Bz = Bz.reshape(B.z.shape)
+
+        # Replace NaN with zero before accumulation to prevent NaN
+        # poisoning the sum (NaN + valid = NaN). NaN can arise from
+        # mask_magnet flagging points inside a magnet, or from
+        # numerical singularities at magnet edges.
+        nan_mask = _np.isnan(Bx) | _np.isnan(By) | _np.isnan(Bz)
+        if _np.any(nan_mask):
+            Bx = _np.where(nan_mask, 0.0, Bx)
+            By = _np.where(nan_mask, 0.0, By)
+            Bz = _np.where(nan_mask, 0.0, Bz)
+
+            if magnet._mask_magnet:
+                mask_magnet |= nan_mask
+                needs_masking = True
+
+        B.x += Bx
+        B.y += By
+        B.z += Bz
+
+    # Re-apply NaN mask for points inside any magnet
+    if needs_masking:
+        B.x[mask_magnet] = _np.nan
+        B.y[mask_magnet] = _np.nan
+        B.z[mask_magnet] = _np.nan
 
     B.calc_norm()
     return B

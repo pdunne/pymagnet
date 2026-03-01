@@ -15,18 +15,16 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3 :: Only",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
     "numpy>=2.0.1",
     "numpy-stl>=3.1.2",
     # Numba 0.60+ supports NumPy 2.0; consider pinning an upper bound until validated in CI.
-    "numba>=0.60.0,<0.62",
+    "numba>=0.60.0,<=0.64",
 ]
 
 [project.optional-dependencies]
@@ -86,7 +84,7 @@ include = ["src/pymagnet", "README.md", "LICENSE", "pyproject.toml", "tests"]
 # Ruff configuration
 # ----------------------------
 [tool.ruff]
-target-version = "py310"
+target-version = "py313"
 line-length = 88
 src = ["src"]
 

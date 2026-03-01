@@ -73,7 +73,7 @@ class TestCart2Pol:
         """Test with numpy array inputs."""
         x = np.array([1.0, 0.0, -1.0, 0.0])
         y = np.array([0.0, 1.0, 0.0, -1.0])
-        rho, phi = cart2pol(x, y)
+        rho, _phi = cart2pol(x, y)
         npt.assert_allclose(rho, [1.0, 1.0, 1.0, 1.0])
 
 
@@ -149,20 +149,20 @@ class TestCart2Sph:
 
     def test_origin(self):
         """Origin handling (r=0)."""
-        r, theta, phi = cart2sph(0.0, 0.0, 0.0)
+        r, _theta, _phi = cart2sph(0.0, 0.0, 0.0)
         assert r == 0.0
         # theta is NaN due to arccos(0/0), this is expected
 
     def test_positive_z_axis(self):
         """(0,0,1) -> r=1, theta=0, phi=0."""
-        r, theta, phi = cart2sph(0.0, 0.0, 1.0)
+        r, theta, _phi = cart2sph(0.0, 0.0, 1.0)
         npt.assert_allclose(r, 1.0)
         npt.assert_allclose(theta, 0.0)
         # phi is undefined on z-axis
 
     def test_negative_z_axis(self):
         """(0,0,-1) -> r=1, theta=pi."""
-        r, theta, phi = cart2sph(0.0, 0.0, -1.0)
+        r, theta, _phi = cart2sph(0.0, 0.0, -1.0)
         npt.assert_allclose(r, 1.0)
         npt.assert_allclose(theta, np.pi)
 

@@ -555,11 +555,18 @@ def _generate_volume_data(points, field, **kwargs):
                 [cmax, 0],
             ]
 
+    # Replace NaN with a value below isomin so plotly can render
+    # isosurfaces without gaps from masked magnet interiors
+    values = field.n.flatten()
+    nan_mask = _np.isnan(values)
+    if _np.any(nan_mask):
+        values = _np.where(nan_mask, cmin - 1.0, values)
+
     return _go.Volume(
         x=points.x.flatten(),
         y=points.y.flatten(),
         z=points.z.flatten(),
-        value=field.n.flatten(),
+        value=values,
         colorscale=colorscale,
         cmin=cmin,
         cmax=cmax,

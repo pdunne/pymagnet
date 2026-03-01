@@ -28,32 +28,32 @@ class TestCalcForcePrism:
 
     def test_returns_tuple(self, prism_pair_aligned):
         """calc_force_prism returns a tuple of (force, torque)."""
-        m1, m2 = prism_pair_aligned
+        m1, _m2 = prism_pair_aligned
         result = calc_force_prism(m1, num_samples=5)
         assert isinstance(result, tuple)
         assert len(result) == 2
 
     def test_force_shape_is_3d(self, prism_pair_aligned):
         """Force array has shape (3,)."""
-        m1, m2 = prism_pair_aligned
-        force, torque = calc_force_prism(m1, num_samples=5)
+        m1, _m2 = prism_pair_aligned
+        force, _torque = calc_force_prism(m1, num_samples=5)
         assert force.shape == (3,)
 
     def test_torque_shape_is_3d(self, prism_pair_aligned):
         """Torque array has shape (3,)."""
-        m1, m2 = prism_pair_aligned
+        m1, _m2 = prism_pair_aligned
         force, torque = calc_force_prism(m1, num_samples=5)
         assert torque.shape == (3,)
 
     def test_force_values_are_finite(self, prism_pair_aligned):
         """Force values should be finite (no NaN or inf)."""
-        m1, m2 = prism_pair_aligned
-        force, torque = calc_force_prism(m1, num_samples=5)
+        m1, _m2 = prism_pair_aligned
+        force, _torque = calc_force_prism(m1, num_samples=5)
         assert np.all(np.isfinite(force))
 
     def test_torque_values_are_finite(self, prism_pair_aligned):
         """Torque values should be finite (no NaN or inf)."""
-        m1, m2 = prism_pair_aligned
+        m1, _m2 = prism_pair_aligned
         force, torque = calc_force_prism(m1, num_samples=5)
         assert np.all(np.isfinite(torque))
 
@@ -63,32 +63,32 @@ class TestCalcForceCylinder:
 
     def test_returns_tuple(self, cylinder_pair_aligned):
         """calc_force_cylinder returns a tuple of (force, torque)."""
-        m1, m2 = cylinder_pair_aligned
+        m1, _m2 = cylinder_pair_aligned
         result = calc_force_cylinder(m1, num_segments=5)
         assert isinstance(result, tuple)
         assert len(result) == 2
 
     def test_force_shape_is_3d(self, cylinder_pair_aligned):
         """Force array has shape (3,)."""
-        m1, m2 = cylinder_pair_aligned
-        force, torque = calc_force_cylinder(m1, num_segments=5)
+        m1, _m2 = cylinder_pair_aligned
+        force, _torque = calc_force_cylinder(m1, num_segments=5)
         assert force.shape == (3,)
 
     def test_torque_shape_is_3d(self, cylinder_pair_aligned):
         """Torque array has shape (3,)."""
-        m1, m2 = cylinder_pair_aligned
+        m1, _m2 = cylinder_pair_aligned
         force, torque = calc_force_cylinder(m1, num_segments=5)
         assert torque.shape == (3,)
 
     def test_force_values_are_finite(self, cylinder_pair_aligned):
         """Force values should be finite."""
-        m1, m2 = cylinder_pair_aligned
-        force, torque = calc_force_cylinder(m1, num_segments=5)
+        m1, _m2 = cylinder_pair_aligned
+        force, _torque = calc_force_cylinder(m1, num_segments=5)
         assert np.all(np.isfinite(force))
 
     def test_torque_values_are_finite(self, cylinder_pair_aligned):
         """Torque values should be finite."""
-        m1, m2 = cylinder_pair_aligned
+        m1, _m2 = cylinder_pair_aligned
         force, torque = calc_force_cylinder(m1, num_segments=5)
         assert np.all(np.isfinite(torque))
 
@@ -98,32 +98,32 @@ class TestCalcForceSphere:
 
     def test_returns_tuple(self, sphere_pair_aligned):
         """calc_force_sphere returns a tuple of (force, torque)."""
-        m1, m2 = sphere_pair_aligned
+        m1, _m2 = sphere_pair_aligned
         result = calc_force_sphere(m1, num_samples=10)
         assert isinstance(result, tuple)
         assert len(result) == 2
 
     def test_force_shape_is_3d(self, sphere_pair_aligned):
         """Force array has shape (3,)."""
-        m1, m2 = sphere_pair_aligned
-        force, torque = calc_force_sphere(m1, num_samples=10)
+        m1, _m2 = sphere_pair_aligned
+        force, _torque = calc_force_sphere(m1, num_samples=10)
         assert force.shape == (3,)
 
     def test_torque_shape_is_3d(self, sphere_pair_aligned):
         """Torque array has shape (3,)."""
-        m1, m2 = sphere_pair_aligned
+        m1, _m2 = sphere_pair_aligned
         force, torque = calc_force_sphere(m1, num_samples=10)
         assert torque.shape == (3,)
 
     def test_force_values_are_finite(self, sphere_pair_aligned):
         """Force values should be finite."""
-        m1, m2 = sphere_pair_aligned
-        force, torque = calc_force_sphere(m1, num_samples=10)
+        m1, _m2 = sphere_pair_aligned
+        force, _torque = calc_force_sphere(m1, num_samples=10)
         assert np.all(np.isfinite(force))
 
     def test_torque_values_are_finite(self, sphere_pair_aligned):
         """Torque values should be finite."""
-        m1, m2 = sphere_pair_aligned
+        m1, _m2 = sphere_pair_aligned
         force, torque = calc_force_sphere(m1, num_samples=10)
         assert np.all(np.isfinite(torque))
 

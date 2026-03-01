@@ -178,7 +178,8 @@ def main():
     # Benchmark 5: Batch Vector Rotation (100 points)
     # =========================================================================
     n_points = 100
-    points = np.random.randn(n_points, 3)
+    rng = np.random.default_rng()
+    points = rng.standard_normal((n_points, 3))
     points_T = points.T
 
     def python_rotate_batch():
@@ -196,7 +197,7 @@ def main():
     # Benchmark 6: Batch Vector Rotation (10,000 points)
     # =========================================================================
     n_points = 10000
-    points_large = np.random.randn(n_points, 3)
+    points_large = points = rng.standard_normal((n_points, 3))
     points_large_T = points_large.T
 
     def python_rotate_large():
@@ -214,9 +215,10 @@ def main():
     # Benchmark 7: Coordinate Array Rotation
     # =========================================================================
     n_coords = 1000
-    x = np.random.randn(n_coords)
-    y = np.random.randn(n_coords)
-    z = np.random.randn(n_coords)
+    rng = np.random.default_rng()
+    x = rng.standard_normal(n_coords)
+    y = rng.standard_normal(n_coords)
+    z = rng.standard_normal(n_coords)
     pos_vec = np.array([x, y, z])
 
     def python_coord_rotate():
@@ -256,9 +258,10 @@ def main():
     # Benchmark 9: Triangle Rotation (100 triangles)
     # =========================================================================
     n_triangles = 100
+    rng = np.random.default_rng()
     triangles = []
     for _ in range(n_triangles):
-        tri = np.random.randn(3, 3)
+        tri = rng.standard_normal((3, 3))
         triangles.append(tri)
 
     def python_triangles():

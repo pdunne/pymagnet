@@ -26,7 +26,7 @@ STL_DIR = os.path.join(PROJECT_ROOT, "examples/scripts/stl_magnets/stl")
 print("Warming up numba JIT compilation...")
 print("(This may take a few seconds on first run)")
 
-import pymagnet
+import pymagnet  # noqa: E402
 
 # Warm up by creating a small mesh and calculating field
 cube_path = os.path.join(STL_DIR, "cube.stl")
@@ -252,10 +252,10 @@ def main():
             X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
             n_points = X.size
 
-            def serial_original():
+            def serial_original(X=X, Y=Y, Z=Z):
                 return mesh._get_field_internal(X, Y, Z)
 
-            def parallel():
+            def parallel(X=X, Y=Y, Z=Z):
                 return mesh._get_field_parallel(X, Y, Z)
 
             n_runs = max(3, 20 // grid_size)
