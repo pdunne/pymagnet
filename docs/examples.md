@@ -40,6 +40,33 @@ STL Cubes [![Open In Colab](https://colab.research.google.com/assets/colab-badge
 
 STL Pentagonal Prisms [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/STL%20Magnets/STL%20Forces%20Pentagon.ipynb)
 
+## Configuration Examples
+
+Pymagnet includes ready-to-use TOML configuration files in [`examples/configs/`](https://github.com/pdunne/pymagnet/tree/main/examples/configs). Run any of them with:
+
+```bash
+pymagnet examples/configs/single_cube.toml
+```
+
+| Config File | Description |
+|-------------|-------------|
+| `single_cube.toml` | Single cube magnet with slice views |
+| `single_cylinder.toml` | Single cylinder magnet |
+| `2d_rectangles.toml` | Two 2D rectangular magnets with contour plot |
+| `cube_halbach.toml` | 8-prism Halbach array |
+| `pseudo_Halbach.toml` | Pseudo-Halbach field assembly |
+| `pseudo_Halbach_plot_group.toml` | Grouped multi-plane slice plots |
+| `quadrupolar.toml` | Quadrupolar magnet arrangement |
+| `two_poles.toml` | Two-pole configuration |
+| `cube_volume.toml` | Volume rendering of a cube magnet |
+| `two_cubes_force.toml` | Force calculation between two cubes |
+| `mesh_cube.toml` | STL mesh cube magnet |
+| `mesh_star.toml` | STL mesh star shape |
+| `mesh_bunny.toml` | Stanford bunny STL mesh |
+| `mesh_two_cubes_force.toml` | Force calculation with STL mesh magnets |
+
+See the [Configuration](configuration.md) page for full documentation.
+
 ## Binder
 
 The example notebooks can be run as an instance using Binder:

@@ -1,0 +1,31 @@
+[meta]
+name = "Single Cylinder"
+description = "Axially magnetised cylinder with multiple slice views"
+dimension = "3D"
+
+[[magnets]]
+type = "Cylinder"
+Jr = 1.2
+radius = 5.0
+length = 20.0
+center = [0.0, 0.0, 0.0]
+theta = 0.0
+mask_magnet = true
+
+# All three slices on one plot
+[grid]
+type = "slice"
+max1 = 25.0
+max2 = 25.0
+num_points = 100
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmap = "viridis"
+cmin = 0.0
+cmax = 0.6
+opacity = 0.8
+planes = ["xy", "xz", "yz"]
+num_arrows = 10

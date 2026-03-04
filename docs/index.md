@@ -36,7 +36,14 @@ The current version is written in Python with some speed up using [Numpy](https:
 ## Features
 
 This code uses analytical expressions to calculate the magnetic field due to
-simple magnets:
+simple magnets. Key features include:
+
+* **TOML configuration**: Define and run simulations declaratively from config files
+* **Numba-accelerated mesh calculations**: Up to 247x speedup for STL magnet fields
+* **Flexible point generation**: `slice3D()` for planar slices, `grid3D()` for volumes
+* **Force and torque calculations**: For analytical shapes and STL meshes
+
+Supported magnet types:
 
 * 3D: cubes, prisms (cuboids), cylinders, spheres
 
@@ -64,13 +71,13 @@ but the underlying data is also accessible.
 
 ## Prerequisites
 
-Ensure you have [Python](https://www.python.org/) version >= 3.10.
+Ensure you have [Python](https://www.python.org/) version >= 3.13.
 
 ### Core Dependencies
 
 * numpy (>=2.0.1)
 * numpy-stl (>=3.1.2)
-* numba (>=0.60.0)
+* numba (>=0.60.0, <=0.64)
 
 ### Optional Dependencies (for plotting)
 
@@ -82,6 +89,9 @@ Install with plotting support:
 ```bash
 pip install pymagnet[plots]
 ```
+
+!!! tip "TOML Configuration"
+    Pymagnet supports a declarative TOML-based configuration system. Define your magnets, grids, and plots in a `.toml` file and run simulations from the command line. See the [Configuration](configuration.md) page for details.
 
 !!! Warning
     - Rotate spheres using $\alpha$, $\beta$, $\gamma$, as the magnetisation is always

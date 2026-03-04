@@ -1,0 +1,51 @@
+[meta]
+name = "Mesh Two Cubes Force"
+description = "Two cube STL magnets with force/torque calculation"
+dimension = "3D"
+
+# Lower cube
+[[magnets]]
+type = "Mesh"
+filename = "../scripts/stl_magnets/stl/cube.stl"
+Jr = 1.0
+mesh_scale = 5
+center = [0.0, 0.0, -10.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = false
+
+# Upper cube, offset in x
+[[magnets]]
+type = "Mesh"
+filename = "../scripts/stl_magnets/stl/cube.stl"
+Jr = 1.0
+mesh_scale = 5
+center = [6.0, 0.0, 10.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = false
+
+[grid]
+type = "slice"
+max1 = 30.0
+max2 = 30.0
+slice_value = 0.0
+num_points = 40
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmin = 0.0
+cmax = 0.5
+planes = ["xy", "xz"]
+show_magnets = true
+opacity = 0.8
+num_arrows = 10
+cone_opacity = 0.9
+
+[force]
+enabled = true
+target_magnet = 0
+num_samples = 20
+unit = "mm"

@@ -45,6 +45,7 @@ from pymagnet.forces import calc_force_prism, calc_force_cylinder, calc_force_sp
 | `calc_force_prism()` | Prism (cuboid) | Force/torque on a cuboidal magnet |
 | `calc_force_cylinder()` | Cylinder | Force/torque on a cylindrical magnet |
 | `calc_force_sphere()` | Sphere | Force/torque on a spherical magnet |
+| `calc_force_mesh()` | Mesh (STL) | Force/torque on an STL mesh magnet |
 
 ---
 
@@ -168,6 +169,64 @@ force, torque = calc_force_sphere(sphere, num_samples=300)
 print(f"Force: {force} N")
 print(f"Torque: {torque} N·m")
 ```
+
+---
+
+### `calc_force_mesh`
+
+Calculates the total force and torque on an STL mesh magnet due to all other instantiated magnets. The mesh surface is subdivided into smaller triangles using midpoint subdivision for improved numerical integration accuracy.
+
+```python
+from pymagnet.forces._mesh_force import calc_force_mesh
+```
+
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `active_magnet` | Mesh | required | The target mesh magnet to calculate forces on |
+| `depth` | int | `3` | Subdivision depth (each triangle becomes 4^depth sub-triangles) |
+| `unit` | str | `"mm"` | Length scale for the calculation |
+
+**Returns:**
+
+| Type | Description |
+|------|-------------|
+| `tuple[ndarray, ndarray]` | `(force, torque)` - Force vector (N) and torque vector (N·m) as 3-element arrays |
+
+**Example:**
+
+```python
+import pymagnet as pm
+from pymagnet.forces._mesh_force import calc_force_mesh
+
+pm.reset()
+
+magnet1 = pm.magnets.Mesh("cube1.stl", Jr=1.0, center=(0, 0, 0))
+magnet2 = pm.magnets.Mesh("cube2.stl", Jr=1.0, center=(0, 0, 15))
+
+force, torque = calc_force_mesh(magnet1, depth=3)
+print(f"Force: {force} N")
+print(f"Torque: {torque} N·m")
+```
+
+!!! note "Triangle Subdivision"
+    The `depth` parameter controls integration accuracy. At `depth=3`, each mesh triangle is split into 64 sub-triangles. Higher values improve accuracy but increase computation time.
+
+---
+
+### Mesh Utility Functions
+
+The `pymagnet.forces` module also exports utility functions for working with triangular meshes:
+
+| Function | Description |
+|----------|-------------|
+| `triangle_area(triangle)` | Compute triangle area (njit-compiled) |
+| `get_centroid(triangle)` | Get triangle centroid (njit-compiled) |
+| `get_midpoints(triangle)` | Get edge midpoints |
+| `divide_triangle_centroid(triangle, depth)` | Subdivide into 3^depth sub-triangles (centroid method) |
+| `divide_triangle_regular(triangle, depth)` | Subdivide into 4^depth sub-triangles (midpoint method) |
+| `get_area_triangles(triangles, area)` | Compute areas for an array of triangles |
 
 ---
 

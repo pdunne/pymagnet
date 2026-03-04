@@ -358,6 +358,71 @@ fig, cache, data_objects = slice_quickplot(
 
 ---
 
+## `slice3D` — Generating Planar Evaluation Grids
+
+The `slice3D()` utility function generates a 2D grid of points in 3D space on a specified plane. This is the recommended way to create point arrays for slice plots when you need fine control over the evaluation region.
+
+```python
+from pymagnet.utils._routines3D import slice3D
+```
+
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `plane` | str | `"xy"` | Plane to generate: `"xy"`, `"xz"`, or `"yz"` |
+| `max1` | float | `1.0` | Maximum value along first axis |
+| `max2` | float | `1.0` | Maximum value along second axis |
+| `slice_value` | float | `0.0` | Constant value for the third axis |
+| `unit` | str | `"mm"` | Length scale units |
+
+**Keyword Arguments:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `num_points` | int | `100` | Number of points per axis |
+| `min1` | float | `-max1` | Minimum value along first axis |
+| `min2` | float | `-max2` | Minimum value along second axis |
+
+**Returns:** `Point_Array3` — array of x, y, z values of shape `(num_points, num_points)` with associated unit.
+
+**Plane axis mapping:**
+
+| Plane | Axis 1 (max1/min1) | Axis 2 (max2/min2) | Constant (slice_value) |
+|-------|-------|-------|---------|
+| `"xy"` | x | y | z |
+| `"xz"` | x | z | y |
+| `"yz"` | y | z | x |
+
+**Example:**
+
+```python
+import pymagnet as pm
+from pymagnet.utils._routines3D import slice3D
+from pymagnet.plots import slice_plot
+
+pm.reset()
+pm.magnets.Cube(Jr=1.0, width=10, center=(0, 0, 0), mask_magnet=True)
+
+# XZ plane at y=0 with asymmetric bounds
+points = slice3D(
+    plane="xz",
+    max1=30, min1=-30,
+    max2=40, min2=-40,
+    slice_value=0.0,
+    num_points=100,
+)
+field = pm.get_field_3D(points)
+
+data_dict = {"xz": {"points": points, "field": field}}
+fig, data_objects = slice_plot(data_dict, cmin=0, cmax=0.5)
+```
+
+!!! tip
+    `slice3D()` is particularly useful for asymmetric bounds (e.g. `min1=0, max1=30`) or off-centre slices (e.g. `slice_value=15.0`), where `slice_quickplot()` defaults may not suffice.
+
+---
+
 ## Tips
 
 1. **Performance**: Volume plots with high `num_points` values can be slow. Start with 20-30 points and increase as needed.

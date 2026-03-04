@@ -1,0 +1,51 @@
+[meta]
+name = "Cube Volume Plot"
+description = "A single cube with both slice and volume visualisation"
+dimension = "3D"
+
+[[magnets]]
+type = "Cube"
+Jr = 1.0
+width = 10.0
+center = [0.0, 0.0, 0.0]
+mask_magnet = true
+
+# Slice view: all three planes
+[[grid]]
+type = "slice"
+max1 = 25.0
+max2 = 25.0
+num_points = 80
+unit = "mm"
+
+[[plot]]
+enabled = true
+type = "slice"
+cmap = "viridis"
+cmin = 0.0
+cmax = 0.5
+planes = ["xy", "xz", "yz"]
+show_magnets = true
+num_arrows = 10
+save_fig = true
+filename = "cube_slice.html"
+
+# Volume rendering
+[[grid]]
+type = "volume"
+xmax = 25.0
+ymax = 25.0
+zmax = 25.0
+num_points = 30
+unit = "mm"
+
+[[plot]]
+enabled = true
+type = "volume"
+cmin = 0.05
+cmax = 0.3
+opacity = 0.3
+magnet_opacity = 1.0
+show_magnets = true
+save_fig = true
+filename = "cube_volume.html"

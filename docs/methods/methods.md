@@ -10,6 +10,8 @@ The overall approach is to
 total field.
 4. Draw the resulting data as a line, contour, slice, or volume plot.
 
+Alternatively, you can use the [TOML configuration system](../configuration.md) to define all of these steps declaratively in a config file.
+
 ```mermaid
 flowchart
     1.Create_Magnets-->2.Create_Points
@@ -129,7 +131,7 @@ The Mesh magnet class loads geometry from STL files and calculates magnetic fiel
 - Surface charge density $\sigma_m = \mathbf{M} \cdot \mathbf{\hat{n}}$
 - Numerical integration over the mesh surface
 
-For force and torque calculations, the mesh is subdivided into smaller triangles for improved accuracy.
+Field calculations for mesh magnets are parallelised using Numba's `prange`, achieving up to **247x speedup** on multi-core systems. For force and torque calculations, the mesh is subdivided into smaller triangles for improved accuracy.
 
 ### Quaternion Class
 
@@ -218,3 +220,24 @@ For 3D plots, magnets are rendered as meshes using plotly's `Mesh3d` graphics ob
 |----------|-------------|
 | `reset_magnets()` | Clear all instantiated magnets |
 | `list_magnets()` | Print all current magnets |
+
+---
+
+## Configuration-Based Workflow
+
+As an alternative to the Python API, pymagnet supports a TOML-based declarative workflow:
+
+```mermaid
+flowchart LR
+    TOML[TOML Config File] --> Load[load & validate]
+    Load --> Build[Build Magnets]
+    Build --> Calc[Calculate Fields]
+    Calc --> Plot[Generate Plots]
+    Calc --> Force[Calculate Forces]
+```
+
+1. Define magnets, grids, plots, and force settings in a `.toml` file
+2. Run via CLI (`pymagnet config.toml`) or Python (`pymagnet.config.run("config.toml")`)
+3. Results include field data, plotly/matplotlib figures, and force/torque vectors
+
+See the [Configuration](../configuration.md) page for full documentation.

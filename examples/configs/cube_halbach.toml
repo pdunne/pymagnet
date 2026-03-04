@@ -1,0 +1,132 @@
+[meta]
+name = "Cube-Halbach Array"
+description = "8 prisms in a ring with rotating magnetisation for uniform interior field"
+dimension = "3D"
+
+# 8 prisms at 45-degree intervals around a circle of radius ~20mm
+# Magnetisation phi rotates at 2x the position angle (Halbach condition)
+# Position angle: i * 45 degrees
+# Magnetisation phi: i * 90 degrees
+
+# Position 0 deg, Mag 0 deg (+x)
+[[magnets]]
+type = "Prism"
+Jr = 1.3
+width = 10.0
+depth = 10.0
+height = 20.0
+center = [20.0, 0.0, 0.0]
+theta = 90.0
+phi = 0.0
+mask_magnet = true
+
+# Position 45 deg, Mag 90 deg (+y)
+[[magnets]]
+type = "Prism"
+Jr = 1.3
+width = 10.0
+depth = 10.0
+height = 20.0
+center = [14.142, 14.142, 0.0]
+theta = 90.0
+phi = 90.0
+alpha = 45.0
+mask_magnet = true
+
+# Position 90 deg, Mag 180 deg (-x)
+[[magnets]]
+type = "Prism"
+Jr = 1.3
+width = 10.0
+depth = 10.0
+height = 20.0
+center = [0.0, 20.0, 0.0]
+theta = 90.0
+phi = 180.0
+alpha = 90.0
+mask_magnet = true
+
+# Position 135 deg, Mag 270 deg (-y)
+[[magnets]]
+type = "Prism"
+Jr = 1.3
+width = 10.0
+depth = 10.0
+height = 20.0
+center = [-14.142, 14.142, 0.0]
+theta = 90.0
+phi = 270.0
+alpha = 135.0
+mask_magnet = true
+
+# Position 180 deg, Mag 360/0 deg (+x)
+[[magnets]]
+type = "Prism"
+Jr = 1.3
+width = 10.0
+depth = 10.0
+height = 20.0
+center = [-20.0, 0.0, 0.0]
+theta = 90.0
+phi = 0.0
+alpha = 180.0
+mask_magnet = true
+
+# Position 225 deg, Mag 90 deg (+y)
+[[magnets]]
+type = "Prism"
+Jr = 1.3
+width = 10.0
+depth = 10.0
+height = 20.0
+center = [-14.142, -14.142, 0.0]
+theta = 90.0
+phi = 90.0
+alpha = 225.0
+mask_magnet = true
+
+# Position 270 deg, Mag 180 deg (-x)
+[[magnets]]
+type = "Prism"
+Jr = 1.3
+width = 10.0
+depth = 10.0
+height = 20.0
+center = [0.0, -20.0, 0.0]
+theta = 90.0
+phi = 180.0
+alpha = 270.0
+mask_magnet = true
+
+# Position 315 deg, Mag 270 deg (-y)
+[[magnets]]
+type = "Prism"
+Jr = 1.3
+width = 10.0
+depth = 10.0
+height = 20.0
+center = [14.142, -14.142, 0.0]
+theta = 90.0
+phi = 270.0
+alpha = 315.0
+mask_magnet = true
+
+[grid]
+type = "slice"
+plane = "xy"
+max1 = 40.0
+max2 = 40.0
+slice_value = 0.0
+num_points = 150
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmap = "viridis"
+cmin = 0.0
+cmax = 1.5
+planes = ["xy", "xz"]
+show_magnets = true
+opacity = 0.7
+num_arrows = 15
