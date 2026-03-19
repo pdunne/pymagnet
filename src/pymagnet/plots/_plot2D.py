@@ -238,6 +238,7 @@ def plot_2D_contour(
             cmap=_plt.get_cmap(cmap),
             extend="max",
         )
+        CS.set_edgecolor("face")
 
         # Draw contour lines
         if num_levels > 1:
@@ -649,6 +650,7 @@ def plot_3D_contour(
                 cmap=cmap,
                 linewidth=0.5,
             )
+            CS.set_edgecolor("face")
             CB = _plt.colorbar(CS.lines)
         else:
             color = kwargs.pop("color", "k")

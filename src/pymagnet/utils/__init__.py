@@ -19,10 +19,20 @@ from ._routines2D import get_field_2D, grid2D, rotate_points_2D
 from ._routines3D import get_field_3D, grid3D, line3D, slice3D
 from ._trigonometry3D import altitude, norm_plane, rotate_points, signed_area
 from ._vector_structs import Field1, Field2, Field3, Point_Array2, Point_Array3
+from ._demag import (
+    DemagResult,
+    build_MH_interpolator,
+    solve_demagnetization,
+    solve_demag_tanh,
+    solve_demag_tanh_batch,
+    tanh_MH_model,
+)
 from .global_const import ALIGN_CUTOFF, FP_CUTOFF, MAG_TOL, MU0, PI, PI_2, PI_4
 
 __all__ = [
     "ALIGN_CUTOFF",
+    "DemagResult",
+    "build_MH_interpolator",
     "FP_CUTOFF",
     "MAG_TOL",
     "MU0",
@@ -48,6 +58,10 @@ __all__ = [
     "rotate_points_2D",
     "signed_area",
     "slice3D",
+    "solve_demagnetization",
+    "solve_demag_tanh",
+    "solve_demag_tanh_batch",
+    "tanh_MH_model",
 ]
 
 # Not implemented yet:

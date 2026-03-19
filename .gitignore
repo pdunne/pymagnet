@@ -143,3 +143,5 @@ notes/
 !README.md
 !docs/*/*.md
 work/results
+work/
+results/

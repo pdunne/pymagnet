@@ -12,6 +12,7 @@ __version__ = "0.5.0"
 
 from . import config, forces, magnets, plots, utils
 from .magnets._magnet_base import list, reset
+from .utils._demag import solve_demagnetization, solve_demag_tanh, solve_demag_tanh_batch
 from .utils._routines2D import get_field_2D, grid2D
 from .utils._routines3D import get_field_3D
 
@@ -25,5 +26,8 @@ __all__ = [
     "magnets",
     "plots",
     "reset",
+    "solve_demagnetization",
+    "solve_demag_tanh",
+    "solve_demag_tanh_batch",
     "utils",
 ]
