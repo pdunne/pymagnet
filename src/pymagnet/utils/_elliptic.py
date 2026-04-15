@@ -20,9 +20,12 @@ References:
       elliptic integrals. *Numerical Algorithms*, 10, 13–26.
 """
 
+import os
 from math import fabs, nan, sqrt
 
 from numba import float64, njit, vectorize
+
+_JIT_DISABLED = os.environ.get("NUMBA_DISABLE_JIT", "0") == "1"
 
 
 @njit(cache=True)
@@ -274,8 +277,7 @@ def cel(kc, p, c, s):
     return (3.14159265358979323846 / 2.0) * (ss + cc * em) / (em * (em + pp))
 
 
-@vectorize([float64(float64, float64, float64, float64)], target="parallel")
-def cel_carlson(kc, p, c, s):
+def _cel_carlson_impl(kc, p, c, s):
     """Bulirsch cel(kc, p, c, s) via Carlson symmetric elliptic integrals.
 
     Alternative implementation using the Carlson decomposition:
@@ -306,3 +308,12 @@ def cel_carlson(kc, p, c, s):
         return c * rf + (s - c) / 3.0 * _elliprd(0.0, kc2, 1.0)
     else:
         return c * rf + (s - c * p) / 3.0 * _elliprj(0.0, kc2, 1.0, p)
+
+
+if _JIT_DISABLED:
+    import numpy as _np
+    cel_carlson = _np.vectorize(_cel_carlson_impl)
+else:
+    cel_carlson = vectorize(
+        [float64(float64, float64, float64, float64)], target="parallel"
+    )(_cel_carlson_impl)
