@@ -179,7 +179,34 @@ def _make_scenarios(pm):
         print("  [skip] mesh_large — no suitable STL found")
 
     # ------------------------------------------------------------------
-    # 5. Prism force (two cubes offset along z)
+    # 5. Mesh stress — large STL + full 3D volumetric grid
+    # ------------------------------------------------------------------
+    x_stress = np.linspace(-40, 40, 20)
+    y_stress = np.linspace(-40, 40, 20)
+    z_stress = np.linspace(-40, 40, 20)
+    X_stress, Y_stress, Z_stress = np.meshgrid(x_stress, y_stress, z_stress, indexing="ij")
+
+    for mesh_name, label in [("Stanford_Bunny_10000.stl", "bunny_10000"), ("Stanford_Bunny_500.stl", "bunny_500")]:
+        stress_stl = _stl(mesh_name)
+        if os.path.exists(stress_stl):
+            pm.reset()
+            mesh_stress = pm.magnets.Mesh(stress_stl, Jr=1.0)
+            n_tri_stress = len(mesh_stress.mesh_vectors)
+
+            def scenario_mesh_stress(m=mesh_stress):
+                m.get_field(X_stress, Y_stress, Z_stress)
+
+            scenarios.append((
+                "mesh_stress",
+                f"Mesh.get_field() — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
+                scenario_mesh_stress,
+            ))
+            break
+    else:
+        print("  [skip] mesh_stress — no suitable STL found")
+
+    # ------------------------------------------------------------------
+    # 6. Prism force (two cubes offset along z)
     # ------------------------------------------------------------------
     pm.reset()
     pm.magnets.Cube(Jr=1.0, width=10.0, center=[0.0, 0.0, 0.0])
