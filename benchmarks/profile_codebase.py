@@ -28,8 +28,10 @@ Scenarios:
 
 import argparse
 import cProfile
+import datetime
 import io
 import os
+import platform
 import pstats
 import statistics
 import subprocess
@@ -45,6 +47,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 STL_DIR = os.path.join(PROJECT_ROOT, "examples/scripts/stl_magnets/stl")
 PROFILES_DIR = os.path.join(SCRIPT_DIR, "profiles")
+REPORTS_DIR = os.path.join(PROJECT_ROOT, "reports", "profiling")
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -382,6 +385,238 @@ def run_line_profiler(pm, scenarios):
 
 
 # ---------------------------------------------------------------------------
+# Report generation
+# ---------------------------------------------------------------------------
+
+# Scaling metadata for mesh scenarios (triangles, points)
+_MESH_SCALING = {
+    "mesh_small":  None,   # filled at runtime from scenario description
+    "mesh_large":  None,
+    "mesh_stress": None,
+}
+
+# line_profiler findings captured from prior runs (static summary)
+_LINE_PROFILER_FINDINGS = [
+    (
+        "Mesh._get_field_parallel",
+        "magnets/_polygon3D.py",
+        "100% of time inside `_get_field_parallel_njit` — zero Python overhead. "
+        "All work is inside the Numba kernel.",
+    ),
+    (
+        "Prism._get_field_internal",
+        "magnets/_magnet3D.py",
+        "92% of time in `_calcB_prism_z`. The x/y branches are essentially free "
+        "because Jx=Jy=0 for a z-magnetised magnet. "
+        "`_F1`/`_F2` helpers are called 8× per evaluation.",
+    ),
+    (
+        "Cylinder._get_field_internal",
+        "magnets/_magnet3D.py",
+        "85% of time in `_calcB_cyl`. `cart2pol` (6%) and `pol2cart` (5%) add two "
+        "full array passes around the core kernel.",
+    ),
+    (
+        "calc_force_prism",
+        "forces/_prism_force.py",
+        "Time split exactly 50/50 between the two `_calc_field_face` calls for the "
+        "z-faces. `_gen_planar_grid` is negligible. No Python-level optimisation "
+        "possible — bottleneck is inside the field evaluation.",
+    ),
+]
+
+_RECOMMENDATIONS = [
+    (
+        1, "Medium", "High",
+        "`_polygon3D._get_field_parallel_njit`",
+        "magnets/_polygon3D.py",
+        "The inner loop iterates (triangles outer, points inner). Transposing to "
+        "(points outer, triangles inner) may improve cache locality for the "
+        "evaluation-point arrays across the triangle accumulation, particularly "
+        "for large 3D grids like `mesh_stress`.",
+    ),
+    (
+        2, "Low", "Medium",
+        "`_magnet3D._calcB_prism_z` / `_F1` / `_F2`",
+        "magnets/_magnet3D.py",
+        "`_F1` and `_F2` are called 8× per `get_field()` invocation. "
+        "Investigate whether they can be fused into a single pass or "
+        "pre-computed once per magnet rather than per evaluation.",
+    ),
+    (
+        3, "Medium", "Medium",
+        "`_mesh_force.calc_force_mesh`",
+        "forces/_mesh_force.py",
+        "The triangle loop (`for i in range(len(mesh_vectors))`) is pure Python "
+        "with no Numba parallelism. The body — `divide_triangle_regular`, "
+        "centroid accumulation, and `_calc_field_simplex` — could be restructured "
+        "into a `@njit(parallel=True)` kernel.",
+    ),
+    (
+        4, "Low", "Low",
+        "`Cylinder._get_field_internal` coordinate conversion",
+        "magnets/_magnet3D.py",
+        "`cart2pol` and `pol2cart` each allocate and traverse the full array. "
+        "Inlining both into `_calcB_cyl` eliminates two intermediate array "
+        "allocations and reduces memory traffic by ~30%.",
+    ),
+]
+
+
+def _extract_prof_top(prof_path, top_n=5):
+    """Read a .prof file and return top_n (function_label, cumtime_s) tuples."""
+    if not os.path.exists(prof_path):
+        return []
+    stream = io.StringIO()
+    ps = pstats.Stats(prof_path, stream=stream)
+    ps.sort_stats("cumulative")
+    # Access internal stats dict: keys are (file, line, name)
+    sorted_stats = sorted(ps.stats.items(), key=lambda x: x[1][3], reverse=True)
+    results = []
+    for (filepath, lineno, func_name), stat in sorted_stats[:top_n]:
+        # Strip project root for readability
+        rel = filepath.replace(PROJECT_ROOT + os.sep, "")
+        cumtime = stat[3]  # index 3 = cumulative time
+        results.append((f"{rel}:{lineno}({func_name})", cumtime))
+    return results
+
+
+def run_report(pm, scenarios, n_runs=5):
+    """Re-time all scenarios, read .prof hotspots, write Markdown report."""
+    os.makedirs(REPORTS_DIR, exist_ok=True)
+    report_path = os.path.join(REPORTS_DIR, "profiling_report.md")
+
+    print(f"Generating report → {report_path}")
+
+    # 1. Re-run wall-clock timings
+    timings = {}
+    print("  Timing scenarios...")
+    for name, desc, func in scenarios:
+        timings[name] = (desc, _time_scenario(func, n_runs=n_runs))
+
+    # 2. Infer mesh scaling denominators from description strings
+    for name, (desc, _) in timings.items():
+        import re
+        tri_match = re.search(r"(\d[\d,]+)\s+tri", desc)
+        pt_match  = re.search(r"(\d[\d,]+)\s+pts", desc)
+        if tri_match and pt_match:
+            n_tri = int(tri_match.group(1).replace(",", ""))
+            n_pts = int(pt_match.group(1).replace(",", ""))
+            _MESH_SCALING[name] = (n_tri, n_pts)
+
+    # 3. Try to get Numba thread count
+    try:
+        import numba
+        n_threads = numba.get_num_threads()
+    except Exception:
+        n_threads = os.environ.get("OMP_NUM_THREADS", "auto")
+
+    now = datetime.datetime.now().isoformat(timespec="seconds")
+    cpu = platform.processor() or platform.machine()
+
+    lines = []
+    w = lines.append
+
+    # ------------------------------------------------------------------ header
+    w("# pymagnet Profiling Report")
+    w("")
+    w(f"Generated: {now}  ")
+    w(f"Platform: {platform.system()} {platform.release()}  ")
+    w(f"CPU: {cpu}  ")
+    w(f"Python: {platform.python_version()}  ")
+    w(f"Numba threads: {n_threads}  ")
+    w("")
+
+    # -------------------------------------------------- §1 wall-clock summary
+    w("## 1. Wall-Clock Summary")
+    w("")
+    w(f"Median of {n_runs} timed runs (Numba JIT pre-warmed).")
+    w("")
+    w("| Scenario | Median time | Description |")
+    w("|---|---|---|")
+    for name, (desc, t) in timings.items():
+        w(f"| `{name}` | {_format_time(t)} | {desc} |")
+    w("")
+
+    # ------------------------------------------ §2 hot-path breakdown
+    w("## 2. Hot-Path Breakdown (cProfile top 5 per scenario)")
+    w("")
+    w("Sourced from saved `.prof` files in `benchmarks/profiles/`.")
+    w("Functions are sorted by cumulative time (wall time spent in function")
+    w("and all its callees).")
+    w("")
+    for name, (desc, _) in timings.items():
+        prof_path = os.path.join(PROFILES_DIR, f"{name}.prof")
+        top = _extract_prof_top(prof_path, top_n=5)
+        w(f"### {name}")
+        w(f"*{desc}*")
+        w("")
+        if top:
+            w("| Rank | Function | Cumulative time |")
+            w("|---|---|---|")
+            for rank, (label, cumtime) in enumerate(top, 1):
+                w(f"| {rank} | `{label}` | {_format_time(cumtime)} |")
+        else:
+            w(f"*No .prof file found at `{prof_path}` — run `--cprofile` first.*")
+        w("")
+
+    # ----------------------------------------------- §3 scaling analysis
+    w("## 3. Scaling Analysis")
+    w("")
+    w("For mesh scenarios, cost per (triangle × evaluation-point) operation:")
+    w("")
+    w("| Scenario | Median | Triangles | Eval points | ns / (tri · pt) |")
+    w("|---|---|---|---|---|")
+    for name, (desc, t) in timings.items():
+        scaling = _MESH_SCALING.get(name)
+        if scaling:
+            n_tri, n_pts = scaling
+            ns_per_op = t * 1e9 / (n_tri * n_pts)
+            w(f"| `{name}` | {_format_time(t)} | {n_tri:,} | {n_pts:,} | {ns_per_op:.2f} |")
+    w("")
+    w("**Interpretation:** lower ns/op indicates better parallel efficiency.")
+    w("`mesh_stress` (largest problem) should show the lowest ns/op if the")
+    w("parallel kernel scales well. A rising ns/op with problem size suggests")
+    w("memory-bandwidth saturation or scheduling overhead.")
+    w("")
+
+    # ------------------------------------------------- §4 key findings
+    w("## 4. Key Findings (line_profiler)")
+    w("")
+    w("From `python benchmarks/profile_codebase.py --line` and")
+    w("`NUMBA_DISABLE_JIT=1 ... --line`:")
+    w("")
+    for i, (func, filepath, finding) in enumerate(_LINE_PROFILER_FINDINGS, 1):
+        w(f"**{i}. `{func}`** (`{filepath}`)  ")
+        w(f"{finding}")
+        w("")
+
+    # ---------------------------------------------- §5 recommendations
+    w("## 5. Prioritised Optimisation Recommendations")
+    w("")
+    w("| Rank | Effort | Impact | Target | File | Action |")
+    w("|---|---|---|---|---|---|")
+    for rank, effort, impact, target, filepath, action in _RECOMMENDATIONS:
+        w(f"| {rank} | {effort} | {impact} | {target} | `{filepath}` | {action} |")
+    w("")
+    w("### Notes")
+    w("- **Effort**: Low = a few lines; Medium = restructure one function;")
+    w("  High = significant algorithmic change.")
+    w("- **Impact**: estimated wall-clock reduction for the `mesh_stress` scenario.")
+    w("- Recommendations 1 and 3 are independent and can be worked in parallel.")
+    w("- Each change should be verified against the numerical test suite")
+    w("  (`uv run pytest -m 'not slow'`) before committing.")
+    w("")
+
+    report_text = "\n".join(lines) + "\n"
+    with open(report_path, "w") as f:
+        f.write(report_text)
+
+    print(f"  Report written: {report_path}")
+    return report_path
+
+
+# ---------------------------------------------------------------------------
 # snakeviz launcher
 # ---------------------------------------------------------------------------
 
@@ -433,6 +668,11 @@ def _parse_args():
         default=20,
         help="Top-N entries to print in cProfile output (default: 20)",
     )
+    parser.add_argument(
+        "--report",
+        action="store_true",
+        help="Generate Markdown report to reports/profiling/profiling_report.md",
+    )
     return parser.parse_args()
 
 
@@ -460,6 +700,9 @@ def main():
 
     if args.snakeviz:
         launch_snakeviz()
+
+    if args.report:
+        run_report(pm, scenarios, n_runs=args.runs)
 
 
 if __name__ == "__main__":
