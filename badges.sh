@@ -14,8 +14,8 @@ poetry run pytest --cov pymagnet $TEST_PATH/ \
 
 poetry run genbadge coverage -i $COV_PATH/coverage.xml -o $REP_PATH/coverage-badge.svg
 
-poetry run pytest --junitxml=$JUNIT_PATH/junit.xml 
-poetry run genbadge tests -i $JUNIT_PATH/junit.xml  -o $REP_PATH/tests-badge.svg 
+poetry run pytest --junitxml=$JUNIT_PATH/junit.xml
+poetry run genbadge tests -i $JUNIT_PATH/junit.xml  -o $REP_PATH/tests-badge.svg
 
 poetry run flake8 $SRC_PATH --ignore=E203,E266,E501,W503 --exit-zero --format=html --htmldir $FLAKE_PATH --statistics --tee --output-file $FLAKE_PATH/flake8stats.txt
 poetry run genbadge flake8 -i $FLAKE_PATH/flake8stats.txt -o $REP_PATH/flake8-badge.svg

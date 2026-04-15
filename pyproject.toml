@@ -1,65 +1,188 @@
-[tool.poetry]
+
+[project]
 name = "pymagnet"
-version = "0.5.0"
+version = "0.5.1"
 description = "User Friendly Magnetic Field Calculations"
-authors = ["Peter Dunne <peter.dunne@applied-magnetism.com>"]
-license = "MPL-2.0"
+authors = [
+    { name = "Peter Dunne", email = "peter.dunne@applied-magnetism.com" },
+]
 readme = "README.md"
-homepage = "https://www.applied-magnetism.com"
-repository = "https://github.com/pdunne/pymagnet"
-documentation = "https://pdunne.github.io/pymagnet/"
+license = { file = "LICENSE" }
 keywords = ["magnetism", "magnetic fields"]
-# packages = [{ include = "src/pymagnet" }]
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Intended Audience :: Science/Research",
-  "Topic :: Scientific/Engineering",
-  "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3 :: Only",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0.1",
+    "numpy-stl>=3.1.2",
+    # Numba 0.60+ supports NumPy 2.0; consider pinning an upper bound until validated in CI.
+    "numba>=0.60.0,<=0.64",
 ]
 
+[project.optional-dependencies]
+plots = ["matplotlib>=3.9.2", "plotly>=5.23.0"]
+jupyter = ["ipykernel>=6.29.5", "nbformat>=5.10.4"]
+dev = [
+    "ruff>=0.8.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "polars>=1.38.1",
+    "pre-commit>=4.5.1",
+    "tqdm>=4.67.3",
+    "line-profiler>=4.0",
+    "snakeviz>=2.2",
+]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.1",
+    "mkdocs-mermaid2-plugin>=1.2.3",
+    "mkdocs-autorefs>=1.4.3",
+    "mkdocstrings>=1.0.0",
+    "mkdocstrings-python>=2.0.1",
+    "pymdown-extensions>=10.0",
+    "pandas>=3.0.1",
+    "seaborn>=0.13.2",
+    "pyarrow>=23.0.1",
+    "scipy>=1.17.1",
 
-[tool.poetry.dependencies]
-python = "^3.7, <3.10"
-numpy = "^1.21"
-numpy-stl = "^2.16.3"
-numba = "^0.55.1"
 
-# optional features for plots
-matplotlib = { version = "^3.5.0", optional = true }
-plotly = { version = "^5.4.0", optional = true }
+]
+# A convenience meta-extra for local dev machines; mirrors the above lists.
+all = [
+    "matplotlib>=3.9.2",
+    "plotly>=5.23.0",
+    "ipykernel>=6.29.5",
+    "nbformat>=5.10.4",
+    "ruff>=0.8.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.1",
+    "mkdocs-mermaid2-plugin>=1.2.3",
+    "mkdocs-autorefs>=1.4.3",
+    "mkdocstrings>=1.0.0",
+    "mkdocstrings-python>=2.0.1",
+    "pymdown-extensions>=10.0",
+    "polars>=1.38.1",
+    "pre-commit>=4.5.1",
+    "tqdm>=4.67.3",
+    "line-profiler>=4.0",
+    "snakeviz>=2.2",
+    "pandas>=3.0.1",
+    "seaborn>=0.13.2",
+    "pyarrow>=23.0.1",
+    "scipy>=1.17.1",
 
-# optional features for using the package in a jupyter notebook
-ipykernel = { version = "^6.13.0", optional = true }
-nbformat = { version = "^5.3.0", optional = true }
 
-[tool.poetry.extras]
-plots = ["matplotlib", "plotly"]
-jupyter = ["ipykernel", "nbformat"]
+]
 
+[project.scripts]
+pymagnet = "pymagnet.config._cli:main"
 
-[tool.poetry.dev-dependencies]
-black = "^22.0"
-pytest = "^6.2.5"
-flake8 = "^4.0.1"
-pytest-cov = "^3.0.0"
-genbadge = "^1.0.6"
-defusedxml = "^0.7.1"
-flake8-html = "^0.4.2"
-mypy = "^0.942"
-isort = "^5.10.1"
+[project.urls]
+Homepage = "https://www.applied-magnetism.com"
+Repository = "https://github.com/pdunne/pymagnet"
+Documentation = "https://pdunne.github.io/pymagnet/"
+Issues = "https://github.com/pdunne/pymagnet/issues"
+Changelog = "https://github.com/pdunne/pymagnet/releases"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.isort]
-profile = "black"
+[tool.hatch.build.targets.wheel]
+packages = ["src/pymagnet"]
+include = ["README.md", "LICENSE"]
 
-[tool.black]
+[tool.hatch.build.targets.sdist]
+include = ["src/pymagnet", "README.md", "LICENSE", "pyproject.toml", "tests"]
+
+# UV: keep minimal; use extras via `uv sync --extra dev --extra docs`
+[tool.uv]
+# python-preference = "managed"  # uncomment if you want uv-managed Python
+
+# ----------------------------
+# Ruff configuration
+# ----------------------------
+[tool.ruff]
+target-version = "py313"
 line-length = 88
+src = ["src"]
+
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "W",    # pycodestyle warnings
+    "B",    # flake8-bugbear
+    "I",    # isort
+    "UP",   # pyupgrade
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "NPY",  # numpy-specific rules
+    "PERF", # performance anti-patterns
+    "RUF",  # Ruff-specific
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "B008",   # function call in default argument
+    "SIM108", # ternary operator - reduces readability in numba/math code
+    "C408",   # dict() vs {} - dict() is clearer for plotly kwargs
+    "UP007",  # Union vs | - keep Union for compatibility
+    "RUF012", # ClassVar annotation - not needed for simple cases
+]
+per-file-ignores = { "tests/**" = ["E402"] }
+
+[tool.ruff.lint.isort]
+known-first-party = ["pymagnet"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ----------------------------
+# Pytest & Coverage
+# ----------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = """
+-v --tb=short
+--cov=src/pymagnet
+--cov-report=term-missing
+--cov-report=html:reports/coverage/html
+--cov-report=xml:reports/coverage/coverage.xml
+"""
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "numba: tests involving Numba JIT compilation",
+    "integration: integration tests combining multiple components",
+    "numerical: numerical accuracy and edge case tests",
+]
+
+[tool.coverage.run]
+source = ["src/pymagnet"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
+[tool.coverage.xml]
+output = "coverage.xml"

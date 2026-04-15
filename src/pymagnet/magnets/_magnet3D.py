@@ -12,13 +12,11 @@ magnet with respect to each principal axis.
 TODO: Update __str__ and __repr__ methods to show orientation and magnetisation
 """
 
-from math import fabs, sqrt
 from os import environ as _environ
 
 import numpy as _np
-from numba import float64, vectorize
-
-from ..utils._quaternion import Quaternion
+from ..utils._elliptic import cel as _cel
+from ..utils._quaternion import Quaternion, q_angle_from_axis
 from ..utils.global_const import MAG_TOL, PI
 from ._magnet_base import Magnet
 
@@ -103,7 +101,6 @@ class Magnet3D(Magnet):
         return _np.array([self.alpha, self.beta, self.gamma])
 
     def _generate_rotation_quaternions(self):
-
         """Generates single rotation quaternion for all non-zero rotation angles,
         which are:
 
@@ -123,19 +120,19 @@ class Magnet3D(Magnet):
         forward_rotation, reverse_rotation = Quaternion(), Quaternion()
 
         if _np.fabs(self.alpha_rad) > 1e-4:
-            rotate_about_z = Quaternion.q_angle_from_axis(self.alpha_rad, (0, 0, 1))
+            rotate_about_z = q_angle_from_axis(self.alpha_rad, (0, 0, 1))
 
         if _np.fabs(self.beta_rad) > 1e-4:
-            rotate_about_y = Quaternion.q_angle_from_axis(self.beta_rad, (0, 1, 0))
+            rotate_about_y = q_angle_from_axis(self.beta_rad, (0, 1, 0))
 
         if _np.fabs(self.gamma_rad) > 1e-4:
-            rotate_about_x = Quaternion.q_angle_from_axis(self.gamma_rad, (1, 0, 0))
+            rotate_about_x = q_angle_from_axis(self.gamma_rad, (1, 0, 0))
 
         # Generate compound rotations
         # Order of rotation: beta  about y, alpha about z, gamma about x
-        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y
+        forward_rotation = rotate_about_x * rotate_about_z * rotate_about_y  # type: ignore
 
-        reverse_rotation = forward_rotation.get_conjugate()
+        reverse_rotation = forward_rotation.get_conjugate()  # type: ignore
 
         return forward_rotation, reverse_rotation
 
@@ -171,16 +168,16 @@ class Magnet3D(Magnet):
             )
             > Magnet.tol
         ):
-
             forward_rotation, reverse_rotation = self._generate_rotation_quaternions()
-
+            assert forward_rotation is not None
+            assert reverse_rotation is not None
             # Generate 3xN array for quaternion rotation
             pos_vec = Quaternion._prepare_vector(
                 x - self.center[0], y - self.center[1], z - self.center[2]
             )
-
+            assert pos_vec is not None
             # Rotate points
-            x_rot, y_rot, z_rot = forward_rotation * pos_vec
+            x_rot, y_rot, z_rot = forward_rotation * pos_vec  # type: ignore
 
             # Calls internal child method to calculate the field
             B_local = self._get_field_internal(x_rot, y_rot, z_rot)
@@ -293,9 +290,9 @@ class Prism(Magnet3D):
 
         super().__init__(Jr, **kwargs)
 
-        self.phi = kwargs.pop("theta", 90.0)
+        self.phi = kwargs.pop("phi", 90.0)
         self.phi_rad = _np.deg2rad(self.phi)
-        self.theta = kwargs.pop("phi", 0.0)
+        self.theta = kwargs.pop("theta", 0.0)
         self.theta_rad = _np.deg2rad(self.theta)
 
         # Generate components of magnetisation
@@ -390,7 +387,7 @@ class Prism(Magnet3D):
                     )
                 )
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     @staticmethod
@@ -420,7 +417,7 @@ class Prism(Magnet3D):
                     _np.sqrt(xa_sq + yb_sq + zc_sq) - c - z
                 )
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     def _get_field_internal(self, x, y, z):
@@ -491,7 +488,7 @@ class Prism(Magnet3D):
                 + self._F1(a, b, c, x, -y, -z)
             )
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     def _calcBy_prism_x(self, a, b, c, Jr, x, y, z):
@@ -519,7 +516,7 @@ class Prism(Magnet3D):
             )
             data *= Jr / (4 * PI)
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     def _calcBz_prism_x(self, a, b, c, Jr, x, y, z):
@@ -549,7 +546,7 @@ class Prism(Magnet3D):
                 )
             data *= Jr / (4 * PI)
         except ValueError:
-            data = _np.NaN
+            data = _np.nan
         return data
 
     def _calcB_prism_x(self, x, y, z):
@@ -714,9 +711,6 @@ class Cylinder(Magnet3D):
         self.radius = radius
         self.length = length
 
-        self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
-        self.center = _np.asarray(self.center)
-
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
@@ -731,7 +725,7 @@ class Cylinder(Magnet3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.Jr} (T)\n"
-            + f"Size: {self.get_size() }\n"
+            + f"Size: {self.get_size()}\n"
             + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )
@@ -762,68 +756,6 @@ class Cylinder(Magnet3D):
 
         force, torque = calc_force_cylinder(self, num_samples, unit)
         return force, torque
-
-    @staticmethod
-    @vectorize([float64(float64, float64, float64, float64)], target="parallel")
-    def _cel(kc, p, c, s):
-        """Bulirsch's complete elliptic integral
-        See NIST Handbook of Mathematical Functions, http://dlmf.nist.gov/19.2
-
-        Numba is used to create a compiled Numpy ufunc that accepts numpy arrays.
-
-        Args:
-            kc (float/ndarray): elliptical modulus
-            p (float/ndarray): real parameter
-            c (float/ndarray): real parameter
-            s (float/ndarray): real parameter
-
-        Returns:
-            float/ndarray: result of computing complete elliptic integral
-        """
-        if kc == 0:
-            data = _np.NaN
-            return data
-        else:
-            errtol = 0.000001
-            k = fabs(kc)
-            pp = p
-            cc = c
-            ss = s
-            em = 1.0
-
-            if p > 0:
-                pp = sqrt(p)
-                ss = s / pp
-            else:
-                f = kc * kc
-                q = 1.0 - f
-                g = 1.0 - pp
-                f = f - pp
-                q = q * (ss - c * pp)
-                pp = sqrt(f / g)
-                cc = (c - ss) / g
-                ss = -q / (g * g * pp) + cc * pp
-            f = cc
-            cc = cc + ss / pp
-            g = k / pp
-            ss = 2 * (ss + f * g)
-            pp = g + pp
-            g = em
-            em = k + em
-            kk = k
-
-            while fabs(g - k) > g * errtol:
-                k = 2 * sqrt(kk)
-                kk = k * em
-                f = cc
-                cc = cc + ss / pp
-                g = kk / pp
-                ss = 2 * (ss + f * g)
-                pp = g + pp
-                g = em
-                em = k + em
-            data = (PI / 2.0) * (ss + cc * em) / (em * (em + pp))
-            return data
 
     def _get_field_internal(self, x, y, z):
         """Internal magnetic field calculation methods.
@@ -893,12 +825,13 @@ class Cylinder(Magnet3D):
         kn = _np.sqrt((zn_sq + nrho_a_sq) / (zn_sq + rho_a_sq))
 
         Brho = B0 * (
-            alphap * self._cel(kp, 1, 1, -1) - alphan * self._cel(kn, 1, 1, -1)
+            alphap * _cel(kp, 1, 1, -1)
+            - alphan * _cel(kn, 1, 1, -1)
         )
 
         Bz = (B0 * a / (a + rho)) * (
-            betap * self._cel(kp, gamma**2, 1, gamma)
-            - betan * self._cel(kn, gamma**2, 1, gamma)
+            betap * _cel(kp, gamma**2, 1, gamma)
+            - betan * _cel(kn, gamma**2, 1, gamma)
         )
         return Brho, Bz
 
@@ -965,9 +898,6 @@ class Sphere(Magnet3D):
             print("Do not use phi or theta.")
             print("To rotate the magnetisation, use alpha, beta and gamma")
 
-        self.center = kwargs.pop("center", _np.array([0.0, 0.0, 0.0]))
-        self.center = _np.asarray(self.center)
-
     def __str__(self):
         str = (
             f"{self.__class__.mag_type}\n"
@@ -982,7 +912,7 @@ class Sphere(Magnet3D):
         str = (
             f"{self.__class__.mag_type}\n"
             + f"J: {self.get_Jr()} (T)\n"
-            + f"Size: {self.get_size() }\n"
+            + f"Size: {self.get_size()}\n"
             + f"Center {self.get_center()}\n"
             + f"Orientation alpha,beta,gamma: {self.get_orientation()}\n"
         )

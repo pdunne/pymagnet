@@ -2,22 +2,26 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 # Copyright 2021 Peter Dunne
-"""Plotting routines for calculating along symmetry lines of cubes, cuboids, and cylinders
+"""Plotting routines for calculating along symmetry lines of cubes, cuboids,
+and cylinders"""
 
-"""
+from __future__ import annotations
+
 import warnings
+from typing import Any
 
 try:
     import matplotlib.pyplot as _plt
 except ImportError:
     _has_matplotlib = False
-    warnings.warn("Matplotlib is not installed", UserWarning)
+    warnings.warn("Matplotlib is not installed", UserWarning, stacklevel=2)
 
 else:
     _has_matplotlib = True
 
 
 import numpy as _np
+from numpy.typing import NDArray
 
 from ..magnets import (
     Cylinder,
@@ -25,21 +29,25 @@ from ..magnets import (
     magnetic_field_cylinder_1D,
     magnetic_field_prism_1D,
 )
-from ..utils._vector_structs import Point_Array1
+from ..utils._vector_structs import Field1, Point_Array1
 
 
-def plot_1D_field(magnet, unit="mm", **kwargs):
+def plot_1D_field(
+    magnet: Cylinder | Prism, unit: str = "mm", **kwargs: Any
+) -> tuple[Point_Array1, Field1] | None:
     """Calculates and plots the magnetic field along the central symmetry axis
     of a cylinder or cuboid magnet, assuming the magnetic field is collinear
 
     Args:
-        magnet (Magnet3D): Must be a Magnet3D type of magnet, either Prism, Cube,or Cylinder.
+        magnet (Magnet3D): Must be a Magnet3D type of magnet, either Prism,
+        Cube, or Cylinder.
 
     Kwargs:
         num_points (int): Number of points to calculate. Defaults to 101.
 
     Returns:
-        tuple: Point_Array1, Field1: point array struct containing z and the unit (e/g. 'mm'), vector array containing Bz and the field unit (e.g. 'T').
+        tuple: Point_Array1, Field1: point array struct containing z and the
+        unit (e/g. 'mm'), vector array containing Bz and the field unit (e.g. 'T').
     """
     if not _has_matplotlib:
         raise ImportError("matplotlib is required to use this plot function.")
@@ -56,11 +64,12 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
             num_points,
         )
         field = magnetic_field_cylinder_1D(magnet, points.z)
-
+        if field is None:
+            raise ValueError("Failed to compute magnetic field for Cylinder magnet.")
         # if true, apply NaNs to inside the magnet
         if magnet._mask_magnet:
             mask = _generate_mask_1D(mag_boundary, magnet.center[2], points.z)
-            field.z[mask] = _np.NaN
+            field.z[mask] = _np.nan
 
     elif issubclass(magnet.__class__, Prism):
         mag_boundary = magnet.height / 2
@@ -70,17 +79,20 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
             num_points,
         )
         field = magnetic_field_prism_1D(magnet, points.z)
-
+        if field is None:
+            raise ValueError("Failed to compute magnetic field for Prism magnet.")
         # if true, apply NaNs to inside the magnet
         if magnet._mask_magnet:
             mask = _generate_mask_1D(mag_boundary, magnet.center[2], points.z)
-            field.z[mask] = _np.NaN
+            field.z[mask] = _np.nan
 
     else:
-        print("Error")
-        return None
+        raise TypeError(
+            f"Unsupported magnet type: {type(magnet).__name__}. "
+            "Expected Cylinder or Prism."
+        )
 
-    fig, ax = _plt.subplots(figsize=(8, 8))
+    _fig, _ax = _plt.subplots(figsize=(8, 8))
     unit_length = "(" + points.unit + ")"
     field_unit = "(" + field.unit + ")"
     _plt.xlabel(r"$z$ " + unit_length)
@@ -95,7 +107,9 @@ def plot_1D_field(magnet, unit="mm", **kwargs):
         return points, field
 
 
-def _generate_mask_1D(mag_boundary, zc, z):
+def _generate_mask_1D(
+    mag_boundary: float, zc: float, z: NDArray[_np.floating]
+) -> NDArray[_np.bool_]:
     """Generates mask for points inside magnet
 
     Args:

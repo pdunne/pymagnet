@@ -10,7 +10,7 @@ Private module consiting of point classes and their methods.
 import numpy as _np
 
 
-class Point2(object):
+class Point2:
     """2D point class
 
     Note that multiplication of two points is done elementwise, dot product is

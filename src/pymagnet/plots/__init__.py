@@ -10,8 +10,20 @@ This module imports the classes and functions in the private modules to create a
 - 3D surface and volume plots are rendered using plotly.
 
 """
+
 from ._plot1D import plot_1D_field
-from ._plot2D import plot_2D_contour, plot_2D_line, plot_3D_contour, plot_sub_contour_3D
+from ._plot2D import (
+    plot_2D_contour,
+    plot_2D_contour_BdotgradB,
+    plot_2D_contour_force,
+    plot_2D_contour_gradB,
+    plot_2D_contour_gradB2,
+    plot_2D_contour_gradient,
+    plot_2D_contour_jacobian,
+    plot_2D_line,
+    plot_3D_contour,
+    plot_sub_contour_3D,
+)
 from ._plotly3D import (
     plot_magnet,
     slice_plot,
@@ -24,11 +36,17 @@ from ._plotly3D import (
 
 __all__ = [
     "plot_1D_field",
-    "plot_2D_line",
     "plot_2D_contour",
+    "plot_2D_contour_BdotgradB",
+    "plot_2D_contour_force",
+    "plot_2D_contour_gradB",
+    "plot_2D_contour_gradB2",
+    "plot_2D_contour_gradient",
+    "plot_2D_contour_jacobian",
+    "plot_2D_line",
     "plot_3D_contour",
-    "plot_sub_contour_3D",
     "plot_magnet",
+    "plot_sub_contour_3D",
     "slice_plot",
     "slice_quickplot",
     "volume_plot",

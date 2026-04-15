@@ -1,0 +1,120 @@
+[meta]
+name = "Pseudo-Halbach Field Assembly"
+description = "8 prisms in a perpendicular field configuration from 3D Assemblies notebook"
+dimension = "3D"
+
+# Prism 1: center = (0, 0, 30), Jr = +1.26, phi = 90
+[[magnets]]
+type = "Prism"
+Jr = 1.26
+width = 30.0
+depth = 60.0
+height = 30.0
+center = [0.0, 0.0, 30.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = true
+
+# Prism 2: center = (30, 0, 0), Jr = -1.26, phi = 0
+[[magnets]]
+type = "Prism"
+Jr = -1.26
+width = 30.0
+depth = 60.0
+height = 30.0
+center = [30.0, 0.0, 0.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = true
+
+# Prism 3: center = (0, 0, -30), Jr = +1.26, phi = 0
+[[magnets]]
+type = "Prism"
+Jr = 1.26
+width = 30.0
+depth = 60.0
+height = 30.0
+center = [0.0, 0.0, -30.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = true
+
+# Prism 4: center = (-30, 0, 0), Jr = -1.26, phi = 0
+[[magnets]]
+type = "Prism"
+Jr = -1.26
+width = 30.0
+depth = 60.0
+height = 30.0
+center = [-30.0, 0.0, 0.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = true
+
+# Prism 5: center = (30, 0, 30), Jr = +1.26, phi = 90
+[[magnets]]
+type = "Prism"
+Jr = 1.26
+width = 30.0
+depth = 60.0
+height = 30.0
+center = [30.0, 0.0, 30.0]
+theta = 90.0
+phi = 0.0
+mask_magnet = true
+
+# Prism 6: center = (30, 0, -30), Jr = -1.26, phi = 90
+[[magnets]]
+type = "Prism"
+Jr = -1.26
+width = 30.0
+depth = 60.0
+height = 30.0
+center = [30.0, 0.0, -30.0]
+theta = 90.0
+phi = 0.0
+mask_magnet = true
+
+# Prism 7: center = (-30, 0, 30), Jr = -1.26, phi = 90
+[[magnets]]
+type = "Prism"
+Jr = -1.26
+width = 30.0
+depth = 60.0
+height = 30.0
+center = [-30.0, 0.0, 30.0]
+theta = 90.0
+phi = 0.0
+mask_magnet = true
+
+# Prism 8: center = (-30, 0, -30), Jr = +1.26, phi = 90
+[[magnets]]
+type = "Prism"
+Jr = 1.26
+width = 30.0
+depth = 60.0
+height = 30.0
+center = [-30.0, 0.0, -30.0]
+theta = 90.0
+phi = 0.0
+mask_magnet = true
+
+[grid]
+type = "slice"
+plane = "xy"
+max1 = 60.0
+max2 = 60.0
+slice_value = 0.0
+num_points = 200
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmap = "viridis"
+cmin = 0.0
+cmax = 1.5
+planes = ["xy", "xz", "yz"]
+show_magnets = true
+opacity = 0.7
+num_arrows = 15

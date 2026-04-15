@@ -10,14 +10,18 @@ Unlike the plot2D module, here plotly is used as the backend.
 TODO:
     * Update __str__ and __repr__ for polyhedra
 """
+
+from __future__ import annotations
+
 import warnings
+from typing import TYPE_CHECKING, Any
 
 try:
     import plotly.graph_objects as _go
 
 except ImportError:
     _has_plotly = False
-    warnings.warn("plotly is not installed", UserWarning)
+    warnings.warn("plotly is not installed", UserWarning, stacklevel=2)
 
 else:
     _has_plotly = True
@@ -26,8 +30,11 @@ import numpy as _np
 
 from ..magnets import Cylinder, Magnet3D, Mesh, Prism, Sphere
 from ..magnets._magnet_base import Registry
-from ..utils import Quaternion, get_field_3D, grid3D, slice3D
+from ..utils import Field3, Point_Array3, Quaternion, get_field_3D, grid3D, slice3D
 from ..utils.global_const import MAG_TOL, PI
+
+if TYPE_CHECKING:
+    from plotly.graph_objects import Figure
 
 
 class Polyhedron(Registry):
@@ -69,6 +76,36 @@ class Polyhedron(Registry):
     def __str__(self) -> str:
         return f"(center: {self.center}, size: {self.size} )"
 
+    def _needs_rotation(self) -> bool:
+        """Check if any rotation angles exceed the tolerance threshold."""
+        return _np.any(
+            _np.fabs(_np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]))
+            > Polyhedron.tol
+        )
+
+    def _apply_rotation(self, vertex_coords: _np.ndarray) -> _np.ndarray:
+        """Apply quaternion rotation to vertices and translate to center.
+
+        Args:
+            vertex_coords: 3xN array of vertex coordinates centered at origin
+
+        Returns:
+            ndarray: 3xN array of rotated and translated vertex coordinates
+        """
+        forward_rotation = Quaternion.gen_rotation_quaternion(
+            self.alpha_rad, self.beta_rad, self.gamma_rad
+        )
+        reverse_rotation = forward_rotation.get_conjugate()
+
+        # Rotate points
+        x, y, z = reverse_rotation * vertex_coords
+
+        # Reconstruct 3xN array and add center offset
+        vertex_coords = _np.vstack([x, y, z])
+        vertex_coords += _np.array(self.center).reshape(-1, 1)
+
+        return vertex_coords
+
     def generate_vertices(self):
         """Generates vertices of a polyhedron
 
@@ -103,42 +140,11 @@ class Graphic_Cuboid(Polyhedron):
         Returns:
             ndarray: 3xN array of vertex coordinates (columns are x, y, z)
         """
-        # Generate and rotate the vertices
-        if _np.any(
-            _np.fabs(
-                _np.array(
-                    [
-                        self.alpha_rad,
-                        self.beta_rad,
-                        self.gamma_rad,
-                    ]
-                )
-            ) > Polyhedron.tol
-        ):
-
-            # _, reverse_rotation = self._generate_rotation_quaternions()
-            forward_rotation = Quaternion.gen_rotation_quaternion(
-                self.alpha_rad, self.beta_rad, self.gamma_rad
-            )
-            reverse_rotation = forward_rotation.get_conjugate()
-            # Generate 3xN array for quaternion rotation
-
+        if self._needs_rotation():
             vertex_coords = self._gen_vertices(center=(0, 0, 0), size=self.size)
-
-            # Rotate points
-            x, y, z = reverse_rotation * vertex_coords
-
-            # Reconstruct 3xN array and add center offset
-            vertex_coords = _np.vstack([x, y, z])
-            vertex_coords += _np.array(self.center).reshape(-1, 1)
-
-            # finally return the coordinates
-            return vertex_coords
-
-        # Only generate
+            return self._apply_rotation(vertex_coords)
         else:
-            vertex_coords = self._gen_vertices(self.center, self.size)
-            return vertex_coords
+            return self._gen_vertices(self.center, self.size)
 
     @staticmethod
     def _gen_vertices(center=(0, 0, 0), size=(1, 1, 1)):
@@ -188,49 +194,16 @@ class Graphic_Sphere(Polyhedron):
         self.vertices = self.generate_vertices()
 
     def generate_vertices(self):
-        """Generates and rotates vertices of a cuboid based on orientation angles
+        """Generates and rotates vertices of a sphere based on orientation angles
 
         Returns:
             ndarray: 3xN array of vertex coordinates (columns are x, y, z)
         """
-        # Generate and rotate the vertices
-        if _np.any(
-            _np.fabs(
-                _np.array(
-                    [
-                        self.alpha_rad,
-                        self.beta_rad,
-                        self.gamma_rad,
-                    ]
-                )
-            )
-            > Polyhedron.tol
-        ):
-
-            # _, reverse_rotation = self._generate_rotation_quaternions()
-            forward_rotation = Quaternion.gen_rotation_quaternion(
-                self.alpha_rad, self.beta_rad, self.gamma_rad
-            )
-            reverse_rotation = forward_rotation.get_conjugate()
-
-            # Generate 3xN array for quaternion rotation
-
+        if self._needs_rotation():
             vertex_coords = self._gen_vertices(center=(0, 0, 0), radius=self.radius)
-
-            # Rotate points
-            x, y, z = reverse_rotation * vertex_coords
-
-            # Reconstruct 3xN array and add center offset
-            vertex_coords = _np.vstack([x, y, z])
-            vertex_coords += _np.array(self.center).reshape(-1, 1)
-
-            # finally return the coordinates
-            return vertex_coords
-
-        # Only generate
+            return self._apply_rotation(vertex_coords)
         else:
-            vertex_coords = self._gen_vertices(self.center, self.radius)
-            return vertex_coords
+            return self._gen_vertices(self.center, self.radius)
 
     @staticmethod
     def _gen_vertices(center=(0, 0, 0), radius=1):
@@ -279,51 +252,18 @@ class Graphic_Cylinder(Polyhedron):
         self.vertices = self.generate_vertices()
 
     def generate_vertices(self):
-        """Generates and rotates vertices of a cuboid based on orientation angles
+        """Generates and rotates vertices of a cylinder based on orientation angles
 
         Returns:
             ndarray: 3xN array of vertex coordinates (columns are x, y, z)
         """
-        # Generate and rotate the vertices
-        if _np.any(
-            _np.fabs(
-                _np.array(
-                    [
-                        self.alpha_rad,
-                        self.beta_rad,
-                        self.gamma_rad,
-                    ]
-                )
-            )
-            > Polyhedron.tol
-        ):
-
-            # _, reverse_rotation = self._generate_rotation_quaternions()
-            forward_rotation = Quaternion.gen_rotation_quaternion(
-                self.alpha_rad, self.beta_rad, self.gamma_rad
-            )
-            reverse_rotation = forward_rotation.get_conjugate()
-
-            # Generate 3xN array for quaternion rotation
-
+        if self._needs_rotation():
             vertex_coords = self._gen_vertices(
                 center=(0, 0, 0), radius=self.radius, length=self.length
             )
-
-            # Rotate points
-            x, y, z = reverse_rotation * vertex_coords
-
-            # Reconstruct 3xN array and add center offset
-            vertex_coords = _np.vstack([x, y, z])
-            vertex_coords += _np.array(self.center).reshape(-1, 1)
-
-            # finally return the coordinates
-            return vertex_coords
-
-        # Only generate
+            return self._apply_rotation(vertex_coords)
         else:
-            vertex_coords = self._gen_vertices(self.center, self.radius, self.length)
-            return vertex_coords
+            return self._gen_vertices(self.center, self.radius, self.length)
 
     @staticmethod
     def _gen_vertices(center=(0, 0, 0), radius=1, length=1):
@@ -615,11 +555,18 @@ def _generate_volume_data(points, field, **kwargs):
                 [cmax, 0],
             ]
 
+    # Replace NaN with a value below isomin so plotly can render
+    # isosurfaces without gaps from masked magnet interiors
+    values = field.n.flatten()
+    nan_mask = _np.isnan(values)
+    if _np.any(nan_mask):
+        values = _np.where(nan_mask, cmin - 1.0, values)
+
     return _go.Volume(
         x=points.x.flatten(),
         y=points.y.flatten(),
         z=points.z.flatten(),
-        value=field.n.flatten(),
+        value=values,
         colorscale=colorscale,
         cmin=cmin,
         cmax=cmax,
@@ -635,7 +582,7 @@ def _generate_volume_data(points, field, **kwargs):
     )
 
 
-def plot_magnet(unit="mm", **kwargs):
+def plot_magnet(unit: str = "mm", **kwargs: Any) -> Figure:
     """Renders magnets
 
     Args:
@@ -670,7 +617,9 @@ def plot_magnet(unit="mm", **kwargs):
     return fig
 
 
-def slice_plot(data_dict, **kwargs):
+def slice_plot(
+    data_dict: dict[str, dict[str, Any]], **kwargs: Any
+) -> tuple[Figure, list[Any]]:
     """Plots magnetic field slices.
     A convenience function.
 
@@ -698,7 +647,7 @@ def slice_plot(data_dict, **kwargs):
     if show_magnets:
         data_objects.extend(_generate_all_meshes(magnet_opacity=magnet_opacity))
 
-    for plane in data_dict.keys():
+    for plane in data_dict:
         points = data_dict[plane]["points"]
         field = data_dict[plane]["field"]
 
@@ -739,7 +688,9 @@ def slice_plot(data_dict, **kwargs):
     return fig, data_objects
 
 
-def slice_quickplot(**kwargs):
+def slice_quickplot(
+    **kwargs: Any,
+) -> tuple[Figure, dict[str, dict[str, Any]], list[Any]]:
     """Calculates and plots magnetic field slices.
     A convenience function.
 
@@ -831,7 +782,9 @@ def slice_quickplot(**kwargs):
     return fig, cache, data_objects
 
 
-def volume_plot(points, field, **kwargs):
+def volume_plot(
+    points: Point_Array3, field: Field3, **kwargs: Any
+) -> tuple[Figure, list[Any]]:
     """Plots magnetic field volume.
 
     Args:
@@ -876,7 +829,7 @@ def volume_plot(points, field, **kwargs):
         _generate_volume_data(
             points,
             field,
-            cmim=cmin,
+            cmin=cmin,
             cmax=cmax,
             opacity=opacity,
             colorscale=colorscale,
@@ -910,7 +863,9 @@ def volume_plot(points, field, **kwargs):
     return fig, data_objects
 
 
-def volume_quickplot(**kwargs):
+def volume_quickplot(
+    **kwargs: Any,
+) -> tuple[Figure, dict[str, Any], list[Any]]:
     """Calculates and plots magnetic field slices.
     A convenience function.
 

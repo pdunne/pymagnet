@@ -1,4 +1,3 @@
-
 import numpy as _np
 
 from ..magnets import Magnet3D
@@ -19,7 +18,8 @@ def _get_ranges_prism(active_magnet):
         active_magnet (Prism): Target magnet
 
     Returns:
-        tuple: xlim (tuple), ylim (tuple), zlim (tuple), areas (ndarray) - areas of each face of the cuboid
+        tuple: xlim (tuple), ylim (tuple), zlim (tuple), areas (ndarray)
+        - areas of each face of the cuboid
     """
     size_x, size_y, size_z = active_magnet.get_size()
 
@@ -37,7 +37,8 @@ def _gen_grid(xlim=(0, 10), ylim=(0, 10), num_samples=10):
     Args:
         xlim (tuple, optional): Min and max x values. Defaults to (0, 10).
         ylim (tuple, optional): Min and max y values. Defaults to (0, 10).
-        num_samples (int, optional): Number of points to generate in each direction. Defaults to 10.
+        num_samples (int, optional): Number of points to generate in each direction.
+          Defaults to 10.
 
     Returns:
         ndarray: (num_samples**2, 3) array of points
@@ -77,8 +78,10 @@ def _gen_planar_grid(
         xlim (tuple): min and max x values (float)
         ylim (tuple): min and max y values (float)
         zlim (tuple): min and max z values (float)
-        face (str, optional): family of planes to generate (x, y, or z). Defaults to "x".
-        num_samples (int, optional): Number of grid points to generate (10x10). Defaults to 10.
+        face (str, optional): family of planes to generate (x, y, or z).
+        Defaults to "x".
+        num_samples (int, optional): Number of grid points to generate (10x10).
+        Defaults to 10.
         unit (str, optional): Length scale. Defaults to "mm".
 
     Returns:
@@ -125,7 +128,6 @@ def _gen_planar_grid(
             points_upper = Point_Array3(x + xc, y + yc, z + zc, unit=unit)
 
         elif face.lower() == "z":
-
             pos_vec = Quaternion._prepare_vector(points_1, points_2, points_3_lower)
             x, y, z = reverse_rotation * pos_vec
             points_lower = Point_Array3(x + xc, y + yc, z + zc, unit=unit)
@@ -134,7 +136,6 @@ def _gen_planar_grid(
             x, y, z = reverse_rotation * pos_vec
             points_upper = Point_Array3(x + xc, y + yc, z + zc, unit=unit)
     else:
-
         if face.lower() == "x":
             points_lower = Point_Array3(
                 points_3_lower + xc, points_1 + yc, points_2 + zc, unit=unit
@@ -198,7 +199,8 @@ def _calc_field_face(active_magnet, points):
 
 
 def calc_force_prism(active_magnet, num_samples=20, unit="mm"):
-    """Calculates the total force on a cuboidal magnet due to all other instantiated magnets
+    """Calculates the total force on a cuboidal magnet due to all other
+    instantiated magnets
 
     Args:
         active_magnet (Prism): Target Magnet
@@ -224,7 +226,6 @@ def calc_force_prism(active_magnet, num_samples=20, unit="mm"):
         )
         > active_magnet.tol
     ):
-
         _, reverse_rotation = active_magnet._generate_rotation_quaternions()
         Jrot = reverse_rotation * Jvec
     else:
@@ -297,6 +298,7 @@ def calc_force_prism(active_magnet, num_samples=20, unit="mm"):
         torque += total_torque * Jrot[2] * areas[2] / num_points_sq
 
     scaling_factor = get_unit_value_meter(points_lower.get_unit())
+    assert scaling_factor is not None
     force /= MU0 / scaling_factor / scaling_factor
     torque /= MU0 / scaling_factor / scaling_factor / scaling_factor
 

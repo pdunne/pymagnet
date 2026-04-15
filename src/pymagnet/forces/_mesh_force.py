@@ -31,7 +31,7 @@ def get_centroid(triangle):
 #         result[i] = (triangle[0,i] + triangle[1,i] + triangle[2,i])/3.0
 
 
-# @njit
+@njit(cache=True)
 def triangle_area(triangle):
     """Gets the area of a triangle. Computes the cross product area.
 
@@ -41,13 +41,26 @@ def triangle_area(triangle):
     Returns:
         float: area
     """
-    return _np.linalg.norm(
-        _np.cross((triangle[1] - triangle[0]), (triangle[2] - triangle[0])) / 2
-    )
+    # Edge vectors
+    e1_x = triangle[1, 0] - triangle[0, 0]
+    e1_y = triangle[1, 1] - triangle[0, 1]
+    e1_z = triangle[1, 2] - triangle[0, 2]
+
+    e2_x = triangle[2, 0] - triangle[0, 0]
+    e2_y = triangle[2, 1] - triangle[0, 1]
+    e2_z = triangle[2, 2] - triangle[0, 2]
+
+    # Cross product
+    cx = e1_y * e2_z - e1_z * e2_y
+    cy = e1_z * e2_x - e1_x * e2_z
+    cz = e1_x * e2_y - e1_y * e2_x
+
+    # Area = |cross| / 2
+    return _np.sqrt(cx * cx + cy * cy + cz * cz) / 2.0
 
 
 # @guvectorize(["void(f8[:,:, :], f8[:])"], "(x, y, y)->(x)")
-@njit
+# @njit
 def get_area_triangles(triangles, area):
     """Computes the area for an array of triangles
 
@@ -64,45 +77,51 @@ def get_area_triangles(triangles, area):
         )
 
 
-@njit
-def _divide_triangle_centroid(triangle, depth=1, memo=_np.array(())):
-    """Recursively divides a triangle into 3 using the centroid
+def _divide_triangle_centroid_fast(triangle, depth=1):
+    """Divides a triangle into 3**depth sub-triangles using centroid subdivision.
+
+    Uses pre-allocated arrays and iterative processing for better performance.
 
     Args:
         triangle (ndarray): (3,3) array of triangle vertices in 3D
-        depth (int, optional): Number of recursions to do. Defaults to 1.
-        memo (ndarray, optional): Tracked array of generated vertices. Defaults to _np.array(()).
+        depth (int, optional): Number of subdivision levels. Defaults to 1.
 
     Returns:
-        ndarray: N*3*3 array of vertices. where N = 3**depth
+        ndarray: (3**depth, 3, 3) array of sub-triangle vertices
     """
+    # Use a working buffer: start with input triangle, expand each iteration
+    current = _np.array([triangle])
 
-    centroid = _np.array([0.0, 0.0, 0.0])
-    trig_array = _np.zeros((3, 3, 3))
-    centroid = get_centroid(triangle)
+    for _ in range(depth):
+        n = len(current)
+        next_level = _np.zeros((n * 3, 3, 3))
 
-    for i in range(3):
-        centroid[i] = (triangle[0, i] + triangle[1, i] + triangle[2, i]) / 3
-        trig_array[i, :] = triangle[:]
+        for i in range(n):
+            tri = current[i]
+            centroid = (tri[0] + tri[1] + tri[2]) / 3.0
 
-    trig_array[0, 2, :] = centroid
-    trig_array[1, 0, :] = centroid
-    trig_array[2, 1, :] = centroid
-    depth -= 1
+            # Sub-triangle 0: v0, v1, centroid
+            next_level[i * 3, 0, :] = tri[0]
+            next_level[i * 3, 1, :] = tri[1]
+            next_level[i * 3, 2, :] = centroid
 
-    if depth < 1:
-        memo = _np.append(memo, trig_array)
-    else:
-        memo = _divide_triangle_centroid(trig_array[0, ...], depth=depth, memo=memo)
-        memo = _divide_triangle_centroid(trig_array[1, ...], depth=depth, memo=memo)
-        memo = _divide_triangle_centroid(trig_array[2, ...], depth=depth, memo=memo)
+            # Sub-triangle 1: centroid, v1, v2
+            next_level[i * 3 + 1, 0, :] = centroid
+            next_level[i * 3 + 1, 1, :] = tri[1]
+            next_level[i * 3 + 1, 2, :] = tri[2]
 
-    return memo
+            # Sub-triangle 2: v0, centroid, v2
+            next_level[i * 3 + 2, 0, :] = tri[0]
+            next_level[i * 3 + 2, 1, :] = centroid
+            next_level[i * 3 + 2, 2, :] = tri[2]
+
+        current = next_level
+
+    return current
 
 
-@njit
 def get_midpoints(triangle):
-    """Get midpoints of the faces of a triangle
+    """Get midpoints of the edges of a triangle.
 
     Args:
         triangle (ndarray): (3,3) array of triangle vertices in 3D
@@ -117,79 +136,135 @@ def get_midpoints(triangle):
 
 
 @njit
-def _divide_triangle_regular(triangle, depth=1, memo=_np.array(())):
-    """Recursively divides a triangle into 4 using the midpoint of each face.
+def _get_midpoints_njit(triangle):
+    """Get midpoints of the edges of a triangle (numba-compatible).
 
     Args:
         triangle (ndarray): (3,3) array of triangle vertices in 3D
-        depth (int, optional): Number of recursions to perform. Defaults to 1.
-        memo (ndarray, optional): Tracked array of generated vertices. Defaults to _np.array(()).
 
     Returns:
-        ndarray: (N*3*3,) array of vertices, where N = 4**depth
+        ndarray: (3,3) array of the three midpoints
     """
-    midpoints = get_midpoints(triangle)
-    trig_array = _np.zeros((4, 3, 3))
-    trig_array[0, 0, :] = triangle[0]
-    trig_array[0, 1, :] = midpoints[0]
-    trig_array[0, 2, :] = midpoints[2]
+    midpoints = _np.zeros((3, 3))
+    for i in range(3):
+        j = (i + 1) % 3
+        for k in range(3):
+            midpoints[i, k] = (triangle[i, k] + triangle[j, k]) / 2.0
+    return midpoints
 
-    trig_array[1, 0, :] = midpoints[0]
-    trig_array[1, 1, :] = midpoints[1]
-    trig_array[1, 2, :] = midpoints[2]
 
-    trig_array[2, 0, :] = midpoints[2]
-    trig_array[2, 1, :] = midpoints[1]
-    trig_array[2, 2, :] = triangle[2]
+@njit
+def _subdivide_triangle_regular_njit(tri, out, out_idx):
+    """Subdivide a single triangle into 4 sub-triangles (numba-compatible).
 
-    trig_array[3, 0, :] = midpoints[0]
-    trig_array[3, 1, :] = triangle[1]
-    trig_array[3, 2, :] = midpoints[1]
-    depth -= 1
+    Args:
+        tri (ndarray): (3,3) input triangle
+        out (ndarray): output array to write results to
+        out_idx (int): starting index in output array
 
-    if depth < 1:
-        memo = _np.append(memo, trig_array)
-    else:
-        memo = _divide_triangle_regular(trig_array[0, ...], depth=depth, memo=memo)
-        memo = _divide_triangle_regular(trig_array[1, ...], depth=depth, memo=memo)
-        memo = _divide_triangle_regular(trig_array[2, ...], depth=depth, memo=memo)
-        memo = _divide_triangle_regular(trig_array[3, ...], depth=depth, memo=memo)
+    Returns:
+        None (modifies out in-place)
+    """
+    midpoints = _get_midpoints_njit(tri)
 
-    return memo
+    # Sub-triangle 0: v0, m01, m20
+    for k in range(3):
+        out[out_idx, 0, k] = tri[0, k]
+        out[out_idx, 1, k] = midpoints[0, k]
+        out[out_idx, 2, k] = midpoints[2, k]
+
+    # Sub-triangle 1: m01, m12, m20 (center triangle)
+    for k in range(3):
+        out[out_idx + 1, 0, k] = midpoints[0, k]
+        out[out_idx + 1, 1, k] = midpoints[1, k]
+        out[out_idx + 1, 2, k] = midpoints[2, k]
+
+    # Sub-triangle 2: m20, m12, v2
+    for k in range(3):
+        out[out_idx + 2, 0, k] = midpoints[2, k]
+        out[out_idx + 2, 1, k] = midpoints[1, k]
+        out[out_idx + 2, 2, k] = tri[2, k]
+
+    # Sub-triangle 3: m01, v1, m12
+    for k in range(3):
+        out[out_idx + 3, 0, k] = midpoints[0, k]
+        out[out_idx + 3, 1, k] = tri[1, k]
+        out[out_idx + 3, 2, k] = midpoints[1, k]
+
+
+@njit
+def _divide_triangle_regular_fast_njit(triangle, depth):
+    """Divides a triangle into 4**depth sub-triangles using midpoint subdivision.
+
+    Uses pre-allocated arrays and iterative processing for better performance.
+    Compiled with numba for additional speedup.
+
+    Args:
+        triangle (ndarray): (3,3) array of triangle vertices in 3D
+        depth (int): Number of subdivision levels
+
+    Returns:
+        ndarray: (4**depth, 3, 3) array of sub-triangle vertices
+    """
+    # Start with the input triangle
+    current_count = 1
+    current = _np.zeros((1, 3, 3))
+    for i in range(3):
+        for j in range(3):
+            current[0, i, j] = triangle[i, j]
+
+    for _ in range(depth):
+        next_count = current_count * 4
+        next_level = _np.zeros((next_count, 3, 3))
+
+        for i in range(current_count):
+            _subdivide_triangle_regular_njit(current[i], next_level, i * 4)
+
+        current = next_level
+        current_count = next_count
+
+    return current
+
+
+def _divide_triangle_regular_fast(triangle, depth=1):
+    """Divides a triangle into 4**depth sub-triangles using midpoint subdivision.
+
+    Wrapper around the numba-compiled implementation.
+
+    Args:
+        triangle (ndarray): (3,3) array of triangle vertices in 3D
+        depth (int, optional): Number of subdivision levels. Defaults to 1.
+
+    Returns:
+        ndarray: (4**depth, 3, 3) array of sub-triangle vertices
+    """
+    return _divide_triangle_regular_fast_njit(triangle.astype(_np.float64), depth)
 
 
 def divide_triangle_centroid(triangle, depth=1):
-    """Recursively divides a triangle into 3 using the centroid.
-    A wrapper over `_divide_triangle_centroid` to  reshape the output from
-    (N*3*3,) to (N,3,3)
+    """Divides a triangle into 3**depth sub-triangles using centroid subdivision.
 
     Args:
         triangle (ndarray): (3,3) array of triangle vertices in 3D
-        depth (int, optional): Number of recursions to perform. Defaults to 1.
+        depth (int, optional): Number of subdivision levels. Defaults to 1.
 
     Returns:
         ndarray: (N,3,3) array of vertices, where N = 3**depth
     """
-    mesh = _divide_triangle_centroid(triangle, depth=depth)
-    mesh = mesh.reshape((mesh.shape[0] // 9, 3, 3))
-    return mesh
+    return _divide_triangle_centroid_fast(triangle, depth=depth)
 
 
 def divide_triangle_regular(triangle, depth=1):
-    """Recursively divides a triangle into 4 using the midpoint of each face.
-    A wrapper over `_divide_triangle_regular` to  reshape the output from
-    (N*3*3,) to (N,3,3)
+    """Divides a triangle into 4**depth sub-triangles using midpoint subdivision.
 
     Args:
         triangle (ndarray): (3,3) array of triangle vertices in 3D
-        depth (int, optional): Number of recursions to perform. Defaults to 1.
+        depth (int, optional): Number of subdivision levels. Defaults to 1.
 
     Returns:
         ndarray: (N,3,3) array of vertices, where N = 4**depth
     """
-    mesh = _divide_triangle_regular(triangle, depth=depth)
-    mesh = mesh.reshape((mesh.shape[0] // 9, 3, 3))
-    return mesh
+    return _divide_triangle_regular_fast(triangle, depth=depth)
 
 
 def _calc_field_simplex(active_magnet, points):
@@ -250,6 +325,7 @@ def calc_force_mesh(active_magnet, depth=3, unit="mm"):
             torque += local_torque * -active_magnet.Jnorm[i] * area / num_sub_triangles
 
     scaling_factor = get_unit_value_meter(points.get_unit())
+    assert scaling_factor is not None
     force /= MU0 / scaling_factor / scaling_factor
     torque /= MU0 / scaling_factor / scaling_factor / scaling_factor
 

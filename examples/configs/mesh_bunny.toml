@@ -1,0 +1,33 @@
+[meta]
+name = "Mesh Stanford Bunny"
+description = "Stanford Bunny (10000 triangles) loaded from STL file"
+dimension = "3D"
+
+[[magnets]]
+type = "Mesh"
+filename = "../scripts/stl_magnets/stl/Stanford_Bunny_10000.stl"
+Jr = 1.0
+mesh_scale = 5
+center = [0.0, 0.0, 0.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = false
+
+[grid]
+type = "slice"
+max1 = 350.0
+max2 = 350.0
+slice_value = 0.0
+num_points = 100
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmap = "viridis"
+cmin = 0.0
+cmax = 0.5
+planes = ["xy", "xz", "yz"]
+show_magnets = true
+opacity = 0.8
+num_arrows = 10

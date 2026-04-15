@@ -1,0 +1,48 @@
+[meta]
+name = "Two Poles"
+description = "2 prisms simulating two pole piece style geometries"
+dimension = "3D"
+
+# Prism 1: center = (30, 0, 0), Jr = -1.26, phi = 0
+[[magnets]]
+type = "Prism"
+Jr = 1.26
+width = 30.0
+depth = 60.0
+height = 90.0
+center = [30.0, 0.0, 0.0]
+theta = 90.0
+phi = 0.0
+mask_magnet = true
+
+# Prism 1: center = (-30, 0, 0), Jr = -1.26, phi = 0
+[[magnets]]
+type = "Prism"
+Jr = 1.26
+width = 30.0
+depth = 60.0
+height = 90.0
+center = [-30.0, 0.0, 0.0]
+theta = 90.0
+phi = 0.0
+mask_magnet = true
+
+[grid]
+type = "slice"
+plane = "xy"
+max1 = 60.0
+max2 = 60.0
+slice_value = 0.0
+num_points = 200
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmap = "viridis"
+cmin = 0.0
+cmax = 1.0
+planes = ["xy", "xz"]
+show_magnets = true
+opacity = 0.9
+num_arrows = 20

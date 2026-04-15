@@ -8,14 +8,18 @@ This module contains all functions needed to plot lines and contours for 2D
 magnetic sources, and
 
 """
+
+from __future__ import annotations
+
 import warnings
+from typing import TYPE_CHECKING, Any
 
 try:
     import matplotlib.pyplot as _plt
 
 except ImportError:
     _has_matplotlib = False
-    warnings.warn("matplotlib is not installed", UserWarning)
+    warnings.warn("matplotlib is not installed", UserWarning, stacklevel=2)
 
 else:
     _has_matplotlib = True
@@ -26,14 +30,19 @@ else:
     from matplotlib.transforms import Affine2D
 
 import numpy as _np
+from numpy.typing import NDArray
 
-from ..utils import Field2, Point_Array2
+from ..utils import Field2, Field3, Point_Array2, Point_Array3
+
+if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
 # from ..utils._conversions import get_unit_value_meter, get_unit_value_tesla
 # from .. import magnets as _mag
 
 
-class patch(object):
+class patch:
     """Encodes magnet dimensions for drawing on plots"""
 
     def __init__(self, x, y, width, height, transform, type):
@@ -61,7 +70,7 @@ class patch(object):
         return f"(x: {self.x}, y: {self.y} w:{self.width}, h: {self.height})"
 
 
-class arrow(object):
+class arrow:
     """Encodes magnetisation vector for drawing on plots"""
 
     def __init__(self, x, y, dx, dy, transform, width=3):
@@ -97,7 +106,7 @@ class arrow(object):
         )
 
 
-class magnet_patch(object):
+class magnet_patch:
     """Magnet drawing class"""
 
     def __init__(self, patch, arrow) -> None:
@@ -109,7 +118,9 @@ class magnet_patch(object):
         return self.patch.__str__() + self.arrow.__str__()
 
 
-def plot_2D_line(point_array, field, **kwargs):
+def plot_2D_line(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, Axes]:
     """Line Plot of field from 2D magnet
 
     Args:
@@ -150,7 +161,9 @@ def plot_2D_line(point_array, field, **kwargs):
     return fig, ax
 
 
-def plot_2D_contour(point_array, field, **kwargs):
+def plot_2D_contour(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, Axes]:
     """Contour plot of field
 
     Args:
@@ -225,6 +238,7 @@ def plot_2D_contour(point_array, field, **kwargs):
             cmap=_plt.get_cmap(cmap),
             extend="max",
         )
+        CS.set_edgecolor("face")
 
         # Draw contour lines
         if num_levels > 1:
@@ -248,7 +262,6 @@ def plot_2D_contour(point_array, field, **kwargs):
             _vector_plot2(point_array, field, NQ, vector_color)
 
     elif plot_type.lower() == "streamplot":
-
         xpl = point_array.x[:, 0]
         ypl = point_array.y[0, :]
         cmap = kwargs.pop("cmap", None)
@@ -320,6 +333,279 @@ def plot_2D_contour(point_array, field, **kwargs):
         _plt.savefig("contour_plot.png", dpi=300)
 
     return fig, ax
+
+
+def plot_2D_contour_gradient(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, Axes]:
+    """Contour plot of the magnetic field gradient magnitude.
+
+    Computes grad(|B|) and plots as a filled contour. Delegates to
+    plot_2D_contour with appropriate default labels.
+
+    Args:
+        point_array (Point_Array2): coordinates
+        field (Field2): Magnetic field (must have .n populated via calc_norm)
+
+    Kwargs:
+        All kwargs from plot_2D_contour are supported.
+        clab defaults to "∇|B| (T/{unit})"
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
+    """
+    from ..utils._routines2D import gradB_2D
+
+    grad_field = gradB_2D(field.n, point_array.x, point_array.y)
+    kwargs.setdefault("clab", f"\u2207|B| (T/{point_array.unit})")
+    if "cmax" not in kwargs:
+        finite = grad_field.n[_np.isfinite(grad_field.n)]
+        kwargs["cmax"] = float(_np.max(finite)) if finite.size > 0 else 1.0
+    return plot_2D_contour(point_array, grad_field, **kwargs)
+
+
+def plot_2D_contour_force(
+    point_array: Point_Array2,
+    field: Field2,
+    chi_m: float,
+    c: float,
+    **kwargs: Any,
+) -> tuple[Figure, Axes]:
+    """Contour plot of the scalar magnetic gradient force.
+
+    Computes F = (chi_m / mu_0) * c * |B| * grad(|B|) and plots as a
+    filled contour. Delegates to plot_2D_contour with appropriate labels.
+
+    Args:
+        point_array (Point_Array2): coordinates
+        field (Field2): Magnetic field
+        chi_m (float): Magnetic susceptibility
+        c (float): Material constant
+
+    Kwargs:
+        All kwargs from plot_2D_contour are supported.
+        clab defaults to "F∇B (T²/{unit})"
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
+    """
+    from ..utils._routines2D import FgradB_2D
+
+    force_field = FgradB_2D(field, point_array.x, point_array.y, chi_m, c)
+    kwargs.setdefault("clab", f"F\u2207B (T\u00b2/{point_array.unit})")
+    if "cmax" not in kwargs:
+        finite = force_field.n[_np.isfinite(force_field.n)]
+        kwargs["cmax"] = float(_np.max(finite)) if finite.size > 0 else 1.0
+    return plot_2D_contour(point_array, force_field, **kwargs)
+
+
+def plot_2D_contour_BdotgradB(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, Axes]:
+    """Contour plot of B . grad(B) tensor force.
+
+    Computes the exact tensor product F_i = sum_j B_j * dB_j/dx_i
+    and plots as a filled contour. Delegates to plot_2D_contour.
+
+    Args:
+        point_array (Point_Array2): coordinates
+        field (Field2): Magnetic field
+
+    Kwargs:
+        All kwargs from plot_2D_contour are supported.
+        clab defaults to "B·∇B (T²/{unit})"
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
+    """
+    from ..utils._routines2D import BdotgradB_2D
+
+    bdg = BdotgradB_2D(field, point_array.x, point_array.y)
+    kwargs.setdefault("clab", f"B\u00b7\u2207B (T\u00b2/{point_array.unit})")
+    if "cmax" not in kwargs:
+        finite = bdg.n[_np.isfinite(bdg.n)]
+        kwargs["cmax"] = float(_np.max(finite)) if finite.size > 0 else 1.0
+    return plot_2D_contour(point_array, bdg, **kwargs)
+
+
+def plot_2D_contour_gradB2(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, Axes]:
+    """Contour plot of |∇(B²)| with ∇(B²) vector overlay.
+
+    Computes ∇(|B|²) directly by taking the gradient of field.n².
+    The contour shows |∇(B²)| and quiver arrows show the ∇(B²) direction.
+
+    Args:
+        point_array (Point_Array2): coordinates
+        field (Field2): Magnetic field
+
+    Kwargs:
+        All kwargs from plot_2D_contour are supported.
+        clab defaults to "|∇(B²)| (T²/{unit})"
+        num_arrows (int): Number of quiver arrows per axis side. Defaults to 10.
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
+    """
+    from ..utils._routines2D import gradB_2D
+
+    # Compute ∇(|B|²) directly from the gradient of the squared magnitude
+    grad_B2 = gradB_2D(field.n**2, point_array.x, point_array.y)
+
+    kwargs.setdefault("clab", f"|\u2207(B\u00b2)| (T\u00b2/{point_array.unit})")
+    kwargs.setdefault("num_arrows", 10)
+    if "cmax" not in kwargs:
+        finite = grad_B2.n[_np.isfinite(grad_B2.n)]
+        kwargs["cmax"] = float(_np.max(finite)) if finite.size > 0 else 1.0
+    return plot_2D_contour(point_array, grad_B2, **kwargs)
+
+
+def plot_2D_contour_gradB(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, Axes]:
+    """Contour plot of the Jacobian Frobenius norm with grad(|B|) vector overlay.
+
+    Computes the full Jacobian J_ij = dB_i/dx_j via jacobian_B_2D, then plots
+    ||J||_F = sqrt(sum of J_ij^2) as a filled contour with quiver arrows
+    showing the direction of grad(|B|) overlaid.
+
+    Args:
+        point_array (Point_Array2): coordinates
+        field (Field2): Magnetic field
+
+    Kwargs:
+        All kwargs from plot_2D_contour are supported.
+        clab defaults to "||∇B|| (T/{unit})"
+        num_arrows (int): Number of quiver arrows per axis side. Defaults to 10.
+
+    Returns:
+        tuple: fig, ax reference to matplotlib figure and axis objects
+    """
+    from ..utils._routines2D import gradB_2D, jacobian_B_2D
+
+    J = jacobian_B_2D(field, point_array.x, point_array.y)
+
+    # Frobenius norm of the Jacobian: total rate of field variation
+    frob = _np.sqrt(
+        J.dBx_dx**2 + J.dBx_dy**2 + J.dBy_dx**2 + J.dBy_dy**2
+    )
+
+    # Build a Field2 with grad(|B|) as the vector components and ||J||_F as norm
+    grad_field = gradB_2D(field.n, point_array.x, point_array.y)
+    grad_field.n = frob
+
+    kwargs.setdefault("clab", f"||\u2207B|| (T/{point_array.unit})")
+    kwargs.setdefault("num_arrows", 10)
+    if "cmax" not in kwargs:
+        finite = frob[_np.isfinite(frob)]
+        kwargs["cmax"] = float(_np.max(finite)) if finite.size > 0 else 1.0
+    return plot_2D_contour(point_array, grad_field, **kwargs)
+
+
+def plot_2D_contour_jacobian(
+    point_array: Point_Array2, field: Field2, **kwargs: Any
+) -> tuple[Figure, NDArray]:
+    """2x2 contour plot of all Jacobian tensor components.
+
+    Computes the full 2D Jacobian J_ij = dB_i/dx_j and plots each of the
+    4 components (dBx/dx, dBx/dy, dBy/dx, dBy/dy) as a subplot panel.
+
+    Args:
+        point_array (Point_Array2): coordinates
+        field (Field2): Magnetic field
+
+    Kwargs:
+        cmap (str): Colormap. Defaults to 'RdBu_r' (diverging).
+        cmin (float): Color scale minimum. Defaults to -cmax (symmetric).
+        cmax (float): Color scale maximum. Defaults to max(|data|).
+        num_levels (int): Number of contour levels. Defaults to 11.
+        show_magnets (bool): Draw magnets. Defaults to True.
+        save_fig (bool): Save to png file. Defaults to False.
+
+    Returns:
+        tuple: fig, axes (2x2 array of matplotlib axes)
+    """
+    if not _has_matplotlib:
+        raise ImportError("matplotlib is required to use this plot function.")
+
+    from ..magnets._polygon2D import PolyMagnet
+    from ..utils._routines2D import jacobian_B_2D
+
+    J = jacobian_B_2D(field, point_array.x, point_array.y)
+
+    cmap = kwargs.pop("cmap", "RdBu_r")
+    num_levels = kwargs.pop("num_levels", 11)
+    show_magnets = kwargs.pop("show_magnets", True)
+    SAVE = kwargs.pop("save_fig", False)
+    unit = point_array.unit
+
+    components = [
+        (J.dBx_dx, f"\u2202Bx/\u2202x (T/{unit})"),
+        (J.dBx_dy, f"\u2202Bx/\u2202y (T/{unit})"),
+        (J.dBy_dx, f"\u2202By/\u2202x (T/{unit})"),
+        (J.dBy_dy, f"\u2202By/\u2202y (T/{unit})"),
+    ]
+
+    # Determine symmetric color limits from all components
+    all_finite = _np.concatenate(
+        [comp[_np.isfinite(comp)].ravel() for comp, _ in components]
+    )
+    default_cmax = float(_np.max(_np.abs(all_finite))) if all_finite.size > 0 else 1.0
+    cmax = kwargs.pop("cmax", round(default_cmax, 2))
+    cmin = kwargs.pop("cmin", -cmax)
+
+    fig, axes = _plt.subplots(2, 2, figsize=(14, 12))
+    lev_fill = _np.linspace(cmin, cmax, 256, endpoint=True)
+    lev_lines = _np.linspace(cmin, cmax, num_levels, endpoint=True)
+
+    for ax, (data, label) in zip(axes.ravel(), components):
+        CS = ax.contourf(
+            point_array.x,
+            point_array.y,
+            data,
+            levels=lev_fill,
+            cmap=_plt.get_cmap(cmap),
+            extend="both",
+        )
+        CS.set_edgecolor("face")
+
+        if num_levels > 1:
+            ax.contour(
+                point_array.x,
+                point_array.y,
+                data,
+                levels=lev_lines,
+                linewidths=0.5,
+                colors="k",
+            )
+            CB = fig.colorbar(CS, ax=ax, ticks=lev_lines)
+        else:
+            CB = fig.colorbar(CS, ax=ax)
+
+        CB.ax.get_yaxis().labelpad = 15
+        CB.ax.set_ylabel(label, rotation=270)
+        ax.set_xlabel(f"x ({unit})")
+        ax.set_ylabel(f"y ({unit})")
+        ax.set_aspect("equal")
+
+        if show_magnets:
+            _draw_magnets2(ax)
+            if len(PolyMagnet.instances) > 0:
+                for magnet in PolyMagnet.instances:
+                    poly = _plt.Polygon(
+                        _np.array(magnet.polygon.vertices),
+                        ec="k",
+                        fc="w",
+                        zorder=5,
+                    )
+                    ax.add_patch(poly)
+
+    fig.tight_layout()
+    if SAVE:
+        _plt.savefig("jacobian_plot.png", dpi=300)
+
+    return fig, axes
 
 
 def _num_patch_2D():
@@ -503,7 +789,12 @@ def _vector_plot2(points, field, NQ, vector_color):
             )
 
 
-def plot_3D_contour(points, field, plane, **kwargs):
+def plot_3D_contour(
+    points: Point_Array2 | Point_Array3,
+    field: Field2 | Field3,
+    plane: str,
+    **kwargs: Any,
+) -> tuple[Figure, Axes]:
     """Contour plot of field
 
     Args:
@@ -632,6 +923,7 @@ def plot_3D_contour(points, field, plane, **kwargs):
                 cmap=cmap,
                 linewidth=0.5,
             )
+            CS.set_edgecolor("face")
             CB = _plt.colorbar(CS.lines)
         else:
             color = kwargs.pop("color", "k")
@@ -662,7 +954,12 @@ def plot_3D_contour(points, field, plane, **kwargs):
     return fig, ax
 
 
-def plot_sub_contour_3D(plot_x, plot_y, plot_B, **kwargs):
+def plot_sub_contour_3D(
+    plot_x: NDArray[_np.floating],
+    plot_y: NDArray[_np.floating],
+    plot_B: NDArray[_np.floating],
+    **kwargs: Any,
+) -> tuple[Figure, Axes]:
     """Contour plot of a single magnetic field component of a 3D simulation
 
     Args:
@@ -771,7 +1068,7 @@ def contour_plot_cylinder(magnet, **kwargs):
         -magnet.length : magnet.length : NPJ,
     ]
     Br, Bz = magnet._calcB_cyl(rho, z)
-    Bn = _np.sqrt(Bz ** 2 + Br ** 2)
+    Bn = _np.sqrt(Bz**2 + Br**2)
 
     xlab = "r (m)"
     ylab = "z (m)"

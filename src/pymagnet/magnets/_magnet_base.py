@@ -6,7 +6,8 @@
 
 This private module implements the registry and base magnet classes
 """
-__all__ = ["Registry", "Magnet", "reset", "list"]
+
+__all__ = ["Magnet", "Registry", "list", "reset"]
 
 from weakref import WeakSet
 
@@ -69,7 +70,6 @@ class Registry:
 
     @classmethod
     def get_num_instances(cls, Print_Val=False):
-
         """Return number of instances of class
 
         Args:

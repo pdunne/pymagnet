@@ -1,3 +1,18 @@
+"""Force calculation example for STL mesh magnets.
+
+This example calculates and plots the force between two mesh magnets
+as a function of their separation distance.
+
+For field calculations with mesh magnets, parallel processing is enabled
+by default:
+    Bx, By, Bz = mesh.get_field(x, y, z)  # parallel=True by default
+
+To use the original serial method:
+    Bx, By, Bz = mesh.get_field(x, y, z, parallel=False)
+
+See parallel_field_comparison.py for performance benchmarks.
+"""
+
 import os
 
 import matplotlib.pyplot as plt

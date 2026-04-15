@@ -20,7 +20,7 @@ User friendly magnetic field calculations in Python
 Installing `pymagnet` can be done using
 
 ```bash
-python -m pip install pymagnet 
+python -m pip install pymagnet
 ```
 
 Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D
