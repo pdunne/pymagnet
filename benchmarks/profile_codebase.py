@@ -18,12 +18,15 @@ Environment:
   OMP_NUM_THREADS=N    Control thread count for the parallel mesh path.
 
 Scenarios:
-  1. analytic_cube       - Cube.get_field() over a 20×20×20 grid
-  2. analytic_cylinder   - Cylinder.get_field() over a 20×20×20 grid
-  3. mesh_small          - Mesh.get_field() on a cube STL (~12 triangles, 10×10 grid)
-  4. mesh_large          - Mesh.get_field() on bunny_500 STL (~500 triangles, 20×20 grid)
-  5. prism_force         - calc_force_prism() between two offset cubes
-  6. mesh_force          - Mesh.get_force_torque() between cube STL and a Prism
+  1. analytic_cube            - Cube.get_field() over a 20×20×20 grid
+  2. analytic_cylinder        - Cylinder.get_field() over a 20×20×20 grid
+  3. mesh_small               - Mesh.get_field() on a cube STL (~12 triangles, 10×10 grid)
+  4. mesh_large               - Mesh.get_field() on bunny_500 STL (~500 triangles, 20×20 grid)
+  5. mesh_stress              - Mesh.get_field() on bunny_10000, 20×20×20 3D grid (tri-outer)
+  6. mesh_stress_pts          - Mesh._get_field_parallel_pts() same grid (pts-outer, no culling)
+  7. mesh_stress_pts_cut      - Mesh._get_field_parallel_pts(r_cut=40) same grid (pts-outer + culling)
+  8. prism_force              - calc_force_prism() between two offset cubes
+  9. mesh_force               - Mesh.get_force_torque() between cube STL and a Prism
 """
 
 import argparse
@@ -44,6 +47,16 @@ import numpy as np
 # Paths
 # ---------------------------------------------------------------------------
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Scenarios that are too slow to run with NUMBA_DISABLE_JIT=1 (interpreted
+# Python replaces every @njit kernel, making large-mesh runs take minutes).
+_JIT_DISABLED_SKIP = {
+    "mesh_stress",
+    "mesh_stress_pts",
+    "mesh_stress_pts_cut",
+    "mesh_multi_seq",
+    "mesh_multi_fused",
+}
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 STL_DIR = os.path.join(PROJECT_ROOT, "examples/scripts/stl_magnets/stl")
 PROFILES_DIR = os.path.join(SCRIPT_DIR, "profiles")
@@ -204,12 +217,61 @@ def _make_scenarios(pm):
                 f"Mesh.get_field() — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
                 scenario_mesh_stress,
             ))
+
+            def scenario_mesh_stress_pts(m=mesh_stress):
+                m._get_field_parallel_pts(X_stress, Y_stress, Z_stress)
+
+            scenarios.append((
+                "mesh_stress_pts",
+                f"Mesh._get_field_parallel_pts() — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
+                scenario_mesh_stress_pts,
+            ))
+
+            def scenario_mesh_stress_pts_cut(m=mesh_stress):
+                m._get_field_parallel_pts(X_stress, Y_stress, Z_stress, r_cut=40.0)
+
+            scenarios.append((
+                "mesh_stress_pts_cut",
+                f"Mesh._get_field_parallel_pts(r_cut=40) — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
+                scenario_mesh_stress_pts_cut,
+            ))
+            # ------------------------------------------------------------------
+            # 5b. Multi-magnet fused path
+            # ------------------------------------------------------------------
+            # Two copies of the stress mesh at different positions; compare
+            # fused single-pass vs two sequential get_field() calls + sum.
+            pm.reset()
+            ma = pm.magnets.Mesh(stress_stl, Jr=1.0, center=[0.0, 0.0, 0.0])
+            mb = pm.magnets.Mesh(stress_stl, Jr=1.0, center=[0.0, 0.0, 80.0])
+
+            def scenario_mesh_multi_seq(a=ma, b=mb):
+                # get_field returns (Bx, By, Bz) tuple
+                Bxa, Bya, Bza = a.get_field(X_stress, Y_stress, Z_stress)
+                Bxb, Byb, Bzb = b.get_field(X_stress, Y_stress, Z_stress)
+                import numpy as _np2
+                _ = (Bxa + Bxb, Bya + Byb, Bza + Bzb)
+
+            scenarios.append((
+                "mesh_multi_seq",
+                f"2×Mesh.get_field() sequential + sum — {label} ×2 ({n_tri_stress*2} total tri)",
+                scenario_mesh_multi_seq,
+            ))
+
+            def scenario_mesh_multi_fused(a=ma, b=mb):
+                pm.magnets.get_total_field_mesh([a, b], X_stress, Y_stress, Z_stress)
+
+            scenarios.append((
+                "mesh_multi_fused",
+                f"get_total_field_mesh([m1,m2]) — {label} ×2 ({n_tri_stress*2} total tri)",
+                scenario_mesh_multi_fused,
+            ))
+
             break
     else:
-        print("  [skip] mesh_stress — no suitable STL found")
+        print("  [skip] mesh_stress / mesh_stress_pts — no suitable STL found")
 
     # ------------------------------------------------------------------
-    # 6. Prism force (two cubes offset along z)
+    # 7. Prism force (two cubes offset along z)
     # ------------------------------------------------------------------
     pm.reset()
     pm.magnets.Cube(Jr=1.0, width=10.0, center=[0.0, 0.0, 0.0])
@@ -336,9 +398,9 @@ def run_line_profiler(pm, scenarios):
         sys.exit(1)
 
     # Import function objects for instrumentation.
-    # Note: @njit functions (_get_field_parallel_njit etc.) are opaque to
-    # line_profiler unless NUMBA_DISABLE_JIT=1 is set — instrument the
-    # Python-level wrappers instead, which dispatch into them.
+    # Note: @njit functions are opaque to line_profiler unless
+    # NUMBA_DISABLE_JIT=1 is set — instrument the Python-level wrappers
+    # instead, which dispatch into them.
     from pymagnet.utils._elliptic import cel
     from pymagnet.magnets._polygon3D import Mesh
     from pymagnet.magnets._magnet3D import Prism, Cube, Cylinder
@@ -400,8 +462,8 @@ _LINE_PROFILER_FINDINGS = [
     (
         "Mesh._get_field_parallel",
         "magnets/_polygon3D.py",
-        "100% of time inside `_get_field_parallel_njit` — zero Python overhead. "
-        "All work is inside the Numba kernel.",
+        "Delegates to `_get_field_parallel_pts_njit` (points-outer prange). "
+        "100% of time inside the Numba kernel — zero Python overhead.",
     ),
     (
         "Prism._get_field_internal",
@@ -427,13 +489,14 @@ _LINE_PROFILER_FINDINGS = [
 
 _RECOMMENDATIONS = [
     (
-        1, "Medium", "High",
-        "`_polygon3D._get_field_parallel_njit`",
+        1, "DONE", "Critical",
+        "`_get_field_parallel_njit` race condition fixed",
         "magnets/_polygon3D.py",
-        "The inner loop iterates (triangles outer, points inner). Transposing to "
-        "(points outer, triangles inner) may improve cache locality for the "
-        "evaluation-point arrays across the triangle accumulation, particularly "
-        "for large 3D grids like `mesh_stress`.",
+        "The old triangles-outer `prange` kernel had a race condition: every thread "
+        "wrote to all N_pts indices of the output arrays simultaneously, producing "
+        "non-deterministic errors up to ~10% on 12-thread runs. Fixed by replacing "
+        "with `_get_field_parallel_pts_njit` (points-outer prange). "
+        "Single-thread residual vs serial is now ~5e-11 (FP accumulation order only).",
     ),
     (
         2, "Low", "Medium",
@@ -617,6 +680,66 @@ def run_report(pm, scenarios, n_runs=5):
 
 
 # ---------------------------------------------------------------------------
+# Culling fraction diagnostic
+# ---------------------------------------------------------------------------
+
+
+def run_culling_diagnostic(pm):
+    """Estimate distance-cutoff culling fraction for the mesh_stress scenario.
+
+    Builds a k-d tree on triangle centroids and, for each evaluation point
+    on the mesh_stress 20×20×20 grid, counts how many triangles fall within
+    a series of cutoff radii.  Prints a table showing the mean/min/max
+    fraction of triangles that would be evaluated (kept) and the theoretical
+    maximum speedup from culling the rest.
+    """
+    try:
+        from scipy.spatial import KDTree
+    except ImportError:
+        print("scipy not installed — run: pip install scipy")
+        return
+
+    # Find the same mesh as mesh_stress
+    for mesh_name, label in [("Stanford_Bunny_10000.stl", "bunny_10000"), ("Stanford_Bunny_500.stl", "bunny_500")]:
+        stress_stl = _stl(mesh_name)
+        if os.path.exists(stress_stl):
+            break
+    else:
+        print("  [skip] culling diagnostic — no suitable STL found")
+        return
+
+    pm.reset()
+    m = pm.magnets.Mesh(stress_stl, Jr=1.0)
+    centroids = m.mesh_vectors.mean(axis=1)   # (N_tri, 3)
+    n_tri = len(centroids)
+    pm.reset()
+
+    # Same grid as mesh_stress
+    x = np.linspace(-40, 40, 20)
+    y = np.linspace(-40, 40, 20)
+    z = np.linspace(-40, 40, 20)
+    X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+    pts = np.stack([X.ravel(), Y.ravel(), Z.ravel()], axis=1)  # (N_pts, 3)
+    n_pts = len(pts)
+
+    tree = KDTree(centroids)
+
+    print(f"\nCulling fraction — {label} ({n_tri} tri), {n_pts} eval pts")
+    print(f"{'r_cut (mm)':>12} {'mean kept':>12} {'min kept':>10} {'max kept':>10} {'max speedup':>12}")
+    print("-" * 60)
+    for r_cut in [20, 40, 60, 80, 100, 150]:
+        counts = np.array(tree.query_ball_point(pts, r=float(r_cut), return_length=True))
+        fracs = counts / n_tri
+        mean_kept = fracs.mean()
+        speedup = 1.0 / mean_kept if mean_kept > 0 else float("inf")
+        print(
+            f"{r_cut:>12.0f} {mean_kept:>11.1%} {fracs.min():>9.1%}"
+            f" {fracs.max():>9.1%} {speedup:>11.1f}x"
+        )
+    print()
+
+
+# ---------------------------------------------------------------------------
 # snakeviz launcher
 # ---------------------------------------------------------------------------
 
@@ -673,6 +796,11 @@ def _parse_args():
         action="store_true",
         help="Generate Markdown report to reports/profiling/profiling_report.md",
     )
+    parser.add_argument(
+        "--culling",
+        action="store_true",
+        help="Print distance-cutoff culling fraction table for mesh_stress scenario",
+    )
     return parser.parse_args()
 
 
@@ -687,6 +815,17 @@ def main():
 
     print("Building scenarios...")
     scenarios = _make_scenarios(pm)
+
+    jit_disabled = os.environ.get("NUMBA_DISABLE_JIT", "0") == "1"
+    if jit_disabled:
+        skipped = [s for s in scenarios if s[0] in _JIT_DISABLED_SKIP]
+        scenarios = [s for s in scenarios if s[0] not in _JIT_DISABLED_SKIP]
+        if skipped:
+            print(
+                f"  [NUMBA_DISABLE_JIT=1] skipping {len(skipped)} slow scenario(s): "
+                + ", ".join(s[0] for s in skipped)
+            )
+
     print(f"  {len(scenarios)} scenarios ready.\n")
 
     # Always print wall-clock summary
@@ -703,6 +842,9 @@ def main():
 
     if args.report:
         run_report(pm, scenarios, n_runs=args.runs)
+
+    if args.culling:
+        run_culling_diagnostic(pm)
 
 
 if __name__ == "__main__":

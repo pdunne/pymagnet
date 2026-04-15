@@ -144,4 +144,6 @@ notes/
 !docs/*/*.md
 work/results
 work/
+work/*
 results/
+reference/

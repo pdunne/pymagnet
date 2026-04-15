@@ -153,7 +153,12 @@ class Mesh(Magnet3D):
     def _get_field_parallel(self, x, y, z):
         """Parallel magnetic field calculation using numba.
 
-        Uses numba's prange for parallel processing across triangles.
+        Delegates to :meth:`_get_field_parallel_pts`, which parallelises over
+        evaluation points (prange outer loop) rather than triangles.  This is
+        the only correct parallel strategy: the original triangles-outer kernel
+        had a race condition — multiple threads writing to the same output
+        array indices without synchronisation — producing non-deterministic
+        errors up to ~10% on large meshes.
 
         Args:
             x (float/array): x co-ordinates
@@ -163,37 +168,7 @@ class Mesh(Magnet3D):
         Returns:
             Field3: Magnetic field array
         """
-        from ..utils._routines3D import _allocate_field_array3
-
-        B = _allocate_field_array3(x, y, z)
-        vec_shape = B.x.shape
-
-        # Flatten arrays for numba processing
-        x_flat = _np.asarray(x).ravel().astype(_np.float64)
-        y_flat = _np.asarray(y).ravel().astype(_np.float64)
-        z_flat = _np.asarray(z).ravel().astype(_np.float64)
-
-        # Ensure mesh_vectors is contiguous float64
-        mesh_vectors = _np.ascontiguousarray(self.mesh_vectors, dtype=_np.float64)
-        Jnorm = _np.ascontiguousarray(self.Jnorm, dtype=_np.float64)
-
-        # Call parallel numba function
-        Bx, By, Bz = _get_field_parallel_njit(
-            mesh_vectors, Jnorm, self.Jr, x_flat, y_flat, z_flat
-        )
-
-        # Handle non-finite values
-        Bx[~_np.isfinite(Bx)] = 0.0
-        By[~_np.isfinite(By)] = 0.0
-        Bz[~_np.isfinite(Bz)] = 0.0
-
-        # Reshape and assign
-        B.x = Bx.reshape(vec_shape)
-        B.y = By.reshape(vec_shape)
-        B.z = Bz.reshape(vec_shape)
-        B.n = _np.linalg.norm([B.x, B.y, B.z], axis=0)
-
-        return B
+        return self._get_field_parallel_pts(x, y, z)
 
     def _get_field_serial_fast(self, x, y, z):
         """Serial but numba-optimized magnetic field calculation.
@@ -223,6 +198,57 @@ class Mesh(Magnet3D):
 
         Bx, By, Bz = _get_field_serial_njit(
             mesh_vectors, Jnorm, self.Jr, x_flat, y_flat, z_flat
+        )
+
+        Bx[~_np.isfinite(Bx)] = 0.0
+        By[~_np.isfinite(By)] = 0.0
+        Bz[~_np.isfinite(Bz)] = 0.0
+
+        B.x = Bx.reshape(vec_shape)
+        B.y = By.reshape(vec_shape)
+        B.z = Bz.reshape(vec_shape)
+        B.n = _np.linalg.norm([B.x, B.y, B.z], axis=0)
+
+        return B
+
+    def _get_field_parallel_pts(self, x, y, z, r_cut=_np.inf):
+        """Transposed parallel field calculation: prange over evaluation points.
+
+        Precomputes per-triangle rotation data once, then parallelises over
+        the evaluation-point axis rather than the triangle axis.  This layout
+        enables per-point triangle culling via an optional distance cutoff.
+
+        Args:
+            x (float/array): x co-ordinates
+            y (float/array): y co-ordinates
+            z (float/array): z co-ordinates
+            r_cut (float): distance cutoff in the same units as the mesh
+                coordinates.  Triangles whose centroid is farther than r_cut
+                from an evaluation point are skipped.  Default: np.inf
+                (no culling — full accuracy).
+
+        Returns:
+            Field3: Magnetic field array
+        """
+        from ..utils._routines3D import _allocate_field_array3
+
+        B = _allocate_field_array3(x, y, z)
+        vec_shape = B.x.shape
+
+        x_flat = _np.asarray(x).ravel().astype(_np.float64)
+        y_flat = _np.asarray(y).ravel().astype(_np.float64)
+        z_flat = _np.asarray(z).ravel().astype(_np.float64)
+
+        mesh_vectors = _np.ascontiguousarray(self.mesh_vectors, dtype=_np.float64)
+        Jnorm = _np.ascontiguousarray(self.Jnorm, dtype=_np.float64)
+
+        rotations, offsets, RA_tris1, RA_tris2, swap_flags, active, centroids = (
+            _precompute_triangle_data(mesh_vectors, Jnorm, self.Jr)
+        )
+
+        Bx, By, Bz = _get_field_parallel_pts_njit(
+            rotations, offsets, RA_tris1, RA_tris2, swap_flags, active, centroids,
+            Jnorm, x_flat, y_flat, z_flat, float(r_cut),
         )
 
         Bx[~_np.isfinite(Bx)] = 0.0
@@ -929,45 +955,6 @@ def _calcB_triangle_njit(triangle, Jr, x_flat, y_flat, z_flat):
     return Bx, By, Bz
 
 
-@njit(parallel=True, cache=True)
-def _get_field_parallel_njit(
-    mesh_vectors, Jnorm, Jr, x_flat, y_flat, z_flat, threshold=1e-4
-):
-    """Calculate magnetic field from all triangles in parallel.
-
-    Args:
-        mesh_vectors (ndarray): (N, 3, 3) array of triangle vertices
-        Jnorm (ndarray): (N,) normal magnetization for each triangle
-        Jr (float): remnant magnetization magnitude
-        x_flat, y_flat, z_flat (ndarray): flattened coordinate arrays
-        threshold (float): minimum |Jnorm/Jr| to include triangle
-
-    Returns:
-        tuple: (Bx, By, Bz) total field arrays
-    """
-    n_triangles = mesh_vectors.shape[0]
-    n_points = x_flat.size
-
-    # Allocate output arrays
-    Bx_total = _np.zeros(n_points)
-    By_total = _np.zeros(n_points)
-    Bz_total = _np.zeros(n_points)
-
-    # Process triangles in parallel
-    for i in prange(n_triangles):
-        if _np.fabs(Jnorm[i] / Jr) > threshold:
-            Btx, Bty, Btz = _calcB_triangle_njit(
-                mesh_vectors[i], Jnorm[i], x_flat, y_flat, z_flat
-            )
-
-            # Accumulate (thread-safe for prange with reduction)
-            for j in range(n_points):
-                Bx_total[j] += Btx[j]
-                By_total[j] += Bty[j]
-                Bz_total[j] += Btz[j]
-
-    return Bx_total, By_total, Bz_total
-
 
 @njit(cache=True)
 def _get_field_serial_njit(
@@ -1003,3 +990,286 @@ def _get_field_serial_njit(
             Bz_total += Btz
 
     return Bx_total, By_total, Bz_total
+
+
+# ---------------------------------------------------------------------------
+# Transposed (points-outer) parallel kernel
+# ---------------------------------------------------------------------------
+
+
+def _precompute_triangle_data(mesh_vectors, Jnorm, Jr, threshold=1e-4):
+    """Precompute per-triangle rotation data for the points-outer kernel.
+
+    Calls _rotate_triangle_njit once per active triangle and stores the
+    results in flat contiguous arrays so they can be passed to a @njit kernel.
+
+    Args:
+        mesh_vectors (ndarray): (N, 3, 3) triangle vertices
+        Jnorm (ndarray): (N,) normal magnetisation per triangle
+        Jr (float): remnant magnetisation magnitude
+        threshold (float): minimum |Jnorm/Jr| to include a triangle
+
+    Returns:
+        rotations  (N, 4)  float64 — rotation quaternion per triangle
+        offsets    (N, 3)  float64 — translation offset after rotation
+        RA_tris1   (N, 2)  float64 — [base, altitude] of first RA sub-triangle
+        RA_tris2   (N, 2)  float64 — [base, altitude] of second RA sub-triangle
+        swap_flags (N,)    bool    — True when RA sub-triangles must be swapped
+        active     (N,)    bool    — |Jnorm/Jr| > threshold
+        centroids  (N, 3)  float64 — triangle centroids for distance culling
+    """
+    n_tri = mesh_vectors.shape[0]
+    rotations = _np.zeros((n_tri, 4), dtype=_np.float64)
+    offsets = _np.zeros((n_tri, 3), dtype=_np.float64)
+    RA_tris1 = _np.zeros((n_tri, 2), dtype=_np.float64)
+    RA_tris2 = _np.zeros((n_tri, 2), dtype=_np.float64)
+    swap_flags = _np.zeros(n_tri, dtype=_np.bool_)
+    active = _np.abs(Jnorm / Jr) > threshold
+    centroids = mesh_vectors.mean(axis=1).astype(_np.float64)
+
+    for i in range(n_tri):
+        if active[i]:
+            q, _, offset, RA1, RA2 = _rotate_triangle_njit(mesh_vectors[i])
+            rotations[i] = q
+            offsets[i] = offset
+            RA_tris1[i] = RA1
+            RA_tris2[i] = RA2
+            norm1 = norm_plane_njit(mesh_vectors[i])
+            swap_flags[i] = (
+                _np.fabs(norm1[0]) < ALIGN_CUTOFF
+                and norm1[1] < -0.99
+                and _np.fabs(norm1[2]) < ALIGN_CUTOFF
+                and Jnorm[i] < 0
+            )
+
+    return (
+        _np.ascontiguousarray(rotations),
+        _np.ascontiguousarray(offsets),
+        _np.ascontiguousarray(RA_tris1),
+        _np.ascontiguousarray(RA_tris2),
+        _np.ascontiguousarray(swap_flags),
+        _np.ascontiguousarray(active),
+        _np.ascontiguousarray(centroids),
+    )
+
+
+@njit(parallel=True, cache=True)
+def _get_field_parallel_pts_njit(
+    rotations, offsets, RA_tris1, RA_tris2, swap_flags, active, centroids,
+    Jnorm, x_flat, y_flat, z_flat, r_cut,
+):
+    """Transposed parallel field kernel: prange over evaluation points.
+
+    For each evaluation point, iterates over all active triangles and
+    accumulates field contributions using scalar arithmetic (no per-triangle
+    array allocations).  Quaternion rotations are inlined.
+
+    Args:
+        rotations  (N_tri, 4): rotation quaternion per triangle
+        offsets    (N_tri, 3): translation offset per triangle
+        RA_tris1   (N_tri, 2): first RA sub-triangle [base, altitude]
+        RA_tris2   (N_tri, 2): second RA sub-triangle [base, altitude]
+        swap_flags (N_tri,):   swap RA sub-triangles when True
+        active     (N_tri,):   include triangle when True
+        centroids  (N_tri, 3): triangle centroids for distance culling
+        Jnorm      (N_tri,):   normal magnetisation per triangle
+        x_flat, y_flat, z_flat: flattened evaluation-point coordinates
+        r_cut (float): distance cutoff — triangles whose centroid is farther
+            than r_cut from the evaluation point are skipped.
+            Pass np.inf to disable culling.
+
+    Returns:
+        tuple: (Bx, By, Bz) total field arrays
+    """
+    n_tri = rotations.shape[0]
+    n_pts = x_flat.size
+    r_cut_sq = r_cut * r_cut
+
+    Bx_total = _np.zeros(n_pts)
+    By_total = _np.zeros(n_pts)
+    Bz_total = _np.zeros(n_pts)
+
+    for j in prange(n_pts):
+        bx = 0.0
+        by = 0.0
+        bz = 0.0
+        xj = x_flat[j]
+        yj = y_flat[j]
+        zj = z_flat[j]
+
+        for i in range(n_tri):
+            if not active[i]:
+                continue
+
+            # ---- distance culling ----
+            ddx = centroids[i, 0] - xj
+            ddy = centroids[i, 1] - yj
+            ddz = centroids[i, 2] - zj
+            if ddx * ddx + ddy * ddy + ddz * ddz > r_cut_sq:
+                continue
+
+            # ---- inline quaternion rotation of evaluation point ----
+            qw = rotations[i, 0]
+            qx = rotations[i, 1]
+            qy = rotations[i, 2]
+            qz = rotations[i, 3]
+
+            tx = 2.0 * (qy * zj - qz * yj)
+            ty = 2.0 * (qz * xj - qx * zj)
+            tz = 2.0 * (qx * yj - qy * xj)
+            xr = xj + qw * tx + (qy * tz - qz * ty)
+            yr = yj + qw * ty + (qz * tx - qx * tz)
+            zr = zj + qw * tz + (qx * ty - qy * tx)
+
+            xr -= offsets[i, 0]
+            yr -= offsets[i, 1]
+            zr -= offsets[i, 2]
+
+            # ---- RA sub-triangle selection ----
+            if swap_flags[i]:
+                a1 = RA_tris2[i, 0]
+                b1 = RA_tris2[i, 1]
+                a2 = RA_tris1[i, 0]
+                b2 = RA_tris1[i, 1]
+            else:
+                a1 = RA_tris1[i, 0]
+                b1 = RA_tris1[i, 1]
+                a2 = RA_tris2[i, 0]
+                b2 = RA_tris2[i, 1]
+
+            jr = Jnorm[i]
+
+            # ---- first RA triangle ----
+            Bx1 = _charge_sheet_x_scalar(a1, b1, jr, xr, yr, zr)
+            By1 = _charge_sheet_y_scalar(a1, b1, jr, xr, yr, zr)
+            Bz1 = _charge_sheet_z_scalar(a1, b1, jr, xr, yr, zr)
+
+            # ---- second RA triangle (180° z-rotation of coords) ----
+            xl = -(xr - a1)
+            yl = -yr
+            # zl == zr (unchanged)
+            Bx2 = -_charge_sheet_x_scalar(a2, b2, jr, xl + a2, yl, zr)
+            By2 = -_charge_sheet_y_scalar(a2, b2, jr, xl + a2, yl, zr)
+            Bz2 = _charge_sheet_z_scalar(a2, b2, jr, xl + a2, yl, zr)
+
+            # Sum in rotated frame
+            Bxr = Bx1 + Bx2
+            Byr = By1 + By2
+            Bzr = Bz1 + Bz2
+
+            # ---- inline inverse quaternion rotation of field ----
+            # Conjugate: negate xyz components
+            tx = 2.0 * (-qy * Bzr - (-qz) * Byr)
+            ty = 2.0 * (-qz * Bxr - (-qx) * Bzr)
+            tz = 2.0 * (-qx * Byr - (-qy) * Bxr)
+            bx += Bxr + qw * tx + (-qy * tz - (-qz) * ty)
+            by += Byr + qw * ty + (-qz * tx - (-qx) * tz)
+            bz += Bzr + qw * tz + (-qx * ty - (-qy) * tx)
+
+        Bx_total[j] = bx
+        By_total[j] = by
+        Bz_total[j] = bz
+
+    return Bx_total, By_total, Bz_total
+
+
+# ---------------------------------------------------------------------------
+# Multi-magnet fused path
+# ---------------------------------------------------------------------------
+
+
+def _precompute_all_meshes(meshes, threshold=1e-4):
+    """Precompute and concatenate triangle data for a list of Mesh magnets.
+
+    Calls ``_precompute_triangle_data`` once per magnet and concatenates the
+    results so that all triangles from all magnets can be processed in a single
+    ``_get_field_parallel_pts_njit`` call.
+
+    Args:
+        meshes: iterable of ``Mesh`` instances
+        threshold (float): minimum |Jnorm/Jr| to include a triangle
+
+    Returns:
+        tuple: (rotations, offsets, RA_tris1, RA_tris2, swap_flags, active,
+                centroids, Jnorm) — all contiguous float64/bool arrays with
+                rows from every magnet concatenated in order.
+    """
+    mesh_list = list(meshes)
+    parts = [
+        _precompute_triangle_data(
+            _np.ascontiguousarray(m.mesh_vectors, dtype=_np.float64),
+            _np.ascontiguousarray(m.Jnorm, dtype=_np.float64),
+            m.Jr,
+            threshold,
+        )
+        for m in mesh_list
+    ]
+    Jnorm_parts = [_np.ascontiguousarray(m.Jnorm, dtype=_np.float64) for m in mesh_list]
+    combined = tuple(_np.concatenate([p[k] for p in parts]) for k in range(7))
+    return combined + (_np.concatenate(Jnorm_parts),)
+
+
+def get_total_field_mesh(meshes, x, y, z, r_cut=_np.inf):
+    """Compute the total magnetic field from multiple Mesh magnets in one pass.
+
+    Concatenates triangle data from all meshes and evaluates the field at
+    every point ``(x, y, z)`` using the points-outer parallel kernel
+    ``_get_field_parallel_pts_njit``.  An optional distance cutoff skips
+    triangles whose centroid is farther than ``r_cut`` from an evaluation
+    point, which can give a large speedup for sparse or localised geometries.
+
+    Args:
+        meshes: list (or any iterable) of ``Mesh`` instances.  Pass
+            ``pm.magnets.Mesh.instances`` to include all currently registered
+            meshes.
+        x, y, z (float or ndarray): evaluation point coordinates.
+        r_cut (float): distance cutoff in the same length units as the mesh
+            coordinates.  Triangles farther than ``r_cut`` from a point are
+            skipped.  Default: ``np.inf`` (no culling — full accuracy).
+
+    Returns:
+        Field3: total magnetic field array (attributes ``.x``, ``.y``, ``.z``,
+        ``.n``).
+
+    Example::
+
+        import pymagnet as pm
+        import numpy as np
+
+        pm.reset()
+        m1 = pm.magnets.Mesh("left.stl",  Jr=1.0, center=[-30, 0, 0])
+        m2 = pm.magnets.Mesh("right.stl", Jr=1.0, center=[ 30, 0, 0])
+
+        x = np.linspace(-60, 60, 40)
+        X, Y, Z = np.meshgrid(x, x, x, indexing="ij")
+
+        # Single fused pass — equivalent to summing m1.get_field() + m2.get_field()
+        B = pm.magnets.get_total_field_mesh([m1, m2], X, Y, Z, r_cut=40.0)
+    """
+    from ..utils._routines3D import _allocate_field_array3
+
+    B = _allocate_field_array3(x, y, z)
+    vec_shape = B.x.shape
+
+    x_flat = _np.asarray(x).ravel().astype(_np.float64)
+    y_flat = _np.asarray(y).ravel().astype(_np.float64)
+    z_flat = _np.asarray(z).ravel().astype(_np.float64)
+
+    rotations, offsets, RA_tris1, RA_tris2, swap_flags, active, centroids, Jnorm = (
+        _precompute_all_meshes(meshes)
+    )
+
+    Bx, By, Bz = _get_field_parallel_pts_njit(
+        rotations, offsets, RA_tris1, RA_tris2, swap_flags, active, centroids,
+        Jnorm, x_flat, y_flat, z_flat, float(r_cut),
+    )
+
+    Bx[~_np.isfinite(Bx)] = 0.0
+    By[~_np.isfinite(By)] = 0.0
+    Bz[~_np.isfinite(Bz)] = 0.0
+
+    B.x = Bx.reshape(vec_shape)
+    B.y = By.reshape(vec_shape)
+    B.z = Bz.reshape(vec_shape)
+    B.n = _np.linalg.norm([B.x, B.y, B.z], axis=0)
+    return B

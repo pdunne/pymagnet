@@ -13,7 +13,7 @@ from ._magnet2D import Circle, Magnet2D, Rectangle, Square
 from ._magnet3D import Cube, Cylinder, Magnet3D, Prism, Sphere
 from ._magnet_base import Magnet
 from ._polygon2D import Line, LineUtils, Polygon, PolyMagnet
-from ._polygon3D import Mesh
+from ._polygon3D import Mesh, get_total_field_mesh
 
 __all__ = [
     "Circle",
@@ -25,6 +25,7 @@ __all__ = [
     "Magnet2D",
     "Magnet3D",
     "Mesh",
+    "get_total_field_mesh",
     "PolyMagnet",
     "Polygon",
     "Prism",
