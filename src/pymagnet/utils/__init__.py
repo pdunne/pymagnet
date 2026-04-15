@@ -15,10 +15,35 @@ a public API, including:
 
 from ._point_structs import Point2, Point3
 from ._quaternion import Quaternion
-from ._routines2D import get_field_2D, grid2D, rotate_points_2D
-from ._routines3D import get_field_3D, grid3D, line3D, slice3D
+from ._routines2D import (
+    BdotgradB_2D,
+    FgradB_2D,
+    get_field_2D,
+    gradB_2D,
+    grid2D,
+    jacobian_B_2D,
+    rotate_points_2D,
+)
+from ._routines3D import (
+    BdotgradB_3D,
+    FgradB_3D,
+    get_field_3D,
+    gradB_3D,
+    grid3D,
+    jacobian_B_3D,
+    line3D,
+    slice3D,
+)
 from ._trigonometry3D import altitude, norm_plane, rotate_points, signed_area
-from ._vector_structs import Field1, Field2, Field3, Point_Array2, Point_Array3
+from ._vector_structs import (
+    Field1,
+    Field2,
+    Field3,
+    Jacobian2,
+    Jacobian3,
+    Point_Array2,
+    Point_Array3,
+)
 from ._demag import (
     DemagResult,
     build_MH_interpolator,
@@ -31,27 +56,37 @@ from .global_const import ALIGN_CUTOFF, FP_CUTOFF, MAG_TOL, MU0, PI, PI_2, PI_4
 
 __all__ = [
     "ALIGN_CUTOFF",
+    "BdotgradB_2D",
+    "BdotgradB_3D",
     "DemagResult",
-    "build_MH_interpolator",
+    "FgradB_2D",
+    "FgradB_3D",
     "FP_CUTOFF",
+    "Field1",
+    "Field2",
+    "Field3",
+    "Jacobian2",
+    "Jacobian3",
     "MAG_TOL",
     "MU0",
     "PI",
     "PI_2",
     "PI_4",
-    "Field1",
-    "Field2",
-    "Field3",
     "Point2",
     "Point3",
     "Point_Array2",
     "Point_Array3",
     "Quaternion",
     "altitude",
+    "build_MH_interpolator",
     "get_field_2D",
     "get_field_3D",
+    "gradB_2D",
+    "gradB_3D",
     "grid2D",
     "grid3D",
+    "jacobian_B_2D",
+    "jacobian_B_3D",
     "line3D",
     "norm_plane",
     "rotate_points",

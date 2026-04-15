@@ -7,6 +7,8 @@
 Private module consiting of vector and point array classes and their methods.
 """
 
+from dataclasses import dataclass
+
 import numpy as _np
 
 from ._conversions import get_unit_value_meter, get_unit_value_tesla
@@ -357,3 +359,47 @@ class Field3(Point_Array3):
 
     def __str__(self) -> str:
         return f"[Unit: {self.unit}\nBx: {self.x}\nBy: {self.y}\nBz: {self.z}\nBn: {self.n}]"
+
+
+@dataclass
+class Jacobian2:
+    """2D Jacobian tensor of the magnetic field: J_ij = dB_i/dx_j.
+
+    Attributes:
+        dBx_dx: Partial derivative of Bx with respect to x.
+        dBx_dy: Partial derivative of Bx with respect to y.
+        dBy_dx: Partial derivative of By with respect to x.
+        dBy_dy: Partial derivative of By with respect to y.
+    """
+
+    dBx_dx: _np.ndarray
+    dBx_dy: _np.ndarray
+    dBy_dx: _np.ndarray
+    dBy_dy: _np.ndarray
+
+
+@dataclass
+class Jacobian3:
+    """3D Jacobian tensor of the magnetic field: J_ij = dB_i/dx_j.
+
+    Attributes:
+        dBx_dx: Partial derivative of Bx with respect to x.
+        dBx_dy: Partial derivative of Bx with respect to y.
+        dBx_dz: Partial derivative of Bx with respect to z.
+        dBy_dx: Partial derivative of By with respect to x.
+        dBy_dy: Partial derivative of By with respect to y.
+        dBy_dz: Partial derivative of By with respect to z.
+        dBz_dx: Partial derivative of Bz with respect to x.
+        dBz_dy: Partial derivative of Bz with respect to y.
+        dBz_dz: Partial derivative of Bz with respect to z.
+    """
+
+    dBx_dx: _np.ndarray
+    dBx_dy: _np.ndarray
+    dBx_dz: _np.ndarray
+    dBy_dx: _np.ndarray
+    dBy_dy: _np.ndarray
+    dBy_dz: _np.ndarray
+    dBz_dx: _np.ndarray
+    dBz_dy: _np.ndarray
+    dBz_dz: _np.ndarray

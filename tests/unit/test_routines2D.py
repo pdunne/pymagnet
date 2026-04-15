@@ -9,10 +9,12 @@ import numpy.testing as npt
 import pytest
 
 from pymagnet.utils._routines2D import (
+    BdotgradB_2D,
     _allocate_field_array2,
     get_field_2D,
     gradB_2D,
     grid2D,
+    jacobian_B_2D,
     rotate_points_2D,
 )
 
@@ -216,3 +218,70 @@ class TestGradB2D:
         # Gradient in x should be ~1, in y should be ~0
         npt.assert_allclose(dB.x[1:-1, 1:-1], 1.0, atol=0.1)
         npt.assert_allclose(dB.y[1:-1, 1:-1], 0.0, atol=0.1)
+
+
+class TestJacobianB2D:
+    """Tests for jacobian_B_2D function."""
+
+    def test_uniform_field_zero_jacobian(self):
+        """Uniform field has zero Jacobian."""
+        from pymagnet.utils._vector_structs import Field2
+
+        x, y = np.mgrid[-5:5:20j, -5:5:20j]
+        B = Field2(np.ones_like(x), np.zeros_like(x))
+
+        J = jacobian_B_2D(B, x, y)
+        npt.assert_allclose(J.dBx_dx, 0.0, atol=1e-10)
+        npt.assert_allclose(J.dBx_dy, 0.0, atol=1e-10)
+        npt.assert_allclose(J.dBy_dx, 0.0, atol=1e-10)
+        npt.assert_allclose(J.dBy_dy, 0.0, atol=1e-10)
+
+    def test_linear_Bx_field(self):
+        """Bx = x has dBx/dx = 1, all others zero."""
+        from pymagnet.utils._vector_structs import Field2
+
+        x, y = np.mgrid[0:10:21j, 0:10:21j]
+        B = Field2(x.copy(), np.zeros_like(x))
+
+        J = jacobian_B_2D(B, x, y)
+        # Interior points (avoid boundary finite-difference errors)
+        npt.assert_allclose(J.dBx_dx[1:-1, 1:-1], 1.0, atol=0.1)
+        npt.assert_allclose(J.dBx_dy[1:-1, 1:-1], 0.0, atol=0.1)
+        npt.assert_allclose(J.dBy_dx[1:-1, 1:-1], 0.0, atol=0.1)
+        npt.assert_allclose(J.dBy_dy[1:-1, 1:-1], 0.0, atol=0.1)
+
+    def test_returns_jacobian2(self):
+        """Returns a Jacobian2 dataclass."""
+        from pymagnet.utils._vector_structs import Field2, Jacobian2
+
+        x, y = np.mgrid[0:5:10j, 0:5:10j]
+        B = Field2(np.ones_like(x), np.ones_like(x))
+        J = jacobian_B_2D(B, x, y)
+        assert isinstance(J, Jacobian2)
+
+
+class TestBdotgradB2D:
+    """Tests for BdotgradB_2D function."""
+
+    def test_uniform_field_zero(self):
+        """B . grad(B) of uniform field is zero."""
+        from pymagnet.utils._vector_structs import Field2
+
+        x, y = np.mgrid[-5:5:20j, -5:5:20j]
+        B = Field2(np.ones_like(x), np.zeros_like(x))
+
+        F = BdotgradB_2D(B, x, y)
+        npt.assert_allclose(F.x, 0.0, atol=1e-10)
+        npt.assert_allclose(F.y, 0.0, atol=1e-10)
+
+    def test_linear_Bx_field(self):
+        """Bx = x, By = 0: F_x = x * 1 = x, F_y = 0."""
+        from pymagnet.utils._vector_structs import Field2
+
+        x, y = np.mgrid[0:10:21j, 0:10:21j]
+        B = Field2(x.copy(), np.zeros_like(x))
+
+        F = BdotgradB_2D(B, x, y)
+        # F_x = Bx * dBx/dx = x * 1 = x (interior)
+        npt.assert_allclose(F.x[2:-2, 2:-2], x[2:-2, 2:-2], atol=0.5)
+        npt.assert_allclose(F.y[2:-2, 2:-2], 0.0, atol=0.5)

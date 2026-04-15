@@ -9,11 +9,15 @@ import numpy.testing as npt
 import pytest
 
 from pymagnet.utils._routines3D import (
+    BdotgradB_3D,
+    FgradB_3D,
     _allocate_field_array3,
     _get_max_array,
     _tile_arrays,
     get_field_3D,
+    gradB_3D,
     grid3D,
+    jacobian_B_3D,
     line3D,
     plane3D,
     point3D,
@@ -348,3 +352,145 @@ class TestTileArrays:
         npt.assert_allclose(x, x_in)
         npt.assert_allclose(y, y_in)
         npt.assert_allclose(z, z_in)
+
+
+class TestGradB3D:
+    """Tests for gradB_3D function."""
+
+    def test_uniform_field_zero_gradient_3d_grid(self):
+        """Uniform field on 3D grid has zero gradient."""
+        x, y, z = np.mgrid[-5:5:10j, -5:5:10j, -5:5:10j]
+        B = np.ones_like(x)
+
+        dB = gradB_3D(B, x, y, z)
+        npt.assert_allclose(dB.x, 0.0, atol=1e-10)
+        npt.assert_allclose(dB.y, 0.0, atol=1e-10)
+        npt.assert_allclose(dB.z, 0.0, atol=1e-10)
+
+    def test_linear_field_constant_gradient_3d_grid(self):
+        """Linear field B=x on 3D grid has dB/dx=1."""
+        x, y, z = np.mgrid[0:10:11j, 0:10:11j, 0:10:11j]
+        B = x
+
+        dB = gradB_3D(B, x, y, z)
+        npt.assert_allclose(dB.x[1:-1, 1:-1, 1:-1], 1.0, atol=0.1)
+        npt.assert_allclose(dB.y[1:-1, 1:-1, 1:-1], 0.0, atol=0.1)
+        npt.assert_allclose(dB.z[1:-1, 1:-1, 1:-1], 0.0, atol=0.1)
+
+    def test_uniform_field_zero_gradient_slice(self):
+        """Uniform field on 2D slice has zero gradient."""
+        pts = slice3D(plane="xy", max1=5.0, max2=5.0, slice_value=0.0, num_points=10)
+        B = np.ones_like(pts.x)
+
+        dB = gradB_3D(B, pts.x, pts.y, pts.z)
+        npt.assert_allclose(dB.x, 0.0, atol=1e-10)
+        npt.assert_allclose(dB.y, 0.0, atol=1e-10)
+        # z-gradient is zero on a slice (constant z)
+        npt.assert_allclose(dB.z, 0.0, atol=1e-10)
+
+    def test_linear_field_on_xy_slice(self):
+        """Linear field B=x on xy slice has dB/dx=1."""
+        pts = slice3D(plane="xy", max1=5.0, max2=5.0, slice_value=0.0, num_points=20)
+        B = pts.x.copy()
+
+        dB = gradB_3D(B, pts.x, pts.y, pts.z)
+        npt.assert_allclose(dB.x[1:-1, 1:-1], 1.0, atol=0.1)
+        npt.assert_allclose(dB.y[1:-1, 1:-1], 0.0, atol=0.1)
+
+
+class TestFgradB3D:
+    """Tests for FgradB_3D function."""
+
+    def test_uniform_field_zero_force(self):
+        """Uniform field produces zero gradient force."""
+        from pymagnet.utils._vector_structs import Field3
+
+        x, y, z = np.mgrid[-5:5:10j, -5:5:10j, -5:5:10j]
+        B = Field3(np.ones_like(x), np.zeros_like(x), np.zeros_like(x))
+        B.n = np.ones_like(x)
+
+        FB = FgradB_3D(B, x, y, z, chi_m=1.0, c=1.0)
+        npt.assert_allclose(FB.x, 0.0, atol=1e-10)
+        npt.assert_allclose(FB.y, 0.0, atol=1e-10)
+        npt.assert_allclose(FB.z, 0.0, atol=1e-10)
+
+
+class TestJacobianB3D:
+    """Tests for jacobian_B_3D function."""
+
+    def test_uniform_field_zero_jacobian_3d_grid(self):
+        """Uniform field has zero Jacobian on 3D grid."""
+        from pymagnet.utils._vector_structs import Field3
+
+        x, y, z = np.mgrid[-5:5:10j, -5:5:10j, -5:5:10j]
+        B = Field3(np.ones_like(x), np.zeros_like(x), np.zeros_like(x))
+
+        J = jacobian_B_3D(B, x, y, z)
+        for attr in ["dBx_dx", "dBx_dy", "dBx_dz",
+                      "dBy_dx", "dBy_dy", "dBy_dz",
+                      "dBz_dx", "dBz_dy", "dBz_dz"]:
+            npt.assert_allclose(getattr(J, attr), 0.0, atol=1e-10)
+
+    def test_linear_Bx_3d_grid(self):
+        """Bx = x on 3D grid: dBx/dx = 1, all others zero."""
+        from pymagnet.utils._vector_structs import Field3
+
+        x, y, z = np.mgrid[0:10:21j, 0:10:21j, 0:10:21j]
+        B = Field3(x.copy(), np.zeros_like(x), np.zeros_like(x))
+
+        J = jacobian_B_3D(B, x, y, z)
+        s = (slice(1, -1), slice(1, -1), slice(1, -1))  # interior
+        npt.assert_allclose(J.dBx_dx[s], 1.0, atol=0.1)
+        npt.assert_allclose(J.dBx_dy[s], 0.0, atol=0.1)
+        npt.assert_allclose(J.dBx_dz[s], 0.0, atol=0.1)
+        npt.assert_allclose(J.dBy_dx[s], 0.0, atol=0.1)
+        npt.assert_allclose(J.dBz_dx[s], 0.0, atol=0.1)
+
+    def test_uniform_field_zero_jacobian_slice(self):
+        """Uniform field has zero Jacobian on 2D slice."""
+        from pymagnet.utils._vector_structs import Field3
+
+        pts = slice3D(plane="xy", max1=5.0, max2=5.0, slice_value=0.0, num_points=10)
+        B = Field3(np.ones_like(pts.x), np.zeros_like(pts.x), np.zeros_like(pts.x))
+
+        J = jacobian_B_3D(B, pts.x, pts.y, pts.z)
+        for attr in ["dBx_dx", "dBx_dy", "dBy_dx", "dBy_dy"]:
+            npt.assert_allclose(getattr(J, attr), 0.0, atol=1e-10)
+
+    def test_returns_jacobian3(self):
+        """Returns a Jacobian3 dataclass."""
+        from pymagnet.utils._vector_structs import Field3, Jacobian3
+
+        x, y, z = np.mgrid[0:5:5j, 0:5:5j, 0:5:5j]
+        B = Field3(np.ones_like(x), np.ones_like(x), np.ones_like(x))
+        J = jacobian_B_3D(B, x, y, z)
+        assert isinstance(J, Jacobian3)
+
+
+class TestBdotgradB3D:
+    """Tests for BdotgradB_3D function."""
+
+    def test_uniform_field_zero(self):
+        """B . grad(B) of uniform field is zero."""
+        from pymagnet.utils._vector_structs import Field3
+
+        x, y, z = np.mgrid[-5:5:10j, -5:5:10j, -5:5:10j]
+        B = Field3(np.ones_like(x), np.zeros_like(x), np.zeros_like(x))
+
+        F = BdotgradB_3D(B, x, y, z)
+        npt.assert_allclose(F.x, 0.0, atol=1e-10)
+        npt.assert_allclose(F.y, 0.0, atol=1e-10)
+        npt.assert_allclose(F.z, 0.0, atol=1e-10)
+
+    def test_linear_Bx_field(self):
+        """Bx = x, By = Bz = 0: F_x = x, F_y = F_z = 0."""
+        from pymagnet.utils._vector_structs import Field3
+
+        x, y, z = np.mgrid[0:10:21j, 0:10:21j, 0:10:21j]
+        B = Field3(x.copy(), np.zeros_like(x), np.zeros_like(x))
+
+        F = BdotgradB_3D(B, x, y, z)
+        s = (slice(2, -2), slice(2, -2), slice(2, -2))
+        npt.assert_allclose(F.x[s], x[s], atol=0.5)
+        npt.assert_allclose(F.y[s], 0.0, atol=0.5)
+        npt.assert_allclose(F.z[s], 0.0, atol=0.5)

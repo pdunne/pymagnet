@@ -12,12 +12,10 @@ magnet with respect to each principal axis.
 TODO: Update __str__ and __repr__ methods to show orientation and magnetisation
 """
 
-from math import fabs, sqrt
 from os import environ as _environ
 
 import numpy as _np
-from numba import float64, vectorize
-
+from ..utils._elliptic import cel as _cel
 from ..utils._quaternion import Quaternion, q_angle_from_axis
 from ..utils.global_const import MAG_TOL, PI
 from ._magnet_base import Magnet
@@ -759,68 +757,6 @@ class Cylinder(Magnet3D):
         force, torque = calc_force_cylinder(self, num_samples, unit)
         return force, torque
 
-    @staticmethod
-    @vectorize([float64(float64, float64, float64, float64)], target="parallel")
-    def _cel(kc, p, c, s):
-        """Bulirsch's complete elliptic integral
-        See NIST Handbook of Mathematical Functions, http://dlmf.nist.gov/19.2
-
-        Numba is used to create a compiled Numpy ufunc that accepts numpy arrays.
-
-        Args:
-            kc (float/ndarray): elliptical modulus
-            p (float/ndarray): real parameter
-            c (float/ndarray): real parameter
-            s (float/ndarray): real parameter
-
-        Returns:
-            float/ndarray: result of computing complete elliptic integral
-        """
-        if kc == 0:
-            data = _np.nan
-            return data
-        else:
-            errtol = 0.000001
-            k = fabs(kc)
-            pp = p
-            cc = c
-            ss = s
-            em = 1.0
-
-            if p > 0:
-                pp = sqrt(p)
-                ss = s / pp
-            else:
-                f = kc * kc
-                q = 1.0 - f
-                g = 1.0 - pp
-                f = f - pp
-                q = q * (ss - c * pp)
-                pp = sqrt(f / g)
-                cc = (c - ss) / g
-                ss = -q / (g * g * pp) + cc * pp
-            f = cc
-            cc = cc + ss / pp
-            g = k / pp
-            ss = 2 * (ss + f * g)
-            pp = g + pp
-            g = em
-            em = k + em
-            kk = k
-
-            while fabs(g - k) > g * errtol:
-                k = 2 * sqrt(kk)
-                kk = k * em
-                f = cc
-                cc = cc + ss / pp
-                g = kk / pp
-                ss = 2 * (ss + f * g)
-                pp = g + pp
-                g = em
-                em = k + em
-            data = (PI / 2.0) * (ss + cc * em) / (em * (em + pp))
-            return data
-
     def _get_field_internal(self, x, y, z):
         """Internal magnetic field calculation methods.
         Calculates the field due to a cylindrical magnet/solenoid magnetised along z
@@ -889,12 +825,13 @@ class Cylinder(Magnet3D):
         kn = _np.sqrt((zn_sq + nrho_a_sq) / (zn_sq + rho_a_sq))
 
         Brho = B0 * (
-            alphap * self._cel(kp, 1, 1, -1) - alphan * self._cel(kn, 1, 1, -1)
+            alphap * _cel(kp, 1, 1, -1)
+            - alphan * _cel(kn, 1, 1, -1)
         )
 
         Bz = (B0 * a / (a + rho)) * (
-            betap * self._cel(kp, gamma**2, 1, gamma)
-            - betan * self._cel(kn, gamma**2, 1, gamma)
+            betap * _cel(kp, gamma**2, 1, gamma)
+            - betan * _cel(kn, gamma**2, 1, gamma)
         )
         return Brho, Bz
 
