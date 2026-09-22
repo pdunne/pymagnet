@@ -145,5 +145,8 @@ notes/
 work/results
 # work/
 work/*pdf
+work/lin_halbach/*
 results/
 reference/
+work/generate_plan_doc.py
+work/generate_tracker.py
