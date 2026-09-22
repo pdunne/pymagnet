@@ -1224,17 +1224,19 @@ def get_total_field_mesh(meshes, x, y, z, r_cut=_np.inf):
     point, which can give a large speedup for sparse or localised geometries.
 
     Args:
-        meshes: list (or any iterable) of ``Mesh`` instances.  Pass
+        meshes (list): list (or any iterable) of ``Mesh`` instances.  Pass
             ``pm.magnets.Mesh.instances`` to include all currently registered
             meshes.
-        x, y, z (float or ndarray): evaluation point coordinates.
+        x (float or ndarray): x co-ordinates of the evaluation points.
+        y (float or ndarray): y co-ordinates of the evaluation points.
+        z (float or ndarray): z co-ordinates of the evaluation points.
         r_cut (float): distance cutoff in the same length units as the mesh
             coordinates.  Triangles farther than ``r_cut`` from a point are
             skipped.  Default: ``np.inf`` (no culling — full accuracy).
 
     Returns:
         Field3: total magnetic field array (attributes ``.x``, ``.y``, ``.z``,
-        ``.n``).
+            ``.n``).
 
     Example::
 

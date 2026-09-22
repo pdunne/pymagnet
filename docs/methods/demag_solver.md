@@ -184,6 +184,6 @@ M, H_int = solve_demag_tanh_batch(H_ext, Ms=1e6, chi=10.0, N=0.5)
 
 ### Numba path (`solve_demag_tanh` / `solve_demag_tanh_batch`)
 
-Uses a fully compiled Brent's method implementation (`@njit`). Since the tanh residual is pure scalar math, the entire solve runs inside compiled code with no Python overhead. The batch solver parallelises across H_ext values using `prange`.
+Uses a fully compiled Brent's method implementation (`@njit`). Since the tanh residual is pure scalar maths, the entire solve runs inside compiled code with no Python overhead. The batch solver parallelises across H_ext values using `prange`.
 
 Both paths are stateless and side-effect free — safe for use in loops or with multiprocessing.

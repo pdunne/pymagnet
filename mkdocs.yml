@@ -47,6 +47,12 @@ plugins:
       handlers:
         python:
           paths: ["src"]
+          options:
+            docstring_style: google
+            docstring_options:
+              # Docstrings in this project write `Returns:` as `type: description`
+              # (e.g. `tuple: Bx, By, Bz`), not `name: description`.
+              returns_named_value: false
 
 markdown_extensions:
   - admonition

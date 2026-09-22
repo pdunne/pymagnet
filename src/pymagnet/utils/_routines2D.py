@@ -26,7 +26,7 @@ def grid2D(xmax, ymax, **kwargs):
 
     Returns:
         Point_Array2: array of x and y values of shape (num_points, num_points)
-        and associated unit
+            and associated unit
     """
     num_points = kwargs.pop("num_points", 100)
     xmin = kwargs.pop("xmin", -1 * xmax)
@@ -43,7 +43,7 @@ def get_field_2D(Point_Array2):
 
     Args:
         Point_Array2 (Point_Array2): array of x,y points and associated unit,
-        defaults to 'mm'
+            defaults to 'mm'
 
     Returns:
         Field2: array of Bx,By,|B| values and associated unit (defaults to 'T')

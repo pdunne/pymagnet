@@ -34,11 +34,11 @@ def tanh_MH_model(Ms: float, chi: float):
     smoothly to Ms at high fields.
 
     Args:
-        Ms: Saturation magnetization.
-        chi: Dimensionless initial susceptibility (slope dM/dH at H=0).
+        Ms (float): Saturation magnetization.
+        chi (float): Dimensionless initial susceptibility (slope dM/dH at H=0).
 
     Returns:
-        Callable mapping H (float or array) -> M.
+        Callable: mapping H (float or array) -> M.
     """
 
     def f_MH(H):
@@ -246,13 +246,13 @@ def solve_demag_tanh(H_ext, Ms, chi, N=0.5):
     """Solve demagnetization for the tanh model (single scalar H_ext).
 
     Args:
-        H_ext: External applied field magnitude.
-        Ms: Saturation magnetization.
-        chi: Dimensionless initial susceptibility.
-        N: Demagnetizing factor (default 0.5).
+        H_ext (float): External applied field magnitude.
+        Ms (float): Saturation magnetization.
+        chi (float): Dimensionless initial susceptibility.
+        N (float): Demagnetizing factor (default 0.5).
 
     Returns:
-        (M_solution, H_int, converged) tuple.
+        tuple: (M_solution, H_int, converged).
     """
     M_sol, converged = _brentq_njit(H_ext, N, Ms, chi, 0.0, Ms)
     H_int = H_ext - N * M_sol
@@ -264,13 +264,14 @@ def solve_demag_tanh_batch(H_ext_array, Ms, chi, N=0.5):
     """Solve demagnetization for an array of H_ext values in parallel.
 
     Args:
-        H_ext_array: 1D array of external field values.
-        Ms: Saturation magnetization.
-        chi: Dimensionless initial susceptibility.
-        N: Demagnetizing factor (default 0.5).
+        H_ext_array (ndarray): 1D array of external field values.
+        Ms (float): Saturation magnetization.
+        chi (float): Dimensionless initial susceptibility.
+        N (float): Demagnetizing factor (default 0.5).
 
     Returns:
-        (M_solutions, H_int_solutions) arrays of same shape as H_ext_array.
+        tuple: (M_solutions, H_int_solutions) arrays of the same shape as
+            H_ext_array.
     """
     n = H_ext_array.shape[0]
     M_out = _np.empty(n)

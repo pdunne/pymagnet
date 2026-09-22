@@ -28,9 +28,6 @@ _environ["KMP_WARNINGS"] = "0"
 class Magnet3D(Magnet):
     """3D Magnet Base Class
 
-    Args:
-        Magnet (Magnet): Magnet base parent class
-
     Returns:
         Magnet3D: 3D magnet object
     """
@@ -246,9 +243,6 @@ class Magnet3D(Magnet):
 
 class Prism(Magnet3D):
     """Prism 3D Magnet Class
-
-    Args:
-        Magnet3D (Magnet3D): 3D magnet parent class
 
     Returns:
         Prism: Prism magnet object
@@ -643,8 +637,6 @@ class Prism(Magnet3D):
 class Cube(Prism):
     """Cube 3D Magnet Class
 
-    Args:
-        Prism (Prism): Prism magnet parent class
     """
 
     mag_type = "Cube"
@@ -675,9 +667,6 @@ class Cube(Prism):
 
 class Cylinder(Magnet3D):
     """Cylinder 3D Magnet Class
-
-    Args:
-        Magnet3D (Magnet3D): 3D magnet parent class
 
     Returns:
         Cylinder: Cylinder 3D magnet object
@@ -858,9 +847,6 @@ class Cylinder(Magnet3D):
 
 class Sphere(Magnet3D):
     """Sphere 3D Magnet Class
-
-    Args:
-        Magnet3D (Magnet3D): 3D magnet parent class
 
     Returns:
         Sphere: Sphere 3D magnet object

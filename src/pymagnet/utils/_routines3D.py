@@ -83,8 +83,10 @@ def point3D(point, **kwargs):
     """Returns a single point
 
     Args:
-        point (tuple):
-        unit (str, optional): length scale units. Defaults to "mm".
+        point (tuple): Coordinates (x, y, z) of the point.
+
+    Other Parameters:
+        unit (str): length scale units. Defaults to "mm".
 
     Returns:
         Point_Array3: struct of x, y, and z values of shape (1) and associated unit
@@ -107,7 +109,9 @@ def line3D(start, end, num_points=100, **kwargs):
         start (tuple): Starting point (x1,y1,z1)
         end (tuple): End point (x2,y2,z2)
         num_points (int): number of points to generate. Defaults to 100
-        unit (str, optional): length scale units. Defaults to "mm".
+
+    Other Parameters:
+        unit (str): length scale units. Defaults to "mm".
 
     Returns:
         Point_Array3: array of x, y, and z values of shape (num_points) and associated unit
@@ -180,7 +184,8 @@ def get_field_3D(points):
     `Magnet3D` magnet.
 
     Args:
-        Point_Array3 (Point_Array3): array of x,y,z points and associated unit, defaults to 'mm'
+        points (Point_Array3): array of x,y,z points and associated unit,
+            defaults to 'mm'
 
     Returns:
         Field3: array of Bx,By,Bz,|B| values and associated unit (defaults to 'T')

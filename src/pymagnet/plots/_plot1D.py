@@ -40,7 +40,7 @@ def plot_1D_field(
 
     Args:
         magnet (Magnet3D): Must be a Magnet3D type of magnet, either Prism,
-        Cube, or Cylinder.
+            Cube, or Cylinder.
 
     Kwargs:
         num_points (int): Number of points to calculate. Defaults to 101.

@@ -108,7 +108,7 @@ class Polygon:
             N (int, optional): Number of sides. Defaults to 6.
             center (tuple, optional): Polygon center. Defaults to (0.0, 0.0).
             alpha (float, optional): Orientration with respect to x-axis.
-            Defaults to 0.0.
+                Defaults to 0.0.
 
         Raises:
             Exception: N must be > 2
@@ -181,11 +181,11 @@ class LineUtils:
             vertex_1 (ndarray): vertex 1
             vertex_2 (ndarray): vertex 2
             clockwise (bool, optional): Clockwise orientation of points.
-            Defaults to True.
+                Defaults to True.
 
         Returns:
             tuple: normal vector (ndarray), length i.e. distance between
-            vertices (float)
+                vertices (float)
         """
 
         dx = vertex_1[0] - vertex_2[0]
