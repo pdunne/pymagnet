@@ -49,7 +49,7 @@ from pymagnet.plots import plot_magnet
 import pymagnet as pm
 from pymagnet.plots import plot_magnet
 
-pm.reset_magnets()
+pm.reset()
 pm.magnets.Prism(Jr=1.0, center=(0, 0, 0), size=(10, 10, 5))
 pm.magnets.Cylinder(Jr=1.0, center=(20, 0, 0), radius=5, length=10)
 
@@ -57,7 +57,7 @@ fig = plot_magnet(unit="mm", magnet_opacity=0.8)
 ```
 
 <figure>
-  <img src="../img/3d_prism.png" width="400" />
+  <img src="../../img/3d_prism.png" width="400" />
   <figcaption>3D rendering of a prism magnet</figcaption>
 </figure>
 
@@ -112,7 +112,7 @@ import pymagnet as pm
 from pymagnet.utils import slice3D, get_field_3D
 from pymagnet.plots import slice_plot
 
-pm.reset_magnets()
+pm.reset()
 pm.magnets.Prism(Jr=1.0, center=(0, 0, 0), size=(10, 10, 5))
 
 # Calculate field on XY plane at z=0
@@ -166,7 +166,7 @@ from pymagnet.plots import slice_quickplot
 import pymagnet as pm
 from pymagnet.plots import slice_quickplot
 
-pm.reset_magnets()
+pm.reset()
 pm.magnets.Prism(Jr=1.0, center=(0, 0, 0), size=(10, 10, 5))
 
 fig, cache, data_objects = slice_quickplot(
@@ -180,7 +180,7 @@ fig, cache, data_objects = slice_quickplot(
 ```
 
 <figure>
-  <img src="../img/3d_example_slice_1.png" width="500" />
+  <img src="../../img/3d_example_slice_1.png" width="500" />
   <figcaption>Slice plot showing XY and XZ planes through a prism magnet</figcaption>
 </figure>
 
@@ -231,7 +231,7 @@ import pymagnet as pm
 from pymagnet.utils import grid3D, get_field_3D
 from pymagnet.plots import volume_plot
 
-pm.reset_magnets()
+pm.reset()
 pm.magnets.Sphere(Jr=1.0, center=(0, 0, 0), radius=5)
 
 points = grid3D(xmax=15, ymax=15, zmax=15, num_points=30)
@@ -290,7 +290,7 @@ from pymagnet.plots import volume_quickplot
 import pymagnet as pm
 from pymagnet.plots import volume_quickplot
 
-pm.reset_magnets()
+pm.reset()
 pm.magnets.Cylinder(Jr=1.0, center=(0, 0, 0), radius=5, length=10)
 
 fig, cache, data_objects = volume_quickplot(
@@ -303,7 +303,7 @@ fig, cache, data_objects = volume_quickplot(
 ```
 
 <figure>
-  <img src="../img/3d_example_volume_1.png" width="500" />
+  <img src="../../img/3d_example_volume_1.png" width="500" />
   <figcaption>Volume plot showing magnetic field magnitude around a cylinder magnet</figcaption>
 </figure>
 
@@ -328,7 +328,7 @@ fig, cache, data_objects = volume_quickplot(
 ```
 
 <figure>
-  <img src="../img/3d_example_volume_2.png" width="500" />
+  <img src="../../img/3d_example_volume_2.png" width="500" />
   <figcaption>Volume plot with inverted opacity scale</figcaption>
 </figure>
 
@@ -349,7 +349,7 @@ fig, cache, data_objects = slice_quickplot(
 ```
 
 <figure>
-  <img src="../img/3d_example_slice_2.png" width="500" />
+  <img src="../../img/3d_example_slice_2.png" width="500" />
   <figcaption>Slice plot with vector arrows showing field direction</figcaption>
 </figure>
 

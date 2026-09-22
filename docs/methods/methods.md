@@ -218,7 +218,7 @@ For 3D plots, magnets are rendered as meshes using plotly's `Mesh3d` graphics ob
 
 | Function | Description |
 |----------|-------------|
-| `reset_magnets()` | Clear all instantiated magnets |
+| `reset()` | Clear all instantiated magnets |
 | `list_magnets()` | Print all current magnets |
 
 ---

@@ -269,7 +269,7 @@ Clear all instantiated magnets from the registry:
 
 ```python
 import pymagnet as pm
-pm.reset_magnets()
+pm.reset()
 ```
 
 ### List All Magnets

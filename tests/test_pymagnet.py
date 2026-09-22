@@ -8,8 +8,11 @@ TODO:
     - All tests need to be updated and expanded to reflect the new API.
 """
 
+from importlib.metadata import version as _pkg_version
+
 from pymagnet import __version__
 
 
 def test_version():
-    assert __version__ == "0.5.0"
+    """``__version__`` must track the version declared in pyproject.toml."""
+    assert __version__ == _pkg_version("pymagnet")

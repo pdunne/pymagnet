@@ -77,7 +77,7 @@ from pymagnet.forces import calc_force_prism
 import pymagnet as pm
 from pymagnet.forces import calc_force_prism
 
-pm.reset_magnets()
+pm.reset()
 
 # Create two magnets - force will be calculated on magnet1
 magnet1 = pm.magnets.Prism(Jr=1.0, center=(0, 0, 0), size=(10, 10, 5))
@@ -118,7 +118,7 @@ from pymagnet.forces import calc_force_cylinder
 import pymagnet as pm
 from pymagnet.forces import calc_force_cylinder
 
-pm.reset_magnets()
+pm.reset()
 
 # Create two cylindrical magnets
 magnet1 = pm.magnets.Cylinder(Jr=1.0, center=(0, 0, 0), radius=5, length=10)
@@ -159,7 +159,7 @@ from pymagnet.forces import calc_force_sphere
 import pymagnet as pm
 from pymagnet.forces import calc_force_sphere
 
-pm.reset_magnets()
+pm.reset()
 
 # Create a sphere near a prism magnet
 sphere = pm.magnets.Sphere(Jr=1.0, center=(0, 0, 0), radius=5)
@@ -251,7 +251,7 @@ The `pymagnet.forces` module also exports utility functions for working with tri
 import pymagnet as pm
 from pymagnet.forces import calc_force_prism, calc_force_cylinder
 
-pm.reset_magnets()
+pm.reset()
 
 # Create a magnet array
 base = pm.magnets.Prism(Jr=1.2, center=(0, 0, 0), size=(20, 20, 5))
