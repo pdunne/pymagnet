@@ -20,7 +20,7 @@ class TestArccosDomain:
         # Create a small but not too small rotation
         q = q_angle_from_axis(0.01, (0, 0, 1))
         # Should not raise ValueError for arccos
-        angle, axis = q.get_axisangle()
+        angle, _axis = q.get_axisangle()
         assert np.isfinite(angle)
         assert abs(angle - 0.01) < 0.001  # Close to 0.01 radians
 
@@ -30,7 +30,7 @@ class TestArccosDomain:
 
         # This is a 180-degree rotation
         q = Quaternion(0.0, 1.0, 0.0, 0.0)
-        angle, axis = q.get_axisangle()
+        angle, _axis = q.get_axisangle()
         assert np.isfinite(angle)
 
 
@@ -41,7 +41,7 @@ class TestDivisionByZero:
         """Rectangle field at corner is handled."""
         m = magnets.Rectangle(width=10.0, height=20.0, Jr=1.0)
         # Point at exact corner
-        Bx, By = m.get_field(5.0, 10.0)
+        Bx, _By = m.get_field(5.0, 10.0)
         # May be NaN, inf, or array at singularity, but shouldn't crash
         # Just check it returns something
         assert Bx is not None
@@ -50,7 +50,7 @@ class TestDivisionByZero:
         """Prism field at edge is handled."""
         m = magnets.Prism(width=10.0, depth=10.0, height=20.0, Jr=1.0)
         # Point on edge
-        Bx, By, Bz = m.get_field(5.0, 5.0, 10.0)
+        Bx, _By, _Bz = m.get_field(5.0, 5.0, 10.0)
         # May be NaN at singularity, but shouldn't crash
         assert isinstance(Bx, (float, np.floating, np.ndarray))
 
@@ -156,7 +156,7 @@ class TestArrayOperations:
         m = magnets.Prism(width=10.0, depth=10.0, height=20.0, Jr=1.0)
         x, y = np.mgrid[-30:30:10j, -30:30:10j]
         z = np.full_like(x, 30.0)
-        Bx, By, Bz = m.get_field(x, y, z)
+        _Bx, _By, Bz = m.get_field(x, y, z)
         # Check that most values are finite (some may be NaN at singularities)
         finite_fraction = np.sum(np.isfinite(Bz)) / Bz.size
         assert finite_fraction > 0.9

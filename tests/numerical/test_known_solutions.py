@@ -82,7 +82,7 @@ class TestSphereKnownSolutions:
         x = np.array([0.0])
         y = np.array([0.0])
         z = np.array([z_test])
-        Bx, By, Bz = m.get_field(x, y, z)
+        _Bx, _By, Bz = m.get_field(x, y, z)
 
         # Dipole far field: Bz = (2/3) * Jr * (R/z)^3 * 2
         # The factor of 2 comes from the dipole field on axis
@@ -156,7 +156,7 @@ class TestPrismKnownSolutions:
 
         Bz_values = []
         for x, y, z in points:
-            Bx, By, Bz = m.get_field(x, y, z)
+            _Bx, _By, Bz = m.get_field(x, y, z)
             Bz_values.append(Bz)
 
         # All Bz values should be equal due to symmetry
@@ -183,7 +183,7 @@ class TestRectangleKnownSolutions:
         m = magnets.Rectangle(width=10.0, height=20.0, Jr=1.0, center=(0.0, 0.0))
 
         # Far above the magnet on the y-axis
-        Bx, By = m.get_field(0.0, 30.0)
+        Bx, _By = m.get_field(0.0, 30.0)
 
         # Field should be primarily in y direction (along magnetization)
         # and Bx should be zero due to symmetry

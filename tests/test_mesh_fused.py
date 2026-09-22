@@ -91,9 +91,9 @@ def test_two_magnets_fused_matches_sum():
 @pytest.mark.skipif(not _HAS_CUBE, reason="cube.stl not found")
 def test_three_magnets_fused_matches_sum():
     """Three-magnet fused == sum of three individual calls."""
-    m1 = Mesh(_CUBE_STL, Jr=1.0, center=[0.0, 0.0,  0.0])
-    m2 = Mesh(_CUBE_STL, Jr=1.0, center=[20.0, 0.0,  0.0])
-    m3 = Mesh(_CUBE_STL, Jr=0.5, center=[0.0, 20.0,  0.0])
+    m1 = Mesh(_CUBE_STL, Jr=1.0, center=[0.0, 0.0, 0.0])
+    m2 = Mesh(_CUBE_STL, Jr=1.0, center=[20.0, 0.0, 0.0])
+    m3 = Mesh(_CUBE_STL, Jr=0.5, center=[0.0, 20.0, 0.0])
 
     x = np.linspace(-25, 25, 10)
     X, Y, Z = np.meshgrid(x, x, x, indexing="ij")
@@ -111,7 +111,7 @@ def test_three_magnets_fused_matches_sum():
 @pytest.mark.skipif(not _HAS_CUBE, reason="cube.stl not found")
 def test_fused_with_generous_rcut_matches_sum():
     """Distance cutoff larger than the mesh extent gives the exact answer."""
-    m1 = Mesh(_CUBE_STL, Jr=1.0, center=[0.0, 0.0,  0.0])
+    m1 = Mesh(_CUBE_STL, Jr=1.0, center=[0.0, 0.0, 0.0])
     m2 = Mesh(_CUBE_STL, Jr=1.0, center=[0.0, 0.0, 30.0])
 
     x = np.linspace(-20, 20, 8)
@@ -131,7 +131,7 @@ def test_fused_with_generous_rcut_matches_sum():
 @pytest.mark.skipif(not _HAS_CUBE, reason="cube.stl not found")
 def test_mesh_instances_iterable():
     """Passing Mesh.instances (WeakSet) works as the meshes argument."""
-    m1 = Mesh(_CUBE_STL, Jr=1.0, center=[0.0, 0.0,  0.0])
+    m1 = Mesh(_CUBE_STL, Jr=1.0, center=[0.0, 0.0, 0.0])
     m2 = Mesh(_CUBE_STL, Jr=1.0, center=[0.0, 0.0, 20.0])
 
     x = np.linspace(-10, 10, 6)

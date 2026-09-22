@@ -305,7 +305,7 @@ def plot_2D_contour(
             CB = None
 
     else:
-        raise Exception("plot_type must be 'contour' or 'streamplot'")
+        raise ValueError("plot_type must be 'contour' or 'streamplot'")
 
     # Draw magnets and magnetisation arrows
     if show_magnets:
@@ -487,9 +487,7 @@ def plot_2D_contour_gradB(
     J = jacobian_B_2D(field, point_array.x, point_array.y)
 
     # Frobenius norm of the Jacobian: total rate of field variation
-    frob = _np.sqrt(
-        J.dBx_dx**2 + J.dBx_dy**2 + J.dBy_dx**2 + J.dBy_dy**2
-    )
+    frob = _np.sqrt(J.dBx_dx**2 + J.dBx_dy**2 + J.dBy_dx**2 + J.dBy_dy**2)
 
     # Build a Field2 with grad(|B|) as the vector components and ||J||_F as norm
     grad_field = gradB_2D(field.n, point_array.x, point_array.y)
@@ -559,7 +557,7 @@ def plot_2D_contour_jacobian(
     lev_fill = _np.linspace(cmin, cmax, 256, endpoint=True)
     lev_lines = _np.linspace(cmin, cmax, num_levels, endpoint=True)
 
-    for ax, (data, label) in zip(axes.ravel(), components):
+    for ax, (data, label) in zip(axes.ravel(), components, strict=False):
         CS = ax.contourf(
             point_array.x,
             point_array.y,
@@ -939,7 +937,7 @@ def plot_3D_contour(
             CB = None
 
     else:
-        raise Exception("plot_type must be 'contour' or 'streamplot'")
+        raise ValueError("plot_type must be 'contour' or 'streamplot'")
 
     if CB is not None:
         CB.ax.get_yaxis().labelpad = 15

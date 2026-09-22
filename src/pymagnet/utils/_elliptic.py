@@ -61,8 +61,7 @@ def _elliprf(x, y, z, tol=1e-12):
     # Taylor series truncated at 7th order
     e2 = dx * dy - dz * dz
     e3 = dx * dy * dz
-    return (1.0 + e2 * (-1.0 / 10.0 + e2 / 14.0 + e3 / 24.0)
-            + e3 / 6.0) / sqrt(A)
+    return (1.0 + e2 * (-1.0 / 10.0 + e2 / 14.0 + e3 / 24.0) + e3 / 6.0) / sqrt(A)
 
 
 @njit(cache=True)
@@ -109,13 +108,9 @@ def _elliprd(x, y, z, tol=1e-12):
     e3 = e2 * dz
     e4 = dz * dz
     e5 = e2 * e4
-    return (3.0 * sigma
-            + fac * (1.0
-                     - 3.0 * e2 / 14.0
-                     + e3 / 6.0
-                     + 9.0 * e4 / 22.0
-                     - 3.0 * e5 / 26.0)
-            / (A * sqrt(A)))
+    return 3.0 * sigma + fac * (
+        1.0 - 3.0 * e2 / 14.0 + e3 / 6.0 + 9.0 * e4 / 22.0 - 3.0 * e5 / 26.0
+    ) / (A * sqrt(A))
 
 
 @njit(cache=True)
@@ -171,15 +166,15 @@ def _elliprj(x, y, z, p, tol=1e-12):
     E4 = (2.0 * dx * dy * dz + dp * (E2 + 3.0 * dp * dp)) * dp
     E5 = dp * dp * dx * dy * dz
 
-    return (3.0 * sigma
-            + fac * (1.0
-                     - 3.0 * E2 / 14.0
-                     + E3 / 6.0
-                     + 9.0 * E2 * E2 / 88.0
-                     - 3.0 * E4 / 22.0
-                     - 9.0 * E2 * E3 / 52.0
-                     + 3.0 * E5 / 26.0)
-            / (A * sqrt(A)))
+    return 3.0 * sigma + fac * (
+        1.0
+        - 3.0 * E2 / 14.0
+        + E3 / 6.0
+        + 9.0 * E2 * E2 / 88.0
+        - 3.0 * E4 / 22.0
+        - 9.0 * E2 * E3 / 52.0
+        + 3.0 * E5 / 26.0
+    ) / (A * sqrt(A))
 
 
 @njit(cache=True)
@@ -208,8 +203,9 @@ def _elliprc(x, y, tol=1e-12):
             break
 
     # Taylor series
-    return (1.0 + s * s * (3.0 / 10.0 + s * (1.0 / 7.0
-            + s * (3.0 / 8.0 + s * 9.0 / 22.0)))) / sqrt(A)
+    return (
+        1.0 + s * s * (3.0 / 10.0 + s * (1.0 / 7.0 + s * (3.0 / 8.0 + s * 9.0 / 22.0)))
+    ) / sqrt(A)
 
 
 @vectorize([float64(float64, float64, float64, float64)], target="parallel")
@@ -312,6 +308,7 @@ def _cel_carlson_impl(kc, p, c, s):
 
 if _JIT_DISABLED:
     import numpy as _np
+
     cel_carlson = _np.vectorize(_cel_carlson_impl)
 else:
     cel_carlson = vectorize(

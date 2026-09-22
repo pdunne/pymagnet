@@ -11,9 +11,9 @@ import pytest
 from pymagnet.utils._demag import (
     DemagResult,
     build_MH_interpolator,
-    solve_demagnetization,
     solve_demag_tanh,
     solve_demag_tanh_batch,
+    solve_demagnetization,
     tanh_MH_model,
 )
 
@@ -148,7 +148,7 @@ class TestSolveDemagtanhNumba:
         npt.assert_allclose(M_nb, result_scipy.M_solution, rtol=1e-6)
 
     def test_zero_field(self):
-        M, H_int, conv = solve_demag_tanh(0.0, 1e6, 10.0, N=0.5)
+        M, _H_int, conv = solve_demag_tanh(0.0, 1e6, 10.0, N=0.5)
         assert conv
         npt.assert_allclose(M, 0.0, atol=1e-6)
 

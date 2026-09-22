@@ -160,7 +160,7 @@ class TestSlice3D:
 
     def test_invalid_plane_raises(self):
         """Invalid plane name raises exception."""
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             slice3D(plane="invalid")
 
     def test_custom_unit(self):
@@ -339,7 +339,7 @@ class TestTileArrays:
 
     def test_tiles_scalar(self):
         """Tiles scalar to match array."""
-        x, y, z = _tile_arrays(1.0, np.array([1, 2, 3]), 0.0)
+        x, _y, z = _tile_arrays(1.0, np.array([1, 2, 3]), 0.0)
         assert x.shape == (3,)
         assert z.shape == (3,)
 
@@ -426,9 +426,17 @@ class TestJacobianB3D:
         B = Field3(np.ones_like(x), np.zeros_like(x), np.zeros_like(x))
 
         J = jacobian_B_3D(B, x, y, z)
-        for attr in ["dBx_dx", "dBx_dy", "dBx_dz",
-                      "dBy_dx", "dBy_dy", "dBy_dz",
-                      "dBz_dx", "dBz_dy", "dBz_dz"]:
+        for attr in [
+            "dBx_dx",
+            "dBx_dy",
+            "dBx_dz",
+            "dBy_dx",
+            "dBy_dy",
+            "dBy_dz",
+            "dBz_dx",
+            "dBz_dy",
+            "dBz_dz",
+        ]:
             npt.assert_allclose(getattr(J, attr), 0.0, atol=1e-10)
 
     def test_linear_Bx_3d_grid(self):

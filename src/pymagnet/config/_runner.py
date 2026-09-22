@@ -56,7 +56,7 @@ def run(
 
     processed: set[int] = set()
 
-    for i, (gc, pc) in enumerate(zip(config.grids, config.plots)):
+    for i, (gc, pc) in enumerate(zip(config.grids, config.plots, strict=False)):
         if i in processed:
             continue
 
@@ -379,9 +379,7 @@ def _plot_3d_grouped(config: SimulationConfig, indices: list[int]):
                 if NA < 1:
                     NA = 1
                 data_objects.append(
-                    _draw_cones(
-                        points, field, NA=NA, cone_opacity=pc.cone_opacity
-                    )
+                    _draw_cones(points, field, NA=NA, cone_opacity=pc.cone_opacity)
                 )
 
     fig = go.Figure(data=data_objects)
@@ -403,7 +401,5 @@ def _calculate_force(config: SimulationConfig, magnets: list) -> dict[str, Any]:
     """Calculate force and torque on the target magnet."""
     fc = config.force
     target = magnets[fc.target_magnet]
-    force, torque = target.get_force_torque(
-        num_samples=fc.num_samples, unit=fc.unit
-    )
+    force, torque = target.get_force_torque(num_samples=fc.num_samples, unit=fc.unit)
     return {"force": force, "torque": torque}

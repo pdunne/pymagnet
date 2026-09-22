@@ -4,7 +4,6 @@ from numba import njit, prange
 from ..magnets import Magnet3D
 from ..utils._conversions import get_unit_value_meter
 from ..utils._routines3D import _allocate_field_array3
-from ..utils._vector_structs import Point_Array3
 from ..utils.global_const import ALIGN_CUTOFF, MU0
 
 
@@ -283,7 +282,7 @@ def _precompute_force_centroids(mesh_vectors, Jnorm, Jr, depth):
             - areas_active (ndarray): (n_active,) triangle areas
             - n_sub (int): sub-triangles per active triangle
     """
-    n_sub = 4 ** depth
+    n_sub = 4**depth
     active = _np.fabs(Jnorm / Jr) > ALIGN_CUTOFF
     idx = _np.where(active)[0]
     n_active = len(idx)
@@ -433,8 +432,16 @@ def calc_force_mesh(active_magnet, depth=3, unit="mm"):
     # 3. Accumulate force/torque in parallel over active triangles
     xc, yc, zc = active_magnet.centroid
     force, torque = _accumulate_force_torque_njit(
-        centroids, Bx, By, Bz, Jnorm_active, areas, n_sub,
-        float(xc), float(yc), float(zc),
+        centroids,
+        Bx,
+        By,
+        Bz,
+        Jnorm_active,
+        areas,
+        n_sub,
+        float(xc),
+        float(yc),
+        float(zc),
     )
 
     # 4. Apply unit scaling

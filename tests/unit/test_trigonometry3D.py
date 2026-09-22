@@ -144,12 +144,12 @@ class TestLargestSideRA:
         """Identifies longest side correctly."""
         # Triangle with side 0 being longest
         triangle = np.array([[0.0, 0.0, 0.0], [10.0, 0.0, 0.0], [5.0, 0.0, 3.0]])
-        longest_side, RA1, RA2 = _largest_side_RA(triangle)
+        longest_side, _RA1, _RA2 = _largest_side_RA(triangle)
         assert longest_side == 0  # Side from vertex 0 to vertex 1
 
     def test_returns_right_angle_triangles(self, equilateral_triangle):
         """Returns two right-angled triangle dimensions."""
-        longest_side, RA1, RA2 = _largest_side_RA(equilateral_triangle)
+        _longest_side, RA1, RA2 = _largest_side_RA(equilateral_triangle)
         # RA1 and RA2 should have [base, height] format
         assert len(RA1) == 2
         assert len(RA2) == 2
@@ -158,7 +158,7 @@ class TestLargestSideRA:
 
     def test_total_base_equals_longest_side(self, equilateral_triangle):
         """Sum of RA triangle bases should equal longest side."""
-        longest_side, RA1, RA2 = _largest_side_RA(equilateral_triangle)
+        _longest_side, RA1, RA2 = _largest_side_RA(equilateral_triangle)
         total_base = RA1[0] + RA2[0]
         # For equilateral, longest side = 1
         npt.assert_allclose(total_base, 1.0, rtol=1e-10)
@@ -166,7 +166,7 @@ class TestLargestSideRA:
     def test_altitude_preserved(self):
         """Both RA triangles have same altitude."""
         triangle = np.array([[0.0, 0.0, 0.0], [3.0, 0.0, 0.0], [1.0, 0.0, 2.0]])
-        longest_side, RA1, RA2 = _largest_side_RA(triangle)
+        _longest_side, RA1, RA2 = _largest_side_RA(triangle)
         npt.assert_allclose(RA1[1], RA2[1], rtol=1e-10)
 
 
@@ -245,7 +245,7 @@ class TestAlignTriangleToY:
         y_axis = np.array([0, 1, 0])
         rot_axis = np.cross(y_axis, norm_vec)
 
-        aligned, rotation = align_triangle_to_y(
+        aligned, _rotation = align_triangle_to_y(
             right_angle_triangle, rot_axis, norm_vec
         )
 
@@ -259,7 +259,7 @@ class TestAlignTriangleToY:
         y_axis = np.array([0, 1, 0])
         rot_axis = np.cross(y_axis, norm_vec)
 
-        aligned, rotation = align_triangle_to_y(
+        _aligned, rotation = align_triangle_to_y(
             right_angle_triangle_xz, rot_axis, norm_vec
         )
 

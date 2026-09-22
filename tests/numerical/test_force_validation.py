@@ -219,7 +219,7 @@ class TestAllag2009Validation:
     def test_coaxial_configuration_fz(self, allag_tolerance):
         """Test axial force (Fz) at offset=0 against Allag2009."""
         reset()
-        m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
         m2 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 20))
 
         # Compute force on m2 (upper magnet) to match reference convention
@@ -232,7 +232,7 @@ class TestAllag2009Validation:
     def test_coaxial_configuration_fx_near_zero(self, allag_tolerance):
         """Test that lateral force (Fx) is near zero at offset=0."""
         reset()
-        m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
         m2 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 20))
 
         force, _ = calc_force_prism(m2, num_samples=30)
@@ -256,7 +256,7 @@ class TestAllag2009Validation:
         expected_fz = ALLAG2009_FZ[offset_idx]
 
         reset()
-        m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
         m2 = magnets.Prism(
             width=10, depth=10, height=10, Jr=1.0, center=(offset, 0, 20)
         )
@@ -271,14 +271,14 @@ class TestAllag2009Validation:
     def test_force_symmetry_positive_negative_offset(self):
         """Test that Fx(-offset) = -Fx(offset) (antisymmetry)."""
         reset()
-        m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
         m2_pos = magnets.Prism(
             width=10, depth=10, height=10, Jr=1.0, center=(10, 0, 20)
         )
         force_pos, _ = calc_force_prism(m2_pos, num_samples=20)
 
         reset()
-        m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
         m2_neg = magnets.Prism(
             width=10, depth=10, height=10, Jr=1.0, center=(-10, 0, 20)
         )
@@ -306,7 +306,7 @@ class TestOConnell2020Validation:
     def test_asymmetric_configuration_force(self, oconnell_tolerance):
         """Test force at offset=0 against O'Connell2020."""
         reset()
-        m1 = magnets.Prism(width=20, depth=12, height=6, Jr=0.38, center=(0, 0, 0))
+        magnets.Prism(width=20, depth=12, height=6, Jr=0.38, center=(0, 0, 0))
         m2 = magnets.Prism(width=12, depth=20, height=6, Jr=0.38, center=(-4, -4, 8))
 
         # Compute force on m2 (upper magnet) to match reference convention
@@ -324,7 +324,7 @@ class TestOConnell2020Validation:
     def test_asymmetric_configuration_torque(self, oconnell_tolerance):
         """Test torque at offset=0 against O'Connell2020."""
         reset()
-        m1 = magnets.Prism(width=20, depth=12, height=6, Jr=0.38, center=(0, 0, 0))
+        magnets.Prism(width=20, depth=12, height=6, Jr=0.38, center=(0, 0, 0))
         m2 = magnets.Prism(width=12, depth=20, height=6, Jr=0.38, center=(-4, -4, 8))
 
         # Compute torque on m2 (upper magnet) to match reference convention
@@ -347,7 +347,7 @@ class TestOConnell2020Validation:
         offset = OCONNELL_OFFSETS[offset_idx]
 
         reset()
-        m1 = magnets.Prism(width=20, depth=12, height=6, Jr=0.38, center=(0, 0, 0))
+        magnets.Prism(width=20, depth=12, height=6, Jr=0.38, center=(0, 0, 0))
         m2 = magnets.Prism(
             width=12, depth=20, height=6, Jr=0.38, center=(-4 + offset, -4, 8)
         )
@@ -369,7 +369,7 @@ class TestForcePhysicalConsistency:
 
     def test_attraction_force_negative_z(self, allag2009_magnets):
         """Two aligned magnets should attract (negative Fz for upper magnet pulling down)."""
-        m1, m2 = allag2009_magnets
+        _m1, m2 = allag2009_magnets
         force, _ = calc_force_prism(m2, num_samples=20)
 
         # m2 is above m1, both magnetized in same direction
@@ -382,9 +382,7 @@ class TestForcePhysicalConsistency:
         for gap in [15, 20, 30, 50]:  # mm gap between magnet centers
             reset()
             m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-            m2 = magnets.Prism(
-                width=10, depth=10, height=10, Jr=1.0, center=(0, 0, gap)
-            )
+            magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, gap))
             force, _ = calc_force_prism(m1, num_samples=15)
             forces.append(np.linalg.norm(force))
 
@@ -396,16 +394,12 @@ class TestForcePhysicalConsistency:
         """Reversing one magnet's magnetization should reverse force direction."""
         reset()
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2_aligned = magnets.Prism(
-            width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 20)
-        )
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 20))
         force_aligned, _ = calc_force_prism(m1, num_samples=15)
 
         reset()
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2_anti = magnets.Prism(
-            width=10, depth=10, height=10, Jr=-1.0, center=(0, 0, 20)
-        )
+        magnets.Prism(width=10, depth=10, height=10, Jr=-1.0, center=(0, 0, 20))
         force_anti, _ = calc_force_prism(m1, num_samples=15)
 
         # Fz should have opposite signs

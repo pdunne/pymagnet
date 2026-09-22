@@ -119,7 +119,7 @@ class Polygon:
         N = int(N)
 
         if N < 3:
-            raise Exception("Error, N must be > 2.")
+            raise ValueError("Error, N must be > 2.")
 
         apothem = kwargs.pop("apothem", None)
         length = kwargs.pop("length", None)
@@ -167,7 +167,9 @@ class Polygon:
         elif radius is not None:
             return radius
         else:
-            raise Exception("Error, one of apothem, length, or radius must be defined.")
+            raise ValueError(
+                "Error, one of apothem, length, or radius must be defined."
+            )
 
 
 class LineUtils:
@@ -391,7 +393,7 @@ class PolyMagnet(Magnet2D):
         if self.custom_polygon:
             vertices = kwargs.pop("vertices", None)
             if vertices is None:
-                raise Exception("Error, no vertices were defined.")
+                raise ValueError("Error, no vertices were defined.")
 
             vertices = _np.atleast_2d(vertices)
 

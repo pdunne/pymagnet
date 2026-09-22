@@ -78,7 +78,7 @@ def rotate_points_2D(x, y, alpha):
     x = _np.atleast_1d(x)
     y = _np.atleast_1d(y)
     if len(x) != len(y):
-        raise Exception("Must have same number of points in x and y")
+        raise ValueError("Must have same number of points in x and y")
 
     rot_matrix = _np.array(
         [[_np.cos(alpha), -_np.sin(alpha)], [_np.sin(alpha), _np.cos(alpha)]]

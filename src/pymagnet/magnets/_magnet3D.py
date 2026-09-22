@@ -15,6 +15,7 @@ TODO: Update __str__ and __repr__ methods to show orientation and magnetisation
 from os import environ as _environ
 
 import numpy as _np
+
 from ..utils._elliptic import cel as _cel
 from ..utils._quaternion import Quaternion, q_angle_from_axis
 from ..utils.global_const import MAG_TOL, PI
@@ -635,9 +636,7 @@ class Prism(Magnet3D):
 
 
 class Cube(Prism):
-    """Cube 3D Magnet Class
-
-    """
+    """Cube 3D Magnet Class"""
 
     mag_type = "Cube"
 
@@ -813,14 +812,10 @@ class Cylinder(Magnet3D):
 
         kn = _np.sqrt((zn_sq + nrho_a_sq) / (zn_sq + rho_a_sq))
 
-        Brho = B0 * (
-            alphap * _cel(kp, 1, 1, -1)
-            - alphan * _cel(kn, 1, 1, -1)
-        )
+        Brho = B0 * (alphap * _cel(kp, 1, 1, -1) - alphan * _cel(kn, 1, 1, -1))
 
         Bz = (B0 * a / (a + rho)) * (
-            betap * _cel(kp, gamma**2, 1, gamma)
-            - betan * _cel(kn, gamma**2, 1, gamma)
+            betap * _cel(kp, gamma**2, 1, gamma) - betan * _cel(kn, gamma**2, 1, gamma)
         )
         return Brho, Bz
 

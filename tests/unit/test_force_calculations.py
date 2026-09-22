@@ -42,7 +42,7 @@ class TestCalcForcePrism:
     def test_torque_shape_is_3d(self, prism_pair_aligned):
         """Torque array has shape (3,)."""
         m1, _m2 = prism_pair_aligned
-        force, torque = calc_force_prism(m1, num_samples=5)
+        _force, torque = calc_force_prism(m1, num_samples=5)
         assert torque.shape == (3,)
 
     def test_force_values_are_finite(self, prism_pair_aligned):
@@ -54,7 +54,7 @@ class TestCalcForcePrism:
     def test_torque_values_are_finite(self, prism_pair_aligned):
         """Torque values should be finite (no NaN or inf)."""
         m1, _m2 = prism_pair_aligned
-        force, torque = calc_force_prism(m1, num_samples=5)
+        _force, torque = calc_force_prism(m1, num_samples=5)
         assert np.all(np.isfinite(torque))
 
 
@@ -77,7 +77,7 @@ class TestCalcForceCylinder:
     def test_torque_shape_is_3d(self, cylinder_pair_aligned):
         """Torque array has shape (3,)."""
         m1, _m2 = cylinder_pair_aligned
-        force, torque = calc_force_cylinder(m1, num_segments=5)
+        _force, torque = calc_force_cylinder(m1, num_segments=5)
         assert torque.shape == (3,)
 
     def test_force_values_are_finite(self, cylinder_pair_aligned):
@@ -89,7 +89,7 @@ class TestCalcForceCylinder:
     def test_torque_values_are_finite(self, cylinder_pair_aligned):
         """Torque values should be finite."""
         m1, _m2 = cylinder_pair_aligned
-        force, torque = calc_force_cylinder(m1, num_segments=5)
+        _force, torque = calc_force_cylinder(m1, num_segments=5)
         assert np.all(np.isfinite(torque))
 
 
@@ -112,7 +112,7 @@ class TestCalcForceSphere:
     def test_torque_shape_is_3d(self, sphere_pair_aligned):
         """Torque array has shape (3,)."""
         m1, _m2 = sphere_pair_aligned
-        force, torque = calc_force_sphere(m1, num_samples=10)
+        _force, torque = calc_force_sphere(m1, num_samples=10)
         assert torque.shape == (3,)
 
     def test_force_values_are_finite(self, sphere_pair_aligned):
@@ -124,7 +124,7 @@ class TestCalcForceSphere:
     def test_torque_values_are_finite(self, sphere_pair_aligned):
         """Torque values should be finite."""
         m1, _m2 = sphere_pair_aligned
-        force, torque = calc_force_sphere(m1, num_samples=10)
+        _force, torque = calc_force_sphere(m1, num_samples=10)
         assert np.all(np.isfinite(torque))
 
 
@@ -175,7 +175,7 @@ class TestForceDirection:
 
     def test_aligned_magnets_attract_along_z(self, prism_pair_aligned):
         """Two magnets with same magnetization direction attract (negative Fz on upper)."""
-        m1, m2 = prism_pair_aligned
+        _m1, m2 = prism_pair_aligned
         # m1 at z=0, m2 at z=25, both Jr=+1.0 (magnetized in +z)
         # m2 should be pulled toward m1 (negative z direction)
         force2, _ = calc_force_prism(m2, num_samples=10)
@@ -183,7 +183,7 @@ class TestForceDirection:
 
     def test_anti_aligned_magnets_repel(self, prism_pair_anti_aligned):
         """Two magnets with opposite magnetization repel."""
-        m1, m2 = prism_pair_anti_aligned
+        _m1, m2 = prism_pair_anti_aligned
         # m1 at z=0 with Jr=+1.0, m2 at z=25 with Jr=-1.0
         # Opposite poles face each other, should repel
         force2, _ = calc_force_prism(m2, num_samples=10)
@@ -207,7 +207,7 @@ class TestSymmetryConditions:
         self, prism_pair_aligned, force_tolerance
     ):
         """On-axis pair should have zero lateral force (Fx=Fy=0)."""
-        m1, m2 = prism_pair_aligned
+        m1, _m2 = prism_pair_aligned
         # Both magnets on z-axis, symmetric about it
         force1, _ = calc_force_prism(m1, num_samples=10)
 
@@ -219,7 +219,7 @@ class TestSymmetryConditions:
         self, prism_pair_aligned, force_tolerance
     ):
         """Aligned magnets on z-axis should have minimal torque."""
-        m1, m2 = prism_pair_aligned
+        m1, _m2 = prism_pair_aligned
         _, torque1 = calc_force_prism(m1, num_samples=10)
 
         # Torque should be very small due to symmetry
@@ -237,12 +237,12 @@ class TestForceScaling:
         """Force should scale with Jr^2 (both magnets have same Jr)."""
         reset()
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
         force_ref, _ = calc_force_prism(m1, num_samples=8)
 
         reset()
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=Jr, center=(0, 0, 0))
-        m2 = magnets.Prism(width=10, depth=10, height=10, Jr=Jr, center=(0, 0, 25))
+        magnets.Prism(width=10, depth=10, height=10, Jr=Jr, center=(0, 0, 25))
         force_Jr, _ = calc_force_prism(m1, num_samples=8)
 
         # Force scales as Jr^2 since both magnets scale
@@ -265,18 +265,16 @@ class TestUnitScaling:
         # Using mm
         reset()
         m1_mm = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2_mm = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
-        force_mm, torque_mm = calc_force_prism(m1_mm, num_samples=8, unit="mm")
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
+        force_mm, _torque_mm = calc_force_prism(m1_mm, num_samples=8, unit="mm")
 
         # Using m (convert dimensions)
         reset()
         m1_m = magnets.Prism(
             width=0.01, depth=0.01, height=0.01, Jr=1.0, center=(0, 0, 0)
         )
-        m2_m = magnets.Prism(
-            width=0.01, depth=0.01, height=0.01, Jr=1.0, center=(0, 0, 0.025)
-        )
-        force_m, torque_m = calc_force_prism(m1_m, num_samples=8, unit="m")
+        magnets.Prism(width=0.01, depth=0.01, height=0.01, Jr=1.0, center=(0, 0, 0.025))
+        force_m, _torque_m = calc_force_prism(m1_m, num_samples=8, unit="m")
 
         # Forces should be equal (same physical configuration)
         # Use atol for near-zero components (x, y) and rtol for significant component (z)
@@ -291,7 +289,7 @@ class TestRegistryInteraction:
 
     def test_force_excludes_self(self, prism_pair_aligned):
         """Force calculation should not include self-interaction."""
-        m1, m2 = prism_pair_aligned
+        m1, _m2 = prism_pair_aligned
         # Should not crash or give NaN from self-interaction
         force, torque = calc_force_prism(m1, num_samples=5)
         assert np.all(np.isfinite(force))
@@ -301,12 +299,12 @@ class TestRegistryInteraction:
         """Force on magnet should include contributions from all other magnets."""
         reset()
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
 
         force_2mag, _ = calc_force_prism(m1, num_samples=8)
 
         # Add a third magnet
-        m3 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, -25))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, -25))
         force_3mag, _ = calc_force_prism(m1, num_samples=8)
 
         # With symmetric third magnet, z-force should decrease (forces partially cancel)
@@ -317,7 +315,7 @@ class TestRegistryInteraction:
         """After reset(), force on single magnet should be zero."""
         reset()
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
 
         force_before, _ = calc_force_prism(m1, num_samples=5)
         assert np.linalg.norm(force_before) > 0  # Non-zero force
@@ -340,16 +338,12 @@ class TestNumericalStability:
         """Distant magnets should have small force."""
         reset()
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2_close = magnets.Prism(
-            width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25)
-        )
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 25))
         force_close, _ = calc_force_prism(m1, num_samples=8)
 
         reset()
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2_far = magnets.Prism(
-            width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 100)
-        )
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 100))
         force_far, _ = calc_force_prism(m1, num_samples=8)
 
         # Far magnet should produce smaller force
@@ -360,7 +354,7 @@ class TestNumericalStability:
         reset()
         # Gap of 1mm between 10mm cubes
         m1 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 0))
-        m2 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 11))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 11))
 
         force, torque = calc_force_prism(m1, num_samples=10)
         assert np.all(np.isfinite(force))
@@ -370,7 +364,7 @@ class TestNumericalStability:
         """Rotated magnets should give finite force."""
         reset()
         # Create a second magnet to interact with
-        m2 = magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 50))
+        magnets.Prism(width=10, depth=10, height=10, Jr=1.0, center=(0, 0, 50))
 
         force, torque = calc_force_prism(prism_rotated, num_samples=8)
         assert np.all(np.isfinite(force))
@@ -386,7 +380,7 @@ class TestConvergence:
 
     def test_prism_force_converges_with_num_samples(self, prism_pair_aligned):
         """Force should converge as num_samples increases."""
-        m1, m2 = prism_pair_aligned
+        m1, _m2 = prism_pair_aligned
 
         forces = []
         for num_samples in [5, 10, 20, 40]:

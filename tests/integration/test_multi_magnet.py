@@ -18,7 +18,7 @@ class TestFieldSuperposition2D:
     def test_two_magnets_field_adds(self):
         """Fields from two magnets superimpose."""
         # Create single magnet and measure field
-        m1 = magnets.Rectangle(width=10.0, height=20.0, Jr=1.0, center=(0.0, 0.0))
+        magnets.Rectangle(width=10.0, height=20.0, Jr=1.0, center=(0.0, 0.0))
         points = grid2D(30.0, 30.0, num_points=5)
         field_single = get_field_2D(points)
         Bx_single = field_single.x.copy()
@@ -40,8 +40,8 @@ class TestFieldSuperposition2D:
         m2 = magnets.Rectangle(width=10.0, height=20.0, Jr=-1.0, center=(15.0, 0.0))
 
         # Field at origin should have reduced magnitude
-        Bx, By = m1.get_field(0.0, 0.0)
-        Bx2, By2 = m2.get_field(0.0, 0.0)
+        Bx, _By = m1.get_field(0.0, 0.0)
+        Bx2, _By2 = m2.get_field(0.0, 0.0)
 
         # At origin between them, fields partially cancel
         # Total field magnitude should be less than either individual

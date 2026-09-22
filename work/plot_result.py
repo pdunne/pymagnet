@@ -1,7 +1,6 @@
 """Calculates and plots the magnetic field due to rectangular magnet arrays."""
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 import pymagnet as pm
 import pymagnet.plots as mplt
@@ -165,13 +164,13 @@ def main():
     plt.close(fig)
 
     # Jacobian 2x2 panel (all 4 partial derivatives)
-    fig, axes = mplt.plot_2D_contour_jacobian(
+    fig, _axes = mplt.plot_2D_contour_jacobian(
         grid_points, field_grid, cmap="RdBu_r", num_levels=15
     )
     fig.savefig(f"double_halbach_{N:02d}_offset{mag_offset:01d}_jacobian.pdf", dpi=200)
     plt.close(fig)
 
-    fig, ax = mplt.plot_2D_contour_gradB(
+    fig, _ax = mplt.plot_2D_contour_gradB(
         grid_points, field_grid, cmax=0.5, show_magnets=True
     )
 

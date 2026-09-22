@@ -104,7 +104,7 @@ def main():
     print("\nWarming up numba JIT compilation...")
 
     # Warmup with smallest mesh
-    first_file = list(available.values())[0]
+    first_file = next(iter(available.values()))
     pm.reset()
     warmup_mesh = pm.magnets.Mesh(first_file, Jr=1.0)
     _ = warmup_mesh.get_field(0.0, 0.0, 5.0)  # parallel=True is default

@@ -66,6 +66,7 @@ REPORTS_DIR = os.path.join(PROJECT_ROOT, "reports", "profiling")
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _format_time(seconds):
     if seconds < 1e-6:
         return f"{seconds * 1e9:.1f} ns"
@@ -94,6 +95,7 @@ def _stl(name):
 # ---------------------------------------------------------------------------
 # Scenario factories
 # ---------------------------------------------------------------------------
+
 
 def _make_scenarios(pm):
     """Build and return a list of (name, description, callable) tuples.
@@ -131,11 +133,13 @@ def _make_scenarios(pm):
     def scenario_analytic_cube():
         cube.get_field(X3d, Y3d, Z3d)
 
-    scenarios.append((
-        "analytic_cube",
-        f"Cube.get_field() — 20×20×20 grid ({X3d.size} pts)",
-        scenario_analytic_cube,
-    ))
+    scenarios.append(
+        (
+            "analytic_cube",
+            f"Cube.get_field() — 20×20×20 grid ({X3d.size} pts)",
+            scenario_analytic_cube,
+        )
+    )
 
     # ------------------------------------------------------------------
     # 2. Analytic Cylinder
@@ -146,11 +150,13 @@ def _make_scenarios(pm):
     def scenario_analytic_cylinder():
         cylinder.get_field(X3d, Y3d, Z3d)
 
-    scenarios.append((
-        "analytic_cylinder",
-        f"Cylinder.get_field() — 20×20×20 grid ({X3d.size} pts)",
-        scenario_analytic_cylinder,
-    ))
+    scenarios.append(
+        (
+            "analytic_cylinder",
+            f"Cylinder.get_field() — 20×20×20 grid ({X3d.size} pts)",
+            scenario_analytic_cylinder,
+        )
+    )
 
     # ------------------------------------------------------------------
     # 3. Mesh — small (cube STL)
@@ -164,18 +170,23 @@ def _make_scenarios(pm):
         def scenario_mesh_small():
             mesh_small.get_field(X2d, Y2d, Z2d_plane)
 
-        scenarios.append((
-            "mesh_small",
-            f"Mesh.get_field() — cube STL ({n_tri_small} tri), 10×10 grid ({X2d.size} pts)",
-            scenario_mesh_small,
-        ))
+        scenarios.append(
+            (
+                "mesh_small",
+                f"Mesh.get_field() — cube STL ({n_tri_small} tri), 10×10 grid ({X2d.size} pts)",
+                scenario_mesh_small,
+            )
+        )
     else:
         print(f"  [skip] mesh_small — {cube_stl} not found")
 
     # ------------------------------------------------------------------
     # 4. Mesh — large (bunny_500 or star as fallback)
     # ------------------------------------------------------------------
-    for mesh_name, label in [("Stanford_Bunny_500.stl", "bunny_500"), ("star.stl", "star")]:
+    for mesh_name, label in [
+        ("Stanford_Bunny_500.stl", "bunny_500"),
+        ("star.stl", "star"),
+    ]:
         large_stl = _stl(mesh_name)
         if os.path.exists(large_stl):
             pm.reset()
@@ -185,11 +196,13 @@ def _make_scenarios(pm):
             def scenario_mesh_large(m=mesh_large):
                 m.get_field(X_lg, Y_lg, Z_lg)
 
-            scenarios.append((
-                "mesh_large",
-                f"Mesh.get_field() — {label} ({n_tri_large} tri), 20×20 grid ({X_lg.size} pts)",
-                scenario_mesh_large,
-            ))
+            scenarios.append(
+                (
+                    "mesh_large",
+                    f"Mesh.get_field() — {label} ({n_tri_large} tri), 20×20 grid ({X_lg.size} pts)",
+                    scenario_mesh_large,
+                )
+            )
             break
     else:
         print("  [skip] mesh_large — no suitable STL found")
@@ -200,9 +213,14 @@ def _make_scenarios(pm):
     x_stress = np.linspace(-40, 40, 20)
     y_stress = np.linspace(-40, 40, 20)
     z_stress = np.linspace(-40, 40, 20)
-    X_stress, Y_stress, Z_stress = np.meshgrid(x_stress, y_stress, z_stress, indexing="ij")
+    X_stress, Y_stress, Z_stress = np.meshgrid(
+        x_stress, y_stress, z_stress, indexing="ij"
+    )
 
-    for mesh_name, label in [("Stanford_Bunny_10000.stl", "bunny_10000"), ("Stanford_Bunny_500.stl", "bunny_500")]:
+    for mesh_name, label in [
+        ("Stanford_Bunny_10000.stl", "bunny_10000"),
+        ("Stanford_Bunny_500.stl", "bunny_500"),
+    ]:
         stress_stl = _stl(mesh_name)
         if os.path.exists(stress_stl):
             pm.reset()
@@ -212,29 +230,35 @@ def _make_scenarios(pm):
             def scenario_mesh_stress(m=mesh_stress):
                 m.get_field(X_stress, Y_stress, Z_stress)
 
-            scenarios.append((
-                "mesh_stress",
-                f"Mesh.get_field() — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
-                scenario_mesh_stress,
-            ))
+            scenarios.append(
+                (
+                    "mesh_stress",
+                    f"Mesh.get_field() — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
+                    scenario_mesh_stress,
+                )
+            )
 
             def scenario_mesh_stress_pts(m=mesh_stress):
                 m._get_field_parallel_pts(X_stress, Y_stress, Z_stress)
 
-            scenarios.append((
-                "mesh_stress_pts",
-                f"Mesh._get_field_parallel_pts() — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
-                scenario_mesh_stress_pts,
-            ))
+            scenarios.append(
+                (
+                    "mesh_stress_pts",
+                    f"Mesh._get_field_parallel_pts() — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
+                    scenario_mesh_stress_pts,
+                )
+            )
 
             def scenario_mesh_stress_pts_cut(m=mesh_stress):
                 m._get_field_parallel_pts(X_stress, Y_stress, Z_stress, r_cut=40.0)
 
-            scenarios.append((
-                "mesh_stress_pts_cut",
-                f"Mesh._get_field_parallel_pts(r_cut=40) — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
-                scenario_mesh_stress_pts_cut,
-            ))
+            scenarios.append(
+                (
+                    "mesh_stress_pts_cut",
+                    f"Mesh._get_field_parallel_pts(r_cut=40) — {label} ({n_tri_stress} tri), 20×20×20 3D grid ({X_stress.size} pts)",
+                    scenario_mesh_stress_pts_cut,
+                )
+            )
             # ------------------------------------------------------------------
             # 5b. Multi-magnet fused path
             # ------------------------------------------------------------------
@@ -248,23 +272,26 @@ def _make_scenarios(pm):
                 # get_field returns (Bx, By, Bz) tuple
                 Bxa, Bya, Bza = a.get_field(X_stress, Y_stress, Z_stress)
                 Bxb, Byb, Bzb = b.get_field(X_stress, Y_stress, Z_stress)
-                import numpy as _np2
                 _ = (Bxa + Bxb, Bya + Byb, Bza + Bzb)
 
-            scenarios.append((
-                "mesh_multi_seq",
-                f"2×Mesh.get_field() sequential + sum — {label} ×2 ({n_tri_stress*2} total tri)",
-                scenario_mesh_multi_seq,
-            ))
+            scenarios.append(
+                (
+                    "mesh_multi_seq",
+                    f"2×Mesh.get_field() sequential + sum — {label} ×2 ({n_tri_stress * 2} total tri)",
+                    scenario_mesh_multi_seq,
+                )
+            )
 
             def scenario_mesh_multi_fused(a=ma, b=mb):
                 pm.magnets.get_total_field_mesh([a, b], X_stress, Y_stress, Z_stress)
 
-            scenarios.append((
-                "mesh_multi_fused",
-                f"get_total_field_mesh([m1,m2]) — {label} ×2 ({n_tri_stress*2} total tri)",
-                scenario_mesh_multi_fused,
-            ))
+            scenarios.append(
+                (
+                    "mesh_multi_fused",
+                    f"get_total_field_mesh([m1,m2]) — {label} ×2 ({n_tri_stress * 2} total tri)",
+                    scenario_mesh_multi_fused,
+                )
+            )
 
             break
     else:
@@ -280,28 +307,34 @@ def _make_scenarios(pm):
     def scenario_prism_force():
         pm.forces.calc_force_prism(cube_force_target, num_samples=10)
 
-    scenarios.append((
-        "prism_force",
-        "calc_force_prism() — two 10mm cubes, 10 samples/face",
-        scenario_prism_force,
-    ))
+    scenarios.append(
+        (
+            "prism_force",
+            "calc_force_prism() — two 10mm cubes, 10 samples/face",
+            scenario_prism_force,
+        )
+    )
 
     # ------------------------------------------------------------------
     # 6. Mesh force (cube STL + Prism source)
     # ------------------------------------------------------------------
     if os.path.exists(cube_stl):
         pm.reset()
-        pm.magnets.Prism(width=10.0, depth=10.0, height=10.0, Jr=1.0, center=[0.0, 0.0, 0.0])
+        pm.magnets.Prism(
+            width=10.0, depth=10.0, height=10.0, Jr=1.0, center=[0.0, 0.0, 0.0]
+        )
         mesh_force_target = pm.magnets.Mesh(cube_stl, Jr=1.0, center=[0.0, 0.0, 15.0])
 
         def scenario_mesh_force(m=mesh_force_target):
             m.get_force_torque(depth=2)
 
-        scenarios.append((
-            "mesh_force",
-            "Mesh.get_force_torque() — cube STL vs Prism source, depth=2",
-            scenario_mesh_force,
-        ))
+        scenarios.append(
+            (
+                "mesh_force",
+                "Mesh.get_force_torque() — cube STL vs Prism source, depth=2",
+                scenario_mesh_force,
+            )
+        )
 
     return scenarios
 
@@ -309,6 +342,7 @@ def _make_scenarios(pm):
 # ---------------------------------------------------------------------------
 # Warm-up
 # ---------------------------------------------------------------------------
+
 
 def _warmup(pm):
     """Trigger Numba JIT compilation before any timed run."""
@@ -319,7 +353,7 @@ def _warmup(pm):
         m = pm.magnets.Mesh(cube_stl, Jr=1.0)
         x0, y0, z0 = np.array([0.0]), np.array([0.0]), np.array([5.0])
         m.get_field(x0, y0, z0, parallel=False)
-        m.get_field(x0, y0, z0)   # parallel=True
+        m.get_field(x0, y0, z0)  # parallel=True
     else:
         # Fallback: Cube field to warm up analytic kernels
         pm.reset()
@@ -332,6 +366,7 @@ def _warmup(pm):
 # ---------------------------------------------------------------------------
 # Wall-clock summary
 # ---------------------------------------------------------------------------
+
 
 def run_summary(pm, scenarios, n_runs=5):
     col_name = 40
@@ -355,6 +390,7 @@ def run_summary(pm, scenarios, n_runs=5):
 # ---------------------------------------------------------------------------
 # cProfile
 # ---------------------------------------------------------------------------
+
 
 def run_cprofile(pm, scenarios, top_n=20):
     os.makedirs(PROFILES_DIR, exist_ok=True)
@@ -380,14 +416,15 @@ def run_cprofile(pm, scenarios, top_n=20):
         print(f"Profile saved: {prof_path}")
         print(summary)
 
-    print(f"\nTo explore interactively:")
-    print(f"  pip install snakeviz")
+    print("\nTo explore interactively:")
+    print("  pip install snakeviz")
     print(f"  snakeviz {PROFILES_DIR}/<scenario>.prof")
 
 
 # ---------------------------------------------------------------------------
 # line_profiler
 # ---------------------------------------------------------------------------
+
 
 def run_line_profiler(pm, scenarios):
     """Instrument known hot functions with line_profiler and print results."""
@@ -401,10 +438,10 @@ def run_line_profiler(pm, scenarios):
     # Note: @njit functions are opaque to line_profiler unless
     # NUMBA_DISABLE_JIT=1 is set — instrument the Python-level wrappers
     # instead, which dispatch into them.
-    from pymagnet.utils._elliptic import cel
-    from pymagnet.magnets._polygon3D import Mesh
-    from pymagnet.magnets._magnet3D import Prism, Cube, Cylinder
     from pymagnet.forces._prism_force import calc_force_prism
+    from pymagnet.magnets._magnet3D import Cylinder, Prism
+    from pymagnet.magnets._polygon3D import Mesh
+    from pymagnet.utils._elliptic import cel
 
     hotspots = [
         # (label, function_object)
@@ -435,7 +472,7 @@ def run_line_profiler(pm, scenarios):
             print(f"  [skip] cannot instrument {label} (not a pure-Python function)")
 
     print("Running line_profiler on all scenarios...\n")
-    for name, desc, func in scenarios:
+    for name, _desc, func in scenarios:
         print(f"  Profiling: {name}")
         lp.enable_by_count()
         func()
@@ -452,8 +489,8 @@ def run_line_profiler(pm, scenarios):
 
 # Scaling metadata for mesh scenarios (triangles, points)
 _MESH_SCALING = {
-    "mesh_small":  None,   # filled at runtime from scenario description
-    "mesh_large":  None,
+    "mesh_small": None,  # filled at runtime from scenario description
+    "mesh_large": None,
     "mesh_stress": None,
 }
 
@@ -489,7 +526,9 @@ _LINE_PROFILER_FINDINGS = [
 
 _RECOMMENDATIONS = [
     (
-        1, "DONE", "Critical",
+        1,
+        "DONE",
+        "Critical",
         "`_get_field_parallel_njit` race condition fixed",
         "magnets/_polygon3D.py",
         "The old triangles-outer `prange` kernel had a race condition: every thread "
@@ -499,7 +538,9 @@ _RECOMMENDATIONS = [
         "Single-thread residual vs serial is now ~5e-11 (FP accumulation order only).",
     ),
     (
-        2, "Low", "Medium",
+        2,
+        "Low",
+        "Medium",
         "`_magnet3D._calcB_prism_z` / `_F1` / `_F2`",
         "magnets/_magnet3D.py",
         "`_F1` and `_F2` are called 8× per `get_field()` invocation. "
@@ -507,7 +548,9 @@ _RECOMMENDATIONS = [
         "pre-computed once per magnet rather than per evaluation.",
     ),
     (
-        3, "Medium", "Medium",
+        3,
+        "Medium",
+        "Medium",
         "`_mesh_force.calc_force_mesh`",
         "forces/_mesh_force.py",
         "The triangle loop (`for i in range(len(mesh_vectors))`) is pure Python "
@@ -516,7 +559,9 @@ _RECOMMENDATIONS = [
         "into a `@njit(parallel=True)` kernel.",
     ),
     (
-        4, "Low", "Low",
+        4,
+        "Low",
+        "Low",
         "`Cylinder._get_field_internal` coordinate conversion",
         "magnets/_magnet3D.py",
         "`cart2pol` and `pol2cart` each allocate and traverse the full array. "
@@ -560,8 +605,9 @@ def run_report(pm, scenarios, n_runs=5):
     # 2. Infer mesh scaling denominators from description strings
     for name, (desc, _) in timings.items():
         import re
+
         tri_match = re.search(r"(\d[\d,]+)\s+tri", desc)
-        pt_match  = re.search(r"(\d[\d,]+)\s+pts", desc)
+        pt_match = re.search(r"(\d[\d,]+)\s+pts", desc)
         if tri_match and pt_match:
             n_tri = int(tri_match.group(1).replace(",", ""))
             n_pts = int(pt_match.group(1).replace(",", ""))
@@ -570,6 +616,7 @@ def run_report(pm, scenarios, n_runs=5):
     # 3. Try to get Numba thread count
     try:
         import numba
+
         n_threads = numba.get_num_threads()
     except Exception:
         n_threads = os.environ.get("OMP_NUM_THREADS", "auto")
@@ -630,12 +677,14 @@ def run_report(pm, scenarios, n_runs=5):
     w("")
     w("| Scenario | Median | Triangles | Eval points | ns / (tri · pt) |")
     w("|---|---|---|---|---|")
-    for name, (desc, t) in timings.items():
+    for name, (_desc, t) in timings.items():
         scaling = _MESH_SCALING.get(name)
         if scaling:
             n_tri, n_pts = scaling
             ns_per_op = t * 1e9 / (n_tri * n_pts)
-            w(f"| `{name}` | {_format_time(t)} | {n_tri:,} | {n_pts:,} | {ns_per_op:.2f} |")
+            w(
+                f"| `{name}` | {_format_time(t)} | {n_tri:,} | {n_pts:,} | {ns_per_op:.2f} |"
+            )
     w("")
     w("**Interpretation:** lower ns/op indicates better parallel efficiency.")
     w("`mesh_stress` (largest problem) should show the lowest ns/op if the")
@@ -700,7 +749,11 @@ def run_culling_diagnostic(pm):
         return
 
     # Find the same mesh as mesh_stress
-    for mesh_name, label in [("Stanford_Bunny_10000.stl", "bunny_10000"), ("Stanford_Bunny_500.stl", "bunny_500")]:
+    # `label` is deliberately used after the loop, below.
+    for mesh_name, label in [  # noqa: B007
+        ("Stanford_Bunny_10000.stl", "bunny_10000"),
+        ("Stanford_Bunny_500.stl", "bunny_500"),
+    ]:
         stress_stl = _stl(mesh_name)
         if os.path.exists(stress_stl):
             break
@@ -710,7 +763,7 @@ def run_culling_diagnostic(pm):
 
     pm.reset()
     m = pm.magnets.Mesh(stress_stl, Jr=1.0)
-    centroids = m.mesh_vectors.mean(axis=1)   # (N_tri, 3)
+    centroids = m.mesh_vectors.mean(axis=1)  # (N_tri, 3)
     n_tri = len(centroids)
     pm.reset()
 
@@ -725,10 +778,14 @@ def run_culling_diagnostic(pm):
     tree = KDTree(centroids)
 
     print(f"\nCulling fraction — {label} ({n_tri} tri), {n_pts} eval pts")
-    print(f"{'r_cut (mm)':>12} {'mean kept':>12} {'min kept':>10} {'max kept':>10} {'max speedup':>12}")
+    print(
+        f"{'r_cut (mm)':>12} {'mean kept':>12} {'min kept':>10} {'max kept':>10} {'max speedup':>12}"
+    )
     print("-" * 60)
     for r_cut in [20, 40, 60, 80, 100, 150]:
-        counts = np.array(tree.query_ball_point(pts, r=float(r_cut), return_length=True))
+        counts = np.array(
+            tree.query_ball_point(pts, r=float(r_cut), return_length=True)
+        )
         fracs = counts / n_tri
         mean_kept = fracs.mean()
         speedup = 1.0 / mean_kept if mean_kept > 0 else float("inf")
@@ -742,6 +799,7 @@ def run_culling_diagnostic(pm):
 # ---------------------------------------------------------------------------
 # snakeviz launcher
 # ---------------------------------------------------------------------------
+
 
 def launch_snakeviz():
     os.makedirs(PROFILES_DIR, exist_ok=True)
@@ -757,6 +815,7 @@ def launch_snakeviz():
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
+
 
 def _parse_args():
     parser = argparse.ArgumentParser(

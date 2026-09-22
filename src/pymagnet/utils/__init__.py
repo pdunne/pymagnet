@@ -13,6 +13,14 @@ a public API, including:
 
 """
 
+from ._demag import (
+    DemagResult,
+    build_MH_interpolator,
+    solve_demag_tanh,
+    solve_demag_tanh_batch,
+    solve_demagnetization,
+    tanh_MH_model,
+)
 from ._point_structs import Point2, Point3
 from ._quaternion import Quaternion
 from ._routines2D import (
@@ -44,34 +52,26 @@ from ._vector_structs import (
     Point_Array2,
     Point_Array3,
 )
-from ._demag import (
-    DemagResult,
-    build_MH_interpolator,
-    solve_demagnetization,
-    solve_demag_tanh,
-    solve_demag_tanh_batch,
-    tanh_MH_model,
-)
 from .global_const import ALIGN_CUTOFF, FP_CUTOFF, MAG_TOL, MU0, PI, PI_2, PI_4
 
 __all__ = [
     "ALIGN_CUTOFF",
-    "BdotgradB_2D",
-    "BdotgradB_3D",
-    "DemagResult",
-    "FgradB_2D",
-    "FgradB_3D",
     "FP_CUTOFF",
-    "Field1",
-    "Field2",
-    "Field3",
-    "Jacobian2",
-    "Jacobian3",
     "MAG_TOL",
     "MU0",
     "PI",
     "PI_2",
     "PI_4",
+    "BdotgradB_2D",
+    "BdotgradB_3D",
+    "DemagResult",
+    "FgradB_2D",
+    "FgradB_3D",
+    "Field1",
+    "Field2",
+    "Field3",
+    "Jacobian2",
+    "Jacobian3",
     "Point2",
     "Point3",
     "Point_Array2",
@@ -93,9 +93,9 @@ __all__ = [
     "rotate_points_2D",
     "signed_area",
     "slice3D",
-    "solve_demagnetization",
     "solve_demag_tanh",
     "solve_demag_tanh_batch",
+    "solve_demagnetization",
     "tanh_MH_model",
 ]
 

@@ -379,7 +379,7 @@ class TestTrigonometryNumbaFunctions:
             ]
         )
 
-        q, rotated, offset, ra1, ra2 = _rotate_triangle_njit(triangle)
+        q, _rotated, _offset, ra1, ra2 = _rotate_triangle_njit(triangle)
 
         # Check quaternion is unit length
         assert np.isclose(quat_norm(q), 1.0)
@@ -404,12 +404,12 @@ class TestTrigonometryNumbaFunctions:
 
         for triangle in triangles:
             # Original function
-            q_orig, rot_orig, off_orig, ra1_orig, ra2_orig = _rotate_triangle(
+            _q_orig, _rot_orig, off_orig, ra1_orig, ra2_orig = _rotate_triangle(
                 triangle, 1.0
             )
 
             # Numba function
-            q_njit, rot_njit, off_njit, ra1_njit, ra2_njit = _rotate_triangle_njit(
+            _q_njit, _rot_njit, off_njit, ra1_njit, ra2_njit = _rotate_triangle_njit(
                 triangle
             )
 

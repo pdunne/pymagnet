@@ -157,7 +157,7 @@ class TestRotatePoints2D:
         """Mismatched x, y lengths raise exception."""
         x = np.array([1.0, 2.0])
         y = np.array([0.0])
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             rotate_points_2D(x, y, 0.0)
 
 

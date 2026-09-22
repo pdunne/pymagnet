@@ -70,9 +70,7 @@ class TestKernelVsNumpy3D:
         F = rng.standard_normal((10, 10, 10))
         dx, dy, dz = 0.5, 0.3, 0.8
 
-        numba_dx, numba_dy, numba_dz = _gradient_3d(
-            np.ascontiguousarray(F), dx, dy, dz
-        )
+        numba_dx, numba_dy, numba_dz = _gradient_3d(np.ascontiguousarray(F), dx, dy, dz)
         np_dx, np_dy, np_dz = np.gradient(F, dx, dy, dz)
 
         npt.assert_allclose(numba_dx, np_dx, atol=1e-12)
@@ -85,9 +83,7 @@ class TestKernelVsNumpy3D:
         F = rng.standard_normal((8, 12, 6))
         dx, dy, dz = 1.0, 0.5, 2.0
 
-        numba_dx, numba_dy, numba_dz = _gradient_3d(
-            np.ascontiguousarray(F), dx, dy, dz
-        )
+        numba_dx, numba_dy, numba_dz = _gradient_3d(np.ascontiguousarray(F), dx, dy, dz)
         np_dx, np_dy, np_dz = np.gradient(F, dx, dy, dz)
 
         npt.assert_allclose(numba_dx, np_dx, atol=1e-12)
@@ -100,9 +96,7 @@ class TestKernelVsNumpy3D:
         F = rng.standard_normal((3, 3, 3))
         dx, dy, dz = 1.0, 1.0, 1.0
 
-        numba_dx, numba_dy, numba_dz = _gradient_3d(
-            np.ascontiguousarray(F), dx, dy, dz
-        )
+        numba_dx, numba_dy, numba_dz = _gradient_3d(np.ascontiguousarray(F), dx, dy, dz)
         np_dx, np_dy, np_dz = np.gradient(F, dx, dy, dz)
 
         npt.assert_allclose(numba_dx, np_dx, atol=1e-12)

@@ -30,7 +30,7 @@ class TestCarlsonRF:
         assert val1 == pytest.approx(val3, abs=1e-10)
 
     def test_rf_vs_scipy(self):
-        sp = pytest.importorskip("scipy")
+        pytest.importorskip("scipy")
         from scipy.special import elliprf as sp_rf
 
         cases = [(0.0, 1.0, 1.0), (0.5, 1.0, 2.0), (1.0, 2.0, 3.0)]
@@ -40,7 +40,7 @@ class TestCarlsonRF:
 
 class TestCarlsonRD:
     def test_rd_vs_scipy(self):
-        sp = pytest.importorskip("scipy")
+        pytest.importorskip("scipy")
         from scipy.special import elliprd as sp_rd
 
         cases = [(0.0, 2.0, 1.0), (1.0, 2.0, 3.0), (0.5, 1.0, 1.5)]
@@ -53,12 +53,10 @@ class TestCarlsonRJ:
         """RJ(x, y, z, z) = RD(x, y, z)."""
         cases = [(0.0, 2.0, 1.0), (1.0, 2.0, 3.0)]
         for x, y, z in cases:
-            assert _elliprj(x, y, z, z) == pytest.approx(
-                _elliprd(x, y, z), rel=1e-6
-            )
+            assert _elliprj(x, y, z, z) == pytest.approx(_elliprd(x, y, z), rel=1e-6)
 
     def test_rj_vs_scipy(self):
-        sp = pytest.importorskip("scipy")
+        pytest.importorskip("scipy")
         from scipy.special import elliprj as sp_rj
 
         cases = [
@@ -67,9 +65,7 @@ class TestCarlsonRJ:
             (0.5, 1.0, 1.5, 2.0),
         ]
         for x, y, z, p in cases:
-            assert _elliprj(x, y, z, p) == pytest.approx(
-                sp_rj(x, y, z, p), rel=1e-6
-            )
+            assert _elliprj(x, y, z, p) == pytest.approx(sp_rj(x, y, z, p), rel=1e-6)
 
 
 # ---------------------------------------------------------------------------
@@ -78,13 +74,11 @@ class TestCarlsonRJ:
 class TestCelIdentities:
     def test_cel_1_1_1_1_is_pi_half(self):
         """cel(1, 1, 1, 1) = K(0) = π/2."""
-        assert float(cel(1.0, 1.0, 1.0, 1.0)) == pytest.approx(
-            math.pi / 2, abs=1e-10
-        )
+        assert float(cel(1.0, 1.0, 1.0, 1.0)) == pytest.approx(math.pi / 2, abs=1e-10)
 
     def test_cel_vs_ellipk(self):
         """cel(kc, 1, 1, 1) = K(k) where k² = 1 - kc²."""
-        sp = pytest.importorskip("scipy")
+        pytest.importorskip("scipy")
         from scipy.special import ellipk
 
         for kc in [0.01, 0.1, 0.3, 0.5, 0.7, 0.9, 0.99]:
@@ -97,7 +91,7 @@ class TestCelIdentities:
 
     def test_cel_vs_ellipe(self):
         """cel(kc, 1, 1, kc²) = E(k)."""
-        sp = pytest.importorskip("scipy")
+        pytest.importorskip("scipy")
         from scipy.special import ellipe
 
         for kc in [0.01, 0.1, 0.3, 0.5, 0.7, 0.9, 0.99]:
@@ -132,8 +126,12 @@ class TestThreeWayComparison:
         res_bulirsch = cel(self.KCS, p, c, s)
         res_carlson = cel_carlson(self.KCS, p, c, s)
 
-        np.testing.assert_allclose(res_bulirsch, ref, rtol=1e-10, err_msg="Bulirsch vs scipy K")
-        np.testing.assert_allclose(res_carlson, ref, rtol=1e-8, err_msg="Carlson vs scipy K")
+        np.testing.assert_allclose(
+            res_bulirsch, ref, rtol=1e-10, err_msg="Bulirsch vs scipy K"
+        )
+        np.testing.assert_allclose(
+            res_carlson, ref, rtol=1e-8, err_msg="Carlson vs scipy K"
+        )
 
     def test_E_three_way(self):
         """E(k): scipy ellipe vs Bulirsch vs Carlson."""
@@ -149,8 +147,12 @@ class TestThreeWayComparison:
         res_bulirsch = cel(self.KCS, p, c, s)
         res_carlson = cel_carlson(self.KCS, p, c, s)
 
-        np.testing.assert_allclose(res_bulirsch, ref, rtol=1e-10, err_msg="Bulirsch vs scipy E")
-        np.testing.assert_allclose(res_carlson, ref, rtol=1e-8, err_msg="Carlson vs scipy E")
+        np.testing.assert_allclose(
+            res_bulirsch, ref, rtol=1e-10, err_msg="Bulirsch vs scipy E"
+        )
+        np.testing.assert_allclose(
+            res_carlson, ref, rtol=1e-8, err_msg="Carlson vs scipy E"
+        )
 
 
 # ---------------------------------------------------------------------------

@@ -130,9 +130,7 @@ def validate_config(config: SimulationConfig) -> list[str]:
 
     # Validate dimension
     if config.dimension not in ("2D", "3D"):
-        errors.append(
-            f"Invalid dimension '{config.dimension}'. Must be '2D' or '3D'."
-        )
+        errors.append(f"Invalid dimension '{config.dimension}'. Must be '2D' or '3D'.")
 
     # Validate magnets
     if not config.magnets:
@@ -151,13 +149,11 @@ def validate_config(config: SimulationConfig) -> list[str]:
         # Check dimension compatibility
         if config.dimension == "2D" and mc.type in DIMENSION_3D_TYPES:
             errors.append(
-                f"{prefix}: Type '{mc.type}' is a 3D magnet "
-                f"but dimension is '2D'."
+                f"{prefix}: Type '{mc.type}' is a 3D magnet but dimension is '2D'."
             )
         elif config.dimension == "3D" and mc.type in DIMENSION_2D_TYPES:
             errors.append(
-                f"{prefix}: Type '{mc.type}' is a 2D magnet "
-                f"but dimension is '3D'."
+                f"{prefix}: Type '{mc.type}' is a 2D magnet but dimension is '3D'."
             )
 
         # Check required dimensions
@@ -221,7 +217,7 @@ def validate_config(config: SimulationConfig) -> list[str]:
                 )
             for plane in pc.planes:
                 if plane not in VALID_PLANES:
-                    errors.append(
+                    errors.append(  # noqa: PERF401 - clearer than a comprehension
                         f"{prefix}: planes contains invalid plane '{plane}'. "
                         f"Must be one of: {', '.join(sorted(VALID_PLANES))}"
                     )

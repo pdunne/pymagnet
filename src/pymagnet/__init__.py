@@ -13,7 +13,11 @@ __version__ = "0.5.1"
 from . import config, forces, magnets, plots, utils
 from .magnets._magnet_base import list, reset
 from .magnets._polygon3D import get_total_field_mesh
-from .utils._demag import solve_demagnetization, solve_demag_tanh, solve_demag_tanh_batch
+from .utils._demag import (
+    solve_demag_tanh,
+    solve_demag_tanh_batch,
+    solve_demagnetization,
+)
 from .utils._routines2D import (
     BdotgradB_2D,
     FgradB_2D,
@@ -37,9 +41,11 @@ from .utils._vector_structs import Jacobian2, Jacobian3
 __all__ = [
     "BdotgradB_2D",
     "BdotgradB_3D",
-    "config",
     "FgradB_2D",
     "FgradB_3D",
+    "Jacobian2",
+    "Jacobian3",
+    "config",
     "forces",
     "get_field_2D",
     "get_field_3D",
@@ -48,8 +54,6 @@ __all__ = [
     "gradB_3D",
     "grid2D",
     "grid3D",
-    "Jacobian2",
-    "Jacobian3",
     "jacobian_B_2D",
     "jacobian_B_3D",
     "line3D",
@@ -58,8 +62,8 @@ __all__ = [
     "plots",
     "reset",
     "slice3D",
-    "solve_demagnetization",
     "solve_demag_tanh",
     "solve_demag_tanh_batch",
+    "solve_demagnetization",
     "utils",
 ]

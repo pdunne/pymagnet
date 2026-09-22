@@ -42,4 +42,4 @@ def validate(toml_path: str | Path) -> list[str]:
     return validate_config(config)
 
 
-__all__ = ["load", "run", "validate", "SimulationConfig"]
+__all__ = ["SimulationConfig", "load", "run", "validate"]

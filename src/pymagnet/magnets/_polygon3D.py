@@ -252,8 +252,18 @@ class Mesh(Magnet3D):
         )
 
         Bx, By, Bz = _get_field_parallel_pts_njit(
-            rotations, offsets, RA_tris1, RA_tris2, swap_flags, active, centroids,
-            Jnorm, x_flat, y_flat, z_flat, float(r_cut),
+            rotations,
+            offsets,
+            RA_tris1,
+            RA_tris2,
+            swap_flags,
+            active,
+            centroids,
+            Jnorm,
+            x_flat,
+            y_flat,
+            z_flat,
+            float(r_cut),
         )
 
         Bx[~_np.isfinite(Bx)] = 0.0
@@ -960,7 +970,6 @@ def _calcB_triangle_njit(triangle, Jr, x_flat, y_flat, z_flat):
     return Bx, By, Bz
 
 
-
 @njit(cache=True)
 def _get_field_serial_njit(
     mesh_vectors, Jnorm, Jr, x_flat, y_flat, z_flat, threshold=1e-4
@@ -1060,8 +1069,18 @@ def _precompute_triangle_data(mesh_vectors, Jnorm, Jr, threshold=1e-4):
 
 @njit(parallel=True, cache=True)
 def _get_field_parallel_pts_njit(
-    rotations, offsets, RA_tris1, RA_tris2, swap_flags, active, centroids,
-    Jnorm, x_flat, y_flat, z_flat, r_cut,
+    rotations,
+    offsets,
+    RA_tris1,
+    RA_tris2,
+    swap_flags,
+    active,
+    centroids,
+    Jnorm,
+    x_flat,
+    y_flat,
+    z_flat,
+    r_cut,
 ):
     """Transposed parallel field kernel: prange over evaluation points.
 
@@ -1211,7 +1230,7 @@ def _precompute_all_meshes(meshes, threshold=1e-4):
     ]
     Jnorm_parts = [_np.ascontiguousarray(m.Jnorm, dtype=_np.float64) for m in mesh_list]
     combined = tuple(_np.concatenate([p[k] for p in parts]) for k in range(7))
-    return combined + (_np.concatenate(Jnorm_parts),)
+    return (*combined, _np.concatenate(Jnorm_parts))
 
 
 def get_total_field_mesh(meshes, x, y, z, r_cut=_np.inf):
@@ -1267,8 +1286,18 @@ def get_total_field_mesh(meshes, x, y, z, r_cut=_np.inf):
     )
 
     Bx, By, Bz = _get_field_parallel_pts_njit(
-        rotations, offsets, RA_tris1, RA_tris2, swap_flags, active, centroids,
-        Jnorm, x_flat, y_flat, z_flat, float(r_cut),
+        rotations,
+        offsets,
+        RA_tris1,
+        RA_tris2,
+        swap_flags,
+        active,
+        centroids,
+        Jnorm,
+        x_flat,
+        y_flat,
+        z_flat,
+        float(r_cut),
     )
 
     Bx[~_np.isfinite(Bx)] = 0.0

@@ -117,6 +117,8 @@ include = ["src/pymagnet", "README.md", "LICENSE", "pyproject.toml", "tests"]
 target-version = "py313"
 line-length = 88
 src = ["src"]
+# work/ is a scratch directory; tutorials/ predates the current API.
+extend-exclude = ["work", "tutorials"]
 
 
 [tool.ruff.lint]
@@ -140,8 +142,11 @@ ignore = [
     "C408",   # dict() vs {} - dict() is clearer for plotly kwargs
     "UP007",  # Union vs | - keep Union for compatibility
     "RUF012", # ClassVar annotation - not needed for simple cases
+    "RUF001", # ambiguous unicode in strings - µ, ×, – are intentional here
+    "RUF002", # ambiguous unicode in docstrings - same
+    "RUF003", # ambiguous unicode in comments - same
 ]
-per-file-ignores = { "tests/**" = ["E402"] }
+per-file-ignores = { "tests/**" = ["E402"], "**/*.ipynb" = ["B018"] }
 
 [tool.ruff.lint.isort]
 known-first-party = ["pymagnet"]

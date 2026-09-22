@@ -44,7 +44,7 @@ class TestPlot2DContourGradient:
 
     def test_custom_kwargs(self, field_and_points):
         points, field = field_and_points
-        fig, ax = mplt.plot_2D_contour_gradient(
+        fig, _ax = mplt.plot_2D_contour_gradient(
             points, field, cmin=0.0, cmax=1.0, cmap="plasma", show_magnets=False
         )
         assert fig is not None
@@ -84,7 +84,7 @@ class TestPlot2DContourGradB2:
     def test_has_vector_arrows_by_default(self, field_and_points):
         """Default num_arrows=10 produces quiver overlay."""
         points, field = field_and_points
-        fig, ax = mplt.plot_2D_contour_gradB2(points, field, show_magnets=False)
+        _fig, ax = mplt.plot_2D_contour_gradB2(points, field, show_magnets=False)
         from matplotlib.quiver import Quiver
 
         quivers = [c for c in ax.get_children() if isinstance(c, Quiver)]
@@ -103,7 +103,7 @@ class TestPlot2DContourGradB:
     def test_has_vector_arrows_by_default(self, field_and_points):
         """Default num_arrows=10 produces quiver overlay."""
         points, field = field_and_points
-        fig, ax = mplt.plot_2D_contour_gradB(points, field, show_magnets=False)
+        _fig, ax = mplt.plot_2D_contour_gradB(points, field, show_magnets=False)
         # Quiver collection should be present on the axes
         from matplotlib.quiver import Quiver
 
@@ -122,7 +122,7 @@ class TestPlot2DContourJacobian:
 
     def test_custom_cmap(self, field_and_points):
         points, field = field_and_points
-        fig, axes = mplt.plot_2D_contour_jacobian(
+        fig, _axes = mplt.plot_2D_contour_jacobian(
             points, field, cmap="seismic", show_magnets=False
         )
         assert fig is not None

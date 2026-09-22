@@ -174,7 +174,7 @@ def slice3D(plane="xy", max1=1.0, max2=1.0, slice_value=0.0, unit="mm", **kwargs
         z = kwargs.pop("custom_z", _np.array([0.0]))
 
     else:
-        raise Exception("plane must be one of 'xy', 'xz, 'yz', or 'custom'")
+        raise ValueError("plane must be one of 'xy', 'xz, 'yz', or 'custom'")
 
     return Point_Array3(x, y, z, unit=unit)
 
@@ -288,7 +288,7 @@ def gradB_3D(B, x, y, z):
         else:
             dBdx, dBdy, dBdz = _np.gradient(B_arr, dx, dy, dz)
     elif B_arr.ndim == 2:
-        varying, constant, coords = _detect_slice_axes(x, y, z)
+        varying, _constant, coords = _detect_slice_axes(x, y, z)
         c1, c2 = coords[varying[0]], coords[varying[1]]
         N1, N2 = B_arr.shape
         d1 = (c1.max() - c1.min()) / N1
@@ -298,7 +298,11 @@ def gradB_3D(B, x, y, z):
         else:
             grad1, grad2 = _np.gradient(B_arr, d1, d2)
 
-        components = {"x": _np.zeros_like(B_arr), "y": _np.zeros_like(B_arr), "z": _np.zeros_like(B_arr)}
+        components = {
+            "x": _np.zeros_like(B_arr),
+            "y": _np.zeros_like(B_arr),
+            "z": _np.zeros_like(B_arr),
+        }
         components[varying[0]] = grad1
         components[varying[1]] = grad2
         dBdx, dBdy, dBdz = components["x"], components["y"], components["z"]
@@ -368,14 +372,16 @@ def jacobian_B_3D(B, x, y, z):
             dBy_dx, dBy_dy, dBy_dz = _np.gradient(By, dx, dy, dz)
             dBz_dx, dBz_dy, dBz_dz = _np.gradient(Bz, dx, dy, dz)
     elif Bx.ndim == 2:
-        varying, constant, coords = _detect_slice_axes(x, y, z)
+        varying, _constant, coords = _detect_slice_axes(x, y, z)
         c1, c2 = coords[varying[0]], coords[varying[1]]
         N1, N2 = Bx.shape
         d1 = (c1.max() - c1.min()) / N1
         d2 = (c2.max() - c2.min()) / N2
 
         zeros = _np.zeros_like(Bx)
-        grad_fn = _gradient_2d if use_numba else lambda F, d1, d2: _np.gradient(F, d1, d2)
+        grad_fn = (
+            _gradient_2d if use_numba else lambda F, d1, d2: _np.gradient(F, d1, d2)
+        )
         # Compute gradients for each B component on the 2D slice
         result = {}
         for comp_name, comp_arr in [("Bx", Bx), ("By", By), ("Bz", Bz)]:
@@ -389,12 +395,20 @@ def jacobian_B_3D(B, x, y, z):
         dBy_dx, dBy_dy, dBy_dz = result["By"]["x"], result["By"]["y"], result["By"]["z"]
         dBz_dx, dBz_dy, dBz_dz = result["Bz"]["x"], result["Bz"]["y"], result["Bz"]["z"]
     else:
-        raise ValueError(f"B components must be 2D (slice) or 3D (grid), got ndim={Bx.ndim}")
+        raise ValueError(
+            f"B components must be 2D (slice) or 3D (grid), got ndim={Bx.ndim}"
+        )
 
     return Jacobian3(
-        dBx_dx=dBx_dx, dBx_dy=dBx_dy, dBx_dz=dBx_dz,
-        dBy_dx=dBy_dx, dBy_dy=dBy_dy, dBy_dz=dBy_dz,
-        dBz_dx=dBz_dx, dBz_dy=dBz_dy, dBz_dz=dBz_dz,
+        dBx_dx=dBx_dx,
+        dBx_dy=dBx_dy,
+        dBx_dz=dBx_dz,
+        dBy_dx=dBy_dx,
+        dBy_dy=dBy_dy,
+        dBy_dz=dBy_dz,
+        dBz_dx=dBz_dx,
+        dBz_dy=dBz_dy,
+        dBz_dz=dBz_dz,
     )
 
 

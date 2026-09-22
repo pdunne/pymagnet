@@ -339,19 +339,19 @@ class TestQuaternionMultiplyErrors:
     def test_invalid_vector_length(self):
         """Vector with wrong length should raise exception."""
         q = Quaternion()
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             q * [1, 2]  # Too short
 
     def test_invalid_type(self):
         """Invalid type should raise exception."""
         q = Quaternion()
-        with pytest.raises(Exception):
+        with pytest.raises(TypeError):
             q * "invalid"
 
     def test_invalid_type_number(self):
         """Scalar number should raise exception."""
         q = Quaternion()
-        with pytest.raises(Exception):
+        with pytest.raises(TypeError):
             q * 5.0
 
 
@@ -416,7 +416,7 @@ class TestGetAxisAngle:
         """
         # Test with a very small rotation instead
         q = q_angle_from_axis(0.001, (0, 0, 1))
-        theta, axis = q.get_axisangle()
+        theta, _axis = q.get_axisangle()
         npt.assert_allclose(theta, 0.001, atol=1e-6)
 
     def test_90_degree_rotation(self, rotation_90_z):
