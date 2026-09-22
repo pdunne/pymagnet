@@ -2,6 +2,10 @@
 
 User friendly magnetic field calculations in Python
 
+[![PyPI](https://img.shields.io/pypi/v/pymagnet.svg)](https://pypi.org/project/pymagnet/)
+[![Python versions](https://img.shields.io/pypi/pyversions/pymagnet.svg)](https://pypi.org/project/pymagnet/)
+[![CI](https://github.com/pdunne/pymagnet/actions/workflows/ci.yaml/badge.svg)](https://github.com/pdunne/pymagnet/actions/workflows/ci.yaml)
+[![Docs](https://img.shields.io/badge/docs-pdunne.github.io%2Fpymagnet-blue)](https://pdunne.github.io/pymagnet/)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-blue.svg)](https://opensource.org/licenses/MPL-2.0)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![DOI](https://zenodo.org/badge/339667292.svg)](https://zenodo.org/badge/latestdoi/339667292)
@@ -9,11 +13,21 @@ User friendly magnetic field calculations in Python
 
 ## Getting Started
 
-Installing `pymagnet` can be done using
+Pymagnet requires **Python 3.12 or newer**.
 
 ```bash
 python -m pip install pymagnet
 ```
+
+Plotting support (matplotlib and plotly) is optional. To install it alongside
+the core library:
+
+```bash
+python -m pip install "pymagnet[plots]"
+```
+
+The plotting functions raise a clear error if called without these packages, so
+install the `plots` extra if you intend to use any of the figures shown below.
 
 Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D
 and 3D objects, like cubes or cylinders, as well as complex non-convex structures stored in STL
@@ -52,6 +66,36 @@ and complex compound objects:
 There are helper functions to plot the data as line, contour, slice, and volume plots,
 but the underlying data is also accessible.
 
+### Forces and torques
+
+Forces and torques on a magnet due to all other magnets in the system are
+calculated from the surface charge model, for prisms, cylinders, spheres, and
+STL meshes:
+
+```python
+force, torque = magnet.get_force_torque()
+```
+
+### Performance
+
+Field calculations for STL meshes are parallelised with Numba, which makes
+non-convex geometries of several thousand triangles practical to work with. For
+large meshes, `Mesh.get_field()` also accepts an optional `r_cut` distance
+cutoff that skips distant triangles — this trades accuracy for speed, and the
+[documentation](https://pdunne.github.io/pymagnet/magnets/magnets_3d/#distance-cutoff-r_cut)
+gives the measured trade-off before you rely on it.
+
+### Declarative simulations
+
+Simulations can be described in a TOML file and run without writing Python:
+
+```bash
+pymagnet my_simulation.toml
+```
+
+See the [configuration guide](https://pdunne.github.io/pymagnet/configuration/)
+for the full format.
+
 ## Documentation
 
 Full documentation can be found here: [https://pdunne.github.io/pymagnet/](https://pdunne.github.io/pymagnet/)
@@ -64,7 +108,7 @@ Examples can be found [in the repository](https://github.com/pdunne/pymagnet/tre
 
 #### 2D Examples
 
-Getting Started [![First Steps](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/First%20Steps.ipynb)
+Getting Started [![First Steps](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/Fields/First%20Steps.ipynb)
 
 1D Simple Plots [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/Fields/1D%20Examples.ipynb)
 
@@ -94,7 +138,7 @@ Cylinders [![Open In Colab](https://colab.research.google.com/assets/colab-badge
 
 Spheres [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/Forces%20Torques/Spheres.ipynb)
 
-STL Cubes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/STL%20Magnets/STL%20Examples.ipynb)
+STL Meshes [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/STL%20Magnets/STL_Forces.ipynb)
 
 STL Pentagonal Prisms [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pdunne/pymagnet/blob/main/examples/notebooks/STL%20Magnets/STL%20Forces%20Pentagon.ipynb)
 
@@ -103,17 +147,6 @@ STL Pentagonal Prisms [![Open In Colab](https://colab.research.google.com/assets
 The example notebooks can be run as an instance using Binder:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pdunne/pymagnet/main?filepath=examples%2Fnotebooks)
-
-<!-- ## Prerequisites
-
-Ensure you have [Python](https://www.anaconda.com/) version >= 3.6
- (to use f-strings), and the following packages:
-
-* numpy
-* numpy-stl
-* numba
-* matplotlib
-* plotly -->
 
 ## Usage
 
