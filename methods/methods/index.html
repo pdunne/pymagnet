@@ -5,18 +5,20 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="https://pdunne.github.io/pymagnet/methods/methods/" rel="canonical"/>
+<link href="../../forces_torques/" rel="prev"/>
+<link href="../transforms/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.3.0, mkdocs-material-8.2.14" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.3" name="generator"/>
 <title>Class Methods - Pymagnet</title>
-<link href="../../assets/stylesheets/main.3de6f41f.min.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/palette.cc9b2e1e.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
 <link href="../../assets/_mkdocstrings.css" rel="stylesheet"/>
-<script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
-<body data-md-color-accent="none" data-md-color-primary="none" data-md-color-scheme="" dir="ltr">
+<body dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
@@ -27,13 +29,13 @@
 </div>
 <div data-md-component="announce">
 </div>
-<header class="md-header" data-md-component="header">
+<header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
 <a aria-label="Pymagnet" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Pymagnet">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
 </label>
 <div class="md-header__title" data-md-component="header-title">
 <div class="md-header__ellipsis">
@@ -51,8 +53,9 @@
 </div>
 </div>
 </div>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
 <label class="md-header__button md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
 </label>
 <div class="md-search" data-md-component="search" role="dialog">
 <label class="md-search__overlay" for="__search"></label>
@@ -60,22 +63,23 @@
 <form class="md-search__form" name="search">
 <input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
 <label class="md-search__icon md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
 </label>
 <nav aria-label="Search" class="md-search__options">
-<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" type="reset">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
 </button>
 </nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
 </form>
 <div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
 <div class="md-search-result" data-md-component="search-result">
 <div class="md-search-result__meta">
             Initializing search
           </div>
-<ol class="md-search-result__list"></ol>
+<ol class="md-search-result__list" role="presentation"></ol>
 </div>
 </div>
 </div>
@@ -92,117 +96,265 @@
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
 <a aria-label="Pymagnet" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Pymagnet">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
     Pymagnet
   </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../..">
-        Home
-      </a>
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../whats_new/">
+<span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../examples/">
-        Examples
-      </a>
+<span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../configuration/">
+<span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" id="__nav_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_3">
-          Magnets
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Magnets" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_3">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Magnets
+  
+
+    
+  </span>
 <span class="md-nav__icon md-icon"></span>
-          Magnets
-        </label>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Magnets
+  
+
+          </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../magnets/magnets_overview/">
-        Overview
-      </a>
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../magnets/magnets_1d/">
-        1D Methods
-      </a>
+<span class="md-ellipsis">
+    
+  
+    1D Methods
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../magnets/magnets_2d/">
-        2D Magnets
-      </a>
+<span class="md-ellipsis">
+    
+  
+    2D Magnets
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../magnets/magnets_3d/">
-        3D Magnets
-      </a>
+<span class="md-ellipsis">
+    
+  
+    3D Magnets
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../magnets/composite_magnets/">
-        Composite Magnets
-      </a>
+<span class="md-ellipsis">
+    
+  
+    Composite Magnets
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" id="__nav_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4">
-          Plots
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Plots" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_4">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Plots
+  
+
+    
+  </span>
 <span class="md-nav__icon md-icon"></span>
-          Plots
-        </label>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plots
+  
+
+          </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../plots/plots_overview/">
-        Overview
-      </a>
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../plots/plots_2d/">
-        2D Plots
-      </a>
+<span class="md-ellipsis">
+    
+  
+    2D Plots
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../plots/plots_3d/">
-        3D Plots
-      </a>
+<span class="md-ellipsis">
+    
+  
+    3D Plots
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../forces_torques/">
-        Forces &amp; Torques
-      </a>
+<span class="md-ellipsis">
+    
+  
+    Forces &amp; Torques
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6">
-          Methods
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Methods" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
 <span class="md-nav__icon md-icon"></span>
-          Methods
-        </label>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
 <label class="md-nav__link md-nav__link--active" for="__toc">
-          Class Methods
-          <span class="md-nav__icon md-icon"></span>
+<span class="md-ellipsis">
+    
+  
+    Class Methods
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
 </label>
 <a class="md-nav__link md-nav__link--active" href="./">
-        Class Methods
-      </a>
+<span class="md-ellipsis">
+    
+  
+    Class Methods
+  
+
+    
+  </span>
+</a>
 <nav aria-label="Table of contents" class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">
 <span class="md-nav__icon md-icon"></span>
@@ -211,94 +363,263 @@
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#magnetic-fields">
-    Magnetic Fields
-  </a>
+<span class="md-ellipsis">
+      
+        Magnetic Fields
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#forces-and-torques">
-    Forces and Torques
-  </a>
+<span class="md-ellipsis">
+      
+        Forces and Torques
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#classes">
-    Classes
-  </a>
+<span class="md-ellipsis">
+      
+        Classes
+      
+    </span>
+</a>
 <nav aria-label="Classes" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#magnet-classes">
-    Magnet Classes
-  </a>
+<span class="md-ellipsis">
+      
+        Magnet Classes
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#mesh-class">
-    Mesh Class
-  </a>
+<span class="md-ellipsis">
+      
+        Mesh Class
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#quaternion-class">
-    Quaternion Class
-  </a>
+<span class="md-ellipsis">
+      
+        Quaternion Class
+      
+    </span>
+</a>
 </li>
 </ul>
 </nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#plot-methods">
-    Plot Methods
-  </a>
+<span class="md-ellipsis">
+      
+        Plot Methods
+      
+    </span>
+</a>
 <nav aria-label="Plot Methods" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#2d-plotting-matplotlib">
+<span class="md-ellipsis">
+      
+        2D Plotting (matplotlib)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3d-plotting-plotly">
+<span class="md-ellipsis">
+      
+        3D Plotting (plotly)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#draw-magnets-on-plot">
-    Draw Magnets on Plot
-  </a>
+<span class="md-ellipsis">
+      
+        Draw Magnets on Plot
+      
+    </span>
+</a>
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#utility-functions">
+<span class="md-ellipsis">
+      
+        Utility Functions
+      
+    </span>
+</a>
+<nav aria-label="Utility Functions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#field-calculation">
+<span class="md-ellipsis">
+      
+        Field Calculation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#grid-generation">
+<span class="md-ellipsis">
+      
+        Grid Generation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#magnet-management">
+<span class="md-ellipsis">
+      
+        Magnet Management
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-based-workflow">
+<span class="md-ellipsis">
+      
+        Configuration-Based Workflow
+      
+    </span>
+</a>
 </li>
 </ul>
 </nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../transforms/">
-        Transforms
-      </a>
+<span class="md-ellipsis">
+    
+  
+    Transforms
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../demag_solver/">
+<span class="md-ellipsis">
+    
+  
+    Demagnetisation Solver
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7">
-          Code Reference
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Code Reference" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Code Reference
+  
+
+    
+  </span>
 <span class="md-nav__icon md-icon"></span>
-          Code Reference
-        </label>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Code Reference
+  
+
+          </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../code_reference/pymagnet/">
-        pymagnet
-      </a>
+<span class="md-ellipsis">
+    
+  
+    pymagnet
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../code_reference/magnets/">
-        magnets
-      </a>
+<span class="md-ellipsis">
+    
+  
+    magnets
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../code_reference/plots/">
-        plots
-      </a>
+<span class="md-ellipsis">
+    
+  
+    plots
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../code_reference/config/">
+<span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../code_reference/utils/">
-        utils
-      </a>
+<span class="md-ellipsis">
+    
+  
+    utils
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
@@ -319,51 +640,150 @@
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#magnetic-fields">
-    Magnetic Fields
-  </a>
+<span class="md-ellipsis">
+      
+        Magnetic Fields
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#forces-and-torques">
-    Forces and Torques
-  </a>
+<span class="md-ellipsis">
+      
+        Forces and Torques
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#classes">
-    Classes
-  </a>
+<span class="md-ellipsis">
+      
+        Classes
+      
+    </span>
+</a>
 <nav aria-label="Classes" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#magnet-classes">
-    Magnet Classes
-  </a>
+<span class="md-ellipsis">
+      
+        Magnet Classes
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#mesh-class">
-    Mesh Class
-  </a>
+<span class="md-ellipsis">
+      
+        Mesh Class
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#quaternion-class">
-    Quaternion Class
-  </a>
+<span class="md-ellipsis">
+      
+        Quaternion Class
+      
+    </span>
+</a>
 </li>
 </ul>
 </nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#plot-methods">
-    Plot Methods
-  </a>
+<span class="md-ellipsis">
+      
+        Plot Methods
+      
+    </span>
+</a>
 <nav aria-label="Plot Methods" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#2d-plotting-matplotlib">
+<span class="md-ellipsis">
+      
+        2D Plotting (matplotlib)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3d-plotting-plotly">
+<span class="md-ellipsis">
+      
+        3D Plotting (plotly)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#draw-magnets-on-plot">
-    Draw Magnets on Plot
-  </a>
+<span class="md-ellipsis">
+      
+        Draw Magnets on Plot
+      
+    </span>
+</a>
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#utility-functions">
+<span class="md-ellipsis">
+      
+        Utility Functions
+      
+    </span>
+</a>
+<nav aria-label="Utility Functions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#field-calculation">
+<span class="md-ellipsis">
+      
+        Field Calculation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#grid-generation">
+<span class="md-ellipsis">
+      
+        Grid Generation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#magnet-management">
+<span class="md-ellipsis">
+      
+        Magnet Management
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-based-workflow">
+<span class="md-ellipsis">
+      
+        Configuration-Based Workflow
+      
+    </span>
+</a>
 </li>
 </ul>
 </nav>
@@ -378,10 +798,11 @@
 <ol>
 <li>Instantiate a set of magnets</li>
 <li>Generate an array of points to be calculated</li>
-<li>Loop over each magnet, calcuate the field at each point and sum this to the
+<li>Loop over each magnet, calculate the field at each point and sum this to the
 total field.</li>
 <li>Draw the resulting data as a line, contour, slice, or volume plot.</li>
 </ol>
+<p>Alternatively, you can use the <a href="../../configuration/">TOML configuration system</a> to define all of these steps declaratively in a config file.</p>
 <div class="mermaid">flowchart
     1.Create_Magnets--&gt;2.Create_Points
     subgraph 3.Calculate_B
@@ -429,11 +850,9 @@ total field.</li>
 </ol>
 <h2 id="classes">Classes</h2>
 <p>At the top of the hierarchy is the Registry class which records a set of <code>Weakref</code>
-references to instances of each class, which is used for the <code>Magnet</code> and <code>Polyhedron</code>
-child classes.</p>
+references to instances of each class, which is used for the <code>Magnet</code> child classes.</p>
 <div class="mermaid">classDiagram
 Registry &lt;|-- Magnet
-Registry &lt;|-- Polyhedron
 class Registry{
     +set instances
     -list _class_instances
@@ -446,27 +865,28 @@ class Registry{
 <h3 id="magnet-classes">Magnet Classes</h3>
 <div class="mermaid">classDiagram
     Registry &lt;|-- Magnet
-    Magnet &lt;|-- Magnet_2D
-    Magnet_2D &lt;|-- Rectangle
+    Magnet &lt;|-- Magnet2D
+    Magnet2D &lt;|-- Rectangle
     Rectangle &lt;|-- Square
-    Magnet_2D &lt;|-- Circle
-    Magnet &lt;|-- Magnet_3D
-    Magnet_3D &lt;|-- Prism
+    Magnet2D &lt;|-- Circle
+    Magnet2D &lt;|-- PolyMagnet
+    Magnet &lt;|-- Magnet3D
+    Magnet3D &lt;|-- Prism
     Prism &lt;|-- Cube
-    Magnet_3D &lt;|-- Cylinder
-    Magnet_3D &lt;|-- Sphere
-    Magnet_3D &lt;|-- Mesh
+    Magnet3D &lt;|-- Cylinder
+    Magnet3D &lt;|-- Sphere
+    Magnet3D &lt;|-- Mesh
     class Registry{
         +set instances
-        +get_instances() 
+        +get_instances()
         +reset()
     }
     class Magnet{
-        +rest_magnets()
-        +list_magnets()
     }
-    class Magnet_2D{
+    class Magnet2D{
         +get_field()
+        +get_center()
+        +get_orientation()
     }
 
     class Rectangle{
@@ -474,9 +894,13 @@ class Registry{
 
     class Circle{
     }
-    class Magnet_3D{
+    class PolyMagnet{
+    }
+    class Magnet3D{
         +get_field()
         +get_force_torque()
+        +get_center()
+        +get_Jr()
     }
     class Prism{
     }
@@ -488,44 +912,207 @@ class Registry{
     }
 </div>
 <h3 id="mesh-class">Mesh Class</h3>
-<p>The Mesh magnet class performs</p>
+<p>The Mesh magnet class loads geometry from STL files and calculates magnetic fields using a surface charge approach. Each triangular face of the mesh contributes to the total field based on:</p>
+<ul>
+<li>Face normal vector and magnetisation alignment</li>
+<li>Surface charge density <span class="arithmatex">\(\sigma_m = \mathbf{M} \cdot \mathbf{\hat{n}}\)</span></li>
+<li>Numerical integration over the mesh surface</li>
+</ul>
+<p>Field calculations for mesh magnets are parallelised using Numba's <code>prange</code>, achieving up to <strong>247x speedup</strong> on multi-core systems. For force and torque calculations, the mesh is subdivided into smaller triangles for improved accuracy.</p>
 <h3 id="quaternion-class">Quaternion Class</h3>
-<p>This is a convenience class for performing rotations of points/vectors about arbitrary axes.</p>
+<p>This is a convenience class for performing rotations of points/vectors about arbitrary axes. Quaternions avoid gimbal lock issues that can occur with Euler angles.</p>
+<p><strong>Key methods:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gen_rotation_quaternion(alpha, beta, gamma)</code></td>
+<td>Create quaternion from Euler angles</td>
+</tr>
+<tr>
+<td><code>get_conjugate()</code></td>
+<td>Return conjugate quaternion (for inverse rotation)</td>
+</tr>
+<tr>
+<td><code>__mul__</code></td>
+<td>Rotate a point/vector using quaternion multiplication</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Quaternion</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create rotation quaternion (30° about z, 45° about y, 0° about x)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="o">.</span><span class="n">gen_rotation_quaternion</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">45</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c1"># Rotate a point</span>
+<span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">rotated</span> <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">point</span>
+</code></pre></div>
+<hr/>
 <h2 id="plot-methods">Plot Methods</h2>
+<h3 id="2d-plotting-matplotlib">2D Plotting (matplotlib)</h3>
+<p>Functions for 2D visualisation using matplotlib:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plot_1D_field()</code></td>
+<td>Line plot of field along magnet axis</td>
+</tr>
+<tr>
+<td><code>plot_2D_line()</code></td>
+<td>Line plot along arbitrary path</td>
+</tr>
+<tr>
+<td><code>plot_2D_contour()</code></td>
+<td>Contour plot of field magnitude</td>
+</tr>
+<tr>
+<td><code>plot_3D_contour()</code></td>
+<td>3D surface plot using matplotlib</td>
+</tr>
+<tr>
+<td><code>plot_sub_contour_3D()</code></td>
+<td>Multiple 3D contour subplots</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3d-plotting-plotly">3D Plotting (plotly)</h3>
+<p>Functions for interactive 3D visualisation using plotly:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plot_magnet()</code></td>
+<td>Render 3D magnet geometry</td>
+</tr>
+<tr>
+<td><code>slice_plot()</code></td>
+<td>Plot field on 2D slice planes</td>
+</tr>
+<tr>
+<td><code>slice_quickplot()</code></td>
+<td>Quick slice plot with auto grid</td>
+</tr>
+<tr>
+<td><code>volume_plot()</code></td>
+<td>3D volume rendering of field</td>
+</tr>
+<tr>
+<td><code>volume_quickplot()</code></td>
+<td>Quick volume plot with auto grid</td>
+</tr>
+</tbody>
+</table>
 <h3 id="draw-magnets-on-plot">Draw Magnets on Plot</h3>
+<p>For 2D plots, magnets are drawn as patches (rectangles, circles, or polygons) overlaid on the field contours.</p>
+<p>For 3D plots, magnets are rendered as meshes using plotly's <code>Mesh3d</code> graphics object. The rendering classes (<code>Graphic_Cuboid</code>, <code>Graphic_Cylinder</code>, <code>Graphic_Sphere</code>, <code>Graphic_Mesh</code>) generate the appropriate vertex data for each magnet type.</p>
+<hr/>
+<h2 id="utility-functions">Utility Functions</h2>
+<h3 id="field-calculation">Field Calculation</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_field_2D(points)</code></td>
+<td>Calculate 2D field at given points</td>
+</tr>
+<tr>
+<td><code>get_field_3D(points)</code></td>
+<td>Calculate 3D field at given points</td>
+</tr>
+</tbody>
+</table>
+<h3 id="grid-generation">Grid Generation</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grid3D(xmax, ymax, zmax, ...)</code></td>
+<td>Generate 3D grid of points</td>
+</tr>
+<tr>
+<td><code>slice3D(plane, ...)</code></td>
+<td>Generate 2D slice in 3D space</td>
+</tr>
+<tr>
+<td><code>line3D(start, end, ...)</code></td>
+<td>Generate points along a line</td>
+</tr>
+</tbody>
+</table>
+<h3 id="magnet-management">Magnet Management</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reset()</code></td>
+<td>Clear all instantiated magnets</td>
+</tr>
+<tr>
+<td><code>list_magnets()</code></td>
+<td>Print all current magnets</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="configuration-based-workflow">Configuration-Based Workflow</h2>
+<p>As an alternative to the Python API, pymagnet supports a TOML-based declarative workflow:</p>
+<div class="mermaid">flowchart LR
+    TOML[TOML Config File] --&gt; Load[load &amp; validate]
+    Load --&gt; Build[Build Magnets]
+    Build --&gt; Calc[Calculate Fields]
+    Calc --&gt; Plot[Generate Plots]
+    Calc --&gt; Force[Calculate Forces]
+</div>
+<ol>
+<li>Define magnets, grids, plots, and force settings in a <code>.toml</code> file</li>
+<li>Run via CLI (<code>pymagnet config.toml</code>) or Python (<code>pymagnet.config.run("config.toml")</code>)</li>
+<li>Results include field data, plotly/matplotlib figures, and force/torque vectors</li>
+</ol>
+<p>See the <a href="../../configuration/">Configuration</a> page for full documentation.</p>
 </article>
 </div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
 </div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
 </main>
 <footer class="md-footer">
-<nav aria-label="Footer" class="md-footer__inner md-grid">
-<a aria-label="Previous: Forces &amp; Torques" class="md-footer__link md-footer__link--prev" href="../../forces_torques/" rel="prev">
-<div class="md-footer__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
-</div>
-<div class="md-footer__title">
-<div class="md-ellipsis">
-<span class="md-footer__direction">
-                Previous
-              </span>
-              Forces &amp; Torques
-            </div>
-</div>
-</a>
-<a aria-label="Next: Transforms" class="md-footer__link md-footer__link--next" href="../transforms/" rel="next">
-<div class="md-footer__title">
-<div class="md-ellipsis">
-<span class="md-footer__direction">
-                Next
-              </span>
-              Transforms
-            </div>
-</div>
-<div class="md-footer__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"></path></svg>
-</div>
-</a>
-</nav>
 <div class="md-footer-meta md-typeset">
 <div class="md-footer-meta__inner md-grid">
 <div class="md-copyright">
@@ -543,11 +1130,13 @@ class Registry{
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
-<script src="../../assets/javascripts/bundle.c2e1ee47.min.js"></script>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
 <script src="../../javascripts/config.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({});</script></body>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({
+    theme: "default"
+});</script></body>
 </html>

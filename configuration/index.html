@@ -1,0 +1,2254 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pdunne.github.io/pymagnet/configuration/">
+      
+      
+        <link rel="prev" href="../examples/">
+      
+      
+        <link rel="next" href="../magnets/magnets_overview/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Configuration - Pymagnet</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pymagnet" class="md-header__button md-logo" aria-label="Pymagnet" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pymagnet
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pymagnet" class="md-nav__button md-logo" aria-label="Pymagnet" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pymagnet
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats_new/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toml-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TOML File Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TOML File Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#meta-simulation-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [meta] — Simulation Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#magnets-magnet-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [[magnets]] — Magnet Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grid-grid-evaluation-grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [grid] / [[grid]] — Evaluation Grid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plot-plot-visualisation-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [plot] / [[plot]] — Visualisation Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#force-force-and-torque-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [force] — Force and Torque Calculation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#runtoml_path-output_dirnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run(toml_path, *, output_dir=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loadtoml_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load(toml_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validatetoml_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate(toml_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2d-contour-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2D Contour Plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#force-calculation-between-two-cubes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Force Calculation Between Two Cubes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grouped-slice-plots-multiple-planes-on-one-figure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grouped Slice Plots (Multiple Planes on One Figure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Magnets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Magnets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets/magnets_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets/magnets_1d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1D Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets/magnets_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2D Magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets/magnets_3d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3D Magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets/composite_magnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Composite Magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plots/plots_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plots/plots_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2D Plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plots/plots_3d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3D Plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../forces_torques/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forces & Torques
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methods/methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Class Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methods/transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methods/demag_solver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demagnetisation Solver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code_reference/pymagnet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pymagnet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code_reference/magnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code_reference/plots/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code_reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code_reference/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    utils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toml-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TOML File Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TOML File Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#meta-simulation-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [meta] — Simulation Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#magnets-magnet-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [[magnets]] — Magnet Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grid-grid-evaluation-grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [grid] / [[grid]] — Evaluation Grid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plot-plot-visualisation-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [plot] / [[plot]] — Visualisation Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#force-force-and-torque-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [force] — Force and Torque Calculation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#runtoml_path-output_dirnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run(toml_path, *, output_dir=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loadtoml_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load(toml_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validatetoml_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate(toml_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2d-contour-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2D Contour Plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#force-calculation-between-two-cubes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Force Calculation Between Two Cubes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grouped-slice-plots-multiple-planes-on-one-figure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grouped Slice Plots (Multiple Planes on One Figure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="configuration">Configuration</h1>
+<p>Pymagnet supports a declarative TOML-based configuration system for defining simulations without writing Python code. A single <code>.toml</code> file specifies magnets, evaluation grids, plot settings, and force calculations.</p>
+<h2 id="quick-start">Quick Start</h2>
+<p>Create a file called <code>single_cube.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[meta]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Single Cube&quot;</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;A single 10mm cube magnet with slice views&quot;</span>
+<span class="n">dimension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3D&quot;</span>
+
+<span class="k">[[magnets]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cube&quot;</span>
+<span class="n">Jr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+<span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="n">center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span>
+<span class="n">mask_magnet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="k">[grid]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slice&quot;</span>
+<span class="n">max1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">max2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">num_points</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="n">unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mm&quot;</span>
+
+<span class="k">[plot]</span>
+<span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slice&quot;</span>
+<span class="n">cmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span>
+<span class="n">cmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span>
+<span class="n">planes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;xz&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;xy&quot;</span><span class="p">]</span>
+<span class="n">show_magnets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<p>Run it from the command line:</p>
+<div class="highlight"><pre><span></span><code>pymagnet<span class="w"> </span>single_cube.toml
+</code></pre></div>
+<p>Or from Python:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">run</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="s2">&quot;single_cube.toml&quot;</span><span class="p">)</span>
+<span class="c1"># result[&quot;magnets&quot;] — list of magnet instances</span>
+<span class="c1"># result[&quot;results&quot;] — list of dicts with points, field, figure</span>
+<span class="c1"># result[&quot;force&quot;]   — force/torque dict (if enabled)</span>
+</code></pre></div>
+<hr />
+<h2 id="toml-file-structure">TOML File Structure</h2>
+<p>A configuration file has four main sections:</p>
+<h3 id="meta-simulation-metadata"><code>[meta]</code> — Simulation Metadata</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>str</td>
+<td><code>""</code></td>
+<td>Simulation name (used in output filenames)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>str</td>
+<td><code>""</code></td>
+<td>Description for documentation</td>
+</tr>
+<tr>
+<td><code>dimension</code></td>
+<td>str</td>
+<td><code>"3D"</code></td>
+<td><code>"2D"</code> or <code>"3D"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="magnets-magnet-definitions"><code>[[magnets]]</code> — Magnet Definitions</h3>
+<p>Each <code>[[magnets]]</code> entry defines one magnet. The <code>type</code> and <code>Jr</code> fields are required; all others have defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>str</td>
+<td>required</td>
+<td>Magnet type (see below)</td>
+</tr>
+<tr>
+<td><code>Jr</code></td>
+<td>float</td>
+<td>required</td>
+<td>Remnant magnetisation (T)</td>
+</tr>
+<tr>
+<td><code>center</code></td>
+<td>list</td>
+<td><code>[0, 0, 0]</code></td>
+<td>Centre position</td>
+</tr>
+<tr>
+<td><code>phi</code></td>
+<td>float</td>
+<td><code>90.0</code></td>
+<td>Magnetisation azimuthal angle (degrees)</td>
+</tr>
+<tr>
+<td><code>theta</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Magnetisation polar angle (degrees, 3D only)</td>
+</tr>
+<tr>
+<td><code>alpha</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Rotation about z-axis (degrees)</td>
+</tr>
+<tr>
+<td><code>beta</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Rotation about y-axis (degrees, 3D only)</td>
+</tr>
+<tr>
+<td><code>gamma</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Rotation about x-axis (degrees, 3D only)</td>
+</tr>
+<tr>
+<td><code>mask_magnet</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Set field inside magnet to NaN</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dimension-specific parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Required Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Rectangle</code></td>
+<td><code>width</code>, <code>height</code></td>
+</tr>
+<tr>
+<td><code>Square</code></td>
+<td><code>width</code></td>
+</tr>
+<tr>
+<td><code>Circle</code></td>
+<td><code>radius</code></td>
+</tr>
+<tr>
+<td><code>Prism</code></td>
+<td><code>width</code>, <code>depth</code>, <code>height</code></td>
+</tr>
+<tr>
+<td><code>Cube</code></td>
+<td><code>width</code></td>
+</tr>
+<tr>
+<td><code>Cylinder</code></td>
+<td><code>radius</code>, <code>length</code></td>
+</tr>
+<tr>
+<td><code>Sphere</code></td>
+<td><code>radius</code></td>
+</tr>
+<tr>
+<td><code>Mesh</code></td>
+<td><code>filename</code> (path to STL file, relative to TOML file)</td>
+</tr>
+</tbody>
+</table>
+<p>Mesh magnets also accept <code>mesh_scale</code> (float, default <code>1.0</code>) for unit conversion.</p>
+<h3 id="grid-grid-evaluation-grid"><code>[grid]</code> / <code>[[grid]]</code> — Evaluation Grid</h3>
+<p>Use <code>[grid]</code> for a single grid or <code>[[grid]]</code> for multiple grids (paired with <code>[[plot]]</code> entries).</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>str</td>
+<td><code>"grid2D"</code></td>
+<td>Grid type: <code>"grid2D"</code>, <code>"slice"</code>, <code>"grid3D"</code>, <code>"volume"</code></td>
+</tr>
+<tr>
+<td><code>num_points</code></td>
+<td>int</td>
+<td><code>100</code></td>
+<td>Points per axis</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td>str</td>
+<td><code>"mm"</code></td>
+<td>Length scale</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For <code>grid2D</code> (2D simulations):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>xmax</code></td>
+<td>float</td>
+<td><code>50.0</code></td>
+<td>Maximum x value</td>
+</tr>
+<tr>
+<td><code>ymax</code></td>
+<td>float</td>
+<td><code>50.0</code></td>
+<td>Maximum y value</td>
+</tr>
+<tr>
+<td><code>xmin</code></td>
+<td>float</td>
+<td><code>-xmax</code></td>
+<td>Minimum x value</td>
+</tr>
+<tr>
+<td><code>ymin</code></td>
+<td>float</td>
+<td><code>-ymax</code></td>
+<td>Minimum y value</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For <code>slice</code> (3D planar cross-section):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plane</code></td>
+<td>str</td>
+<td><code>"xy"</code></td>
+<td>Plane: <code>"xy"</code>, <code>"xz"</code>, or <code>"yz"</code></td>
+</tr>
+<tr>
+<td><code>max1</code></td>
+<td>float</td>
+<td><code>30.0</code></td>
+<td>Maximum along first axis</td>
+</tr>
+<tr>
+<td><code>max2</code></td>
+<td>float</td>
+<td><code>30.0</code></td>
+<td>Maximum along second axis</td>
+</tr>
+<tr>
+<td><code>min1</code></td>
+<td>float</td>
+<td><code>-max1</code></td>
+<td>Minimum along first axis</td>
+</tr>
+<tr>
+<td><code>min2</code></td>
+<td>float</td>
+<td><code>-max2</code></td>
+<td>Minimum along second axis</td>
+</tr>
+<tr>
+<td><code>slice_value</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Position on the third axis</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For <code>grid3D</code> / <code>volume</code> (3D volume):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>xmax</code></td>
+<td>float</td>
+<td><code>30.0</code></td>
+<td>Maximum x value</td>
+</tr>
+<tr>
+<td><code>ymax</code></td>
+<td>float</td>
+<td><code>30.0</code></td>
+<td>Maximum y value</td>
+</tr>
+<tr>
+<td><code>zmax</code></td>
+<td>float</td>
+<td><code>30.0</code></td>
+<td>Maximum z value</td>
+</tr>
+<tr>
+<td><code>xmin</code></td>
+<td>float</td>
+<td><code>-xmax</code></td>
+<td>Minimum x value</td>
+</tr>
+<tr>
+<td><code>ymin</code></td>
+<td>float</td>
+<td><code>-ymax</code></td>
+<td>Minimum y value</td>
+</tr>
+<tr>
+<td><code>zmin</code></td>
+<td>float</td>
+<td><code>-zmax</code></td>
+<td>Minimum z value</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plot-plot-visualisation-settings"><code>[plot]</code> / <code>[[plot]]</code> — Visualisation Settings</h3>
+<p>Each <code>[[plot]]</code> entry is paired with the corresponding <code>[[grid]]</code> entry by index.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Enable/disable plotting</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>str</td>
+<td><code>"contour"</code></td>
+<td>Plot type (see below)</td>
+</tr>
+<tr>
+<td><code>cmap</code></td>
+<td>str</td>
+<td><code>"viridis"</code></td>
+<td>Colourmap name</td>
+</tr>
+<tr>
+<td><code>cmin</code></td>
+<td>float</td>
+<td><code>None</code></td>
+<td>Minimum colour scale value</td>
+</tr>
+<tr>
+<td><code>cmax</code></td>
+<td>float</td>
+<td><code>None</code></td>
+<td>Maximum colour scale value</td>
+</tr>
+<tr>
+<td><code>num_levels</code></td>
+<td>int</td>
+<td><code>11</code></td>
+<td>Number of contour/isosurface levels</td>
+</tr>
+<tr>
+<td><code>num_arrows</code></td>
+<td>int</td>
+<td><code>None</code></td>
+<td>Number of vector arrows</td>
+</tr>
+<tr>
+<td><code>show_magnets</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Render magnets on plot</td>
+</tr>
+<tr>
+<td><code>figure_group</code></td>
+<td>str</td>
+<td><code>""</code></td>
+<td>Group multiple plots onto one figure</td>
+</tr>
+<tr>
+<td><code>save_fig</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Save figure to disk</td>
+</tr>
+<tr>
+<td><code>filename</code></td>
+<td>str</td>
+<td><code>""</code></td>
+<td>Output filename (auto-generated if empty)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2D plot types:</strong> <code>"contour"</code>, <code>"streamplot"</code></p>
+<p><strong>3D plot types:</strong> <code>"slice"</code>, <code>"volume"</code></p>
+<p><strong>3D-specific parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>opacity</code></td>
+<td>float</td>
+<td><code>0.8</code></td>
+<td>Field surface opacity</td>
+</tr>
+<tr>
+<td><code>magnet_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Magnet rendering opacity</td>
+</tr>
+<tr>
+<td><code>cone_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Vector arrow opacity</td>
+</tr>
+<tr>
+<td><code>planes</code></td>
+<td>list</td>
+<td><code>["xy", "xz", "yz"]</code></td>
+<td>Planes to render for slice plots</td>
+</tr>
+</tbody>
+</table>
+<h3 id="force-force-and-torque-calculation"><code>[force]</code> — Force and Torque Calculation</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Enable force calculation</td>
+</tr>
+<tr>
+<td><code>target_magnet</code></td>
+<td>int</td>
+<td><code>0</code></td>
+<td>Index of the magnet to calculate forces on (0-based)</td>
+</tr>
+<tr>
+<td><code>num_samples</code></td>
+<td>int</td>
+<td><code>20</code></td>
+<td>Number of integration samples per face</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td>str</td>
+<td><code>"mm"</code></td>
+<td>Length scale</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="python-api">Python API</h2>
+<h3 id="runtoml_path-output_dirnone"><code>run(toml_path, *, output_dir=None)</code></h3>
+<p>Load config, create magnets, calculate fields, generate plots, and optionally compute forces.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">run</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="s2">&quot;my_config.toml&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;output/&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Returns</strong> a dict with:</p>
+<ul>
+<li><code>config</code> — the <code>SimulationConfig</code> dataclass</li>
+<li><code>magnets</code> — list of magnet instances</li>
+<li><code>results</code> — list of dicts (one per grid/plot pair), each containing <code>points</code>, <code>field</code>, and optionally <code>figure</code> and <code>saved_to</code></li>
+<li><code>force</code> — dict with <code>force</code> and <code>torque</code> arrays (if force enabled)</li>
+</ul>
+<h3 id="loadtoml_path"><code>load(toml_path)</code></h3>
+<p>Load and validate a TOML file without running the simulation.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;my_config.toml&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">magnets</span><span class="p">),</span> <span class="s2">&quot;magnets&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="validatetoml_path"><code>validate(toml_path)</code></h3>
+<p>Validate a TOML file and return a list of error messages. An empty list means the config is valid.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate</span>
+
+<span class="n">errors</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="s2">&quot;my_config.toml&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="cli-usage">CLI Usage</h2>
+<div class="highlight"><pre><span></span><code>pymagnet<span class="w"> </span>CONFIG_FILE<span class="w"> </span><span class="o">[</span>-o<span class="w"> </span>OUTPUT_DIR<span class="o">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CONFIG_FILE</code></td>
+<td>Path to TOML configuration file</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>Output directory for saved figures</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>pymagnet<span class="w"> </span>examples/configs/single_cube.toml<span class="w"> </span>-o<span class="w"> </span>output/
+</code></pre></div>
+<hr />
+<h2 id="examples">Examples</h2>
+<h3 id="2d-contour-plot">2D Contour Plot</h3>
+<div class="highlight"><pre><span></span><code><span class="k">[meta]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2D Rectangles&quot;</span>
+<span class="n">dimension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2D&quot;</span>
+
+<span class="k">[[magnets]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Rectangle&quot;</span>
+<span class="n">Jr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+<span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">20.0</span>
+<span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="n">center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">-15.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span>
+
+<span class="k">[[magnets]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Rectangle&quot;</span>
+<span class="n">Jr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-1.0</span>
+<span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">20.0</span>
+<span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="n">center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">15.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span>
+
+<span class="k">[grid]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;grid2D&quot;</span>
+<span class="n">xmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">40.0</span>
+<span class="n">ymax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">num_points</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+
+<span class="k">[plot]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;contour&quot;</span>
+<span class="n">cmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span>
+<span class="n">cmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span>
+<span class="n">num_arrows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="n">save_fig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2d_rectangles.png&quot;</span>
+</code></pre></div>
+<h3 id="force-calculation-between-two-cubes">Force Calculation Between Two Cubes</h3>
+<div class="highlight"><pre><span></span><code><span class="k">[meta]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Two Cubes - Force&quot;</span>
+<span class="n">dimension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3D&quot;</span>
+
+<span class="k">[[magnets]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cube&quot;</span>
+<span class="n">Jr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+<span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="n">center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span>
+
+<span class="k">[[magnets]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cube&quot;</span>
+<span class="n">Jr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+<span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="n">center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">15.0</span><span class="p">]</span>
+
+<span class="k">[grid]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slice&quot;</span>
+<span class="n">plane</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;xz&quot;</span>
+<span class="n">max1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">max2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">num_points</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+
+<span class="k">[plot]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slice&quot;</span>
+<span class="n">cmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span>
+<span class="n">cmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.8</span>
+<span class="n">planes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;xz&quot;</span><span class="p">]</span>
+
+<span class="k">[force]</span>
+<span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">target_magnet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">num_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+</code></pre></div>
+<h3 id="grouped-slice-plots-multiple-planes-on-one-figure">Grouped Slice Plots (Multiple Planes on One Figure)</h3>
+<p>Use <code>figure_group</code> to render multiple grid/plot pairs onto a single 3D figure. This is useful for showing different cross-sections of an assembly simultaneously.</p>
+<div class="highlight"><pre><span></span><code><span class="k">[meta]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Multi-Slice Assembly&quot;</span>
+<span class="n">dimension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3D&quot;</span>
+
+<span class="k">[[magnets]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Prism&quot;</span>
+<span class="n">Jr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.26</span>
+<span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">60.0</span>
+<span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">30.0</span><span class="p">]</span>
+<span class="n">mask_magnet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="c1"># XY slice at z=15</span>
+<span class="k">[[grid]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slice&quot;</span>
+<span class="n">max1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">max2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">60.0</span>
+<span class="n">min2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-60.0</span>
+<span class="n">slice_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">15.0</span>
+<span class="n">num_points</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+
+<span class="k">[[plot]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slice&quot;</span>
+<span class="n">figure_group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;main&quot;</span>
+<span class="n">cmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span>
+<span class="n">cmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+<span class="n">planes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;xy&quot;</span><span class="p">]</span>
+<span class="n">num_arrows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+
+<span class="c1"># XZ slice at y=0</span>
+<span class="k">[[grid]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slice&quot;</span>
+<span class="n">max1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<span class="n">max2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">60.0</span>
+<span class="n">min1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-30.0</span>
+<span class="n">min2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-60.0</span>
+<span class="n">num_points</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+
+<span class="k">[[plot]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slice&quot;</span>
+<span class="n">figure_group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;main&quot;</span>
+<span class="n">cmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span>
+<span class="n">cmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+<span class="n">planes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;xz&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>Plots sharing the same <code>figure_group</code> string are combined into one plotly figure.</p>
+<hr />
+<h2 id="more-examples">More Examples</h2>
+<p>See the <a href="https://github.com/pdunne/pymagnet/tree/main/examples/configs">examples/configs/</a> directory for 14 ready-to-use configuration files covering single magnets, Halbach arrays, STL meshes, force calculations, and grouped plots.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

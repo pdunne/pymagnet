@@ -1,360 +1,2316 @@
 
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pdunne.github.io/pymagnet/plots/plots_3d/">
+      
+      
+        <link rel="prev" href="../plots_2d/">
+      
+      
+        <link rel="next" href="../../forces_torques/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>3D Plots - Pymagnet</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
 
-<html class="no-js" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.3.0, mkdocs-material-8.2.14" name="generator"/>
-<title>3D Plots - Pymagnet</title>
-<link href="../../assets/stylesheets/main.3de6f41f.min.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/palette.cc9b2e1e.min.css" rel="stylesheet"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
-<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-<link href="../../assets/_mkdocstrings.css" rel="stylesheet"/>
-<script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-</head>
-<body data-md-color-accent="none" data-md-color-primary="none" data-md-color-scheme="" dir="ltr">
-<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
-<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
-<label class="md-overlay" for="__drawer"></label>
-<div data-md-component="skip">
-<a class="md-skip" href="#3d-plotting">
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#3d-plotting" class="md-skip">
           Skip to content
         </a>
-</div>
-<div data-md-component="announce">
-</div>
-<header class="md-header" data-md-component="header">
-<nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="Pymagnet" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Pymagnet">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
-</a>
-<label class="md-header__button md-icon" for="__drawer">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
-</label>
-<div class="md-header__title" data-md-component="header-title">
-<div class="md-header__ellipsis">
-<div class="md-header__topic">
-<span class="md-ellipsis">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pymagnet" class="md-header__button md-logo" aria-label="Pymagnet" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
             Pymagnet
           </span>
-</div>
-<div class="md-header__topic" data-md-component="header-topic">
-<span class="md-ellipsis">
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
             
               3D Plots
             
           </span>
-</div>
-</div>
-</div>
-<label class="md-header__button md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
-</label>
-<div class="md-search" data-md-component="search" role="dialog">
-<label class="md-search__overlay" for="__search"></label>
-<div class="md-search__inner" role="search">
-<form class="md-search__form" name="search">
-<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
-<label class="md-search__icon md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
-</label>
-<nav aria-label="Search" class="md-search__options">
-<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" type="reset">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
-</button>
-</nav>
-</form>
-<div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="">
-<div class="md-search-result" data-md-component="search-result">
-<div class="md-search-result__meta">
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
             Initializing search
           </div>
-<ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-</nav>
+      
+    
+    
+  </nav>
+  
 </header>
-<div class="md-container" data-md-component="container">
-<main class="md-main" data-md-component="main">
-<div class="md-main__inner md-grid">
-<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
-<label class="md-nav__title" for="__drawer">
-<a aria-label="Pymagnet" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Pymagnet">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
-</a>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pymagnet" class="md-nav__button md-logo" aria-label="Pymagnet" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
     Pymagnet
   </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../..">
-        Home
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
       </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../examples/">
-        Examples
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats_new/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
       </a>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" id="__nav_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_3">
-          Magnets
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Magnets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Magnets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../magnets/magnets_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../magnets/magnets_1d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1D Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../magnets/magnets_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2D Magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../magnets/magnets_3d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3D Magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../magnets/composite_magnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Composite Magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plots_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plots_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2D Plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3D Plots
+  
+
+    
+  </span>
+  
+  
+
           <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Magnets" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_3">
-<span class="md-nav__icon md-icon"></span>
-          Magnets
         </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../magnets/magnets_overview/">
-        Overview
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3D Plots
+  
+
+    
+  </span>
+  
+  
+
       </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../magnets/magnets_1d/">
-        1D Methods
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../magnets/magnets_2d/">
-        2D Magnets
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../magnets/magnets_3d/">
-        3D Magnets
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../magnets/composite_magnets/">
-        Composite Magnets
-      </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" id="__nav_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4">
-          Plots
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Plots" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_4">
-<span class="md-nav__icon md-icon"></span>
-          Plots
-        </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../plots_overview/">
-        Overview
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../plots_2d/">
-        2D Plots
-      </a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-          3D Plots
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-        3D Plots
-      </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#slices">
-    Slices
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#volume-plots">
-    Volume Plots
+      
+        <li class="md-nav__item">
+  <a href="#available-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Functions
+      
+    </span>
   </a>
+  
 </li>
-</ul>
+      
+        <li class="md-nav__item">
+  <a href="#plot_magnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plot_magnet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slice-plots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slice Plots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Slice Plots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slice_plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slice_plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#slice_quickplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slice_quickplot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volume-plots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Plots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Volume Plots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volume_plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        volume_plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume_quickplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        volume_quickplot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opacity-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opacity Scaling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vector-arrows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vector Arrows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slice3d-generating-planar-evaluation-grids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slice3D — Generating Planar Evaluation Grids
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
-</li>
-</ul>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../forces_torques/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forces & Torques
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../methods/methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Class Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../methods/transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../methods/demag_solver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demagnetisation Solver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/pymagnet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pymagnet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/magnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/plots/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    utils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
 </nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../forces_torques/">
-        Forces &amp; Torques
-      </a>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6">
-          Methods
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Methods" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
-<span class="md-nav__icon md-icon"></span>
-          Methods
-        </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../methods/methods/">
-        Class Methods
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../methods/transforms/">
-        Transforms
-      </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7">
-          Code Reference
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Code Reference" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
-<span class="md-nav__icon md-icon"></span>
-          Code Reference
-        </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../code_reference/pymagnet/">
-        pymagnet
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../code_reference/magnets/">
-        magnets
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../code_reference/plots/">
-        plots
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../code_reference/utils/">
-        utils
-      </a>
-</li>
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#slices">
-    Slices
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#volume-plots">
-    Volume Plots
+      
+        <li class="md-nav__item">
+  <a href="#available-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Functions
+      
+    </span>
   </a>
+  
 </li>
-</ul>
+      
+        <li class="md-nav__item">
+  <a href="#plot_magnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plot_magnet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slice-plots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slice Plots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Slice Plots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slice_plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slice_plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#slice_quickplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slice_quickplot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volume-plots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Plots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Volume Plots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volume_plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        volume_plot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume_quickplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        volume_quickplot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opacity-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opacity Scaling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vector-arrows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vector Arrows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slice3d-generating-planar-evaluation-grids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        slice3D — Generating Planar Evaluation Grids
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
-</div>
-</div>
-</div>
-<div class="md-content" data-md-component="content">
-<article class="md-content__inner md-typeset">
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
 <h1 id="3d-plotting">3D Plotting</h1>
-<p>All plots are produced using plotly.</p>
-<h2 id="slices">Slices</h2>
+<p>All 3D plotting functions use <strong>plotly</strong> as the backend, providing interactive visualizations that can be rotated, zoomed, and panned.</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>These functions require plotly to be installed:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>plotly
+</code></pre></div>
+<h2 id="available-functions">Available Functions</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plot_magnet()</code></td>
+<td>Render 3D magnets only (no field)</td>
+</tr>
+<tr>
+<td><code>slice_plot()</code></td>
+<td>Plot pre-calculated field data on 2D slices</td>
+</tr>
+<tr>
+<td><code>slice_quickplot()</code></td>
+<td>Calculate and plot field on 2D slices in one step</td>
+</tr>
+<tr>
+<td><code>volume_plot()</code></td>
+<td>Plot pre-calculated field data as 3D volume</td>
+</tr>
+<tr>
+<td><code>volume_quickplot()</code></td>
+<td>Calculate and plot field as 3D volume in one step</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="plot_magnet"><code>plot_magnet</code></h2>
+<p>Renders all instantiated 3D magnets as interactive plotly meshes.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_magnet</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unit</code></td>
+<td>str</td>
+<td><code>"mm"</code></td>
+<td>Unit label for axis titles</td>
+</tr>
+<tr>
+<td><code>magnet_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of rendered magnets (0.0 to 1.0)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Figure</code></td>
+<td>Plotly figure object</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_magnet</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Prism</span><span class="p">(</span><span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plot_magnet</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">,</span> <span class="n">magnet_opacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</code></pre></div>
+<figure>
+  <img src="../../img/3d_prism.png" width="400" />
+  <figcaption>3D rendering of a prism magnet</figcaption>
+</figure>
+
+<hr />
+<h2 id="slice-plots">Slice Plots</h2>
+<p>Slice plots display 2D cross-sections of the magnetic field in 3D space. These are useful for visualizing field distributions on specific planes (XY, XZ, or YZ).</p>
+<h3 id="slice_plot"><code>slice_plot</code></h3>
+<p>Plots magnetic field data on pre-calculated slices. Use this when you have already computed the field data and want more control over the calculation.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">slice_plot</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data_dict</code></td>
+<td>dict</td>
+<td>required</td>
+<td>Dictionary containing slice data (see format below)</td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td>float</td>
+<td><code>0.8</code></td>
+<td>Opacity of field surface</td>
+</tr>
+<tr>
+<td><code>magnet_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of rendered magnets</td>
+</tr>
+<tr>
+<td><code>cone_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of vector cones</td>
+</tr>
+<tr>
+<td><code>cmin</code></td>
+<td>float</td>
+<td><code>0</code></td>
+<td>Minimum value for colorscale</td>
+</tr>
+<tr>
+<td><code>cmax</code></td>
+<td>float</td>
+<td><code>0.5</code></td>
+<td>Maximum value for colorscale</td>
+</tr>
+<tr>
+<td><code>colorscale</code></td>
+<td>str</td>
+<td><code>"viridis"</code></td>
+<td>Plotly colorscale name</td>
+</tr>
+<tr>
+<td><code>num_arrows</code></td>
+<td>int</td>
+<td><code>None</code></td>
+<td>Number of vector arrows to display (None = no arrows)</td>
+</tr>
+<tr>
+<td><code>show_magnets</code></td>
+<td>bool</td>
+<td><code>True</code></td>
+<td>Whether to render magnets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Data Dictionary Format:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">data_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;xy&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="n">Point_Array3</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">Field3</span><span class="p">},</span>
+    <span class="s2">&quot;xz&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="n">Point_Array3</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">Field3</span><span class="p">},</span>
+    <span class="s2">&quot;yz&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="n">Point_Array3</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">Field3</span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tuple[Figure, list]</code></td>
+<td>Plotly figure and list of data objects</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">slice_plot</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Prism</span><span class="p">(</span><span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Calculate field on XY plane at z=0</span>
+<span class="n">points</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">slice3D</span><span class="p">(</span><span class="n">plane</span><span class="o">=</span><span class="s2">&quot;xy&quot;</span><span class="p">,</span> <span class="n">max1</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max2</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">slice_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_points</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">get_field_3D</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+<span class="n">data_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;xy&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="n">points</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">field</span><span class="p">}}</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">data_objects</span> <span class="o">=</span> <span class="n">slice_plot</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">cmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="slice_quickplot"><code>slice_quickplot</code></h3>
+<p>Convenience function that calculates the magnetic field and plots slices in one step.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">slice_quickplot</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>max1</code></td>
+<td>float</td>
+<td><code>30</code></td>
+<td>Maximum value for first axis</td>
+</tr>
+<tr>
+<td><code>max2</code></td>
+<td>float</td>
+<td><code>30</code></td>
+<td>Maximum value for second axis</td>
+</tr>
+<tr>
+<td><code>min1</code></td>
+<td>float</td>
+<td><code>-max1</code></td>
+<td>Minimum value for first axis</td>
+</tr>
+<tr>
+<td><code>min2</code></td>
+<td>float</td>
+<td><code>-max2</code></td>
+<td>Minimum value for second axis</td>
+</tr>
+<tr>
+<td><code>slice_value</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Position of slice on the third axis</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td>str</td>
+<td><code>"mm"</code></td>
+<td>Unit label for axes</td>
+</tr>
+<tr>
+<td><code>num_points</code></td>
+<td>int</td>
+<td><code>100</code></td>
+<td>Number of points per axis</td>
+</tr>
+<tr>
+<td><code>planes</code></td>
+<td>list</td>
+<td><code>["xy", "xz", "yz"]</code></td>
+<td>List of planes to plot</td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td>float</td>
+<td><code>0.8</code></td>
+<td>Opacity of field surface</td>
+</tr>
+<tr>
+<td><code>magnet_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of rendered magnets</td>
+</tr>
+<tr>
+<td><code>cone_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of vector cones</td>
+</tr>
+<tr>
+<td><code>cmin</code></td>
+<td>float</td>
+<td><code>0</code></td>
+<td>Minimum value for colorscale</td>
+</tr>
+<tr>
+<td><code>cmax</code></td>
+<td>float</td>
+<td><code>0.5</code></td>
+<td>Maximum value for colorscale</td>
+</tr>
+<tr>
+<td><code>colorscale</code></td>
+<td>str</td>
+<td><code>"viridis"</code></td>
+<td>Plotly colorscale name</td>
+</tr>
+<tr>
+<td><code>num_arrows</code></td>
+<td>int</td>
+<td><code>None</code></td>
+<td>Number of vector arrows per axis</td>
+</tr>
+<tr>
+<td><code>show_magnets</code></td>
+<td>bool</td>
+<td><code>True</code></td>
+<td>Whether to render magnets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tuple[Figure, dict, list]</code></td>
+<td>Plotly figure, cached data dictionary, and list of data objects</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">slice_quickplot</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Prism</span><span class="p">(</span><span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> <span class="n">data_objects</span> <span class="o">=</span> <span class="n">slice_quickplot</span><span class="p">(</span>
+    <span class="n">max1</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">max2</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">planes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;xy&quot;</span><span class="p">,</span> <span class="s2">&quot;xz&quot;</span><span class="p">],</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">cmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">num_arrows</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<figure>
+  <img src="../../img/3d_example_slice_1.png" width="500" />
+  <figcaption>Slice plot showing XY and XZ planes through a prism magnet</figcaption>
+</figure>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>cache</code> return value contains the calculated <code>points</code> and <code>field</code> data for each plane, which can be reused for further analysis or re-plotting with different visualization settings.</p>
+</div>
+<hr />
 <h2 id="volume-plots">Volume Plots</h2>
-</article>
+<p>Volume plots display the magnetic field as a 3D isosurface visualization, showing regions of equal field magnitude.</p>
+<h3 id="volume_plot"><code>volume_plot</code></h3>
+<p>Plots magnetic field data as a 3D volume. Use this when you have already computed the field data on a 3D grid.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">volume_plot</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>points</code></td>
+<td>Point_Array3</td>
+<td>required</td>
+<td>3D coordinate grid</td>
+</tr>
+<tr>
+<td><code>field</code></td>
+<td>Field3</td>
+<td>required</td>
+<td>Magnetic field data</td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td>float</td>
+<td><code>0.3</code></td>
+<td>Overall opacity of volume</td>
+</tr>
+<tr>
+<td><code>opacityscale</code></td>
+<td>str/list</td>
+<td><code>None</code></td>
+<td>Opacity scaling (<code>"normal"</code>, <code>"invert"</code>, or custom list)</td>
+</tr>
+<tr>
+<td><code>magnet_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of rendered magnets</td>
+</tr>
+<tr>
+<td><code>cone_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of vector cones</td>
+</tr>
+<tr>
+<td><code>cmin</code></td>
+<td>float</td>
+<td><code>0</code></td>
+<td>Minimum value for colorscale</td>
+</tr>
+<tr>
+<td><code>cmax</code></td>
+<td>float</td>
+<td><code>0.5</code></td>
+<td>Maximum value for colorscale</td>
+</tr>
+<tr>
+<td><code>num_levels</code></td>
+<td>int</td>
+<td><code>5</code></td>
+<td>Number of isosurface levels</td>
+</tr>
+<tr>
+<td><code>colorscale</code></td>
+<td>str</td>
+<td><code>"viridis"</code></td>
+<td>Plotly colorscale name</td>
+</tr>
+<tr>
+<td><code>num_arrows</code></td>
+<td>int</td>
+<td><code>None</code></td>
+<td>Number of vector arrows</td>
+</tr>
+<tr>
+<td><code>show_magnets</code></td>
+<td>bool</td>
+<td><code>True</code></td>
+<td>Whether to render magnets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tuple[Figure, list]</code></td>
+<td>Plotly figure and list of data objects</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">volume_plot</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">points</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">grid3D</span><span class="p">(</span><span class="n">xmax</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">num_points</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">get_field_3D</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">data_objects</span> <span class="o">=</span> <span class="n">volume_plot</span><span class="p">(</span>
+    <span class="n">points</span><span class="p">,</span>
+    <span class="n">field</span><span class="p">,</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">cmax</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">num_levels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">opacity</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="volume_quickplot"><code>volume_quickplot</code></h3>
+<p>Convenience function that calculates the magnetic field on a 3D grid and plots it in one step.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">volume_quickplot</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>num_points</code></td>
+<td>int</td>
+<td><code>30</code></td>
+<td>Number of points per axis</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td>str</td>
+<td><code>"mm"</code></td>
+<td>Unit label for axes</td>
+</tr>
+<tr>
+<td><code>xmax</code></td>
+<td>float</td>
+<td><code>30</code></td>
+<td>Maximum x value</td>
+</tr>
+<tr>
+<td><code>ymax</code></td>
+<td>float</td>
+<td><code>30</code></td>
+<td>Maximum y value</td>
+</tr>
+<tr>
+<td><code>zmax</code></td>
+<td>float</td>
+<td><code>30</code></td>
+<td>Maximum z value</td>
+</tr>
+<tr>
+<td><code>xmin</code></td>
+<td>float</td>
+<td><code>-xmax</code></td>
+<td>Minimum x value</td>
+</tr>
+<tr>
+<td><code>ymin</code></td>
+<td>float</td>
+<td><code>-ymax</code></td>
+<td>Minimum y value</td>
+</tr>
+<tr>
+<td><code>zmin</code></td>
+<td>float</td>
+<td><code>-zmax</code></td>
+<td>Minimum z value</td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td>float</td>
+<td><code>0.3</code></td>
+<td>Overall opacity of volume</td>
+</tr>
+<tr>
+<td><code>opacityscale</code></td>
+<td>str/list</td>
+<td><code>None</code></td>
+<td>Opacity scaling</td>
+</tr>
+<tr>
+<td><code>magnet_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of rendered magnets</td>
+</tr>
+<tr>
+<td><code>cone_opacity</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Opacity of vector cones</td>
+</tr>
+<tr>
+<td><code>cmin</code></td>
+<td>float</td>
+<td><code>0</code></td>
+<td>Minimum value for colorscale</td>
+</tr>
+<tr>
+<td><code>cmax</code></td>
+<td>float</td>
+<td><code>0.5</code></td>
+<td>Maximum value for colorscale</td>
+</tr>
+<tr>
+<td><code>num_levels</code></td>
+<td>int</td>
+<td><code>5</code></td>
+<td>Number of isosurface levels</td>
+</tr>
+<tr>
+<td><code>colorscale</code></td>
+<td>str</td>
+<td><code>"viridis"</code></td>
+<td>Plotly colorscale name</td>
+</tr>
+<tr>
+<td><code>num_arrows</code></td>
+<td>int</td>
+<td><code>None</code></td>
+<td>Number of vector arrows</td>
+</tr>
+<tr>
+<td><code>show_magnets</code></td>
+<td>bool</td>
+<td><code>True</code></td>
+<td>Whether to render magnets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tuple[Figure, dict, list]</code></td>
+<td>Plotly figure, cached data dictionary, and list of data objects</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">volume_quickplot</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> <span class="n">data_objects</span> <span class="o">=</span> <span class="n">volume_quickplot</span><span class="p">(</span>
+    <span class="n">xmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">ymax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">zmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">num_points</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">cmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">num_levels</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">opacityscale</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<figure>
+  <img src="../../img/3d_example_volume_1.png" width="500" />
+  <figcaption>Volume plot showing magnetic field magnitude around a cylinder magnet</figcaption>
+</figure>
+
+<hr />
+<h2 id="opacity-scaling">Opacity Scaling</h2>
+<p>The <code>opacityscale</code> parameter in volume plots controls how opacity varies with field magnitude:</p>
+<ul>
+<li><code>"normal"</code>: Higher field values are more opaque</li>
+<li><code>"invert"</code>: Lower field values are more opaque (useful for seeing into strong-field regions)</li>
+<li>Custom list: Define your own opacity mapping as <code>[[value, opacity], ...]</code></li>
+</ul>
+<p><strong>Example with inverted opacity:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> <span class="n">data_objects</span> <span class="o">=</span> <span class="n">volume_quickplot</span><span class="p">(</span>
+    <span class="n">xmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">ymax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">zmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">opacityscale</span><span class="o">=</span><span class="s2">&quot;invert&quot;</span><span class="p">,</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">cmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<figure>
+  <img src="../../img/3d_example_volume_2.png" width="500" />
+  <figcaption>Volume plot with inverted opacity scale</figcaption>
+</figure>
+
+<hr />
+<h2 id="vector-arrows">Vector Arrows</h2>
+<p>Both slice and volume plots support displaying vector arrows (cones) to show field direction:</p>
+<div class="highlight"><pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> <span class="n">data_objects</span> <span class="o">=</span> <span class="n">slice_quickplot</span><span class="p">(</span>
+    <span class="n">max1</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">max2</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">planes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;xy&quot;</span><span class="p">],</span>
+    <span class="n">num_arrows</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>  <span class="c1"># Display 8 arrows per axis</span>
+    <span class="n">cone_opacity</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>  <span class="c1"># Make arrows slightly transparent</span>
+<span class="p">)</span>
+</code></pre></div>
+<figure>
+  <img src="../../img/3d_example_slice_2.png" width="500" />
+  <figcaption>Slice plot with vector arrows showing field direction</figcaption>
+</figure>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>num_arrows</code> parameter controls the density of arrows. Setting it too high may clutter the visualization, while too low may not adequately represent the field direction.</p>
 </div>
+<hr />
+<h2 id="slice3d-generating-planar-evaluation-grids"><code>slice3D</code> — Generating Planar Evaluation Grids</h2>
+<p>The <code>slice3D()</code> utility function generates a 2D grid of points in 3D space on a specified plane. This is the recommended way to create point arrays for slice plots when you need fine control over the evaluation region.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">slice3D</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span> <span class="n">max1</span><span class="p">,</span> <span class="n">max2</span><span class="p">,</span> <span class="n">slice_value</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plane</code></td>
+<td>str</td>
+<td><code>"xy"</code></td>
+<td>Plane to generate: <code>"xy"</code>, <code>"xz"</code>, or <code>"yz"</code></td>
+</tr>
+<tr>
+<td><code>max1</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Maximum value along first axis</td>
+</tr>
+<tr>
+<td><code>max2</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Maximum value along second axis</td>
+</tr>
+<tr>
+<td><code>slice_value</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Constant value for the third axis</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td>str</td>
+<td><code>"mm"</code></td>
+<td>Length scale units</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Keyword Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>num_points</code></td>
+<td>int</td>
+<td><code>100</code></td>
+<td>Number of points per axis</td>
+</tr>
+<tr>
+<td><code>min1</code></td>
+<td>float</td>
+<td><code>-max1</code></td>
+<td>Minimum value along first axis</td>
+</tr>
+<tr>
+<td><code>min2</code></td>
+<td>float</td>
+<td><code>-max2</code></td>
+<td>Minimum value along second axis</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>Point_Array3</code> — array of x, y, z values of shape <code>(num_points, num_points)</code> with associated unit.</p>
+<p><strong>Plane axis mapping:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Plane</th>
+<th>Axis 1 (max1/min1)</th>
+<th>Axis 2 (max2/min2)</th>
+<th>Constant (slice_value)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"xy"</code></td>
+<td>x</td>
+<td>y</td>
+<td>z</td>
+</tr>
+<tr>
+<td><code>"xz"</code></td>
+<td>x</td>
+<td>z</td>
+<td>y</td>
+</tr>
+<tr>
+<td><code>"yz"</code></td>
+<td>y</td>
+<td>z</td>
+<td>x</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">slice_plot</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Cube</span><span class="p">(</span><span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">mask_magnet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># XZ plane at y=0 with asymmetric bounds</span>
+<span class="n">points</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">slice3D</span><span class="p">(</span>
+    <span class="n">plane</span><span class="o">=</span><span class="s2">&quot;xz&quot;</span><span class="p">,</span>
+    <span class="n">max1</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">min1</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">max2</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">min2</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">slice_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">num_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">get_field_3D</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+<span class="n">data_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;xz&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="n">points</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">field</span><span class="p">}}</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">data_objects</span> <span class="o">=</span> <span class="n">slice_plot</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">cmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><code>slice3D()</code> is particularly useful for asymmetric bounds (e.g. <code>min1=0, max1=30</code>) or off-centre slices (e.g. <code>slice_value=15.0</code>), where <code>slice_quickplot()</code> defaults may not suffice.</p>
 </div>
-</main>
-<footer class="md-footer">
-<nav aria-label="Footer" class="md-footer__inner md-grid">
-<a aria-label="Previous: 2D Plots" class="md-footer__link md-footer__link--prev" href="../plots_2d/" rel="prev">
-<div class="md-footer__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
-</div>
-<div class="md-footer__title">
-<div class="md-ellipsis">
-<span class="md-footer__direction">
-                Previous
-              </span>
-              2D Plots
+<hr />
+<h2 id="tips">Tips</h2>
+<ol>
+<li>
+<p><strong>Performance</strong>: Volume plots with high <code>num_points</code> values can be slow. Start with 20-30 points and increase as needed.</p>
+</li>
+<li>
+<p><strong>Color scaling</strong>: Adjust <code>cmin</code> and <code>cmax</code> to highlight the field range of interest. Values outside this range will be clipped.</p>
+</li>
+<li>
+<p><strong>Interactivity</strong>: All plotly figures are interactive. Use mouse controls to rotate, zoom, and pan the 3D view.</p>
+</li>
+<li>
+<p><strong>Exporting</strong>: Save figures using <code>fig.write_html("output.html")</code> for interactive HTML or <code>fig.write_image("output.png")</code> for static images.</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
             </div>
-</div>
-</a>
-<a aria-label="Next: Forces &amp; Torques" class="md-footer__link md-footer__link--next" href="../../forces_torques/" rel="next">
-<div class="md-footer__title">
-<div class="md-ellipsis">
-<span class="md-footer__direction">
-                Next
-              </span>
-              Forces &amp; Torques
-            </div>
-</div>
-<div class="md-footer__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"></path></svg>
-</div>
-</a>
-</nav>
-<div class="md-footer-meta md-typeset">
-<div class="md-footer-meta__inner md-grid">
-<div class="md-copyright">
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
     </a>
+  
 </div>
-</div>
-</div>
+      
+    </div>
+  </div>
 </footer>
-</div>
-<div class="md-dialog" data-md-component="dialog">
-<div class="md-dialog__inner md-typeset"></div>
-</div>
-<script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
-<script src="../../assets/javascripts/bundle.c2e1ee47.min.js"></script>
-<script src="../../javascripts/config.js"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
-</body>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
 </html>

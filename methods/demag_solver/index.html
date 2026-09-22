@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://pdunne.github.io/pymagnet/methods/transforms/">
+        <link rel="canonical" href="https://pdunne.github.io/pymagnet/methods/demag_solver/">
       
       
-        <link rel="prev" href="../methods/">
+        <link rel="prev" href="../transforms/">
       
       
-        <link rel="next" href="../demag_solver/">
+        <link rel="next" href="../../code_reference/pymagnet/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Transforms - Pymagnet</title>
+        <title>Demagnetisation Solver - Pymagnet</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#transforms" class="md-skip">
+        <a href="#demagnetization-solver" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Transforms
+              Demagnetisation Solver
             
           </span>
         </div>
@@ -743,6 +743,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -762,7 +790,7 @@
   <span class="md-ellipsis">
     
   
-    Transforms
+    Demagnetisation Solver
   
 
     
@@ -780,7 +808,7 @@
   <span class="md-ellipsis">
     
   
-    Transforms
+    Demagnetisation Solver
   
 
     
@@ -806,150 +834,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#coordinate-system-transforms" class="md-nav__link">
+  <a href="#physics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Coordinate System Transforms
+        Physics
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Coordinate System Transforms">
+    <nav class="md-nav" aria-label="Physics">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scalar-transforms" class="md-nav__link">
+  <a href="#demagnetizing-factors-for-common-geometries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scalar Transforms
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Scalar Transforms">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#2d-cartesian-polar" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2D: Cartesian ↔ Polar
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3d-cartesian-spherical" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3D: Cartesian ↔ Spherical
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vector-transforms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vector Transforms
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Vector Transforms">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#polar-to-cartesian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Polar to Cartesian
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cylindrical-to-cartesian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cylindrical to Cartesian
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spherical-to-cartesian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Spherical to Cartesian
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Reference
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="API Reference">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#scalar-conversion-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scalar Conversion Functions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vector-conversion-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vector Conversion Functions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#unit-conversion-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unit Conversion Functions
+        Demagnetizing factors for common geometries
       
     </span>
   </a>
@@ -962,22 +862,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#polygon-geometry" class="md-nav__link">
+  <a href="#mh-models" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Polygon Geometry
+        M(H) models
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Polygon Geometry">
+    <nav class="md-nav" aria-label="M(H) models">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#centroid" class="md-nav__link">
+  <a href="#build_mh_interpolatorh_data-m_data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Centroid
+        build_MH_interpolator(H_data, M_data)
       
     </span>
   </a>
@@ -985,10 +885,188 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#signed-area" class="md-nav__link">
+  <a href="#tanh_mh_modelms-chi" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Signed Area
+        tanh_MH_model(Ms, chi)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scipy-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scipy solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scipy solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solve_demagnetizationh_ext-mh_interp-m_sat-n05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solve_demagnetization(H_ext, MH_interp, M_sat, N=0.5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demagresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DemagResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numba-accelerated-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numba-accelerated solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Numba-accelerated solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solve_demag_tanhh_ext-ms-chi-n05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solve_demag_tanh(H_ext, Ms, chi, N=0.5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solve_demag_tanh_batchh_ext_array-ms-chi-n05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solve_demag_tanh_batch(H_ext_array, Ms, chi, N=0.5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpolated-mh-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpolated M(H) data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analytical-tanh-model-scipy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analytical tanh model (scipy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numba-accelerated-single-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numba-accelerated (single value)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numba-accelerated-batch-parallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numba-accelerated (batch, parallel)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solver-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solver strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solver strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scipy-path-solve_demagnetization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scipy path (solve_demagnetization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numba-path-solve_demag_tanh-solve_demag_tanh_batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numba path (solve_demag_tanh / solve_demag_tanh_batch)
       
     </span>
   </a>
@@ -1004,34 +1082,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../demag_solver/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Demagnetisation Solver
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1265,150 +1315,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#coordinate-system-transforms" class="md-nav__link">
+  <a href="#physics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Coordinate System Transforms
+        Physics
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Coordinate System Transforms">
+    <nav class="md-nav" aria-label="Physics">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scalar-transforms" class="md-nav__link">
+  <a href="#demagnetizing-factors-for-common-geometries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scalar Transforms
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Scalar Transforms">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#2d-cartesian-polar" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2D: Cartesian ↔ Polar
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3d-cartesian-spherical" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3D: Cartesian ↔ Spherical
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vector-transforms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vector Transforms
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Vector Transforms">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#polar-to-cartesian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Polar to Cartesian
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cylindrical-to-cartesian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cylindrical to Cartesian
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spherical-to-cartesian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Spherical to Cartesian
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Reference
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="API Reference">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#scalar-conversion-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scalar Conversion Functions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vector-conversion-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vector Conversion Functions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#unit-conversion-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unit Conversion Functions
+        Demagnetizing factors for common geometries
       
     </span>
   </a>
@@ -1421,22 +1343,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#polygon-geometry" class="md-nav__link">
+  <a href="#mh-models" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Polygon Geometry
+        M(H) models
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Polygon Geometry">
+    <nav class="md-nav" aria-label="M(H) models">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#centroid" class="md-nav__link">
+  <a href="#build_mh_interpolatorh_data-m_data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Centroid
+        build_MH_interpolator(H_data, M_data)
       
     </span>
   </a>
@@ -1444,10 +1366,188 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#signed-area" class="md-nav__link">
+  <a href="#tanh_mh_modelms-chi" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Signed Area
+        tanh_MH_model(Ms, chi)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scipy-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scipy solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scipy solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solve_demagnetizationh_ext-mh_interp-m_sat-n05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solve_demagnetization(H_ext, MH_interp, M_sat, N=0.5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demagresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DemagResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numba-accelerated-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numba-accelerated solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Numba-accelerated solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solve_demag_tanhh_ext-ms-chi-n05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solve_demag_tanh(H_ext, Ms, chi, N=0.5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solve_demag_tanh_batchh_ext_array-ms-chi-n05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solve_demag_tanh_batch(H_ext_array, Ms, chi, N=0.5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpolated-mh-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpolated M(H) data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analytical-tanh-model-scipy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analytical tanh model (scipy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numba-accelerated-single-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numba-accelerated (single value)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numba-accelerated-batch-parallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numba-accelerated (batch, parallel)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solver-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solver strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solver strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scipy-path-solve_demagnetization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scipy path (solve_demagnetization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numba-path-solve_demag_tanh-solve_demag_tanh_batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numba path (solve_demag_tanh / solve_demag_tanh_batch)
       
     </span>
   </a>
@@ -1476,200 +1576,293 @@
 
 
 
-<h1 id="transforms">Transforms</h1>
-<h2 id="coordinate-system-transforms">Coordinate System Transforms</h2>
-<p>For certain magnetic sources, like a sphere or solenoid, their field equations are
-more conveniently written in non-cartesian coordinates. The resulting vector fields
-then need to be transformed back into cartesian coordinates of the form
-<span class="arithmatex">\(\mathbf{B} = B_x \mathbf{\hat{x}} + B_y \mathbf{\hat{y}} + B_z \mathbf{\hat{z}}\)</span> or <span class="arithmatex">\(\mathbf{B} = B_x \mathbf{\hat{x}} + B_y \mathbf{\hat{y}}\)</span>.</p>
-<h3 id="scalar-transforms">Scalar Transforms</h3>
-<h4 id="2d-cartesian-polar">2D: Cartesian ↔ Polar</h4>
-<p><strong>Cartesian to Polar:</strong></p>
+<h1 id="demagnetization-solver">Demagnetization Solver</h1>
+<p>Self-consistent solver for calculating the magnetization <strong>M</strong> of a soft magnetic element, accounting for the demagnetizing field. Given an applied field <strong>H_ext</strong> and a measured M(H) curve, the solver finds the operating point where the material response and the demagnetizing load line intersect.</p>
+<h2 id="physics">Physics</h2>
+<p>The internal field of a magnetized body is reduced from the applied field by its own demagnetizing contribution:</p>
 <div class="arithmatex">\[
-\begin{align}
-\rho &amp;= \sqrt{x^2 + y^2} \\
-\phi &amp;= \arctan(y/x)
-\end{align}
+H_\text{int} = H_\text{ext} - N \, M
 \]</div>
-<p><strong>Polar to Cartesian:</strong></p>
+<p>where <strong>N</strong> is the demagnetizing factor (geometry-dependent). The magnetization is determined self-consistently by the material's constitutive relation:</p>
 <div class="arithmatex">\[
-\begin{align}
-x &amp;= \rho \cos \phi \\
-y &amp;= \rho \sin \phi
-\end{align}
+M = f_{MH}(H_\text{int})
 \]</div>
-<h4 id="3d-cartesian-spherical">3D: Cartesian ↔ Spherical</h4>
-<p><strong>Cartesian to Spherical:</strong></p>
+<p>The solver reformulates this as a 1D root-finding problem:</p>
 <div class="arithmatex">\[
-\begin{align}
-r &amp;= \sqrt{x^2 + y^2 + z^2} \\
-\theta &amp;= \arccos(z/r) \\
-\phi &amp;= \arctan(y/x)
-\end{align}
+g(M) = M - f_{MH}\!\left(H_\text{ext} - N \, M\right) = 0
 \]</div>
-<p><strong>Spherical to Cartesian:</strong></p>
-<div class="arithmatex">\[
-\begin{align}
-x &amp;= r \sin\theta \cos\phi \\
-y &amp;= r \sin\theta \sin\phi \\
-z &amp;= r \cos\theta
-\end{align}
-\]</div>
-<hr />
-<h3 id="vector-transforms">Vector Transforms</h3>
-<h4 id="polar-to-cartesian">Polar to Cartesian</h4>
-<p><span class="arithmatex">\(\mathbf{B} = B_r \mathbf{\hat{r}} + B_\phi \mathbf{\hat{\phi}}\)</span></p>
-<div class="arithmatex">\[
-\begin{align}
-B_x &amp;= B_r \cos \phi - B_\phi \sin \phi \\
-B_y &amp;= B_r \sin \phi + B_\phi \cos \phi
-\end{align}
-\]</div>
-<h4 id="cylindrical-to-cartesian">Cylindrical to Cartesian</h4>
-<p><span class="arithmatex">\(\mathbf{B} = B_r \mathbf{\hat{r}} + B_\phi \mathbf{\hat{\phi}} + B_h \mathbf{\hat{h}}\)</span></p>
-<div class="arithmatex">\[
-\begin{align}
-B_x &amp;= B_r \cos \phi - B_\phi \sin \phi \\
-B_y &amp;= B_r \sin \phi + B_\phi \cos \phi \\
-B_z &amp;= B_h
-\end{align}
-\]</div>
-<p>For a solenoid or cylinder <span class="arithmatex">\(B_\phi = 0\)</span>, thus:</p>
-<div class="arithmatex">\[
-\begin{align}
-B_x &amp;= B_r \cos \phi \\
-B_y &amp;= B_r \sin \phi \\
-B_z &amp;= B_h
-\end{align}
-\]</div>
-<h4 id="spherical-to-cartesian">Spherical to Cartesian</h4>
-<p><span class="arithmatex">\(\mathbf{B} = B_r \mathbf{\hat{r}} + B_\theta \mathbf{\hat{\theta}} + B_\phi \mathbf{\hat{\phi}}\)</span></p>
-<div class="arithmatex">\[
-\begin{align}
-B_x &amp;= B_r \sin\theta \cos\phi + B_\theta \cos\theta\cos\phi - B_\phi \sin\phi \\
-B_y &amp;= B_r \sin\theta\sin\phi + B_\theta \cos\theta\sin\phi + B_\phi \cos\phi  \\
-B_z &amp;= B_r \cos\theta - B_\theta \sin\theta
-\end{align}
-\]</div>
-<hr />
-<h2 id="api-reference">API Reference</h2>
-<p>The conversion functions are available in <code>pymagnet.utils</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">cart2pol</span><span class="p">,</span>
-    <span class="n">pol2cart</span><span class="p">,</span>
-    <span class="n">vector_pol2cart</span><span class="p">,</span>
-    <span class="n">cart2sph</span><span class="p">,</span>
-    <span class="n">sph2cart</span><span class="p">,</span>
-    <span class="n">vector_sph2cart</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<h3 id="scalar-conversion-functions">Scalar Conversion Functions</h3>
+<p>and solves over the bracket <span class="arithmatex">\([0,\; M_\text{sat}]\)</span>.</p>
+<h3 id="demagnetizing-factors-for-common-geometries">Demagnetizing factors for common geometries</h3>
 <table>
 <thead>
 <tr>
-<th>Function</th>
+<th>Geometry</th>
+<th>N</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2D circle (infinite cylinder)</td>
+<td>1/2</td>
+</tr>
+<tr>
+<td>Sphere</td>
+<td>1/3</td>
+</tr>
+<tr>
+<td>Thin film (normal to surface)</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mh-models">M(H) models</h2>
+<p>Two ways to provide the constitutive relation <span class="arithmatex">\(M = f(H)\)</span>:</p>
+<h3 id="build_mh_interpolatorh_data-m_data"><code>build_MH_interpolator(H_data, M_data)</code></h3>
+<p>Constructs a monotonicity-preserving <code>PchipInterpolator</code> from measured M(H) data.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>cart2pol(x, y)</code></td>
-<td>Cartesian to polar: returns <code>(rho, phi)</code></td>
+<td><code>H_data</code></td>
+<td><code>np.ndarray</code> (1D)</td>
+<td>Applied field values, strictly increasing</td>
 </tr>
 <tr>
-<td><code>pol2cart(rho, phi)</code></td>
-<td>Polar to cartesian: returns <code>(x, y)</code></td>
-</tr>
-<tr>
-<td><code>cart2sph(x, y, z)</code></td>
-<td>Cartesian to spherical: returns <code>(r, theta, phi)</code></td>
-</tr>
-<tr>
-<td><code>sph2cart(r, theta, phi)</code></td>
-<td>Spherical to cartesian: returns <code>(x, y, z)</code></td>
+<td><code>M_data</code></td>
+<td><code>np.ndarray</code> (1D)</td>
+<td>Magnetization values, non-decreasing</td>
 </tr>
 </tbody>
 </table>
-<h3 id="vector-conversion-functions">Vector Conversion Functions</h3>
+<p><strong>Returns:</strong> <code>PchipInterpolator</code> — callable mapping H -&gt; M.</p>
+<p><strong>Raises:</strong> <code>ValueError</code> if arrays differ in shape, are not 1D, or violate monotonicity.</p>
+<h3 id="tanh_mh_modelms-chi"><code>tanh_MH_model(Ms, chi)</code></h3>
+<p>Returns an analytical M(H) function with built-in saturation:</p>
+<div class="arithmatex">\[
+M = M_s \tanh\!\left(\frac{\chi \, H}{M_s}\right)
+\]</div>
+<p>At low fields this gives <span class="arithmatex">\(M \approx \chi H\)</span> (linear regime), and saturates smoothly to <span class="arithmatex">\(M_s\)</span> at high fields.</p>
 <table>
 <thead>
 <tr>
-<th>Function</th>
+<th>Parameter</th>
+<th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>vector_pol2cart(Brho, Bphi, phi)</code></td>
-<td>Polar vector to cartesian: returns <code>(Bx, By)</code></td>
+<td><code>Ms</code></td>
+<td><code>float</code></td>
+<td>Saturation magnetization</td>
 </tr>
 <tr>
-<td><code>vector_sph2cart(Br, Btheta, Bphi, theta, phi)</code></td>
-<td>Spherical vector to cartesian: returns <code>(Bx, By, Bz)</code></td>
+<td><code>chi</code></td>
+<td><code>float</code></td>
+<td>Dimensionless initial susceptibility (slope <span class="arithmatex">\(dM/dH\)</span> at <span class="arithmatex">\(H=0\)</span>)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="unit-conversion-functions">Unit Conversion Functions</h3>
+<p><strong>Returns:</strong> Callable mapping H (float or array) -&gt; M.</p>
+<h2 id="scipy-solver">Scipy solver</h2>
+<h3 id="solve_demagnetizationh_ext-mh_interp-m_sat-n05"><code>solve_demagnetization(H_ext, MH_interp, M_sat, N=0.5)</code></h3>
+<p>General-purpose solver that accepts any callable M(H) model — either from <code>build_MH_interpolator</code> or <code>tanh_MH_model</code>.</p>
 <table>
 <thead>
 <tr>
-<th>Function</th>
+<th>Parameter</th>
+<th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>get_unit_value_meter(unit)</code></td>
-<td>Get SI prefix factor for length units (e.g., "mm" → 1e-3)</td>
+<td><code>H_ext</code></td>
+<td><code>float</code></td>
+<td>Applied external field magnitude</td>
 </tr>
 <tr>
-<td><code>get_unit_value_tesla(unit)</code></td>
-<td>Get SI prefix factor for field units (e.g., "mT" → 1e-3)</td>
+<td><code>MH_interp</code></td>
+<td><code>Callable</code></td>
+<td>Any callable mapping H -&gt; M</td>
+</tr>
+<tr>
+<td><code>M_sat</code></td>
+<td><code>float</code></td>
+<td>Saturation magnetization (upper bound for root search)</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td><code>float</code></td>
+<td>Demagnetizing factor (default 0.5)</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.utils._conversions</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_unit_value_meter</span>
+<p><strong>Returns:</strong> <code>DemagResult</code> (see below).</p>
+<h3 id="demagresult"><code>DemagResult</code></h3>
+<p>Dataclass returned by <code>solve_demagnetization</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>M_solution</code></td>
+<td><code>float</code></td>
+<td>Self-consistent magnetization</td>
+</tr>
+<tr>
+<td><code>H_int</code></td>
+<td><code>float</code></td>
+<td>Internal field: <span class="arithmatex">\(H_\text{ext} - N \cdot M\)</span></td>
+</tr>
+<tr>
+<td><code>converged</code></td>
+<td><code>bool</code></td>
+<td>Whether the solver converged</td>
+</tr>
+<tr>
+<td><code>solver_used</code></td>
+<td><code>str</code></td>
+<td><code>"brentq"</code>, <code>"fsolve"</code>, or <code>"exact"</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="numba-accelerated-solver">Numba-accelerated solver</h2>
+<p>When using the <code>tanh_MH_model</code>, the entire solve can run inside numba-compiled code, bypassing scipy. This gives ~80x speedup and supports parallel batch solving.</p>
+<h3 id="solve_demag_tanhh_ext-ms-chi-n05"><code>solve_demag_tanh(H_ext, Ms, chi, N=0.5)</code></h3>
+<p>Solves for a single scalar H_ext value. Compiled with <code>@njit(cache=True)</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>H_ext</code></td>
+<td><code>float</code></td>
+<td>Applied external field magnitude</td>
+</tr>
+<tr>
+<td><code>Ms</code></td>
+<td><code>float</code></td>
+<td>Saturation magnetization</td>
+</tr>
+<tr>
+<td><code>chi</code></td>
+<td><code>float</code></td>
+<td>Dimensionless initial susceptibility</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td><code>float</code></td>
+<td>Demagnetizing factor (default 0.5)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>(M_solution, H_int, converged)</code> tuple.</p>
+<h3 id="solve_demag_tanh_batchh_ext_array-ms-chi-n05"><code>solve_demag_tanh_batch(H_ext_array, Ms, chi, N=0.5)</code></h3>
+<p>Solves for an array of H_ext values in parallel. Compiled with <code>@njit(parallel=True, cache=True)</code> using <code>prange</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>H_ext_array</code></td>
+<td><code>np.ndarray</code> (1D)</td>
+<td>Array of applied field values</td>
+</tr>
+<tr>
+<td><code>Ms</code></td>
+<td><code>float</code></td>
+<td>Saturation magnetization</td>
+</tr>
+<tr>
+<td><code>chi</code></td>
+<td><code>float</code></td>
+<td>Dimensionless initial susceptibility</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td><code>float</code></td>
+<td>Demagnetizing factor (default 0.5)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>(M_solutions, H_int_solutions)</code> arrays with same shape as input.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="interpolated-mh-data">Interpolated M(H) data</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">demag_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_MH_interpolator</span><span class="p">,</span> <span class="n">solve_demagnetization</span>
 
-<span class="n">factor</span> <span class="o">=</span> <span class="n">get_unit_value_meter</span><span class="p">(</span><span class="s2">&quot;mm&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;1 mm = </span><span class="si">{</span><span class="n">factor</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>  <span class="c1"># Output: 1 mm = 0.001 m</span>
+<span class="n">chi</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">H_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1e6</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">M_data</span> <span class="o">=</span> <span class="n">chi</span> <span class="o">*</span> <span class="n">H_data</span>
+
+<span class="n">interp</span> <span class="o">=</span> <span class="n">build_MH_interpolator</span><span class="p">(</span><span class="n">H_data</span><span class="p">,</span> <span class="n">M_data</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">solve_demagnetization</span><span class="p">(</span>
+    <span class="n">H_ext</span><span class="o">=</span><span class="mf">1e5</span><span class="p">,</span>
+    <span class="n">MH_interp</span><span class="o">=</span><span class="n">interp</span><span class="p">,</span>
+    <span class="n">M_sat</span><span class="o">=</span><span class="n">M_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">N</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;M = </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">M_solution</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># M = 166666.67</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;H_int = </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">H_int</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># H_int = 16666.67</span>
 </code></pre></div>
-<hr />
-<h2 id="polygon-geometry">Polygon Geometry</h2>
-<h3 id="centroid">Centroid</h3>
-<p>The centroid of a non-self-intersecting closed polygon defined by <span class="arithmatex">\(n\)</span> vertices,
-is the point <span class="arithmatex">\((C_x, C_y)\)</span> where</p>
-<div class="arithmatex">\[
-C_x = \frac{1}{6A}\sum_{i=0}^{n-1}(x_i+x_{i+1})(x_i\ y_{i+1} - x_{i+1}\ y_i)
-\]</div>
-<p>and</p>
-<div class="arithmatex">\[
-C_y = \frac{1}{6A}\sum_{i=0}^{n-1}(y_i+y_{i+1})(x_i\ y_{i+1} - x_{i+1}\ y_i)
-\]</div>
-<h3 id="signed-area">Signed Area</h3>
-<p>The signed area <span class="arithmatex">\(A\)</span> of a polygon:</p>
-<div class="arithmatex">\[
-A = \frac{1}{2}\sum_{i=0}^{n-1} (x_i\ y_{i+1} - x_{i+1}\ y_i)
-\]</div>
-<p>Also written as:</p>
-<div class="arithmatex">\[
-A = \frac{1}{2} \left(
-    \begin{vmatrix}
-        x_1 &amp; x_2 \\
-        y_1 &amp; y_2  \\
-    \end{vmatrix}
-   + \begin{vmatrix}
-        x_2 &amp; x_3 \\
-        y_2 &amp; y_3  \\
-    \end{vmatrix}
-    + \cdots
-    + \begin{vmatrix}
-        x_n &amp; x_1 \\
-        y_n &amp; y_1  \\
-    \end{vmatrix}
-   \right)
-\]</div>
-<p>For a convex polygon, if <span class="arithmatex">\(A &gt; 0\)</span> the vertices are listed in counter-clockwise order, and clockwise if <span class="arithmatex">\(A &lt; 0\)</span>.</p>
+<h3 id="analytical-tanh-model-scipy">Analytical tanh model (scipy)</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">demag_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">tanh_MH_model</span><span class="p">,</span> <span class="n">solve_demagnetization</span>
+
+<span class="n">f_mh</span> <span class="o">=</span> <span class="n">tanh_MH_model</span><span class="p">(</span><span class="n">Ms</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">chi</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">solve_demagnetization</span><span class="p">(</span>
+    <span class="n">H_ext</span><span class="o">=</span><span class="mf">1e5</span><span class="p">,</span>
+    <span class="n">MH_interp</span><span class="o">=</span><span class="n">f_mh</span><span class="p">,</span>
+    <span class="n">M_sat</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
+    <span class="n">N</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;M = </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">M_solution</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="numba-accelerated-single-value">Numba-accelerated (single value)</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">demag_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_demag_tanh</span>
+
+<span class="n">M</span><span class="p">,</span> <span class="n">H_int</span><span class="p">,</span> <span class="n">converged</span> <span class="o">=</span> <span class="n">solve_demag_tanh</span><span class="p">(</span><span class="n">H_ext</span><span class="o">=</span><span class="mf">1e5</span><span class="p">,</span> <span class="n">Ms</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">chi</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="numba-accelerated-batch-parallel">Numba-accelerated (batch, parallel)</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">demag_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_demag_tanh_batch</span>
+
+<span class="n">H_ext</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5e5</span><span class="p">,</span> <span class="mi">10_000</span><span class="p">)</span>
+<span class="n">M</span><span class="p">,</span> <span class="n">H_int</span> <span class="o">=</span> <span class="n">solve_demag_tanh_batch</span><span class="p">(</span><span class="n">H_ext</span><span class="p">,</span> <span class="n">Ms</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">chi</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="solver-strategy">Solver strategy</h2>
+<h3 id="scipy-path-solve_demagnetization">Scipy path (<code>solve_demagnetization</code>)</h3>
+<ol>
+<li><strong>Exact endpoints</strong> — if <code>g(0) ≈ 0</code> or <code>g(M_sat) ≈ 0</code>, the solution is returned immediately without iteration.</li>
+<li><strong>Brent's method</strong> (<code>brentq</code>) — used when the bracket <code>[0, M_sat]</code> is valid (opposite signs at endpoints). Guaranteed convergence, tolerance <code>1e-6</code>.</li>
+<li><strong>Fallback</strong> (<code>fsolve</code>) — if the bracket is invalid (e.g. when extrapolating beyond the M(H) data), a Newton-type solver is used with initial guess <code>M_sat / 2</code>. A warning is issued.</li>
+</ol>
+<h3 id="numba-path-solve_demag_tanh-solve_demag_tanh_batch">Numba path (<code>solve_demag_tanh</code> / <code>solve_demag_tanh_batch</code>)</h3>
+<p>Uses a fully compiled Brent's method implementation (<code>@njit</code>). Since the tanh residual is pure scalar maths, the entire solve runs inside compiled code with no Python overhead. The batch solver parallelises across H_ext values using <code>prange</code>.</p>
+<p>Both paths are stateless and side-effect free — safe for use in loops or with multiprocessing.</p>
 
 
 

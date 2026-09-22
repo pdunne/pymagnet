@@ -1,88 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/configuration/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/examples/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/forces_torques/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/whats_new/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/code_reference/config/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/code_reference/magnets/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/code_reference/plots/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/code_reference/pymagnet/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/code_reference/utils/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/magnets/composite_magnets/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/magnets/magnets_1d/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/magnets/magnets_2d/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/magnets/magnets_3d/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/magnets/magnets_overview/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/methods/demag_solver/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
-         <loc>None</loc>
-         <lastmod>2022-05-10</lastmod>
-         <changefreq>daily</changefreq>
+         <loc>https://pdunne.github.io/pymagnet/methods/methods/</loc>
+         <lastmod>2026-09-22</lastmod>
+    </url>
+    <url>
+         <loc>https://pdunne.github.io/pymagnet/methods/transforms/</loc>
+         <lastmod>2026-09-22</lastmod>
+    </url>
+    <url>
+         <loc>https://pdunne.github.io/pymagnet/plots/plots_2d/</loc>
+         <lastmod>2026-09-22</lastmod>
+    </url>
+    <url>
+         <loc>https://pdunne.github.io/pymagnet/plots/plots_3d/</loc>
+         <lastmod>2026-09-22</lastmod>
+    </url>
+    <url>
+         <loc>https://pdunne.github.io/pymagnet/plots/plots_overview/</loc>
+         <lastmod>2026-09-22</lastmod>
     </url>
 </urlset>

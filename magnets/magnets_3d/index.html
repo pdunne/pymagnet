@@ -1,348 +1,1366 @@
 
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pdunne.github.io/pymagnet/magnets/magnets_3d/">
+      
+      
+        <link rel="prev" href="../magnets_2d/">
+      
+      
+        <link rel="next" href="../composite_magnets/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>3D Magnets - Pymagnet</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
 
-<html class="no-js" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.3.0, mkdocs-material-8.2.14" name="generator"/>
-<title>3D Magnets - Pymagnet</title>
-<link href="../../assets/stylesheets/main.3de6f41f.min.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/palette.cc9b2e1e.min.css" rel="stylesheet"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
-<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-<link href="../../assets/_mkdocstrings.css" rel="stylesheet"/>
-<script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-</head>
-<body data-md-color-accent="none" data-md-color-primary="none" data-md-color-scheme="" dir="ltr">
-<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
-<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
-<label class="md-overlay" for="__drawer"></label>
-<div data-md-component="skip">
-<a class="md-skip" href="#3d-magnets">
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#3d-magnets" class="md-skip">
           Skip to content
         </a>
-</div>
-<div data-md-component="announce">
-</div>
-<header class="md-header" data-md-component="header">
-<nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="Pymagnet" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Pymagnet">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
-</a>
-<label class="md-header__button md-icon" for="__drawer">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
-</label>
-<div class="md-header__title" data-md-component="header-title">
-<div class="md-header__ellipsis">
-<div class="md-header__topic">
-<span class="md-ellipsis">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pymagnet" class="md-header__button md-logo" aria-label="Pymagnet" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
             Pymagnet
           </span>
-</div>
-<div class="md-header__topic" data-md-component="header-topic">
-<span class="md-ellipsis">
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
             
               3D Magnets
             
           </span>
-</div>
-</div>
-</div>
-<label class="md-header__button md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
-</label>
-<div class="md-search" data-md-component="search" role="dialog">
-<label class="md-search__overlay" for="__search"></label>
-<div class="md-search__inner" role="search">
-<form class="md-search__form" name="search">
-<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
-<label class="md-search__icon md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
-</label>
-<nav aria-label="Search" class="md-search__options">
-<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" type="reset">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
-</button>
-</nav>
-</form>
-<div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="">
-<div class="md-search-result" data-md-component="search-result">
-<div class="md-search-result__meta">
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
             Initializing search
           </div>
-<ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-</nav>
+      
+    
+    
+  </nav>
+  
 </header>
-<div class="md-container" data-md-component="container">
-<main class="md-main" data-md-component="main">
-<div class="md-main__inner md-grid">
-<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
-<label class="md-nav__title" for="__drawer">
-<a aria-label="Pymagnet" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Pymagnet">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
-</a>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pymagnet" class="md-nav__button md-logo" aria-label="Pymagnet" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
     Pymagnet
   </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../..">
-        Home
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
       </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../examples/">
-        Examples
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats_new/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
       </a>
-</li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" id="__nav_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_3">
-          Magnets
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Magnets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Magnets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets_1d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1D Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magnets_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2D Magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3D Magnets
+  
+
+    
+  </span>
+  
+  
+
           <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Magnets" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_3">
-<span class="md-nav__icon md-icon"></span>
-          Magnets
         </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../magnets_overview/">
-        Overview
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3D Magnets
+  
+
+    
+  </span>
+  
+  
+
       </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../magnets_1d/">
-        1D Methods
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../magnets_2d/">
-        2D Magnets
-      </a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-          3D Magnets
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-        3D Magnets
-      </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#prismscuboids">
-    Prisms/Cuboids
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prismscuboids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prisms/Cuboids
+      
+    </span>
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#cylinderssolenoids">
-    Cylinders/Solenoids
+      
+        <li class="md-nav__item">
+  <a href="#cylinderssolenoids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cylinders/Solenoids
+      
+    </span>
   </a>
-<nav aria-label="Cylinders/Solenoids" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#bulirschs-complete-elliptic-integral">
-    Bulirsch's complete elliptic integral
+  
+    <nav class="md-nav" aria-label="Cylinders/Solenoids">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bulirschs-complete-elliptic-integral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulirsch's complete elliptic integral
+      
+    </span>
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#example">
-    Example
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#spheres">
-    Spheres
+      
+        <li class="md-nav__item">
+  <a href="#spheres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spheres
+      
+    </span>
   </a>
+  
 </li>
-</ul>
+      
+        <li class="md-nav__item">
+  <a href="#meshes-stl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Meshes (STL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Meshes (STL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-mesh-magnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a mesh magnet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calculating-the-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calculating the field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distance-cutoff-r_cut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance cutoff: r_cut
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-meshes-in-one-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple meshes in one pass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces-and-torques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forces and torques
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../composite_magnets/">
-        Composite Magnets
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../composite_magnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Composite Magnets
+  
+
+    
+  </span>
+  
+  
+
       </a>
-</li>
-</ul>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plots
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plots
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plots/plots_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plots/plots_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2D Plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plots/plots_3d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3D Plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../forces_torques/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forces & Torques
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../methods/methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Class Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../methods/transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../methods/demag_solver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demagnetisation Solver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/pymagnet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pymagnet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/magnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    magnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/plots/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code_reference/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    utils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
 </nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" id="__nav_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4">
-          Plots
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Plots" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_4">
-<span class="md-nav__icon md-icon"></span>
-          Plots
-        </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../plots/plots_overview/">
-        Overview
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../plots/plots_2d/">
-        2D Plots
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../plots/plots_3d/">
-        3D Plots
-      </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../forces_torques/">
-        Forces &amp; Torques
-      </a>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6">
-          Methods
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Methods" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
-<span class="md-nav__icon md-icon"></span>
-          Methods
-        </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../methods/methods/">
-        Class Methods
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../methods/transforms/">
-        Transforms
-      </a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7">
-          Code Reference
-          <span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-label="Code Reference" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
-<span class="md-nav__icon md-icon"></span>
-          Code Reference
-        </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../code_reference/pymagnet/">
-        pymagnet
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../code_reference/magnets/">
-        magnets
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../code_reference/plots/">
-        plots
-      </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../code_reference/utils/">
-        utils
-      </a>
-</li>
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#prismscuboids">
-    Prisms/Cuboids
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prismscuboids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prisms/Cuboids
+      
+    </span>
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#cylinderssolenoids">
-    Cylinders/Solenoids
+      
+        <li class="md-nav__item">
+  <a href="#cylinderssolenoids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cylinders/Solenoids
+      
+    </span>
   </a>
-<nav aria-label="Cylinders/Solenoids" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#bulirschs-complete-elliptic-integral">
-    Bulirsch's complete elliptic integral
+  
+    <nav class="md-nav" aria-label="Cylinders/Solenoids">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bulirschs-complete-elliptic-integral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulirsch's complete elliptic integral
+      
+    </span>
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#example">
-    Example
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
   </a>
+  
 </li>
-</ul>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spheres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spheres
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#meshes-stl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Meshes (STL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Meshes (STL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-mesh-magnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a mesh magnet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calculating-the-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calculating the field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distance-cutoff-r_cut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance cutoff: r_cut
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-meshes-in-one-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple meshes in one pass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces-and-torques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forces and torques
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#spheres">
-    Spheres
-  </a>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-<div class="md-content" data-md-component="content">
-<article class="md-content__inner md-typeset">
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
 <h1 id="3d-magnets">3D Magnets</h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul>
 <li>SI Units with the Sommerfeld convetion are used for this discussion:
-<span class="arithmatex">\(\mathbf{B} = \mu_0 \left( \mathbf{H} + \mathbf{M}  \right)\)</span><sup id="fnref3:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+<span class="arithmatex">\(\mathbf{B} = \mu_0 \left( \mathbf{H} + \mathbf{M}  \right)\)</span><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
 <li>However, the Kennelly Convetion is used for the creation of each magnet object
 in the library:
-<span class="arithmatex">\(\mathbf{B} = \mu_0\mathbf{H} + \mathbf{J}\)</span><sup id="fnref4:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+<span class="arithmatex">\(\mathbf{B} = \mu_0\mathbf{H} + \mathbf{J}\)</span><sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
 <li>In free space <span class="arithmatex">\(\mathbf{B} = \mu_0 \mathbf{H}\)</span></li>
 <li>In magnetised bodies, the demagnetising field <span class="arithmatex">\(\mathbf{H_d} = - N \mathbf{M}\)</span>,
 where <span class="arithmatex">\(N\)</span> is the demagnetising factor.</li>
@@ -356,8 +1374,9 @@ by a factor <span class="arithmatex">\(\mu_0\)</span>, i.e. <span class="arithma
 replaced by <span class="arithmatex">\(J\)</span> or <span class="arithmatex">\(J_r\)</span>.</p>
 <h2 id="prismscuboids">Prisms/Cuboids</h2>
 <figure>
-<img src="../../img/3d_prism.png" width="300"/>
+    <img src="../../img/3d_prism.png" width="300" />
 </figure>
+
 <p>For a uniformly magnetised cuboid, used in our experiments, with dimensions <span class="arithmatex">\(2a
 \times  2b \times 2c\)</span> magnetised in the <span class="arithmatex">\(x\)</span>-direction
 is<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></p>
@@ -424,8 +1443,9 @@ F_2\left(x,y,z\right)=\frac{\sqrt{\left(a+x\right)^2+\left(b-y\right)^2+\left(c+
 of the first set of equations about the <span class="arithmatex">\(z\)</span>-axis.</p>
 <h2 id="cylinderssolenoids">Cylinders/Solenoids</h2>
 <figure>
-<img src="../../img/3d_cylinder.png" width="300"/>
+    <img src="../../img/3d_cylinder.png" width="300" />
 </figure>
+
 <p>Recalling that the magnetic field due to a cylinder of length <span class="arithmatex">\(2b\)</span> and radius <span class="arithmatex">\(a\)</span>,
 with a current <span class="arithmatex">\(I\)</span> running through <span class="arithmatex">\(n\)</span> turns of wire along the symmetry axis is:</p>
 <div class="arithmatex">\[
@@ -436,7 +1456,7 @@ B_z = \frac{\mu_0 n I}{2} \left[
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul>
-<li>This is equivalent to the equation in the <a href="#cylinder">Cylinder section</a>,
+<li>This is equivalent to the equation in the <a href="../magnets_1d/#cylinder">Cylinder section</a>,
 where <span class="arithmatex">\(\mu_0 n I \equiv \mu_0 M_r\)</span></li>
 <li>For an infinite solenoid, this reduces to <span class="arithmatex">\(B_z = \mu_0 n I\)</span> at its center</li>
 </ul>
@@ -478,24 +1498,26 @@ Bulirsch:</p>
 <p><span class="arithmatex">\(K(k) = C(k_c, 1, 1, 1)\)</span></p>
 <p><span class="arithmatex">\(E(K) = C(k_c, 1, 1, k_c^2)\)</span></p>
 <p><span class="arithmatex">\(\Pi(n, k) = C(k_c, n+1, 1, 1)\)</span></p>
-<p>A simple algorirthm for solving the elliptic integrals<sup id="fnref2:6"><a class="footnote-ref" href="#fn:6">6</a></sup> is included as a <code>@staticmethod</code>
-in the <code>Cylinder</code> subclass. It is vectorised and JIT compiled as a Numpy ufunc using
+<p>A simple algorirthm for solving the elliptic integrals<sup id="fnref2:6"><a class="footnote-ref" href="#fn:6">6</a></sup> is provided by
+<code>pymagnet.utils._elliptic</code>. It is vectorised and JIT compiled as a Numpy ufunc using
 Numba for improved performance:</p>
-<pre><code>Cylinder._cel(kc, p, c, s)
+<pre><code>cel(kc, p, c, s)
 </code></pre>
 <h3 id="example">Example</h3>
 <p>Here is an example of how to use it, for the special case of
 <span class="arithmatex">\(k_c = 1\)</span> for the first complete elliptic integral, <span class="arithmatex">\(K(1)\)</span>:</p>
 <p><span class="arithmatex">\(C\left(1, 1, 1, 1 \right)  = \pi/2\)</span></p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pymagnet</span> <span class="k">as</span> <span class="nn">pm</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="n">cel_value</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Cylinder</span><span class="o">.</span><span class="n">_cel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">cel_value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet.utils._elliptic</span><span class="w"> </span><span class="kn">import</span> <span class="n">cel</span>
+
+<span class="n">cel_value</span> <span class="o">=</span> <span class="n">cel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">cel_value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
 </code></pre></div>
 <h2 id="spheres">Spheres</h2>
 <figure>
-<img src="../../img/3d_sphere.png" width="300"/>
+    <img src="../../img/3d_sphere.png" width="300" />
 </figure>
+
 <p>Outside a uniformly magnetised sphere<sup id="fnref:8"><a class="footnote-ref" href="#fn:8">8</a></sup> of radius <span class="arithmatex">\(a\)</span>, the stray field is identical to a magnetic
 dipole, and has a convenient representation in spherical coordinates:</p>
 <div class="arithmatex">\[
@@ -503,103 +1525,354 @@ dipole, and has a convenient representation in spherical coordinates:</p>
     2\cos(\theta) \mathbf{\hat{r}} + \sin(\theta) \mathbf{\hat{\theta}}
      \right]
 \]</div>
+<h2 id="meshes-stl">Meshes (STL)</h2>
+<p>Arbitrary — including non-convex — geometries are supported by importing a
+triangulated surface from an STL file. The same Coulombic charge model used for
+the analytic magnets above applies: for a uniformly magnetised body the volume
+charge density vanishes, so the field is generated entirely by the surface
+charge</p>
+<div class="arithmatex">\[
+\sigma_m = \mathbf{J} \cdot \mathbf{\hat{n}}
+\]</div>
+<p>which is evaluated per triangle. Each triangle of the mesh carries a uniform
+charge density given by the projection of the magnetisation onto its outward
+normal, and the total field is the sum over all triangles. Triangles lying
+parallel to <span class="arithmatex">\(\mathbf{J}\)</span> carry no charge and are skipped.</p>
+<h3 id="creating-a-mesh-magnet">Creating a mesh magnet</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+
+<span class="n">pm</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="n">magnet</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span>
+    <span class="s2">&quot;bunny.stl&quot;</span><span class="p">,</span>
+    <span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">mesh_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filename</code></td>
+<td>str</td>
+<td>required</td>
+<td>Path to the STL file to import</td>
+</tr>
+<tr>
+<td><code>Jr</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Signed remanent magnetisation (T)</td>
+</tr>
+<tr>
+<td><code>center</code></td>
+<td>tuple</td>
+<td><code>(0, 0, 0)</code></td>
+<td>Position of the magnet centre</td>
+</tr>
+<tr>
+<td><code>phi</code></td>
+<td>float</td>
+<td><code>90.0</code></td>
+<td>Azimuthal angle of the magnetisation (degrees)</td>
+</tr>
+<tr>
+<td><code>theta</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Polar angle of the magnetisation (degrees)</td>
+</tr>
+<tr>
+<td><code>mesh_scale</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Scaling factor applied to the imported mesh</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Magnetisation and mesh rotation</p>
+<p>The magnetisation direction is set by <code>phi</code>/<code>theta</code>. Rotating the mesh
+itself via <code>alpha</code>/<code>beta</code>/<code>gamma</code> does not currently rotate
+<span class="arithmatex">\(\mathbf{J}\)</span> with it.</p>
+</div>
+<h3 id="calculating-the-field">Calculating the field</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;ij&quot;</span><span class="p">)</span>
+
+<span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="n">Bz</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code>, <code>y</code>, <code>z</code></td>
+<td>float/ndarray</td>
+<td>required</td>
+<td>Evaluation point coordinates</td>
+</tr>
+<tr>
+<td><code>parallel</code></td>
+<td>bool</td>
+<td><code>True</code></td>
+<td>Use the parallel Numba kernel</td>
+</tr>
+<tr>
+<td><code>r_cut</code></td>
+<td>float</td>
+<td><code>np.inf</code></td>
+<td>Distance cutoff (see below)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="distance-cutoff-r_cut">Distance cutoff: <code>r_cut</code></h3>
+<p>The cost of a mesh evaluation is <span class="arithmatex">\(O(N_\mathrm{tri} \times N_\mathrm{points})\)</span>,
+which dominates runtime for large meshes. Because the contribution of a charged
+triangle falls off with distance, triangles whose centroid lies farther than
+<code>r_cut</code> from an evaluation point can be skipped:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Bx</span><span class="p">,</span> <span class="n">By</span><span class="p">,</span> <span class="n">Bz</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">r_cut</span><span class="o">=</span><span class="mf">40.0</span><span class="p">)</span>
+</code></pre></div>
+<p><code>r_cut</code> is in the same length units as the mesh coordinates (normally mm). The
+default, <code>np.inf</code>, performs no culling and is numerically exact.</p>
+<div class="admonition danger">
+<p class="admonition-title"><code>r_cut</code> trades accuracy for speed — and the trade is steep</p>
+<p>Culling is an approximation. The surface charges of a closed magnetised body
+very nearly cancel when seen from a distance, so discarding some of them
+removes a large contribution relative to the small net field that remains.
+The error is therefore worst at points far from the magnet, which is exactly
+where the cutoff saves the most work.</p>
+</div>
+<p>Measured on <code>Stanford_Bunny_10000.stl</code> (10 000 triangles, a 30³ = 27 000 point
+grid spanning ±70 mm, reference time 2.714 s) by
+<code>benchmarks/benchmark_rcut.py</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>r_cut</code></th>
+<th>Median time</th>
+<th>Speedup</th>
+<th>nRMSE</th>
+<th>Pointwise rel. RMS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20 mm</td>
+<td>87.8 ms</td>
+<td>30.9×</td>
+<td>0.683</td>
+<td>0.930</td>
+</tr>
+<tr>
+<td>40 mm</td>
+<td>327.4 ms</td>
+<td>8.3×</td>
+<td>0.372</td>
+<td>0.774</td>
+</tr>
+<tr>
+<td>60 mm</td>
+<td>797.0 ms</td>
+<td>3.4×</td>
+<td>0.202</td>
+<td>0.534</td>
+</tr>
+<tr>
+<td>80 mm</td>
+<td>1.362 s</td>
+<td>2.0×</td>
+<td>0.121</td>
+<td>0.344</td>
+</tr>
+<tr>
+<td>100 mm</td>
+<td>1.941 s</td>
+<td>1.4×</td>
+<td>0.071</td>
+<td>0.254</td>
+</tr>
+<tr>
+<td>130 mm</td>
+<td>2.447 s</td>
+<td>1.1×</td>
+<td>0.017</td>
+<td>0.089</td>
+</tr>
+<tr>
+<td>160 mm</td>
+<td>2.562 s</td>
+<td>1.06×</td>
+<td>0.0015</td>
+<td>0.0084</td>
+</tr>
+<tr>
+<td>200 mm</td>
+<td>2.575 s</td>
+<td>1.05×</td>
+<td>~0</td>
+<td>~0</td>
+</tr>
+</tbody>
+</table>
+<p>where nRMSE is the RMS error normalised by the RMS of the reference field, and
+the last column is the RMS of the per-point relative error.</p>
+<p>Read that table before reaching for <code>r_cut</code>. On this geometry the cutoffs that
+are genuinely fast are also badly wrong — a 30× speedup comes with an error
+comparable to the field itself — while the cutoffs accurate to a few percent are
+barely faster than no cutoff at all. <code>r_cut</code> is worth using when the evaluation
+region is small and close to the magnet compared with the extent of the mesh,
+and it is not a general-purpose speed knob. Always validate against an
+<code>r_cut=np.inf</code> reference for the geometry and evaluation grid you actually care
+about.</p>
+<h3 id="multiple-meshes-in-one-pass">Multiple meshes in one pass</h3>
+<p><code>get_total_field_mesh()</code> concatenates the triangles of several meshes and
+evaluates them in a single parallel pass, which avoids re-traversing the
+evaluation grid once per magnet:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymagnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_total_field_mesh</span>
+
+<span class="n">m1</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="s2">&quot;left.stl&quot;</span><span class="p">,</span> <span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">m2</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">magnets</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="s2">&quot;right.stl&quot;</span><span class="p">,</span> <span class="n">Jr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">get_total_field_mesh</span><span class="p">([</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">],</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+</code></pre></div>
+<p>The result is numerically identical to summing the individual <code>get_field()</code>
+calls. It returns a <code>Field3</code> object rather than a tuple. An <code>r_cut</code> argument is
+accepted and behaves as above.</p>
+<h3 id="forces-and-torques">Forces and torques</h3>
+<div class="highlight"><pre><span></span><code><span class="n">force</span><span class="p">,</span> <span class="n">torque</span> <span class="o">=</span> <span class="n">magnet</span><span class="o">.</span><span class="n">get_force_torque</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div>
+<p>Each mesh triangle is recursively subdivided into <span class="arithmatex">\(4^\mathrm{depth}\)</span>
+sub-triangles for the surface integration. See
+<a href="../../forces_torques/">Forces &amp; Torques</a> for details.</p>
+<hr />
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul>
 <li>SI Units with the Sommerfeld convetion are used for this discussion:
-<span class="arithmatex">\(\mathbf{B} = \mu_0 \left( \mathbf{H} + \mathbf{M}  \right)\)</span><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+<span class="arithmatex">\(\mathbf{B} = \mu_0 \left( \mathbf{H} + \mathbf{M}  \right)\)</span><sup id="fnref3:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
 <li>However, the Kennelly Convetion is used for the creation of each magnet object
 in the library:
-<span class="arithmatex">\(\mathbf{B} = \mu_0\mathbf{H} + \mathbf{J}\)</span><sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+<span class="arithmatex">\(\mathbf{B} = \mu_0\mathbf{H} + \mathbf{J}\)</span><sup id="fnref4:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
 <li>In free space <span class="arithmatex">\(\mathbf{B} = \mu_0 \mathbf{H}\)</span></li>
 <li>In magnetised bodies, the demagnetising field <span class="arithmatex">\(\mathbf{H_d} = - N \mathbf{M}\)</span>,
 where <span class="arithmatex">\(N\)</span> is the demagnetising factor.</li>
 </ul>
 </div>
 <div class="footnote">
-<hr/>
+<hr />
 <ol>
 <li id="fn:1">
-<p>J. M. D. Coey, Magnetism and Magnetic Materials (Cambridge University Press, 2010). <a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">↩</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">↩</a><a class="footnote-backref" href="#fnref3:1" title="Jump back to footnote 1 in the text">↩</a><a class="footnote-backref" href="#fnref4:1" title="Jump back to footnote 1 in the text">↩</a></p>
+<p>J. M. D. Coey, Magnetism and Magnetic Materials (Cambridge University Press, 2010).&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:2">
-<p>E. P. Furlani, Permanent Magnet and Electromechanical Devices (Academic Press, San Diego, 2001). <a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">↩</a></p>
+<p>E. P. Furlani, Permanent Magnet and Electromechanical Devices (Academic Press, San Diego, 2001).&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn:3">
-<p>Z. J. Yang, T. H. Johansen, H. Bratsberg, G. Helgesen, and A. T. Skjeltorp, Potential and Force between a Magnet and a Bulk Y1Ba2Cu3O7-δ Superconductor Studied by a Mechanical Pendulum, Superconductor Science and Technology 3, 591 (1990). <a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">↩</a></p>
+<p>Z. J. Yang, T. H. Johansen, H. Bratsberg, G. Helgesen, and A. T. Skjeltorp, Potential and Force between a Magnet and a Bulk Y1Ba2Cu3O7-δ Superconductor Studied by a Mechanical Pendulum, Superconductor Science and Technology 3, 591 (1990).&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 <li id="fn:4">
-<p>J. M. Camacho and V. Sosa, Alternative Method to Calculate the Magnetic Field of Permanent Magnets with Azimuthal Symmetry, Revista Mexicana de Física E 59, 8 (2013). <a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">↩</a></p>
+<p>J. M. Camacho and V. Sosa, Alternative Method to Calculate the Magnetic Field of Permanent Magnets with Azimuthal Symmetry, Revista Mexicana de Física E 59, 8 (2013).&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
 </li>
 <li id="fn:5">
-<p>R. Bulirsch, Numerical Calculation of Elliptic Integrals and Elliptic Functions. III, Numer. Math. 13, 305 (1969). <a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">↩</a></p>
+<p>R. Bulirsch, Numerical Calculation of Elliptic Integrals and Elliptic Functions. III, Numer. Math. 13, 305 (1969).&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
 </li>
 <li id="fn:6">
-<p>See <a href="http://dlmf.nist.gov/19.2">http://dlmf.nist.gov/19.2</a> <a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">↩</a><a class="footnote-backref" href="#fnref2:6" title="Jump back to footnote 6 in the text">↩</a></p>
+<p>See <a href="http://dlmf.nist.gov/19.2">http://dlmf.nist.gov/19.2</a>&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
 </li>
 <li id="fn:7">
-<p>N. Derby and S. Olbert, Cylindrical Magnets and Ideal Solenoids, American Journal of Physics 78, 229 (2010). <a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">↩</a></p>
+<p>N. Derby and S. Olbert, Cylindrical Magnets and Ideal Solenoids, American Journal of Physics 78, 229 (2010).&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
 </li>
 <li id="fn:8">
-<p>Adapted from <a href="https://commons.wikimedia.org/wiki/File:Kugelkoord-lokale-Basis-s.svg">here</a> <a class="footnote-backref" href="#fnref:8" title="Jump back to footnote 8 in the text">↩</a></p>
+<p>Adapted from <a href="https://commons.wikimedia.org/wiki/File:Kugelkoord-lokale-Basis-s.svg">here</a>&#160;<a class="footnote-backref" href="#fnref:8" title="Jump back to footnote 8 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
-</article>
-</div>
-</div>
-</main>
-<footer class="md-footer">
-<nav aria-label="Footer" class="md-footer__inner md-grid">
-<a aria-label="Previous: 2D Magnets" class="md-footer__link md-footer__link--prev" href="../magnets_2d/" rel="prev">
-<div class="md-footer__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
-</div>
-<div class="md-footer__title">
-<div class="md-ellipsis">
-<span class="md-footer__direction">
-                Previous
-              </span>
-              2D Magnets
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
             </div>
-</div>
-</a>
-<a aria-label="Next: Composite Magnets" class="md-footer__link md-footer__link--next" href="../composite_magnets/" rel="next">
-<div class="md-footer__title">
-<div class="md-ellipsis">
-<span class="md-footer__direction">
-                Next
-              </span>
-              Composite Magnets
-            </div>
-</div>
-<div class="md-footer__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"></path></svg>
-</div>
-</a>
-</nav>
-<div class="md-footer-meta md-typeset">
-<div class="md-footer-meta__inner md-grid">
-<div class="md-copyright">
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
     </a>
+  
 </div>
-</div>
-</div>
+      
+    </div>
+  </div>
 </footer>
-</div>
-<div class="md-dialog" data-md-component="dialog">
-<div class="md-dialog__inner md-typeset"></div>
-</div>
-<script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
-<script src="../../assets/javascripts/bundle.c2e1ee47.min.js"></script>
-<script src="../../javascripts/config.js"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
-</body>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
 </html>
