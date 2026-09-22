@@ -1,0 +1,36 @@
+{
+  "title": "pymagnet: user friendly magnetic field calculations in Python",
+  "upload_type": "software",
+  "license": "mpl-2.0",
+  "creators": [
+    {
+      "name": "Dunne, Peter",
+      "orcid": "0000-0003-2370-2059",
+      "affiliation": "Applied Magnetism"
+    }
+  ],
+  "keywords": [
+    "magnetism",
+    "magnetic field",
+    "permanent magnets",
+    "magnetostatics",
+    "forces and torques",
+    "STL meshes",
+    "computational physics",
+    "Python"
+  ],
+  "description": "<p>Pymagnet is a collection of routines to calculate and plot the magnetic field due to arbitrary 2D and 3D objects, such as cubes, cylinders and spheres, as well as complex non-convex structures stored in STL files.</p>\n\n<p>The library also calculates the magnetic forces and torques acting on one magnet due to all other magnets in a system, for prisms, cylinders, spheres and STL meshes.</p>\n\n<p>The approach assumes the magnets are uniformly magnetised and fully transparent to magnetic fields. There are some drawbacks to this compared to Finite Element Methods (FEM), but with the advantage of significantly faster calculations.</p>\n\n<p><strong>New since v0.3.x:</strong></p>\n\n<ul>\n<li>Field calculations for STL meshes are parallelised with Numba, making non-convex geometries of several thousand triangles practical for interactive use.</li>\n<li>An optional distance cutoff (<code>r_cut</code>) for mesh field evaluation, trading accuracy for speed on large meshes.</li>\n<li>Simulations can be described declaratively in a TOML file and run from the command line, without writing Python.</li>\n<li>A self-consistent demagnetisation solver, which finds the operating point where the material M(H) response meets the demagnetising load line.</li>\n<li>Requires Python 3.12 or newer, and is built on NumPy 2, Numba and SciPy.</li>\n</ul>\n\n<p>Documentation: <a href=\"https://pdunne.github.io/pymagnet/\">https://pdunne.github.io/pymagnet/</a><br>\nSource code: <a href=\"https://github.com/pdunne/pymagnet\">https://github.com/pdunne/pymagnet</a><br>\nPackage: <a href=\"https://pypi.org/project/pymagnet/\">https://pypi.org/project/pymagnet/</a></p>",
+  "related_identifiers": [
+    {
+      "identifier": "https://pdunne.github.io/pymagnet/",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-softwaredocumentation",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://pypi.org/project/pymagnet/",
+      "relation": "isIdenticalTo",
+      "scheme": "url"
+    }
+  ]
+}

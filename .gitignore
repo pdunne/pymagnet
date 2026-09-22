@@ -162,3 +162,4 @@ reports/flake8-badge.svg
 reports/flake8/index.html
 .gitignore
 reports/flake8/back.svg
+zenodo-upload/*
