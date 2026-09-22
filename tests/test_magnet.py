@@ -7,6 +7,7 @@
 TODO:
     - All tests need to be updated and expanded to reflect the new API.
 """
+
 from numpy import round as rnd
 from numpy.linalg import norm
 
@@ -86,9 +87,7 @@ def test_2D_two_magnets():
     width = 20e-3
     height = 40e-3
     center = (-0.75 * width, 0)
-    _ = magnets.Rectangle(
-        width=width, height=height, Jr=1.0, center=center, theta=45.0
-    )
+    _ = magnets.Rectangle(width=width, height=height, Jr=1.0, center=center, theta=45.0)
     center = (0.75 * width, 0)
     _ = magnets.Rectangle(
         width=width, height=height, Jr=1.0, center=center, theta=-45.0
@@ -107,22 +106,19 @@ def test_3D_four_cubes():
     width = 10e-3
     a = width / 2
     hGap = a
-    theta, phi = 0.0, 90.0
+    # theta=90° (in xy plane), phi=0° (along x-axis) → X-magnetization
+    theta, phi = 90.0, 0.0
 
     # Add top left magnet
     _ = magnets.Cube(
         width=width, Jr=1.0, center=(-a - hGap, 0, a), theta=theta, phi=phi
     )
     # Add bottom left magnet
-    _ = magnets.Cube(
-        a=a, Jr=-1.0, center=(-a - hGap, 0, -a), theta=theta, phi=phi
-    )
+    _ = magnets.Cube(a=a, Jr=-1.0, center=(-a - hGap, 0, -a), theta=theta, phi=phi)
     # Add top right magnet
     _ = magnets.Cube(a=a, Jr=1.0, center=(a + hGap, 0, a), theta=theta, phi=phi)
     # Add bottom right magnet
-    _ = magnets.Cube(
-        a=a, Jr=-1.0, center=(a + hGap, 0, -a), theta=theta, phi=phi
-    )
+    _ = magnets.Cube(a=a, Jr=-1.0, center=(a + hGap, 0, -a), theta=theta, phi=phi)
 
     x, y, z = a / 2, a, a / 3
     result = rnd(get_field_3D(Point3(x, y, z)).n[0], 5)
@@ -136,7 +132,5 @@ def test_solenoid_off_axis():
     L = 20e-3
     m_cyl = magnets.Cylinder(radius=R, length=L, Jr=1.0, center=(0.0, 0.0, 0))
 
-    result = round(
-        norm(m_cyl._calcB_cyl(m_cyl.radius * 0.4, m_cyl.length * 0.2)), 5
-    )
+    result = round(norm(m_cyl._calcB_cyl(m_cyl.radius * 0.4, m_cyl.length * 0.2)), 5)
     assert result == 0.86351

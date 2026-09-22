@@ -1,0 +1,37 @@
+[meta]
+name = "Two Cubes - Force"
+description = "Two cubes separated along z-axis, force calculation on second cube"
+dimension = "3D"
+
+[[magnets]]
+type = "Cube"
+Jr = 1.0
+width = 10.0
+center = [0.0, 0.0, 0.0]
+
+[[magnets]]
+type = "Cube"
+Jr = 1.0
+width = 10.0
+center = [0.0, 0.0, 15.0]
+
+[grid]
+type = "slice"
+plane = "xz"
+max1 = 30.0
+max2 = 30.0
+num_points = 100
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmin = 0.0
+cmax = 0.8
+planes = ["xz"]
+
+[force]
+enabled = true
+target_magnet = 1
+num_samples = 20
+unit = "mm"

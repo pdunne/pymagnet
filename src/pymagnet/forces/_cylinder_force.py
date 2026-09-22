@@ -17,14 +17,15 @@ def _get_ranges_cylinder(active_magnet):
         active_magnet (Cylinder): Target magnet
 
     Returns:
-        tuple: xlim (tuple), ylim (tuple), zlim (tuple), areas (ndarray) - areas of each face of the cuboid
+        tuple: xlim (tuple), ylim (tuple), zlim (tuple), areas (ndarray)
+        - areas of each face of the cuboid
     """
     radius, length = active_magnet.get_size()
     xlim = (-radius, radius)
     ylim = (-radius, radius)
     zlim = (-length / 2, length / 2)
 
-    areas = _np.array([1, 1]) * PI * radius ** 2
+    areas = _np.array([1, 1]) * PI * radius**2
     return xlim, ylim, zlim, areas
 
 
@@ -35,7 +36,8 @@ def _gen_cylinder_grid(active_magnet, xlim, ylim, num_segments=10):
         active_magnet (Cylinder): Target magnet.
         xlim (tuple, optional): Min and max x values. Defaults to (0, 10).
         ylim (tuple, optional): Min and max y values. Defaults to (0, 10).
-        num_rectangles (int, optional): Number of points to generate in each direction. Defaults to 10.
+        num_rectangles (int, optional): Number of points to generate in each
+        direction. Defaults to 10.
 
     Returns:
         ndarray: (num_rectangles**2, 3) array of points
@@ -44,7 +46,7 @@ def _gen_cylinder_grid(active_magnet, xlim, ylim, num_segments=10):
     radius, _ = active_magnet.get_size()
     xc, yc, _ = active_magnet.get_center()
     x, y = _np.mgrid[xlim[0] : xlim[1] : NS, ylim[0] : ylim[1] : NS]
-    index = (x - xc) ** 2 + (y - yc) ** 2 < radius ** 2
+    index = (x - xc) ** 2 + (y - yc) ** 2 < radius**2
     x = x[index]
     y = y[index]
 
@@ -60,7 +62,8 @@ def _gen_cylinder_face_grid(
         xlim (tuple): min and max x values (float)
         ylim (tuple): min and max y values (float)
         zlim (tuple): min and max z values (float)
-        num_segments (int, optional): Number of grid points to generate (10x10). Defaults to 20.
+        num_segments (int, optional): Number of grid points to generate (10x10).
+            Defaults to 20.
         unit (str, optional): Length scale. Defaults to "mm".
 
     Returns:
@@ -124,7 +127,8 @@ def _gen_cylinder_face_grid(
 
 
 def calc_force_cylinder(active_magnet, num_segments=20, unit="mm"):
-    """Calculates the total force on a cylinder magnet due to all other instantiated magnets
+    """Calculates the total force on a cylinder magnet due to all other
+    instantiated magnets
 
     Args:
         active_magnet (Cylinder): Target Magnet
@@ -148,7 +152,6 @@ def calc_force_cylinder(active_magnet, num_segments=20, unit="mm"):
         )
         > active_magnet.tol
     ):
-
         _, reverse_rotation = active_magnet._generate_rotation_quaternions()
         Jrot = reverse_rotation * Jvec
     else:
@@ -181,6 +184,7 @@ def calc_force_cylinder(active_magnet, num_segments=20, unit="mm"):
     torque += total_torque * Jrot[2] * areas[1] / num_points
 
     scaling_factor = get_unit_value_meter(points_lower.get_unit())
+    assert scaling_factor is not None
     force /= MU0 / scaling_factor / scaling_factor
     torque /= MU0 / scaling_factor / scaling_factor / scaling_factor
     return force, torque

@@ -7,20 +7,63 @@ User friendly magnetic field calculations
 
 Top level module for exposing the public API of usable modules
 """
-__version__ = "0.4.0"
 
-from . import forces, magnets, utils
+__version__ = "0.5.1"
+
+from . import config, forces, magnets, plots, utils
 from .magnets._magnet_base import list, reset
-from .utils._routines2D import get_field_2D, grid2D
-from .utils._routines3D import get_field_3D
+from .magnets._polygon3D import get_total_field_mesh
+from .utils._demag import (
+    solve_demag_tanh,
+    solve_demag_tanh_batch,
+    solve_demagnetization,
+)
+from .utils._routines2D import (
+    BdotgradB_2D,
+    FgradB_2D,
+    get_field_2D,
+    gradB_2D,
+    grid2D,
+    jacobian_B_2D,
+)
+from .utils._routines3D import (
+    BdotgradB_3D,
+    FgradB_3D,
+    get_field_3D,
+    gradB_3D,
+    grid3D,
+    jacobian_B_3D,
+    line3D,
+    slice3D,
+)
+from .utils._vector_structs import Jacobian2, Jacobian3
 
 __all__ = [
+    "BdotgradB_2D",
+    "BdotgradB_3D",
+    "FgradB_2D",
+    "FgradB_3D",
+    "Jacobian2",
+    "Jacobian3",
+    "config",
     "forces",
-    "magnets",
-    "utils",
-    "list",
-    "reset",
     "get_field_2D",
-    "grid2D",
     "get_field_3D",
+    "get_total_field_mesh",
+    "gradB_2D",
+    "gradB_3D",
+    "grid2D",
+    "grid3D",
+    "jacobian_B_2D",
+    "jacobian_B_3D",
+    "line3D",
+    "list",
+    "magnets",
+    "plots",
+    "reset",
+    "slice3D",
+    "solve_demag_tanh",
+    "solve_demag_tanh_batch",
+    "solve_demagnetization",
+    "utils",
 ]

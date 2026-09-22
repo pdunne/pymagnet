@@ -1,0 +1,31 @@
+[meta]
+name = "Single Cube"
+description = "A single 10mm cube magnet with z-magnetisation, multiple slice views"
+dimension = "3D"
+
+[[magnets]]
+type = "Cube"
+Jr = 1.0
+width = 10.0
+center = [0.0, 0.0, 0.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = true
+
+# XZ and XY slices on one plot
+[grid]
+type = "slice"
+max1 = 30.0
+max2 = 30.0
+slice_value = 0.0
+num_points = 100
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmap = "viridis"
+cmin = 0.0
+cmax = 0.5
+show_magnets = true
+planes = ["xz", "xy"]

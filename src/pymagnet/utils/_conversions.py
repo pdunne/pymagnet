@@ -6,7 +6,6 @@
 as well as 3D cartesian, cylindrical, and spherical.
 
 """
-from typing import Optional
 
 import numpy as _np
 
@@ -154,7 +153,7 @@ def sphere_sph2cart(
     return Bx, By, Bz
 
 
-def get_unit_value_meter(unit: str) -> Optional[float]:
+def get_unit_value_meter(unit: str) -> float | None:
     """Returns a queried metre unit as a number
     Example:
         factor = get_unit_value_meter('cm')
@@ -192,10 +191,10 @@ def get_unit_value_meter(unit: str) -> Optional[float]:
         "ym": 1e-24,
     }
 
-    return si_prefixes.get(unit, None)
+    return si_prefixes.get(unit)
 
 
-def get_unit_value_tesla(unit: str) -> Optional[float]:
+def get_unit_value_tesla(unit: str) -> float | None:
     """Returns a queried magnetic flux density unit as a number
     Example:
         factor = get_unit_value_meter('mT')
@@ -233,4 +232,4 @@ def get_unit_value_tesla(unit: str) -> Optional[float]:
         "yT": 1e-24,
     }
 
-    return si_prefixes.get(unit, None)
+    return si_prefixes.get(unit)

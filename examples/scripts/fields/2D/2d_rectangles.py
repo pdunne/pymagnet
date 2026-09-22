@@ -1,5 +1,4 @@
-"""Calculates and plots the magnetic field due to 2 rectangular magnets
-"""
+"""Calculates and plots the magnetic field due to 2 rectangular magnets"""
 
 import pymagnet as pm
 import pymagnet.plots as mplt

@@ -1,0 +1,39 @@
+[meta]
+name = "2D Linear Halbach"
+description = "Two rectangular 2D magnets with opposite magnetisation"
+dimension = "2D"
+
+[[magnets]]
+type = "Rectangle"
+Jr = 1.26
+width = 9.0
+height = 9.0
+center = [-4.5, 0.0]
+phi = 180.0
+
+[[magnets]]
+type = "Rectangle"
+Jr = 1.26
+width = 9.0
+height = 9.0
+center = [-4.5, 0.0]
+phi = 90.0
+
+[grid]
+type = "grid2D"
+xmax = 40.0
+ymax = 30.0
+num_points = 100
+unit = "mm"
+
+[plot]
+enabled = true
+type = "contour"
+cmap = "viridis"
+cmin = 0.0
+cmax = 0.5
+num_levels = 11
+num_arrows = 11
+show_magnets = true
+save_fig = true
+filename = "2d_rectangles.png"

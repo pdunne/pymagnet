@@ -1,0 +1,49 @@
+[meta]
+name = "Quadrupolar Array"
+description = "Four cubes with alternating magnetisation forming a quadrupole"
+dimension = "3D"
+
+[[magnets]]
+type = "Cube"
+Jr = 1.0
+width = 10.0
+center = [8.0, 8.0, 0.0]
+mask_magnet = true
+
+[[magnets]]
+type = "Cube"
+Jr = -1.0
+width = 10.0
+center = [-8.0, 8.0, 0.0]
+mask_magnet = true
+
+[[magnets]]
+type = "Cube"
+Jr = 1.0
+width = 10.0
+center = [-8.0, -8.0, 0.0]
+mask_magnet = true
+
+[[magnets]]
+type = "Cube"
+Jr = -1.0
+width = 10.0
+center = [8.0, -8.0, 0.0]
+mask_magnet = true
+
+# XY and XZ slices on one plot
+[grid]
+type = "slice"
+max1 = 25.0
+max2 = 25.0
+slice_value = 0.0
+num_points = 100
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmin = 0.0
+cmax = 0.4
+planes = ["xy", "xz"]
+show_magnets = true

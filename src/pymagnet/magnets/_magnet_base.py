@@ -6,7 +6,8 @@
 
 This private module implements the registry and base magnet classes
 """
-__all__ = ["Registry", "Magnet", "reset", "list"]
+
+__all__ = ["Magnet", "Registry", "list", "reset"]
 
 from weakref import WeakSet
 
@@ -69,7 +70,6 @@ class Registry:
 
     @classmethod
     def get_num_instances(cls, Print_Val=False):
-
         """Return number of instances of class
 
         Args:
@@ -124,7 +124,7 @@ class Magnet(Registry):
 
 
 def reset():
-    """Returns a list of all instantiated magnets."""
+    """Clears the instance registry of every magnet class."""
     from ._magnet2D import Circle, Magnet2D, Rectangle, Square
     from ._magnet3D import Cube, Cylinder, Magnet3D, Prism, Sphere
     from ._polygon2D import PolyMagnet
@@ -153,6 +153,6 @@ def list():
     """Returns a list of all instantiated magnets.
 
     Assumes that the child class registries have not been modified outside of
-    using `pymagnet.reset_magnets()`.
+    using `pymagnet.reset()`.
     """
     return Magnet.print_instances()

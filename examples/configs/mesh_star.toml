@@ -1,0 +1,33 @@
+[meta]
+name = "Mesh Star"
+description = "Star-shaped STL magnet demonstrating non-standard geometry"
+dimension = "3D"
+
+[[magnets]]
+type = "Mesh"
+filename = "../scripts/stl_magnets/stl/star.stl"
+Jr = 1.2
+mesh_scale = 5
+center = [0.0, 0.0, 0.0]
+theta = 0.0
+phi = 90.0
+mask_magnet = false
+
+[grid]
+type = "slice"
+max1 = 30.0
+max2 = 30.0
+slice_value = 0.0
+num_points = 50
+unit = "mm"
+
+[plot]
+enabled = true
+type = "slice"
+cmap = "viridis"
+cmin = 0.0
+cmax = 0.5
+planes = ["xy", "xz", "yz"]
+show_magnets = true
+opacity = 0.8
+num_arrows = 10
