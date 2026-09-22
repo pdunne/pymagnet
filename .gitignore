@@ -130,7 +130,6 @@ dmypy.json
 .pyre/
 
 # UV
-uv.lock
 
 # Ruff
 .ruff_cache/

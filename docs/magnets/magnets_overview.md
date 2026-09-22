@@ -30,6 +30,7 @@ Rectangle 2D magnet class.
 
 ```python
 import pymagnet as pm
+
 magnet = pm.magnets.Rectangle(width=10, height=30, Jr=1.0)
 print(magnet)
 ```
@@ -50,6 +51,7 @@ Square 2D magnet class, a subclass of Rectangle.
 
 ```python
 import pymagnet as pm
+
 magnet = pm.magnets.Square(width=10, Jr=1.0)
 print(magnet)
 ```
@@ -76,6 +78,7 @@ Circle 2D magnet class representing a long bipolar rod (infinite length cylinder
 
 ```python
 import pymagnet as pm
+
 magnet = pm.magnets.Circle(radius=10, Jr=1.0)
 print(magnet)
 ```
@@ -151,6 +154,7 @@ Cuboidal (rectangular prism) 3D magnet class.
 
 ```python
 import pymagnet as pm
+
 magnet = pm.magnets.Prism(width=10, depth=20, height=30, Jr=1.0)
 print(magnet)
 ```
@@ -173,6 +177,7 @@ Cube 3D magnet class, a subclass of Prism with equal dimensions.
 
 ```python
 import pymagnet as pm
+
 magnet = pm.magnets.Cube(width=10, Jr=1.0)
 print(magnet)
 ```
@@ -200,6 +205,7 @@ Cylindrical 3D magnet class with axis along z-direction.
 
 ```python
 import pymagnet as pm
+
 magnet = pm.magnets.Cylinder(radius=10, length=10, Jr=1.0)
 print(magnet)
 ```
@@ -224,6 +230,7 @@ Spherical 3D magnet class.
 
 ```python
 import pymagnet as pm
+
 magnet = pm.magnets.Sphere(radius=10, Jr=1.0)
 print(magnet)
 ```
@@ -249,6 +256,7 @@ print(magnet)
 
 ```python
 import pymagnet as pm
+
 magnet = pm.magnets.Mesh("path/to/model.stl", Jr=1.0, mesh_scale=0.001)
 print(magnet)
 ```
@@ -269,6 +277,7 @@ Clear all instantiated magnets from the registry:
 
 ```python
 import pymagnet as pm
+
 pm.reset()
 ```
 
@@ -278,6 +287,7 @@ Print all currently instantiated magnets:
 
 ```python
 import pymagnet as pm
+
 pm.magnets.Prism(Jr=1.0)
 pm.magnets.Cylinder(Jr=0.5)
 pm.list()

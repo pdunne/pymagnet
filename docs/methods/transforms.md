@@ -108,8 +108,12 @@ The conversion functions are available in `pymagnet.utils`:
 
 ```python
 from pymagnet.utils import (
-    cart2pol, pol2cart, vector_pol2cart,
-    cart2sph, sph2cart, vector_sph2cart
+    cart2pol,
+    pol2cart,
+    vector_pol2cart,
+    cart2sph,
+    sph2cart,
+    vector_sph2cart,
 )
 ```
 

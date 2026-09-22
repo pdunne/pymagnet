@@ -236,8 +236,10 @@ points = pm.grid3D(xmax=15, ymax=15, zmax=15, num_points=30)
 field = pm.get_field_3D(points)
 
 fig, data_objects = volume_plot(
-    points, field,
-    cmin=0, cmax=0.2,
+    points,
+    field,
+    cmin=0,
+    cmax=0.2,
     num_levels=8,
     opacity=0.2,
 )
@@ -292,9 +294,12 @@ pm.reset()
 pm.magnets.Cylinder(Jr=1.0, center=(0, 0, 0), radius=5, length=10)
 
 fig, cache, data_objects = volume_quickplot(
-    xmax=20, ymax=20, zmax=20,
+    xmax=20,
+    ymax=20,
+    zmax=20,
     num_points=25,
-    cmin=0, cmax=0.3,
+    cmin=0,
+    cmax=0.3,
     num_levels=6,
     opacityscale="normal",
 )
@@ -319,9 +324,12 @@ The `opacityscale` parameter in volume plots controls how opacity varies with fi
 
 ```python
 fig, cache, data_objects = volume_quickplot(
-    xmax=20, ymax=20, zmax=20,
+    xmax=20,
+    ymax=20,
+    zmax=20,
     opacityscale="invert",
-    cmin=0, cmax=0.5,
+    cmin=0,
+    cmax=0.5,
 )
 ```
 
@@ -341,7 +349,7 @@ fig, cache, data_objects = slice_quickplot(
     max1=20,
     max2=20,
     planes=["xy"],
-    num_arrows=8,      # Display 8 arrows per axis
+    num_arrows=8,  # Display 8 arrows per axis
     cone_opacity=0.9,  # Make arrows slightly transparent
 )
 ```
@@ -406,8 +414,10 @@ pm.magnets.Cube(Jr=1.0, width=10, center=(0, 0, 0), mask_magnet=True)
 # XZ plane at y=0 with asymmetric bounds
 points = pm.slice3D(
     plane="xz",
-    max1=30, min1=-30,
-    max2=40, min2=-40,
+    max1=30,
+    min1=-30,
+    max2=40,
+    min2=-40,
     slice_value=0.0,
     num_points=100,
 )

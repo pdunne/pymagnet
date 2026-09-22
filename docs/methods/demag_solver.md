@@ -137,10 +137,13 @@ M_data = chi * H_data
 interp = build_MH_interpolator(H_data, M_data)
 
 result = solve_demagnetization(
-    H_ext=1e5, MH_interp=interp, M_sat=M_data[-1], N=0.5,
+    H_ext=1e5,
+    MH_interp=interp,
+    M_sat=M_data[-1],
+    N=0.5,
 )
-print(f"M = {result.M_solution:.2f}")   # M = 166666.67
-print(f"H_int = {result.H_int:.2f}")    # H_int = 16666.67
+print(f"M = {result.M_solution:.2f}")  # M = 166666.67
+print(f"H_int = {result.H_int:.2f}")  # H_int = 16666.67
 ```
 
 ### Analytical tanh model (scipy)
@@ -151,7 +154,10 @@ from demag_solver import tanh_MH_model, solve_demagnetization
 f_mh = tanh_MH_model(Ms=1e6, chi=10.0)
 
 result = solve_demagnetization(
-    H_ext=1e5, MH_interp=f_mh, M_sat=1e6, N=0.5,
+    H_ext=1e5,
+    MH_interp=f_mh,
+    M_sat=1e6,
+    N=0.5,
 )
 print(f"M = {result.M_solution:.2f}")
 ```

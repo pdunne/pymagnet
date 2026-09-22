@@ -102,9 +102,7 @@ fig, ax = pm.plots.plot_2D_contour(points, field, cmax=0.5)
 
 # Streamplot
 fig, ax = pm.plots.plot_2D_contour(
-    points, field,
-    plot_type="streamplot",
-    cmap="viridis"
+    points, field, plot_type="streamplot", cmap="viridis"
 )
 ```
 
@@ -186,10 +184,7 @@ field = pm.utils.get_field_3D(points)
 
 # Plot Bz component
 fig, ax = pm.plots.plot_sub_contour_3D(
-    points.x, points.z, field.z,
-    cmin=-0.5, cmax=0.5,
-    cmap="seismic",
-    clab=r"$B_z$ (T)"
+    points.x, points.z, field.z, cmin=-0.5, cmax=0.5, cmap="seismic", clab=r"$B_z$ (T)"
 )
 ```
 

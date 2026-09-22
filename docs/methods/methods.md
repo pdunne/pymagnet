@@ -152,9 +152,7 @@ from pymagnet.utils import Quaternion
 import numpy as np
 
 # Create rotation quaternion (30° about z, 45° about y, 0° about x)
-q = Quaternion.gen_rotation_quaternion(
-    np.deg2rad(30), np.deg2rad(45), np.deg2rad(0)
-)
+q = Quaternion.gen_rotation_quaternion(np.deg2rad(30), np.deg2rad(45), np.deg2rad(0))
 
 # Rotate a point
 point = np.array([1, 0, 0])

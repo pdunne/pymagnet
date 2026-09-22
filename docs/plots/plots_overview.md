@@ -41,10 +41,7 @@ pm.plots.plot_1D_field(magnet, unit="mm")
 
 # 3D interactive slice plot
 fig, cache, data = pm.plots.slice_quickplot(
-    planes=["xy", "xz"],
-    max1=20,
-    max2=20,
-    cmax=0.5
+    planes=["xy", "xz"], max1=20, max2=20, cmax=0.5
 )
 ```
 

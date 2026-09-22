@@ -194,7 +194,7 @@ import numpy as np
 from pymagnet.utils._elliptic import cel
 
 cel_value = cel(1, 1, 1, 1)
-print(np.allclose(cel_value, np.pi/2.0))
+print(np.allclose(cel_value, np.pi / 2.0))
 ```
 
 ## Spheres
@@ -336,8 +336,8 @@ evaluation grid once per magnet:
 ``` python
 from pymagnet import get_total_field_mesh
 
-m1 = pm.magnets.Mesh("left.stl",  Jr=1.0, center=(-30, 0, 0))
-m2 = pm.magnets.Mesh("right.stl", Jr=1.0, center=( 30, 0, 0))
+m1 = pm.magnets.Mesh("left.stl", Jr=1.0, center=(-30, 0, 0))
+m2 = pm.magnets.Mesh("right.stl", Jr=1.0, center=(30, 0, 0))
 
 B = get_total_field_mesh([m1, m2], X, Y, Z)
 print(B.x, B.y, B.z)
