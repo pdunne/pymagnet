@@ -770,22 +770,22 @@ class Cylinder(Magnet3D):
         Returns:
             Field: Magnetic field array
         """
-        from ..utils._conversions import cart2pol, pol2cart
         from ..utils._routines3D import _allocate_field_array3
 
         B = _allocate_field_array3(x, y, z)
 
-        # Convert cartesian coordinates to cylindrical
-        rho, phi = cart2pol(x, y)
+        rho = _np.sqrt(x * x + y * y)
 
         Brho, B.z = self._calcB_cyl(rho, z)
 
-        # Convert magnetic fields from cylindrical to cartesian
-        # We use pol2cart because Bphi is zero
-        # If Bphi was != 0, then would have to use
-        # `..utils._conversions.vector_pol2cart(Brho, Bphi, phi)`
-
-        B.x, B.y = pol2cart(Brho, phi)
+        # Inline pol2cart without arctan2/cos/sin:
+        #   Bx = Brho * cos(phi) = Brho * x/rho
+        #   By = Brho * sin(phi) = Brho * y/rho
+        # On the z-axis rho=0 and Brho=0 by symmetry; use safe reciprocal to
+        # avoid 0/0 producing NaN.
+        inv_rho = _np.where(rho > 0.0, 1.0 / rho, 0.0)
+        B.x = Brho * x * inv_rho
+        B.y = Brho * y * inv_rho
 
         return B
 

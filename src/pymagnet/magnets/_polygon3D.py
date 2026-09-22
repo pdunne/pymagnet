@@ -128,7 +128,7 @@ class Mesh(Magnet3D):
         """
         return self.center
 
-    def get_field(self, x, y, z, parallel=True):
+    def get_field(self, x, y, z, parallel=True, r_cut=_np.inf):
         """Calculates the magnetic field at point(s) x,y,z due to a 3D magnet
         The calculations are always performed in local coordinates with the centre of the magnet at origin and z magnetisation pointing along the local z' axis.
 
@@ -139,18 +139,21 @@ class Mesh(Magnet3D):
             y (float/array): y co-ordinates
             z (float/array): z co-ordinates
             parallel (bool): If True, use parallel numba implementation
+            r_cut (float): Distance cutoff. Triangles whose centroid is farther
+                than ``r_cut`` from an evaluation point are skipped.  Units must
+                match the mesh coordinates (typically mm).  Default: no cutoff.
 
         Returns:
             tuple: Bx(ndarray), By(ndarray), Bz(ndarray)  field vector
         """
         if parallel:
-            B = self._get_field_parallel(x, y, z)
+            B = self._get_field_parallel(x, y, z, r_cut=r_cut)
         else:
             B = self._get_field_internal(x, y, z)
 
         return B.x, B.y, B.z
 
-    def _get_field_parallel(self, x, y, z):
+    def _get_field_parallel(self, x, y, z, r_cut=_np.inf):
         """Parallel magnetic field calculation using numba.
 
         Delegates to :meth:`_get_field_parallel_pts`, which parallelises over
@@ -164,11 +167,13 @@ class Mesh(Magnet3D):
             x (float/array): x co-ordinates
             y (float/array): y co-ordinates
             z (float/array): z co-ordinates
+            r_cut (float): Distance cutoff passed to
+                :meth:`_get_field_parallel_pts`.  Default: no cutoff.
 
         Returns:
             Field3: Magnetic field array
         """
-        return self._get_field_parallel_pts(x, y, z)
+        return self._get_field_parallel_pts(x, y, z, r_cut=r_cut)
 
     def _get_field_serial_fast(self, x, y, z):
         """Serial but numba-optimized magnetic field calculation.

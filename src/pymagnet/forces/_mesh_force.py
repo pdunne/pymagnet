@@ -1,5 +1,5 @@
 import numpy as _np
-from numba import njit
+from numba import njit, prange
 
 from ..magnets import Magnet3D
 from ..utils._conversions import get_unit_value_meter
@@ -267,6 +267,103 @@ def divide_triangle_regular(triangle, depth=1):
     return _divide_triangle_regular_fast(triangle, depth=depth)
 
 
+def _precompute_force_centroids(mesh_vectors, Jnorm, Jr, depth):
+    """Pack sub-triangle centroids and metadata for all active triangles.
+
+    Args:
+        mesh_vectors (ndarray): (N, 3, 3) triangle vertices
+        Jnorm (ndarray): (N,) normal component of magnetisation per triangle
+        Jr (float): remanence magnitude
+        depth (int): subdivision depth (4**depth sub-triangles per triangle)
+
+    Returns:
+        tuple: (centroids_flat, Jnorm_active, areas_active, n_sub)
+            - centroids_flat (ndarray): (n_active * n_sub, 3) centroid coordinates
+            - Jnorm_active (ndarray): (n_active,) Jnorm values for active triangles
+            - areas_active (ndarray): (n_active,) triangle areas
+            - n_sub (int): sub-triangles per active triangle
+    """
+    n_sub = 4 ** depth
+    active = _np.fabs(Jnorm / Jr) > ALIGN_CUTOFF
+    idx = _np.where(active)[0]
+    n_active = len(idx)
+
+    centroids_flat = _np.empty((n_active * n_sub, 3), dtype=_np.float64)
+    Jnorm_active = _np.empty(n_active, dtype=_np.float64)
+    areas_active = _np.empty(n_active, dtype=_np.float64)
+
+    for k, i in enumerate(idx):
+        sub_tris = _divide_triangle_regular_fast_njit(
+            _np.ascontiguousarray(mesh_vectors[i], dtype=_np.float64), depth
+        )
+        centroids_flat[k * n_sub : (k + 1) * n_sub] = sub_tris.mean(axis=1)
+        Jnorm_active[k] = Jnorm[i]
+        areas_active[k] = triangle_area(mesh_vectors[i])
+
+    return centroids_flat, Jnorm_active, areas_active, n_sub
+
+
+@njit(parallel=True, cache=True)
+def _accumulate_force_torque_njit(
+    centroids, Bx, By, Bz, Jnorm_active, areas, n_sub, xc, yc, zc
+):
+    """Accumulate force and torque from pre-computed field values.
+
+    Uses prange over active triangles with scalar reductions.
+
+    Args:
+        centroids (ndarray): (n_active * n_sub, 3) centroid positions
+        Bx, By, Bz (ndarray): (n_active * n_sub,) field components
+        Jnorm_active (ndarray): (n_active,) Jnorm values
+        areas (ndarray): (n_active,) triangle areas
+        n_sub (int): sub-triangles per active triangle
+        xc, yc, zc (float): centroid of active magnet (torque reference point)
+
+    Returns:
+        tuple: (force (3,), torque (3,))
+    """
+    n_active = Jnorm_active.shape[0]
+    fx = 0.0
+    fy = 0.0
+    fz = 0.0
+    tx = 0.0
+    ty = 0.0
+    tz = 0.0
+
+    for k in prange(n_active):
+        s = k * n_sub
+        scale = -Jnorm_active[k] * areas[k] / n_sub
+        sfx = 0.0
+        sfy = 0.0
+        sfz = 0.0
+        stx = 0.0
+        sty = 0.0
+        stz = 0.0
+        for j in range(s, s + n_sub):
+            bx = Bx[j]
+            by = By[j]
+            bz = Bz[j]
+            rx = centroids[j, 0] - xc
+            ry = centroids[j, 1] - yc
+            rz = centroids[j, 2] - zc
+            sfx += bx
+            sfy += by
+            sfz += bz
+            stx += ry * bz - rz * by
+            sty += rz * bx - rx * bz
+            stz += rx * by - ry * bx
+        fx += sfx * scale
+        fy += sfy * scale
+        fz += sfz * scale
+        tx += stx * scale
+        ty += sty * scale
+        tz += stz * scale
+
+    force = _np.array([fx, fy, fz])
+    torque = _np.array([tx, ty, tz])
+    return force, torque
+
+
 def _calc_field_simplex(active_magnet, points):
     """Calculates the total force and torque acting on one simplex of a magnet due
     to all other instantiated magnets
@@ -306,27 +403,43 @@ def _calc_field_simplex(active_magnet, points):
 
 
 def calc_force_mesh(active_magnet, depth=3, unit="mm"):
-    force = _np.zeros(3)
-    torque = _np.zeros(3)
+    # 1. Pre-compute all sub-triangle centroids for active triangles
+    centroids, Jnorm_active, areas, n_sub = _precompute_force_centroids(
+        active_magnet.mesh_vectors, active_magnet.Jnorm, active_magnet.Jr, depth
+    )
 
-    for i in range(len(active_magnet.mesh_vectors)):
-        if _np.fabs(active_magnet.Jnorm[i] / active_magnet.Jr) > ALIGN_CUTOFF:
-            triangle = active_magnet.mesh_vectors[i]
-            mesh = divide_triangle_regular(triangle, depth=depth)
-            centroids = _np.mean(mesh, axis=1)
-            num_sub_triangles = len(centroids)
+    if len(centroids) == 0:
+        return _np.zeros(3), _np.zeros(3)
 
-            points = Point_Array3(
-                centroids[:, 0], centroids[:, 1], centroids[:, 2], unit=unit
-            )
-            local_field, local_torque = _calc_field_simplex(active_magnet, points)
-            area = triangle_area(triangle)
-            force += local_field * -active_magnet.Jnorm[i] * area / num_sub_triangles
-            torque += local_torque * -active_magnet.Jnorm[i] * area / num_sub_triangles
+    # 2. Evaluate field from all source magnets at all centroids (single batched call each)
+    cx = centroids[:, 0]
+    cy = centroids[:, 1]
+    cz = centroids[:, 2]
 
-    scaling_factor = get_unit_value_meter(points.get_unit())
+    Bx = _np.zeros(len(centroids))
+    By = _np.zeros(len(centroids))
+    Bz = _np.zeros(len(centroids))
+    for magnet in Magnet3D.instances:
+        if magnet is not active_magnet:
+            bx, by, bz = magnet.get_field(cx, cy, cz)
+            Bx += bx.ravel()
+            By += by.ravel()
+            Bz += bz.ravel()
+
+    Bx[~_np.isfinite(Bx)] = 0.0
+    By[~_np.isfinite(By)] = 0.0
+    Bz[~_np.isfinite(Bz)] = 0.0
+
+    # 3. Accumulate force/torque in parallel over active triangles
+    xc, yc, zc = active_magnet.centroid
+    force, torque = _accumulate_force_torque_njit(
+        centroids, Bx, By, Bz, Jnorm_active, areas, n_sub,
+        float(xc), float(yc), float(zc),
+    )
+
+    # 4. Apply unit scaling
+    scaling_factor = get_unit_value_meter(unit)
     assert scaling_factor is not None
-    force /= MU0 / scaling_factor / scaling_factor
-    torque /= MU0 / scaling_factor / scaling_factor / scaling_factor
-
+    force = force / (MU0 / scaling_factor / scaling_factor)
+    torque = torque / (MU0 / scaling_factor / scaling_factor / scaling_factor)
     return force, torque
