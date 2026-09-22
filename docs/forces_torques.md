@@ -261,5 +261,7 @@ cylinder = pm.magnets.Cylinder(Jr=1.0, center=(0, 0, 10), radius=3, length=6)
 force, torque = calc_force_cylinder(cylinder, num_segments=30)
 
 print(f"Force on cylinder: Fx={force[0]:.4f}, Fy={force[1]:.4f}, Fz={force[2]:.4f} N")
-print(f"Torque on cylinder: Tx={torque[0]:.6f}, Ty={torque[1]:.6f}, Tz={torque[2]:.6f} N·m")
+print(
+    f"Torque on cylinder: Tx={torque[0]:.6f}, Ty={torque[1]:.6f}, Tz={torque[2]:.6f} N·m"
+)
 ```

@@ -1621,12 +1621,13 @@ wheels = [
 
 [[package]]
 name = "pymagnet"
-version = "0.5.1"
+version = "0.5.2"
 source = { editable = "." }
 dependencies = [
     { name = "numba" },
     { name = "numpy" },
     { name = "numpy-stl" },
+    { name = "scipy" },
 ]
 
 [package.optional-dependencies]
@@ -1730,6 +1731,7 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
     { name = "ruff", marker = "extra == 'all'", specifier = ">=0.8.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.8.0" },
+    { name = "scipy", specifier = ">=1.11" },
     { name = "scipy", marker = "extra == 'all'", specifier = ">=1.17.1" },
     { name = "scipy", marker = "extra == 'docs'", specifier = ">=1.17.1" },
     { name = "seaborn", marker = "extra == 'all'", specifier = ">=0.13.2" },

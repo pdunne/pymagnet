@@ -140,7 +140,9 @@ notes/
 
 *.md
 !README.md
-!docs/*/*.md
+# Re-include every docs page, at any depth (docs/x.md as well as docs/a/x.md).
+!docs/*.md
+!docs/**/*.md
 work/results
 # work/
 work/*pdf

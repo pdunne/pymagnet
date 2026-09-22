@@ -8,7 +8,7 @@ User friendly magnetic field calculations
 Top level module for exposing the public API of usable modules
 """
 
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 
 from . import config, forces, magnets, plots, utils
 from .magnets._magnet_base import list, reset
