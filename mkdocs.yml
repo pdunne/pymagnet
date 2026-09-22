@@ -1,5 +1,6 @@
 
 site_name: Pymagnet
+site_url: https://pdunne.github.io/pymagnet/
 
 theme:
   name: material
