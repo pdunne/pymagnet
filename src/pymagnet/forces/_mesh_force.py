@@ -330,7 +330,7 @@ def _accumulate_force_torque_njit(
     ty = 0.0
     tz = 0.0
 
-    for k in prange(n_active):
+    for k in prange(n_active):  # ty:ignore[not-iterable]
         s = k * n_sub
         scale = -Jnorm_active[k] * areas[k] / n_sub
         sfx = 0.0

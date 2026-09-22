@@ -534,7 +534,7 @@ def _extract_prof_top(prof_path, top_n=5):
     ps = pstats.Stats(prof_path, stream=stream)
     ps.sort_stats("cumulative")
     # Access internal stats dict: keys are (file, line, name)
-    sorted_stats = sorted(ps.stats.items(), key=lambda x: x[1][3], reverse=True)
+    sorted_stats = sorted(ps.stats.items(), key=lambda x: x[1][3], reverse=True)  # ty:ignore[unresolved-attribute]
     results = []
     for (filepath, lineno, func_name), stat in sorted_stats[:top_n]:
         # Strip project root for readability

@@ -58,10 +58,14 @@ class Magnet2D(Magnet):
 
         return self.alpha
 
-    def get_field(self) -> None:
+    def get_field(self, x, y) -> None:
         """Calculates the magnetic field.
 
         This is a template that needs to be implemented for each magnet
+
+        Args:
+            x (ndarray): x co-ordinates
+            y (ndarray): y co-ordinates
         """
         pass
 

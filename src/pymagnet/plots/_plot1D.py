@@ -56,7 +56,7 @@ def plot_1D_field(
     return_data = kwargs.pop("return_data", False)
     points = Point_Array1(_np.zeros(num_points), unit=unit)
 
-    if issubclass(magnet.__class__, Cylinder):
+    if isinstance(magnet, Cylinder):
         mag_boundary = magnet.length / 2
         points.z = _np.linspace(
             -2 * magnet.length + magnet.center[2],
@@ -71,7 +71,7 @@ def plot_1D_field(
             mask = _generate_mask_1D(mag_boundary, magnet.center[2], points.z)
             field.z[mask] = _np.nan
 
-    elif issubclass(magnet.__class__, Prism):
+    elif isinstance(magnet, Prism):
         mag_boundary = magnet.height / 2
         points.z = _np.linspace(
             -2 * magnet.height + magnet.center[2],

@@ -63,6 +63,11 @@ class Point_Array1:
 
         current_unit_val = get_unit_value(self.get_unit())
         new_unit_val = get_unit_value(new_unit)
+        if current_unit_val is None or new_unit_val is None:
+            raise ValueError(
+                f"Cannot convert from '{self.get_unit()}' to '{new_unit}': "
+                "unrecognised unit."
+            )
         scale_val = current_unit_val / new_unit_val
 
         self.z *= scale_val
@@ -126,6 +131,11 @@ class Point_Array2:
 
         current_unit_val = get_unit_value(self.get_unit())
         new_unit_val = get_unit_value(new_unit)
+        if current_unit_val is None or new_unit_val is None:
+            raise ValueError(
+                f"Cannot convert from '{self.get_unit()}' to '{new_unit}': "
+                "unrecognised unit."
+            )
         scale_val = current_unit_val / new_unit_val
 
         self.x *= scale_val
@@ -210,6 +220,11 @@ class Point_Array3(Point_Array2):
 
         current_unit_val = get_unit_value(self.get_unit())
         new_unit_val = get_unit_value(new_unit)
+        if current_unit_val is None or new_unit_val is None:
+            raise ValueError(
+                f"Cannot convert from '{self.get_unit()}' to '{new_unit}': "
+                "unrecognised unit."
+            )
         scale_val = current_unit_val / new_unit_val
         self.x *= scale_val
         self.y *= scale_val

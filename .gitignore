@@ -150,3 +150,14 @@ results/
 reference/
 work/generate_plan_doc.py
 work/generate_tracker.py
+reports/coverage/coverage.xml
+reports/coverage-badge.svg
+reports/flake8/file.svg
+reports/flake8/styles.css
+reports/flake8/flake8stats.txt
+.gitignore
+reports/flake8-badge.svg
+.gitignore
+reports/flake8/index.html
+.gitignore
+reports/flake8/back.svg

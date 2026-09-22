@@ -29,7 +29,6 @@ nav:
       - Class Methods: methods/methods.md
       - Transforms: methods/transforms.md
       - Demagnetisation Solver: methods/demag_solver.md
-  - Simulation Campaign: simulation_campaign.md
   - Code Reference:
       - pymagnet: code_reference/pymagnet.md
       - magnets: code_reference/magnets.md

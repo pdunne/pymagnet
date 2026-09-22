@@ -177,7 +177,7 @@ print(f"Torque: {torque} N·m")
 Calculates the total force and torque on an STL mesh magnet due to all other instantiated magnets. The mesh surface is subdivided into smaller triangles using midpoint subdivision for improved numerical integration accuracy.
 
 ```python
-from pymagnet.forces._mesh_force import calc_force_mesh
+from pymagnet.forces import calc_force_mesh
 ```
 
 **Parameters:**
@@ -198,7 +198,7 @@ from pymagnet.forces._mesh_force import calc_force_mesh
 
 ```python
 import pymagnet as pm
-from pymagnet.forces._mesh_force import calc_force_mesh
+from pymagnet.forces import calc_force_mesh
 
 pm.reset()
 

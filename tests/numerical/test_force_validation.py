@@ -337,9 +337,9 @@ class TestOConnell2020Validation:
 
         # Use looser tolerance for torque (more sensitive to numerical integration)
         torque_tol = {"rtol": 0.20, "atol": 0.005}
-        npt.assert_allclose(torque[0], expected_tx, **torque_tol)
-        npt.assert_allclose(torque[1], expected_ty, **torque_tol)
-        npt.assert_allclose(torque[2], expected_tz, **torque_tol)
+        npt.assert_allclose(torque[0], expected_tx, **torque_tol)  # ty:ignore[no-matching-overload]
+        npt.assert_allclose(torque[1], expected_ty, **torque_tol)  # ty:ignore[no-matching-overload]
+        npt.assert_allclose(torque[2], expected_tz, **torque_tol)  # ty:ignore[no-matching-overload]
 
     @pytest.mark.parametrize("offset_idx", [2, 4, 6])  # offsets 4, 8, 12 mm
     def test_force_at_various_offsets(self, offset_idx, oconnell_tolerance):

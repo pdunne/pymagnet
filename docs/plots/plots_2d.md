@@ -53,7 +53,8 @@ import numpy as np
 magnet = pm.magnets.Rectangle(width=10, height=20, Jr=1.0)
 x = np.linspace(-30, 30, 101)
 y = np.zeros_like(x) + 25  # Line at y=25
-points, field = pm.utils.get_field_2D(x, y)
+points = pm.utils.Point_Array2(x, y)
+field = pm.get_field_2D(points)
 
 # Plot
 fig, ax = pm.plots.plot_2D_line(points, field)
@@ -93,9 +94,8 @@ import pymagnet as pm
 magnet = pm.magnets.Circle(radius=10, Jr=1.0)
 
 # Calculate field on a grid
-points, field = pm.utils.get_field_2D_grid(
-    xmax=30, ymax=30, num_points=101
-)
+points = pm.grid2D(30, 30, num_points=101)
+field = pm.get_field_2D(points)
 
 # Contour plot
 fig, ax = pm.plots.plot_2D_contour(points, field, cmax=0.5)

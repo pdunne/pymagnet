@@ -139,7 +139,7 @@ from pymagnet.utils import (
 **Example:**
 
 ```python
-from pymagnet.utils import get_unit_value_meter
+from pymagnet.utils._conversions import get_unit_value_meter
 
 factor = get_unit_value_meter("mm")
 print(f"1 mm = {factor} m")  # Output: 1 mm = 0.001 m

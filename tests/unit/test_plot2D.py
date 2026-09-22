@@ -16,7 +16,7 @@ import pymagnet.plots as mplt
 
 
 @pytest.fixture(autouse=True)
-def _reset_magnets():
+def _reset():
     """Reset magnet registry before each test."""
     pm.reset()
     yield

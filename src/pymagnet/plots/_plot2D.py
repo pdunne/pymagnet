@@ -23,7 +23,7 @@ except ImportError:
 
 else:
     _has_matplotlib = True
-    import matplotlib.cm as _cm
+    import matplotlib.colors as _mcolors
     from matplotlib.patches import Arrow as _Arrow
     from matplotlib.patches import Circle as _Circ
     from matplotlib.patches import Rectangle as _Rect
@@ -270,7 +270,7 @@ def plot_2D_contour(
             cmin = kwargs.pop("cmin", -round(_np.nanmean(field.n), 1))
             cmax = kwargs.pop("cmax", round(_np.nanmean(field.n), 1))
             stream_shading = kwargs.pop("stream_color", "vertical")
-            norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
+            norm = _mcolors.Normalize(vmin=cmin, vmax=cmax)
 
             stream_dict = {
                 "normal": field.n.T,
@@ -790,8 +790,8 @@ def _vector_plot2(points, field, NQ, vector_color):
 
 
 def plot_3D_contour(
-    points: Point_Array2 | Point_Array3,
-    field: Field2 | Field3,
+    points: Point_Array3,
+    field: Field3,
     plane: str,
     **kwargs: Any,
 ) -> tuple[Figure, Axes]:
@@ -833,7 +833,7 @@ def plot_3D_contour(
         plot_xlab = xlab
         plot_ylab = ylab
         stream_x = field.x
-        stream_y = field.z
+        stream_y = field.y
 
     elif plane.lower() == "xz":
         stream_x = field.x
@@ -904,7 +904,7 @@ def plot_3D_contour(
             cmax = kwargs.pop("cmax", round(finite_field.mean() * 2, 1))
 
             stream_shading = kwargs.pop("stream_shading", "vertical")
-            norm = _cm.colors.Normalize(vmin=cmin, vmax=cmax)
+            norm = _mcolors.Normalize(vmin=cmin, vmax=cmax)
 
             stream_dict = {
                 "normal": field.n.T,

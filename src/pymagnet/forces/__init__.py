@@ -12,6 +12,7 @@ This module imports the classes and functions in the private modules to create a
 
 from ._cylinder_force import calc_force_cylinder
 from ._mesh_force import (
+    calc_force_mesh,
     divide_triangle_centroid,
     divide_triangle_regular,
     get_area_triangles,
@@ -24,6 +25,7 @@ from ._sphere_force import calc_force_sphere
 
 __all__ = [
     "calc_force_cylinder",
+    "calc_force_mesh",
     "calc_force_prism",
     "calc_force_sphere",
     "divide_triangle_centroid",

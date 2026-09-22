@@ -153,6 +153,6 @@ def list():
     """Returns a list of all instantiated magnets.
 
     Assumes that the child class registries have not been modified outside of
-    using `pymagnet.reset_magnets()`.
+    using `pymagnet.reset()`.
     """
     return Magnet.print_instances()

@@ -1094,7 +1094,7 @@ def _get_field_parallel_pts_njit(
     By_total = _np.zeros(n_pts)
     Bz_total = _np.zeros(n_pts)
 
-    for j in prange(n_pts):
+    for j in prange(n_pts):  # ty:ignore[not-iterable]
         bx = 0.0
         by = 0.0
         bz = 0.0

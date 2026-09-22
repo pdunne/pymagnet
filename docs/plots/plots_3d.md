@@ -109,15 +109,14 @@ data_dict = {
 
 ```python
 import pymagnet as pm
-from pymagnet.utils import slice3D, get_field_3D
 from pymagnet.plots import slice_plot
 
 pm.reset()
 pm.magnets.Prism(Jr=1.0, center=(0, 0, 0), size=(10, 10, 5))
 
 # Calculate field on XY plane at z=0
-points = slice3D(plane="xy", max1=20, max2=20, slice_value=0, num_points=50)
-field = get_field_3D(points)
+points = pm.slice3D(plane="xy", max1=20, max2=20, slice_value=0, num_points=50)
+field = pm.get_field_3D(points)
 
 data_dict = {"xy": {"points": points, "field": field}}
 fig, data_objects = slice_plot(data_dict, cmin=0, cmax=0.3)
@@ -228,14 +227,13 @@ from pymagnet.plots import volume_plot
 
 ```python
 import pymagnet as pm
-from pymagnet.utils import grid3D, get_field_3D
 from pymagnet.plots import volume_plot
 
 pm.reset()
 pm.magnets.Sphere(Jr=1.0, center=(0, 0, 0), radius=5)
 
-points = grid3D(xmax=15, ymax=15, zmax=15, num_points=30)
-field = get_field_3D(points)
+points = pm.grid3D(xmax=15, ymax=15, zmax=15, num_points=30)
+field = pm.get_field_3D(points)
 
 fig, data_objects = volume_plot(
     points, field,
@@ -363,7 +361,9 @@ fig, cache, data_objects = slice_quickplot(
 The `slice3D()` utility function generates a 2D grid of points in 3D space on a specified plane. This is the recommended way to create point arrays for slice plots when you need fine control over the evaluation region.
 
 ```python
-from pymagnet.utils._routines3D import slice3D
+import pymagnet as pm
+
+pm.slice3D(plane, max1, max2, slice_value, unit, **kwargs)
 ```
 
 **Parameters:**
@@ -398,14 +398,13 @@ from pymagnet.utils._routines3D import slice3D
 
 ```python
 import pymagnet as pm
-from pymagnet.utils._routines3D import slice3D
 from pymagnet.plots import slice_plot
 
 pm.reset()
 pm.magnets.Cube(Jr=1.0, width=10, center=(0, 0, 0), mask_magnet=True)
 
 # XZ plane at y=0 with asymmetric bounds
-points = slice3D(
+points = pm.slice3D(
     plane="xz",
     max1=30, min1=-30,
     max2=40, min2=-40,

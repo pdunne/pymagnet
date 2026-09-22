@@ -31,7 +31,7 @@ def _gradient_2d(F, dx, dy):
     dF_dx = np.empty_like(F)
     dF_dy = np.empty_like(F)
 
-    for i in prange(Nx):
+    for i in prange(Nx):  # ty:ignore[not-iterable]
         for j in range(Ny):
             # Gradient along axis 0 (x)
             if i == 0:
@@ -72,7 +72,7 @@ def _gradient_3d(F, dx, dy, dz):
     dF_dy = np.empty_like(F)
     dF_dz = np.empty_like(F)
 
-    for i in prange(Nx):
+    for i in prange(Nx):  # ty:ignore[not-iterable]
         for j in range(Ny):
             for k in range(Nz):
                 # Gradient along axis 0 (x)

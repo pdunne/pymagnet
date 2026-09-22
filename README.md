@@ -5,15 +5,7 @@ User friendly magnetic field calculations in Python
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-blue.svg)](https://opensource.org/licenses/MPL-2.0)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![DOI](https://zenodo.org/badge/339667292.svg)](https://zenodo.org/badge/latestdoi/339667292)
-<!-- [![Anaconda-Server Badge](https://anaconda.org/pdunne/pymagnet/badges/version.svg)](https://anaconda.org/pdunne/pymagnet) -->
 
-<!-- [![Python versions](https://img.shields.io/pypi/pymagnet/genbadge.svg)](https://pypi.python.org/pypi/pymagnet/) -->
-
-<!-- [![Build Status](https://github.com/smarie/python-genbadge/actions/workflows/base.yml/badge.svg)](https://github.com/smarie/python-genbadge/actions/workflows/base.yml) -->
-
- [![Tests Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/tests-badge.svg?dummy=8484744)](https://github.com/pdunne/pymagnet/blob/main/reports/junit/junit.xml)
- [![Coverage Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/coverage-badge.svg?dummy=8484744)](https://github.com/pdunne/pymagnet/blob/main/reports/coverage/coverage.xml)
- [![Flake8 Status](https://raw.githubusercontent.com/pdunne/pymagnet/main/reports/flake8-badge.svg?dummy=8484744)](https://github.com/pdunne/pymagnet/blob/main/reports/flake8/index.html)
 
 ## Getting Started
 

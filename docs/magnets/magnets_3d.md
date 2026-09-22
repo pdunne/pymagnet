@@ -176,11 +176,11 @@ $E(K) = C(k_c, 1, 1, k_c^2)$
 
 $\Pi(n, k) = C(k_c, n+1, 1, 1)$
 
-A simple algorirthm for solving the elliptic integrals[^6] is included as a `@staticmethod`
-in the `Cylinder` subclass. It is vectorised and JIT compiled as a Numpy ufunc using
+A simple algorirthm for solving the elliptic integrals[^6] is provided by
+`pymagnet.utils._elliptic`. It is vectorised and JIT compiled as a Numpy ufunc using
 Numba for improved performance:
 
-    Cylinder._cel(kc, p, c, s)
+    cel(kc, p, c, s)
 
 ### Example
 
@@ -190,9 +190,10 @@ $k_c = 1$ for the first complete elliptic integral, $K(1)$:
 $C\left(1, 1, 1, 1 \right)  = \pi/2$
 
 ``` python
-import pymagnet as pm
 import numpy as np
-cel_value = pm.magnets.Cylinder._cel(1, 1, 1, 1)
+from pymagnet.utils._elliptic import cel
+
+cel_value = cel(1, 1, 1, 1)
 print(np.allclose(cel_value, np.pi/2.0))
 ```
 
@@ -333,7 +334,7 @@ evaluates them in a single parallel pass, which avoids re-traversing the
 evaluation grid once per magnet:
 
 ``` python
-from pymagnet.magnets import get_total_field_mesh
+from pymagnet import get_total_field_mesh
 
 m1 = pm.magnets.Mesh("left.stl",  Jr=1.0, center=(-30, 0, 0))
 m2 = pm.magnets.Mesh("right.stl", Jr=1.0, center=( 30, 0, 0))

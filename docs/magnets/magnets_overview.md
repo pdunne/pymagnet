@@ -280,5 +280,5 @@ Print all currently instantiated magnets:
 import pymagnet as pm
 pm.magnets.Prism(Jr=1.0)
 pm.magnets.Cylinder(Jr=0.5)
-pm.list_magnets()
+pm.list()
 ```

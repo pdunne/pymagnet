@@ -245,7 +245,7 @@ def _detect_slice_axes(x, y, z):
         "z": float(z.max() - z.min()),
     }
     coords = {"x": x, "y": y, "z": z}
-    constant = min(ranges, key=ranges.get)
+    constant = min(ranges, key=lambda k: ranges[k])
     varying = [k for k in ("x", "y", "z") if k != constant]
     return varying, constant, coords
 

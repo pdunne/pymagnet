@@ -78,9 +78,11 @@ class Polyhedron(Registry):
 
     def _needs_rotation(self) -> bool:
         """Check if any rotation angles exceed the tolerance threshold."""
-        return _np.any(
-            _np.fabs(_np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]))
-            > Polyhedron.tol
+        return bool(
+            _np.any(
+                _np.fabs(_np.array([self.alpha_rad, self.beta_rad, self.gamma_rad]))
+                > Polyhedron.tol
+            )
         )
 
     def _apply_rotation(self, vertex_coords: _np.ndarray) -> _np.ndarray:
@@ -348,7 +350,7 @@ def list_polyhedra():
     """Returns a list of all instantiated polyhedra.
 
     Assumes that the child class registries have not been modified outside of
-    using `pymagnet.reset_magnets()`.
+    using `pymagnet.reset()`.
     """
     return Polyhedron.print_instances()
 
