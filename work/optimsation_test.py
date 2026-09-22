@@ -5,14 +5,13 @@ import multiprocessing as mp
 from itertools import product
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
+import seaborn as sns
 from tqdm import tqdm
 
 import pymagnet as pm
-
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 def gen_alternating_magnets(N=5, width=10, height=10, Jr=1.0):
@@ -75,7 +74,7 @@ def gen_lin_halbach(N=5, width=10, height=10, Jr=1.0):
 def generate_grid(**params):
     keys = list(params.keys())
     for values in product(*params.values()):
-        yield dict(zip(keys, values))
+        yield dict(zip(keys, values, strict=False))
 
 
 # ------------------------------------------------------------
@@ -95,7 +94,7 @@ def compute_stats(field_n):
 # ------------------------------------------------------------
 # 3. One single simulation run
 # ------------------------------------------------------------
-def run_simulation(run_input):
+def run_simulation(run_input, SAVE=False):
     """
     run_input -> (run_id, params_dict)
     This function is run in PARALLEL by multiprocessing.
@@ -117,31 +116,34 @@ def run_simulation(run_input):
         gen_lin_halbach(N=N, height=h, width=w, Jr=1.26)
 
     # Compute field
-    points = pm.grid2D(4 * w, 2 * h, unit="mm", ymin=0, num_points=1001)
+    points = pm.grid2D(15, 5, unit="mm", ymin=0, num_points=1001)
     field = pm.get_field_2D(points)
 
     # Stats
     stats = compute_stats(field.n)
 
-    # Save everything to its own folder
-    run_dir = Path("results") / f"run_{run_id:04d}"
-    run_dir.mkdir(parents=True, exist_ok=True)
+    if SAVE:
+        # Save everything to its own folder
+        run_dir = Path("results") / f"run_{run_id:04d}"
+        run_dir.mkdir(parents=True, exist_ok=True)
 
-    # Save metadata
-    with open(run_dir / "metadata.json", "w") as f:
-        json.dump(params, f, indent=2)
+        # Save metadata
+        with open(run_dir / "metadata.json", "w") as f:
+            json.dump(params, f, indent=2)
 
-    # Save stats
-    pl.DataFrame([stats]).write_parquet(run_dir / "stats.parquet")
+        # Save stats
+        pl.DataFrame([stats]).write_parquet(run_dir / "stats.parquet")
 
-    # Save raw field
-    pl.DataFrame({"field": field.n.flatten()}).write_parquet(run_dir / "field.parquet")
+        # Save raw field
+        pl.DataFrame({"field": field.n.flatten()}).write_parquet(
+            run_dir / "field.parquet"
+        )
 
     return {"run_id": run_id, **params, **stats}
 
 
 # ------------------------------------------------------------
-# 4. Automatic best‑configuration finder
+# 4. Automatic best-configuration finder
 # ------------------------------------------------------------
 def find_best(df, key="max"):
     """Return the row where `key` is maximized."""
@@ -149,12 +151,12 @@ def find_best(df, key="max"):
 
 
 # ------------------------------------------------------------
-# 5. Pareto‑front analysis
+# 5. Pareto-front analysis
 # ------------------------------------------------------------
 def pareto_front(df, objectives):
     """
     objectives: list of column names to maximize.
-    Returns the Pareto‑optimal subset.
+    Returns the Pareto-optimal subset.
     """
     data = df.to_dicts()
     pareto = []
@@ -312,9 +314,7 @@ if __name__ == "__main__":
 
         H = sorted(cfg_df["height"].unique())
         W = sorted(cfg_df["width"].unique())
-        Z = cfg_df.pivot_table(
-            index="height", columns="width", values="max"
-        ).values
+        Z = cfg_df.pivot_table(index="height", columns="width", values="max").values
 
         H_mesh, W_mesh = np.meshgrid(H, W, indexing="ij")
 
